@@ -1,0 +1,8 @@
+Model Information:
+* title:	Orc RTS Building Set - Proto Series
+* source:	https://sketchfab.com/3d-models/orc-rts-building-set-proto-series-08ea490c9e1e418fa6ad85f7bade12ab
+* author:	BitGem (https://sketchfab.com/bitgem)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

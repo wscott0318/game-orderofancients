@@ -1,0 +1,8 @@
+Model Information:
+* title:	Fantasy Environment Level Set
+* source:	https://sketchfab.com/3d-models/fantasy-environment-level-set-3b15fce0a6d84f99ae2770aec2b9ba9e
+* author:	BitGem (https://sketchfab.com/bitgem)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works
