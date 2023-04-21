@@ -20,7 +20,7 @@ export const GameScene = () => {
         });
 
         return () => {
-            // destry Game
+            // destroy Game
         };
     }, []);
 

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import * as SceneSetup from "./SceneSetting";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { ANG2RAD } from "../../../helper/math";
-import { RENDERER_PROPS } from "../../../constants";
+import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants";
 
 let aspectWidth = window.innerWidth;
 let aspectHeight = window.innerHeight;
@@ -29,7 +29,11 @@ export class SceneRenderer {
 
     initCamera() {
         this._camera = SceneSetup.camera(aspectWidth, aspectHeight);
-        this._camera.position.set(10, 30, 20);
+        this._camera.position.set(
+            CAMERA_PROPS.position.x,
+            CAMERA_PROPS.position.y,
+            CAMERA_PROPS.position.z
+        );
     }
 
     initScene() {
@@ -53,7 +57,7 @@ export class SceneRenderer {
         this._camControls.enablePan = false;
         this._camControls.minPolarAngle = ANG2RAD(10);
         this._camControls.maxPolarAngle = ANG2RAD(65);
-        this._camControls.maxDistance = 50;
+        this._camControls.maxDistance = 100;
         this._camControls.minDistance = 25;
     }
 

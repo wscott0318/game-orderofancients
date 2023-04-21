@@ -67,8 +67,8 @@ export class Environment {
         this.initGround();
         this.initSkyBox();
 
-        this._models.environment.position.x = -10;
-        this._models.environment.position.z = 30;
+        // this._models.environment.position.x = -10;
+        // this._models.environment.position.z = 30;
 
         this._scene.add(this._models.environment);
     }

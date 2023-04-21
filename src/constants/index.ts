@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 export const MODEL_URLS = {
-    environment: "/assets/models/environment/scene.gltf",
+    environment: "/assets/models/environment/foliage_pack_final.gltf",
 };
 
 export const RENDERER_PROPS = {
@@ -16,9 +16,9 @@ export const CAMERA_PROPS = {
     near: 0.1,
     far: 20000,
     position: {
-        x: 10,
-        y: 30,
-        z: 20,
+        x: 15,
+        y: 69,
+        z: 30,
     },
 };
 
@@ -26,7 +26,7 @@ export const SCENE_PROPS = {
     fog: {
         enable: true,
         color: 0xcccccc,
-        near: 30,
+        near: 70,
         far: 100,
     },
 };
