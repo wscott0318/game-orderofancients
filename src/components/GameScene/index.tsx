@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Game } from "./game";
+import { Loader } from "../Loader";
+import AssetsManager from "./AssetsManager";
 
 const Wrapper = styled.div`
     position: relative;
@@ -9,15 +11,28 @@ const Wrapper = styled.div`
 `;
 
 export const GameScene = () => {
+    const [loading, setLoading] = useState(true);
+
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
 
-    useEffect(() => {
+    const createGame = useCallback(async () => {
+        const assetsManager = new AssetsManager();
+
+        await assetsManager.loadModels();
+
+        setLoading(false);
+
         if (gameRef.current) return;
 
         gameRef.current = new Game({
             canvas: canvasDivRef.current!,
+            assetsManager: assetsManager,
         });
+    }, []);
+
+    useEffect(() => {
+        createGame();
 
         return () => {
             // destroy Game
@@ -26,6 +41,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
+            {loading && <Loader />}
+
             <div ref={canvasDivRef}></div>
         </Wrapper>
     );

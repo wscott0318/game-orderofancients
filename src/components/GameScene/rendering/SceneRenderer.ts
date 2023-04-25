@@ -24,7 +24,9 @@ export class SceneRenderer {
         this._renderer.setPixelRatio(window.devicePixelRatio);
         this._renderer.outputEncoding = RENDERER_PROPS.outputEncoding;
         this._renderer.toneMapping = RENDERER_PROPS.toneMapping;
+        this._renderer.toneMappingExposure = 1;
         this._renderer.shadowMap.enabled = RENDERER_PROPS.shadowMapEnable;
+        this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
 
     initCamera() {
@@ -42,7 +44,7 @@ export class SceneRenderer {
 
     initLights() {
         this._scene.add(SceneSetup.HemiLight());
-        this._scene.add(SceneSetup.PointLight());
+        this._scene.add(SceneSetup.SpotLight());
     }
 
     initStats() {

@@ -1,41 +1,32 @@
-import { MODEL_URLS } from "../../constants";
-import { LoadModel } from "./loaders/ModelLoader";
+import AssetsManager from "./AssetsManager";
 import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 
 interface GameOptions {
     canvas: HTMLDivElement;
+    assetsManager: AssetsManager;
 }
 
 export class Game {
-    sceneRenderer: any;
-    envRenderer: any;
-    models: any;
-    enemyArray: any;
-    canvasDiv: HTMLDivElement;
+    _sceneRenderer: SceneRenderer;
+    _envRenderer: Environment;
+    _assetsManager: AssetsManager;
+    _canvasDiv: HTMLDivElement;
 
     constructor(options: GameOptions) {
-        this.models = {};
-        this.enemyArray = [];
-        this.canvasDiv = options.canvas;
-        this.loadAssets();
-    }
-
-    async loadAssets() {
-        this.models.environment = await LoadModel(MODEL_URLS["environment"]);
+        this._assetsManager = options.assetsManager;
+        this._sceneRenderer = new SceneRenderer();
+        this._envRenderer = new Environment({
+            sceneRenderer: this._sceneRenderer,
+            models: this._assetsManager._models,
+        });
+        this._canvasDiv = options.canvas;
 
         this.initialize();
     }
 
     initialize() {
-        this.sceneRenderer = new SceneRenderer();
-
-        this.envRenderer = new Environment({
-            _sceneRenderer: this.sceneRenderer,
-            _models: this.models,
-        });
-
-        this.canvasDiv.appendChild(this.sceneRenderer._renderer.domElement);
+        this._canvasDiv.appendChild(this._sceneRenderer._renderer.domElement);
 
         this.animate();
     }
@@ -43,6 +34,6 @@ export class Game {
     animate() {
         requestAnimationFrame(this.animate.bind(this));
 
-        this.sceneRenderer.render();
+        this._sceneRenderer.render();
     }
 }

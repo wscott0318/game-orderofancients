@@ -1,15 +1,16 @@
 import * as THREE from "three";
 import { ANG2RAD } from "../../../helper/math";
+import { SceneRenderer } from "./SceneRenderer";
 
 export class Environment {
-    _sceneRenderer: any;
-    _scene: any;
+    _sceneRenderer: SceneRenderer;
+    _scene: THREE.Scene;
     _models: any;
 
-    constructor({ _sceneRenderer, _models }: any) {
-        this._sceneRenderer = _sceneRenderer;
+    constructor({ sceneRenderer, models }: any) {
+        this._sceneRenderer = sceneRenderer;
         this._scene = this._sceneRenderer.getScene();
-        this._models = _models;
+        this._models = models;
 
         this.initialize();
     }
@@ -44,19 +45,20 @@ export class Environment {
         );
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(100, 100);
+        texture.repeat.set(200, 200);
         texture.anisotropy = 16;
         texture.encoding = THREE.sRGBEncoding;
         texture.magFilter = THREE.LinearFilter;
         texture.minFilter = THREE.LinearMipMapLinearFilter;
 
-        const geometry = new THREE.PlaneGeometry(250, 250);
+        const geometry = new THREE.PlaneGeometry(500, 500);
         const material = new THREE.MeshStandardMaterial({
             side: THREE.DoubleSide,
             map: texture,
         });
 
         const plane = new THREE.Mesh(geometry, material);
+        plane.receiveShadow = true;
         plane.rotateX(ANG2RAD(90));
         plane.position.y = -0.1;
 
@@ -66,9 +68,6 @@ export class Environment {
     initialize() {
         this.initGround();
         this.initSkyBox();
-
-        // this._models.environment.position.x = -10;
-        // this._models.environment.position.z = 30;
 
         this._scene.add(this._models.environment);
     }

@@ -2,6 +2,7 @@ import * as THREE from "three";
 
 export const MODEL_URLS = {
     environment: "/assets/models/environment/foliage_pack_final.gltf",
+    tower: "/assets/models/building/scene.gltf",
 };
 
 export const RENDERER_PROPS = {
@@ -27,6 +28,6 @@ export const SCENE_PROPS = {
         enable: true,
         color: 0xcccccc,
         near: 70,
-        far: 100,
+        far: 150,
     },
 };

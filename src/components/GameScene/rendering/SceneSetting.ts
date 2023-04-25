@@ -35,7 +35,7 @@ export const renderer = (options: any) => {
 };
 
 export const HemiLight = () => {
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x437e49, 1);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x437e49, 0.2);
     hemiLight.color.setHSL(0.6, 1, 0.6);
     hemiLight.groundColor.setHSL(0.095, 1, 0.75);
     return hemiLight;
@@ -51,6 +51,25 @@ export const PointLight = () => {
     light.decay = 2;
 
     return light;
+};
+
+export const SpotLight = () => {
+    const spotLight = new THREE.SpotLight(0xffffff, 6);
+    spotLight.position.set(10, 80, 20);
+    spotLight.angle = Math.PI / 5;
+    spotLight.penumbra = 1;
+    spotLight.decay = 2;
+    spotLight.distance = 150;
+
+    spotLight.castShadow = true;
+    spotLight.shadow.mapSize.width = 512;
+    spotLight.shadow.mapSize.height = 512;
+    spotLight.shadow.camera.near = 10;
+    spotLight.shadow.camera.far = 200;
+    spotLight.shadow.bias = -0.001;
+    spotLight.shadow.focus = 1;
+
+    return spotLight;
 };
 
 export const StatGUI = () => {
