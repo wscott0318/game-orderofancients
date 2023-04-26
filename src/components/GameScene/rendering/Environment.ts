@@ -69,7 +69,7 @@ export class Environment {
         this.initGround();
         this.initSkyBox();
 
-        this._scene.add(this._models.environment);
+        this._scene.add(this._models.environment.scene);
     }
 
     render() {}

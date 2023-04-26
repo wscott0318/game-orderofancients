@@ -5,9 +5,9 @@ export const LoadModel = (src: any, shadow = true) => {
         const loader = new GLTFLoader();
 
         loader.load(src, function (gltf) {
-            const mesh = gltf.scene;
+            const model = gltf;
 
-            mesh.traverse((obj: any) => {
+            model.scene.traverse((obj: any) => {
                 if (shadow && (obj.isMesh || obj.isSkinnedMesh)) {
                     obj.castShadow = true;
                     obj.receiveShadow = true;
@@ -15,7 +15,7 @@ export const LoadModel = (src: any, shadow = true) => {
                 }
             });
 
-            resolve(mesh);
+            resolve(model);
         });
     });
 };
