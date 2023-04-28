@@ -1,4 +1,5 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import * as THREE from "three";
 
 export const LoadModel = (src: any, shadow = true) => {
     return new Promise((resolve) => {

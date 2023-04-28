@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as SceneSetup from "./SceneSetting";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { ANG2RAD } from "../../../helper/math";
 import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants";
 
@@ -13,8 +14,11 @@ export class SceneRenderer {
     _scene: any;
     _stats: any;
     _camControls: any;
+    _uiRenderer: CSS2DRenderer;
 
     constructor() {
+        this._uiRenderer = new CSS2DRenderer();
+
         this.initialize();
     }
 
@@ -27,6 +31,11 @@ export class SceneRenderer {
         this._renderer.toneMappingExposure = 1;
         this._renderer.shadowMap.enabled = RENDERER_PROPS.shadowMapEnable;
         this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        this._uiRenderer.setSize(aspectWidth, aspectHeight);
+        this._uiRenderer.domElement.style.position = "absolute";
+        this._uiRenderer.domElement.style.top = "0px";
+        document.body.appendChild(this._uiRenderer.domElement);
     }
 
     initCamera() {
@@ -49,12 +58,13 @@ export class SceneRenderer {
 
     initStats() {
         this._stats = SceneSetup.StatGUI();
+        document.body.appendChild(this._stats.dom);
     }
 
     initCameraControl() {
         this._camControls = new OrbitControls(
             this._camera,
-            this._renderer.domElement
+            this._uiRenderer.domElement
         );
         this._camControls.enablePan = false;
         this._camControls.minPolarAngle = ANG2RAD(10);
@@ -69,10 +79,15 @@ export class SceneRenderer {
         this._camera.aspect = aspectWidth / aspectHeight;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(aspectWidth, aspectHeight);
+        this._uiRenderer.setSize(aspectWidth, aspectHeight);
     }
 
     getScene() {
         return this._scene;
+    }
+
+    getCamera() {
+        return this._camera;
     }
 
     initialize() {
@@ -90,6 +105,8 @@ export class SceneRenderer {
         this._stats.update();
 
         this._renderer.render(this._scene, this._camera);
+
+        this._uiRenderer.render(this._scene, this._camera);
     }
 
     dispose() {

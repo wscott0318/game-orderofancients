@@ -104,6 +104,16 @@ export const BOT_PROPS = {
         [BOT_TYPE["swordsman"]]: 0.2,
         [BOT_TYPE["archer"]]: 3.5,
     },
+    healthPoint: {
+        [BOT_TYPE["grunt"]]: 550,
+        [BOT_TYPE["swordsman"]]: 450,
+        [BOT_TYPE["archer"]]: 300,
+    },
+    modelHeight: {
+        [BOT_TYPE["grunt"]]: 3,
+        [BOT_TYPE["swordsman"]]: 2.8,
+        [BOT_TYPE["archer"]]: 2,
+    },
 };
 
 export const TOWER_RADIUS = 4;
@@ -113,5 +123,7 @@ export const TOWER_POSITION = {
     y: 0,
     z: 0,
 };
+
+export const TOWER_HEIGHT = 11;
 
 export const FOREST_RADIUS = 20;

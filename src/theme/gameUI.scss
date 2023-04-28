@@ -1,0 +1,36 @@
+.healthBar {
+    background: #000000;
+    position: relative;
+
+    &__progress {
+        background: #096d08;
+        position: absolute;
+        box-shadow: inset 0.05em 0.05em 0.05em 0 rgba(255, 255, 255, 0.5),
+            inset -0.05em -0.05em 0.05em 0 rgba(0, 0, 0, 0.5);
+    }
+}
+
+.towerStatusBar {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 2px;
+    background: rgb(201, 160, 48);
+    box-shadow: inset 0.05em 0.05em 0.05em 0 rgba(255, 255, 255, 0.5),
+        inset -0.05em -0.05em 0.05em 0 rgba(0, 0, 0, 0.5);
+
+    .level {
+        position: relative;
+        color: white;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        background: rgb(42, 44, 45);
+        border: 1px solid #000;
+        padding: 0 5px;
+        height: 15px;
+    }
+}

@@ -1,3 +1,4 @@
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import {
     ANIMATION_TYPE,
     BOT_PROPS,
@@ -10,9 +11,12 @@ import { ANG2RAD } from "../../../helper/math";
 import { BotAnimationController } from "../BotAnimationController";
 import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import { HEALTH_PIXEL } from "../../../constants/gameUI";
+import { getColorForPercentage } from "../../../helper/color";
 
 export class Bot {
     hp: number;
+    maxHp: number;
     speed: number;
     position: any;
     mesh: any;
@@ -24,9 +28,12 @@ export class Bot {
     direction: THREE.Vector3;
     targetPos: THREE.Vector3;
     status: number;
+    healthBarUI: CSS2DObject;
+    camera: THREE.PerspectiveCamera;
 
     constructor({ sceneRenderer, assetsManager, botType }: any) {
-        this.hp = 100;
+        this.hp = BOT_PROPS.healthPoint[botType];
+        this.maxHp = BOT_PROPS.healthPoint[botType];
         this.speed = 0.1;
         this.position = {
             x: 0,
@@ -42,6 +49,7 @@ export class Bot {
             botType: this.botType,
         });
         this.scene = sceneRenderer.getScene();
+        this.camera = sceneRenderer.getCamera();
         this.direction = new THREE.Vector3();
         this.targetPos = new THREE.Vector3(
             TOWER_POSITION.x,
@@ -50,6 +58,16 @@ export class Bot {
         );
         this.status = BOT_STATUS.walk;
         this.attackRange = BOT_PROPS.attackRange[botType];
+
+        const healthBarDiv = document.createElement("div");
+        healthBarDiv.className = "healthBar";
+
+        const healthProgressDiv = document.createElement("div");
+        healthProgressDiv.className = "healthBar__progress";
+
+        healthBarDiv.appendChild(healthProgressDiv);
+
+        this.healthBarUI = new CSS2DObject(healthBarDiv);
 
         this.initialize();
     }
@@ -69,6 +87,7 @@ export class Bot {
         this.mesh.position.y = this.position.y;
         this.mesh.position.z = this.position.z;
 
+        this.scene.add(this.healthBarUI);
         this.scene.add(this.mesh);
 
         /**
@@ -113,6 +132,39 @@ export class Bot {
 
             this.mesh.position.lerp(target, 0.9);
         }
+
+        /**
+         * Configure HealthBar UI
+         */
+
+        this.healthBarUI.position.set(
+            this.mesh.position.x,
+            this.mesh.position.y + BOT_PROPS.modelHeight[this.botType],
+            this.mesh.position.z
+        );
+
+        const scaleFactor = 85;
+        const scaleVector = new THREE.Vector3();
+        const scale = Math.sqrt(
+            scaleVector
+                .subVectors(this.healthBarUI.position, this.camera.position)
+                .length() / scaleFactor
+        );
+
+        this.healthBarUI.element.style.width = `${
+            (HEALTH_PIXEL * this.maxHp + 2) / scale
+        }px`;
+        this.healthBarUI.element.style.height = `${(5 + 2) / scale}px`;
+
+        const progressBar = this.healthBarUI.element
+            .children[0] as HTMLDivElement;
+        progressBar.style.width = `${(HEALTH_PIXEL * this.hp) / scale}px`;
+        progressBar.style.height = `${5 / scale}px`;
+        progressBar.style.left = `${1 / scale}px`;
+        progressBar.style.top = `${1 / scale}px`;
+        progressBar.style.background = `${getColorForPercentage(
+            this.hp / this.maxHp
+        )}`;
 
         this.animController.tick();
     }

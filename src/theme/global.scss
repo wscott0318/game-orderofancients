@@ -1,3 +1,6 @@
+@import "./gameUI.scss";
+
 body {
     overflow: hidden;
+    cursor: url("../assets/imgs/gameCursor.png"), auto;
 }
