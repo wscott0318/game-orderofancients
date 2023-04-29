@@ -21,8 +21,8 @@ export const CAMERA_PROPS = {
     far: 20000,
     position: {
         x: 15,
-        y: 69,
-        z: 30,
+        y: 89,
+        z: 25,
     },
 };
 
@@ -30,7 +30,7 @@ export const SCENE_PROPS = {
     fog: {
         enable: true,
         color: 0xcccccc,
-        near: 70,
+        near: 90,
         far: 150,
     },
 };
@@ -126,4 +126,4 @@ export const TOWER_POSITION = {
 
 export const TOWER_HEIGHT = 11;
 
-export const FOREST_RADIUS = 20;
+export const FOREST_RADIUS = 35;
