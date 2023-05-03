@@ -66,7 +66,6 @@ export class Game {
         requestAnimationFrame(this.animate.bind(this));
 
         this._towerManager.tick();
-
         this._botManager.tick();
 
         this._spriteManager.tick();
