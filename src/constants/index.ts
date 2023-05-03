@@ -92,7 +92,7 @@ export const BOT_ANIMATION_CLIPS = {
             endFrame: 108,
         },
         dead: {
-            startFrame: 170,
+            startFrame: 172,
             endFrame: 199,
         },
     },
@@ -102,7 +102,7 @@ export const BOT_PROPS = {
     attackRange: {
         [BOT_TYPE["grunt"]]: 1.5,
         [BOT_TYPE["swordsman"]]: 0.2,
-        [BOT_TYPE["archer"]]: 3.5,
+        [BOT_TYPE["archer"]]: 5,
     },
     healthPoint: {
         [BOT_TYPE["grunt"]]: 550,
@@ -113,6 +113,16 @@ export const BOT_PROPS = {
         [BOT_TYPE["grunt"]]: 3,
         [BOT_TYPE["swordsman"]]: 2.8,
         [BOT_TYPE["archer"]]: 2,
+    },
+    attackSpeed: {
+        [BOT_TYPE["grunt"]]: 60,
+        [BOT_TYPE["swordsman"]]: 45,
+        [BOT_TYPE["archer"]]: 54,
+    },
+    attackDamage: {
+        [BOT_TYPE["grunt"]]: 25,
+        [BOT_TYPE["swordsman"]]: 10,
+        [BOT_TYPE["archer"]]: 17,
     },
 };
 
@@ -125,5 +135,7 @@ export const TOWER_POSITION = {
 };
 
 export const TOWER_HEIGHT = 11;
+
+export const TOWER_ATTACK_RANGE = 10;
 
 export const FOREST_RADIUS = 35;

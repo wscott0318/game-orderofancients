@@ -3,6 +3,7 @@
     position: relative;
 
     &__progress {
+        // transition: all 0.1s;
         background: #096d08;
         position: absolute;
         box-shadow: inset 0.05em 0.05em 0.05em 0 rgba(255, 255, 255, 0.5),

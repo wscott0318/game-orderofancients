@@ -16,6 +16,7 @@ export class TowerManager {
     _sceneRenderer: SceneRenderer;
     _assetsManager: AssetsManager;
     _healthBarUI: CSS2DObject;
+    _claimTime: number;
 
     constructor({ sceneRenderer, assetsManager }: any) {
         this._sceneRenderer = sceneRenderer;
@@ -23,6 +24,8 @@ export class TowerManager {
 
         this._tower = new Tower();
         this._towerMesh = this._assetsManager.getTowerModel();
+
+        this._claimTime = 0;
 
         const wrapper = document.createElement("div");
         wrapper.className = "towerStatusBar";
@@ -105,6 +108,8 @@ export class TowerManager {
     }
 
     tick() {
+        if (this._claimTime > 0) this._claimTime--;
+
         this.renderHealthBar();
     }
 }

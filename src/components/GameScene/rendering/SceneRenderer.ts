@@ -4,6 +4,8 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { ANG2RAD } from "../../../helper/math";
 import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants";
+import { cleanMaterial } from "../../../helper/three";
+import { BatchedRenderer } from "three.quarks";
 
 let aspectWidth = window.innerWidth;
 let aspectHeight = window.innerHeight;
@@ -15,9 +17,13 @@ export class SceneRenderer {
     _stats: any;
     _camControls: any;
     _uiRenderer: CSS2DRenderer;
+    _particleRenderer: BatchedRenderer;
+    _clock: THREE.Clock;
 
     constructor() {
         this._uiRenderer = new CSS2DRenderer();
+        this._particleRenderer = new BatchedRenderer();
+        this._clock = new THREE.Clock();
 
         this.initialize();
     }
@@ -49,6 +55,8 @@ export class SceneRenderer {
 
     initScene() {
         this._scene = SceneSetup.scene();
+
+        this._scene.add(this._particleRenderer);
     }
 
     initLights() {
@@ -102,6 +110,9 @@ export class SceneRenderer {
     }
 
     render() {
+        const delta = this._clock.getDelta();
+        this._particleRenderer.update(delta);
+
         this._stats.update();
 
         this._renderer.render(this._scene, this._camera);
@@ -112,22 +123,6 @@ export class SceneRenderer {
     dispose() {
         this._renderer.domElement.remove();
         this._renderer.dispose();
-
-        const cleanMaterial = (material: any) => {
-            material.dispose();
-
-            // dispose textures
-            for (const key of Object.keys(material)) {
-                const value = material[key];
-                if (
-                    value &&
-                    typeof value === "object" &&
-                    "minFilter" in value
-                ) {
-                    value.dispose();
-                }
-            }
-        };
 
         this._scene.traverse((object: any) => {
             if (!object.isMesh) return;

@@ -13,8 +13,12 @@ import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { HEALTH_PIXEL } from "../../../constants/gameUI";
 import { getColorForPercentage } from "../../../helper/color";
+import { cleanMaterial } from "../../../helper/three";
+import TWEEN from "@tweenjs/tween.js";
+import { generateUUID } from "three/src/math/MathUtils";
 
 export class Bot {
+    uuid: string;
     hp: number;
     maxHp: number;
     speed: number;
@@ -30,10 +34,17 @@ export class Bot {
     status: number;
     healthBarUI: CSS2DObject;
     camera: THREE.PerspectiveCamera;
+    attackSpeed: number;
+    attackDamage: number;
+    claimTime: number;
+    canRemove: boolean;
 
     constructor({ sceneRenderer, assetsManager, botType }: any) {
+        this.uuid = generateUUID();
         this.hp = BOT_PROPS.healthPoint[botType];
         this.maxHp = BOT_PROPS.healthPoint[botType];
+        this.attackSpeed = BOT_PROPS.attackSpeed[botType];
+        this.attackDamage = BOT_PROPS.attackDamage[botType];
         this.speed = 0.1;
         this.position = {
             x: 0,
@@ -58,6 +69,8 @@ export class Bot {
         );
         this.status = BOT_STATUS.walk;
         this.attackRange = BOT_PROPS.attackRange[botType];
+        this.claimTime = 0;
+        this.canRemove = false;
 
         const healthBarDiv = document.createElement("div");
         healthBarDiv.className = "healthBar";
@@ -115,7 +128,59 @@ export class Bot {
         this.mesh.quaternion.rotateTowards(targetQuaternion, 10);
     }
 
+    disposeHealthBar() {
+        this.healthBarUI.remove();
+        this.scene.remove(this.healthBarUI);
+        this.healthBarUI.element.remove();
+    }
+
+    dispose() {
+        this.animController.dispose();
+
+        this.mesh.traverse((object: any) => {
+            if (!object.isMesh) return;
+
+            object.geometry.dispose();
+
+            if (object.material.isMaterial) {
+                cleanMaterial(object.material);
+            } else {
+                for (const material of object.material) cleanMaterial(material);
+            }
+        });
+
+        this.scene.remove(this.mesh);
+    }
+
+    kill() {
+        this.animController.playAnimation(ANIMATION_TYPE["dead"]);
+
+        this.status = BOT_STATUS["dead"];
+
+        this.disposeHealthBar();
+
+        const tweenAnimation = new TWEEN.Tween(this.mesh.position)
+            .to(
+                {
+                    x: this.mesh.position.x,
+                    y: this.mesh.position.y - 1,
+                    z: this.mesh.position.z,
+                },
+                1000
+            )
+            .delay(3000)
+            .start();
+
+        tweenAnimation.onComplete(() => {
+            this.dispose();
+
+            this.canRemove = true;
+        });
+    }
+
     tick() {
+        if (this.claimTime > 0) this.claimTime--;
+
         const distance = this.mesh.position.distanceTo(this.targetPos);
 
         if (this.status === BOT_STATUS["walk"]) {

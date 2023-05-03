@@ -49,13 +49,29 @@ export class BotAnimationController {
     playAnimation(animType: any) {
         this.mixer.stopAllAction();
 
-        this.mixer.clipAction(this.clips[animType]).play();
+        const action = this.mixer.clipAction(this.clips[animType]);
+
+        if (animType === ANIMATION_TYPE["dead"]) {
+            action.clampWhenFinished = true;
+            action.setLoop(THREE.LoopOnce, 2);
+        }
+
+        action.play();
     }
 
     initialize() {
         this.initAnimationClips();
 
         this.playAnimation(ANIMATION_TYPE["walk"]);
+    }
+
+    dispose() {
+        this.mixer.stopAllAction();
+
+        this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["walk"]]);
+        this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["attack"]]);
+        this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["dead"]]);
+        this.mixer.uncacheRoot(this.mesh);
     }
 
     tick() {

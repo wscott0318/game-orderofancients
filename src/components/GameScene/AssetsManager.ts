@@ -1,11 +1,36 @@
 import { BOT_TYPE, MODEL_URLS } from "../../constants";
 import { LoadModel } from "./loaders/ModelLoader";
+import * as THREE from "three";
 
 export class AssetsManager {
     _models: any;
+    _particleTextures: any;
 
     constructor() {
         this._models = {};
+        this._particleTextures = [];
+
+        this.loadParticleTextures();
+    }
+
+    loadParticleTextures() {
+        const texture1 = new THREE.TextureLoader().load(
+            "/assets/textures/particle/texture1.png"
+        );
+        const texture2 = new THREE.TextureLoader().load(
+            "/assets/textures/particle/texture2.png"
+        );
+
+        this._particleTextures = [
+            {
+                img: "/assets/textures/particle/texture1.png",
+                texture: texture1,
+            },
+            {
+                img: "/assets/textures/particle/texture2.png",
+                texture: texture2,
+            },
+        ];
     }
 
     loadModels() {
