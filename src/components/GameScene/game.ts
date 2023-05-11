@@ -23,6 +23,7 @@ export class Game {
     _collisionManager: CollisionManager;
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
+    _stoped: boolean;
 
     constructor(options: GameOptions) {
         this._assetsManager = options.assetsManager;
@@ -52,20 +53,30 @@ export class Game {
             particleEffect: this._particleEffect,
         });
         this._canvasDiv = options.canvas;
-
+        this._stoped = false;
         this.initialize();
     }
 
     initialize() {
         this._canvasDiv.appendChild(this._sceneRenderer._renderer.domElement);
-
         this.animate();
     }
 
+    stop() {
+        this._stoped = true;
+    }
+
+    play() {
+        this._stoped = false;
+    }
+
     animate() {
+        if (this._stoped) return;
+
         requestAnimationFrame(this.animate.bind(this));
 
         this._towerManager.tick();
+
         this._botManager.tick();
 
         this._spriteManager.tick();
