@@ -2,6 +2,11 @@ import { BOT_TYPE, MODEL_URLS } from "../../constants";
 import { LoadModel } from "./loaders/ModelLoader";
 import * as THREE from "three";
 
+export interface TextureImage {
+    img: string;
+    texture: THREE.Texture;
+}
+
 export class AssetsManager {
     _models: any;
     _particleTextures: any;

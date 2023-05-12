@@ -4,7 +4,6 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
-    Texture,
     Vector4,
 } from "three";
 import {
@@ -26,11 +25,7 @@ import {
     SpeedOverLife,
     SphereEmitter,
 } from "three.quarks";
-
-export interface TextureImage {
-    img: string;
-    texture: Texture;
-}
+import { TextureImage } from "../AssetsManager";
 
 export function createExplosion(
     renderer: BatchedRenderer,

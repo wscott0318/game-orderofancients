@@ -1,5 +1,15 @@
 import AssetsManager from "./AssetsManager";
+import { createBlackHole } from "./Particles/Blackhole";
+import { createBulletMuzzle } from "./Particles/BulletMuzzle";
+import { createElectricBall } from "./Particles/ElectricBall";
+import { createEnergyRifleMuzzle } from "./Particles/EnergyRifleMuzzle";
 import { createExplosion } from "./Particles/Explosion2";
+import { createLevelUp } from "./Particles/LevelUp";
+import { createPickUp } from "./Particles/PickUp";
+import { createShipSmoke } from "./Particles/ShipSmoke";
+import { createShipTrail } from "./Particles/ShipTrail";
+import { createToonExplosion } from "./Particles/ToonExplosion";
+import { createToonProjectile } from "./Particles/ToonProjectile";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 
 export * as THREE from "three";
@@ -26,6 +36,51 @@ export class ParticleEffect {
         explosion.scale.set(0.1, 0.1, 0.1);
 
         this.sceneRenderer.getScene().add(explosion);
+    }
+
+    addLevelUp(position: THREE.Vector3) {
+        const particle = createLevelUp(
+            this.sceneRenderer._particleRenderer,
+            this.assetsManager._particleTextures
+        );
+
+        particle.position.x = position.x;
+        particle.position.y = position.y;
+        particle.position.z = position.z;
+
+        particle.scale.set(0.1, 0.1, 0.1);
+
+        this.sceneRenderer.getScene().add(particle);
+    }
+
+    addToonProjectTile(position: THREE.Vector3) {
+        const particle = createToonProjectile(
+            this.sceneRenderer._particleRenderer,
+            this.assetsManager._particleTextures
+        );
+
+        particle.position.x = position.x;
+        particle.position.y = position.y;
+        particle.position.z = position.z;
+
+        particle.scale.set(1, 1, 1);
+
+        this.sceneRenderer.getScene().add(particle);
+    }
+
+    addParticle(position: THREE.Vector3) {
+        const particle = createToonProjectile(
+            this.sceneRenderer._particleRenderer,
+            this.assetsManager._particleTextures
+        );
+
+        particle.position.x = position.x;
+        particle.position.y = position.y;
+        particle.position.z = position.z;
+
+        particle.scale.set(0.1, 0.1, 0.1);
+
+        this.sceneRenderer.getScene().add(particle);
     }
 
     tick() {}

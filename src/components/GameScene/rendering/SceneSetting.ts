@@ -24,6 +24,8 @@ export const scene = () => {
             SCENE_PROPS.fog.near,
             SCENE_PROPS.fog.far
         );
+
+        // scene.fog = new THREE.FogExp2(SCENE_PROPS.fog.color, 0.009);
     }
 
     return scene;
