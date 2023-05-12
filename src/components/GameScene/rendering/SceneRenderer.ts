@@ -19,11 +19,13 @@ export class SceneRenderer {
     _uiRenderer: CSS2DRenderer;
     _particleRenderer: BatchedRenderer;
     _clock: THREE.Clock;
+    _gridHelper: THREE.GridHelper;
 
     constructor() {
         this._uiRenderer = new CSS2DRenderer();
         this._particleRenderer = new BatchedRenderer();
         this._clock = new THREE.Clock();
+        this._gridHelper = new THREE.GridHelper();
 
         this.initialize();
     }
@@ -81,6 +83,20 @@ export class SceneRenderer {
         this._camControls.minDistance = 25;
     }
 
+    initGridHelper() {
+        const size = 500;
+        const divisions = 500;
+
+        // const color = new THREE.Color(0x020202);
+        const color = new THREE.Color(0x333333);
+
+        const gridHelper = new THREE.GridHelper(size, divisions, color, color);
+        gridHelper.position.y = 0.01;
+
+        this._gridHelper = gridHelper;
+        this.getScene().add(this._gridHelper);
+    }
+
     onResize() {
         aspectWidth = window.innerWidth;
         aspectHeight = window.innerHeight;
@@ -98,6 +114,14 @@ export class SceneRenderer {
         return this._camera;
     }
 
+    addGrid() {
+        this.getScene().add(this._gridHelper);
+    }
+
+    removeGrid() {
+        this.getScene().remove(this._gridHelper);
+    }
+
     initialize() {
         this.initRenderer();
         this.initCamera();
@@ -105,6 +129,7 @@ export class SceneRenderer {
         this.initLights();
         this.initStats();
         this.initCameraControl();
+        this.initGridHelper();
 
         window.addEventListener("resize", this.onResize.bind(this), false);
     }
