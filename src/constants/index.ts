@@ -139,3 +139,7 @@ export const TOWER_HEIGHT = 11;
 export const TOWER_ATTACK_RANGE = 10;
 
 export const FOREST_RADIUS = 35;
+
+export const CAMERA_POS = {
+    sideView: new THREE.Vector3(40, 30, 0),
+};

@@ -1,12 +1,13 @@
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
+import { CameraAnimationManager } from "./CameraAnimatinManager";
 import { CollisionManager } from "./CollisionManager";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { TowerManager } from "./TowerManager";
 import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
-import TWEEN from "@tweenjs/tween.js";
+import TWEEN, { Easing } from "@tweenjs/tween.js";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -24,6 +25,7 @@ export class Game {
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
     _stoped: boolean;
+    _cameraAnimations: CameraAnimationManager;
 
     constructor(options: GameOptions) {
         this._assetsManager = options.assetsManager;
@@ -54,6 +56,12 @@ export class Game {
         });
         this._canvasDiv = options.canvas;
         this._stoped = false;
+
+        this._cameraAnimations = new CameraAnimationManager({
+            sceneRenderer: this._sceneRenderer,
+            towerPosition: this._towerManager._towerMesh.position,
+        });
+
         this.initialize();
     }
 

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
+import { UI } from "./UI";
 
 const Wrapper = styled.div`
     position: relative;
@@ -42,7 +43,6 @@ export const GameScene = () => {
     return (
         <Wrapper>
             {loading && <Loader />}
-
             <div ref={canvasDivRef}></div>
         </Wrapper>
     );
