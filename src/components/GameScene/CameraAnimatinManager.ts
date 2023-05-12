@@ -25,7 +25,7 @@ export class CameraAnimationManager {
         gsap.to(this._camera.position, {
             ...CAMERA_POS.sideView,
             duration: 3,
-            ease: Circ.easeOut,
+            ease: Circ.easeIn,
             onUpdate: () => {
                 this._camera.lookAt(this._towserPosition);
             },
@@ -34,22 +34,22 @@ export class CameraAnimationManager {
     }
 
     initRotateAroundToserAnimation() {
-        // const camera2DPos = new THREE.Vector2(
-        //     this._camera.position.x,
-        //     this._camera.position.y
-        // );
-        // const tower2DPos = new THREE.Vector2(
-        //     this._towserPosition.x,
-        //     this._towserPosition.y
-        // );
-        // const rotPos = {
-        //     radius: camera2DPos.distanceTo(tower2DPos),
-        //     angle: 0,
-        // };
+        const camera2DPos = new THREE.Vector2(
+            this._camera.position.x,
+            this._camera.position.y
+        );
+        const tower2DPos = new THREE.Vector2(
+            this._towserPosition.x,
+            this._towserPosition.y
+        );
         const rotPos = {
-            radius: CAMERA_POS.sideView.x,
+            radius: camera2DPos.distanceTo(tower2DPos),
             angle: 0,
         };
+        // const rotPos = {
+        //     radius: CAMERA_POS.sideView.x,
+        //     angle: 0,
+        // };
         gsap.to(rotPos, {
             angle: -Math.PI * 2,
             duration: 10,
