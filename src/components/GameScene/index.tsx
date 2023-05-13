@@ -12,7 +12,7 @@ const Wrapper = styled.div`
 `;
 
 export const GameScene = () => {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
@@ -33,7 +33,7 @@ export const GameScene = () => {
     }, []);
 
     useEffect(() => {
-        createGame();
+        // createGame();
 
         return () => {
             // destroy Game
@@ -42,8 +42,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading && <Loader />}
-            <div ref={canvasDivRef}></div>
+            {loading ? <Loader /> : <UI></UI>}
+            {/* <div ref={canvasDivRef}></div> */}
         </Wrapper>
     );
 };

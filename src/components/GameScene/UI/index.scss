@@ -1,7 +1,39 @@
 .content{
     position: absolute;
     display: flex;
-    justify-items: center;
+    margin: 10%;
     width: 100vw;
     height: 100vh;
+}
+
+.menu{
+    position: relative;
+    width: 500px;
+    height: 830px;
+    display: flex;
+    flex-direction: column;
+    background-image: url('../../../assets/imgs/menu.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    align-items: center;
+}
+.button-col{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap:2%;
+    width: 80%;
+    height: 60%;
+    margin-top: 47%;
+    align-items: center;
+}
+.warButton{
+    background-image: url('../../../assets/imgs/button-default.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 80%;
+    height: 15%;
 }

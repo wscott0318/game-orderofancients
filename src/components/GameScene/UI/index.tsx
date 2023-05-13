@@ -1,11 +1,10 @@
 import styled from "styled-components";
 import "./index.scss";
-
+import { StartMenu } from "./StartMenu";
 export const UI = () => {
     return (
         <div className="content">
-            <button>STOP</button>
-            <button>PLAY</button>
+            <StartMenu />
         </div>
     );
 };
