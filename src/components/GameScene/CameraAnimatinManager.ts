@@ -29,7 +29,7 @@ export class CameraAnimationManager {
             onUpdate: () => {
                 this._camera.lookAt(this._towserPosition);
             },
-            onComplete: this.initRotateAroundToserAnimation.bind(this),
+            // onComplete: this.initRotateAroundToserAnimation.bind(this),
         });
     }
 
