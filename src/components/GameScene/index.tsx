@@ -33,7 +33,7 @@ export const GameScene = () => {
     }, []);
 
     useEffect(() => {
-        createGame();
+        // createGame();
 
         return () => {
             // destroy Game
@@ -42,8 +42,9 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading ? <Loader /> : <UI></UI>}
-            <div ref={canvasDivRef}></div>
+            {/* {loading ? <Loader /> : <UI/>} */}
+            <UI />
+            {/* <div ref={canvasDivRef}></div> */}
         </Wrapper>
     );
 };

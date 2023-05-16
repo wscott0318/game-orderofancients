@@ -2,23 +2,23 @@ export const StartMenu = () => {
     return (
         <div className="menu">
             <div className="button-col">
-                <button className="warButton" name="campaign">
-                    CAMPAIGN
+                <button className="warButton" name="play">
+                    PLAY
                 </button>
                 <button className="warButton" name="versus">
-                    VERSUS
+                    DIFFICULTY
                 </button>
                 <button className="warButton" name="custom">
-                    CUSTOM GAME
+                    SETTINGS
                 </button>
                 <button className="warButton" name="localarea">
-                    LOCAL AREA NETWORK
+                    TUTORIAL
                 </button>
-                <button className="warButton" name="single">
-                    SINGLE PLAYER
+                <button className="warButton" name="setting">
+                    PROVIDER
                 </button>
                 <button className="warButton" name="collection">
-                    COLLECTION
+                    CONTACT US
                 </button>
             </div>
         </div>
