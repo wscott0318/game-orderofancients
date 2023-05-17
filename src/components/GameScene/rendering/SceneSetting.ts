@@ -42,7 +42,7 @@ export const HemiLight = () => {
 };
 
 export const PointLight = () => {
-    const light = new THREE.PointLight(0xffffff, 1, 500);
+    const light = new THREE.PointLight(0xffffff, 0, 500);
     light.position.set(10, 60, 20);
     light.castShadow = true;
     light.shadow.mapSize.width = 256;

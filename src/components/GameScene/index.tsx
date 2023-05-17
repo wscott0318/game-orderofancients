@@ -42,8 +42,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading ? <Loader /> : <UI />}
-            {/* <Loader /> */}
+            {/* {loading ? <Loader /> : <UI />} */}
+            {loading && <Loader />}
             <div ref={canvasDivRef}></div>
         </Wrapper>
     );

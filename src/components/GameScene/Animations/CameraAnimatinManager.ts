@@ -1,7 +1,7 @@
 import { gsap, Circ } from "gsap";
-import { SceneRenderer } from "./rendering/SceneRenderer";
+import { SceneRenderer } from "../rendering/SceneRenderer";
 import * as THREE from "three";
-import { CAMERA_POS } from "../../constants";
+import { CAMERA_POS } from "../../../constants";
 
 export class CameraAnimationManager {
     _sceneRenderer: SceneRenderer;
@@ -18,8 +18,8 @@ export class CameraAnimationManager {
         this.initialize();
     }
     initialize() {
-        // this.initDownAnimation();
-        this.dioramaAnimation();
+        this.initDownAnimation();
+        // this.dioramaAnimation();
     }
 
     initDownAnimation() {
