@@ -18,7 +18,8 @@ export class CameraAnimationManager {
         this.initialize();
     }
     initialize() {
-        this.initDownAnimation();
+        // this.initDownAnimation();
+        this.dioramaAnimation();
     }
 
     initDownAnimation() {
@@ -46,10 +47,7 @@ export class CameraAnimationManager {
             radius: camera2DPos.distanceTo(tower2DPos),
             angle: 0,
         };
-        // const rotPos = {
-        //     radius: CAMERA_POS.sideView.x,
-        //     angle: 0,
-        // };
+
         gsap.to(rotPos, {
             angle: -Math.PI * 2,
             duration: 10,
@@ -62,6 +60,22 @@ export class CameraAnimationManager {
                     Math.sin(rotPos.angle) * rotPos.radius;
                 this._camera.lookAt(this._towserPosition);
             },
+        });
+    }
+
+    dioramaAnimation() {
+        const camPos = this._camera.position;
+        gsap.to(camPos, {
+            x: Math.random() * 20 - 10,
+            z: Math.random() * 20 - 10,
+            y: Math.random() * 5 + 10,
+            duration: 4,
+
+            onUpdate: () => {
+                this._camera.lookAt(this._towserPosition);
+            },
+
+            onComplete: this.dioramaAnimation.bind(this),
         });
     }
 }
