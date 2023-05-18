@@ -18,8 +18,8 @@ export class CameraAnimationManager {
         this.initialize();
     }
     initialize() {
-        this.initDownAnimation();
-        // this.dioramaAnimation();
+        // this.initDownAnimation();
+        this.dioramaAnimation();
     }
 
     initDownAnimation() {
@@ -66,9 +66,9 @@ export class CameraAnimationManager {
     dioramaAnimation() {
         const camPos = this._camera.position;
         gsap.to(camPos, {
-            x: Math.random() * 20 - 10,
-            z: Math.random() * 20 - 10,
-            y: Math.random() * 5 + 10,
+            x: Math.random() * 60 - 30,
+            z: Math.random() * 60 - 30,
+            y: Math.random() * 10 + 10,
             duration: 4,
 
             onUpdate: () => {

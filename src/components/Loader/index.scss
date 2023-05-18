@@ -1,60 +1,82 @@
-.middle {
+.content {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('../../assets/imgs/loader-back.jpg');
+    background-size: 100% 100%;
+}
+
+
+.image-wrapper {
     position: relative;
     transform: translate3d(-50%, -50%, 0);
     top: 50%;
     left: 50%;
-    background-image: url('../../assets/imgs/logo.png');
-    background-size: 100% 100%;
-    width: 337px; 
-    height: 226px;
+    width: fit-content;
 }
 
-.loader {
-    width: 106px;
-    height: 56px;
-    display: block;
-    margin: 30px auto;
-    background-image: linear-gradient(#fff 50px, transparent 0),
-        linear-gradient(#fff 50px, transparent 0),
-        linear-gradient(#fff 50px, transparent 0),
-        linear-gradient(#fff 50px, transparent 0),
-        radial-gradient(circle 14px, #fff 100%, transparent 0);
-    background-size: 48px 15px, 15px 35px, 15px 35px, 25px 15px, 28px 28px;
-    background-position: 25px 5px, 58px 20px, 25px 17px, 2px 37px, 76px 0px;
-    background-repeat: no-repeat;
-    position: relative;
-    transform: rotate(-45deg);
-    box-sizing: border-box;
+.shine {
+	overflow: hidden;
+	&::before {
+		background: linear-gradient(
+			to right,
+			fade_out(#000, 0.7) 0%,
+			fade_out(#000, 0.7) 100%
+		);
+        background-size: 0%, 100%;
+        background-repeat: no-repeat;
+        background-position-x: right;
+        content: "";
+		display: block;
+		height: 100%;
+		position: absolute;
+		top: 0;
+		width: 100%;
+		z-index: 2;
+        mask-image: url('../../assets/imgs/logo.png');
+        animation: shine 6s;
+	}
+	@keyframes shine {
+        0% {
+            background-size: 100%, 100%;
+        }
+		100% {
+			background-size: 0%, 100%;
+		}
+	}
 }
-.loader::after,
-.loader::before {
-    content: "";
+
+.progress-container {
     position: absolute;
-    width: 56px;
-    height: 56px;
-    border: 6px solid #fff;
-    border-radius: 50%;
-    left: -45px;
-    top: -10px;
-    background-repeat: no-repeat;
-    background-image: linear-gradient(#fff 64px, transparent 0),
-        linear-gradient(#fff 66px, transparent 0),
-        radial-gradient(circle 4px, #fff 100%, transparent 0);
-    background-size: 40px 1px, 1px 40px, 8px 8px;
-    background-position: center center;
-    box-sizing: border-box;
-    animation: rotation 0.3s linear infinite;
-}
-.loader::before {
-    left: 25px;
-    top: 60px;
+    bottom: 25%;
+    width: 1000px;
+    transform: translateX(-50%);
+    left: 50%;
 }
 
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+.progress2 {
+  padding: 6px;
+  border-radius: 30px;
+  background: rgba(0, 0, 0, 0.25);  
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.progress-bar2 {
+  height: 18px;
+  border-radius: 30px;
+  background-image: 
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.05));
+  transition: 0.4s linear;  
+  transition-property: width, background-color;    
+}
+
+.progress-moved .progress-bar2 {
+  width: 100%; 
+  background-color: #4752efaa;  
+  animation: progressAnimation 6s;
+}
+
+@keyframes progressAnimation {
+  0%   { width: 0%; background-color: #bcc6f9aa;}
+  100% { width: 100%; background-color: #4752efaa; }
 }
