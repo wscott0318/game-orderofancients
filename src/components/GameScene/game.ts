@@ -9,6 +9,8 @@ import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import TWEEN, { Easing } from "@tweenjs/tween.js";
 import { lightAnimationManager } from "./Animations/LightAnimationManager";
+import { StateManager } from "./States/StateManager";
+import { GAME_STATES } from "../../constants";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -25,7 +27,7 @@ export class Game {
     _collisionManager: CollisionManager;
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
-    _stoped: boolean;
+    _stateManager: StateManager;
     _cameraAnimations: CameraAnimationManager;
     _lightAnimations: lightAnimationManager;
 
@@ -57,7 +59,8 @@ export class Game {
             particleEffect: this._particleEffect,
         });
         this._canvasDiv = options.canvas;
-        this._stoped = false;
+
+        this._stateManager = new StateManager();
 
         this._cameraAnimations = new CameraAnimationManager({
             sceneRenderer: this._sceneRenderer,
@@ -76,28 +79,20 @@ export class Game {
         this.animate();
     }
 
-    stop() {
-        this._stoped = true;
-    }
-
-    play() {
-        this._stoped = false;
-    }
-
     animate() {
-        if (this._stoped) return;
-
         requestAnimationFrame(this.animate.bind(this));
 
-        this._towerManager.tick();
+        if (this._stateManager.getCurrentState() === GAME_STATES["PLAYING"]) {
+            this._towerManager.tick();
 
-        this._botManager.tick();
+            this._botManager.tick();
 
-        this._spriteManager.tick();
+            this._spriteManager.tick();
 
-        this._particleEffect.tick();
+            this._particleEffect.tick();
 
-        this._collisionManager.tick();
+            this._collisionManager.tick();
+        }
 
         this._sceneRenderer.render();
 

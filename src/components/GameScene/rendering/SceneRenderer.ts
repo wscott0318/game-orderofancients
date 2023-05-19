@@ -87,14 +87,14 @@ export class SceneRenderer {
         const size = 500;
         const divisions = 500;
 
-        // const color = new THREE.Color(0x020202);
         const color = new THREE.Color(0x333333);
 
         const gridHelper = new THREE.GridHelper(size, divisions, color, color);
         gridHelper.position.y = 0.01;
 
         this._gridHelper = gridHelper;
-        this.getScene().add(this._gridHelper);
+
+        // this.addGrid();
     }
 
     onResize() {

@@ -22,46 +22,46 @@ export class CameraAnimationManager {
         this.dioramaAnimation();
     }
 
-    initDownAnimation() {
-        gsap.to(this._camera.position, {
-            ...CAMERA_POS.sideView,
-            duration: 3,
-            ease: Circ.easeIn,
-            onUpdate: () => {
-                this._camera.lookAt(this._towserPosition);
-            },
-            // onComplete: this.initRotateAroundToserAnimation.bind(this),
-        });
-    }
+    // initDownAnimation() {
+    //     gsap.to(this._camera.position, {
+    //         ...CAMERA_POS.sideView,
+    //         duration: 3,
+    //         ease: Circ.easeIn,
+    //         onUpdate: () => {
+    //             this._camera.lookAt(this._towserPosition);
+    //         },
+    //         // onComplete: this.initRotateAroundToserAnimation.bind(this),
+    //     });
+    // }
 
-    initRotateAroundToserAnimation() {
-        const camera2DPos = new THREE.Vector2(
-            this._camera.position.x,
-            this._camera.position.y
-        );
-        const tower2DPos = new THREE.Vector2(
-            this._towserPosition.x,
-            this._towserPosition.y
-        );
-        const rotPos = {
-            radius: camera2DPos.distanceTo(tower2DPos),
-            angle: 0,
-        };
+    // initRotateAroundToserAnimation() {
+    //     const camera2DPos = new THREE.Vector2(
+    //         this._camera.position.x,
+    //         this._camera.position.y
+    //     );
+    //     const tower2DPos = new THREE.Vector2(
+    //         this._towserPosition.x,
+    //         this._towserPosition.y
+    //     );
+    //     const rotPos = {
+    //         radius: camera2DPos.distanceTo(tower2DPos),
+    //         angle: 0,
+    //     };
 
-        gsap.to(rotPos, {
-            angle: -Math.PI * 2,
-            duration: 10,
-            repeat: -1,
-            ease: "none",
-            onUpdate: () => {
-                this._camera.position.x =
-                    Math.cos(rotPos.angle) * rotPos.radius;
-                this._camera.position.z =
-                    Math.sin(rotPos.angle) * rotPos.radius;
-                this._camera.lookAt(this._towserPosition);
-            },
-        });
-    }
+    //     gsap.to(rotPos, {
+    //         angle: -Math.PI * 2,
+    //         duration: 10,
+    //         repeat: -1,
+    //         ease: "none",
+    //         onUpdate: () => {
+    //             this._camera.position.x =
+    //                 Math.cos(rotPos.angle) * rotPos.radius;
+    //             this._camera.position.z =
+    //                 Math.sin(rotPos.angle) * rotPos.radius;
+    //             this._camera.lookAt(this._towserPosition);
+    //         },
+    //     });
+    // }
 
     dioramaAnimation() {
         const camPos = this._camera.position;
@@ -69,7 +69,7 @@ export class CameraAnimationManager {
             x: Math.random() * 60 - 30,
             z: Math.random() * 60 - 30,
             y: Math.random() * 10 + 10,
-            duration: 4,
+            duration: 10,
 
             onUpdate: () => {
                 this._camera.lookAt(this._towserPosition);

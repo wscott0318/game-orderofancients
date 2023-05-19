@@ -75,6 +75,7 @@ export class TowerManager {
                 .length() / scaleFactor
         );
 
+        this._healthBarUI.element.style.display = "flex";
         this._healthBarUI.element.style.gap = `${2 / scale}px`;
         this._healthBarUI.element.style.padding = `${2 / scale}px`;
 

@@ -4,7 +4,8 @@ import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
-import { UI } from "./UI";
+import { GAME_STATES } from "../../constants";
+import GameMenuUI from "./UI/GameMenu";
 
 const Wrapper = styled.div`
     position: relative;
@@ -15,7 +16,7 @@ const Wrapper = styled.div`
 export const GameScene = () => {
     const [loading, setLoading] = useState(true);
 
-    const [showGrid, setShowGrid] = useState(true);
+    const [showGrid, setShowGrid] = useState(false);
 
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
@@ -36,7 +37,7 @@ export const GameScene = () => {
     }, []);
 
     useEffect(() => {
-        // createGame();
+        createGame();
 
         return () => {
             // destroy Game
@@ -55,11 +56,21 @@ export const GameScene = () => {
         }
     };
 
+    const currentGameState = gameRef.current
+        ? gameRef.current._stateManager.getCurrentState()
+        : null;
+
     return (
         <Wrapper>
             {loading && <Loader />}
 
             <div ref={canvasDivRef}></div>
+
+            {currentGameState === GAME_STATES["GAME_MENU"] ? (
+                <GameMenuUI />
+            ) : (
+                <></>
+            )}
 
             <div className="absolute top-4 right-4">
                 <Toggle

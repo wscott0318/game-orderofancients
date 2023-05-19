@@ -7,6 +7,10 @@ export class StateManager {
         this.currentState = GAME_STATES["GAME_MENU"];
     }
 
+    getCurrentState() {
+        return this.currentState;
+    }
+
     setState(newState: number) {
         this.currentState = newState;
     }
