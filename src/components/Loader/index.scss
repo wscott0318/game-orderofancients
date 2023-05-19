@@ -72,11 +72,11 @@
 
 .progress-moved .progress-bar2 {
   width: 100%; 
-  background-color: #794b38aa;  
+  background-color: #1e334661;  
   animation: progressAnimation 6s;
 }
 
 @keyframes progressAnimation {
-  0%   { width: 0%; background-color: #bcc6f9aa;}
-  100% { width: 100%; background-color: #794b38aa; }
+  0%   { width: 0%; background-color: #ffe57b63;}
+  100% { width: 100%; background-color: #1e334661; }
 }
