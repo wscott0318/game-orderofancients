@@ -7,6 +7,7 @@ const GameMenu = styled.div`
     position: absolute;
     top: 0;
     left: 0;
+    padding: 5%;
     display: flex;
     width: 100vw;
     height: 100vh;
@@ -20,9 +21,8 @@ const GameMenu = styled.div`
         height: 60px;
         background-image: url("/assets/images/chain.png");
         background-size: 100% 100%;
-        top: -200px;
+        top: -100px;
     }
-
     .menu {
         position: relative;
         width: 500px;
@@ -38,8 +38,8 @@ const GameMenu = styled.div`
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: 7px;
-        margin-top: 273px;
+        gap: 9px;
+        margin-top: 280px;
         align-items: center;
     }
     .warButton {
@@ -71,7 +71,7 @@ export const GameMenuUI = () => {
             ),
         });
         gsap.to(".chain", {
-            top: "-60px",
+            top: "0px",
             duration: 1,
         });
         gsap.to(".chain", {
