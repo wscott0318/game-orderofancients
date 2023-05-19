@@ -146,3 +146,7 @@ export const GAME_STATES = {
     PAUSE: 0x03,
     END: 0x04,
 };
+
+export const CAMERA_POS = {
+    sideView: new THREE.Vector3(40, 30, 0),
+};

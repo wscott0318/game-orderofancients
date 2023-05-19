@@ -4,6 +4,7 @@ import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
+import { UI } from "./UI";
 
 const Wrapper = styled.div`
     position: relative;
@@ -35,7 +36,7 @@ export const GameScene = () => {
     }, []);
 
     useEffect(() => {
-        createGame();
+        // createGame();
 
         return () => {
             // destroy Game

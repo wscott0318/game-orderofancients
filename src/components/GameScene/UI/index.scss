@@ -1,0 +1,56 @@
+.content{
+    position: absolute;
+    display: flex;
+    margin: 5%;
+    width: 100vw;
+    height: 100vh;
+    z-index: 3;
+}
+
+.chain{
+    position: absolute;
+    width: 500px;
+    height: 60px;
+    background-image: url('../../../assets/imgs/chain.png');
+    background-size: 100% 100%;
+    top: -200px;
+}
+
+.menu{
+    position: relative;
+    width: 500px;
+    height: 850px;
+    top: -1000px;
+    display: flex;
+    flex-direction: column;
+    background-image: url('../../../assets/imgs/menu.png');
+    background-size: 100% 100%;
+    align-items: center;
+}
+.button-col{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap:7px;
+    margin-top: 273px;
+    align-items: center;
+}
+.warButton{
+    background-image: url('../../../assets/imgs/button-default.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 367px;
+    height: 77px;
+    color: rgb(212, 212, 3);
+    font-size: 20px;
+    font-weight: 900;
+    cursor: url("../../../assets/imgs/cursor.png"), auto;
+    &:hover{
+        background-image: url('../../../assets/imgs/button-hover.png');
+    }
+    
+}
+
+

@@ -1,12 +1,14 @@
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
+import { CameraAnimationManager } from "./Animations/CameraAnimatinManager";
 import { CollisionManager } from "./CollisionManager";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { TowerManager } from "./TowerManager";
 import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
-import TWEEN from "@tweenjs/tween.js";
+import TWEEN, { Easing } from "@tweenjs/tween.js";
+import { lightAnimationManager } from "./Animations/LightAnimationManager";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -23,6 +25,9 @@ export class Game {
     _collisionManager: CollisionManager;
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
+    _stoped: boolean;
+    _cameraAnimations: CameraAnimationManager;
+    _lightAnimations: lightAnimationManager;
 
     constructor(options: GameOptions) {
         this._assetsManager = options.assetsManager;
@@ -52,20 +57,40 @@ export class Game {
             particleEffect: this._particleEffect,
         });
         this._canvasDiv = options.canvas;
+        this._stoped = false;
 
+        this._cameraAnimations = new CameraAnimationManager({
+            sceneRenderer: this._sceneRenderer,
+            towerPosition: this._towerManager._towerMesh.position,
+        });
+
+        this._lightAnimations = new lightAnimationManager({
+            hemiLight: this._sceneRenderer._scene.children[1],
+            spotLight: this._sceneRenderer._scene.children[2],
+        });
         this.initialize();
     }
 
     initialize() {
         this._canvasDiv.appendChild(this._sceneRenderer._renderer.domElement);
-
         this.animate();
     }
 
+    stop() {
+        this._stoped = true;
+    }
+
+    play() {
+        this._stoped = false;
+    }
+
     animate() {
+        if (this._stoped) return;
+
         requestAnimationFrame(this.animate.bind(this));
 
         this._towerManager.tick();
+
         this._botManager.tick();
 
         this._spriteManager.tick();
