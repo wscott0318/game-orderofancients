@@ -6,6 +6,7 @@ import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
+import { GamePlayUI } from "./UI/GamePlay";
 
 const Wrapper = styled.div`
     position: relative;
@@ -15,6 +16,7 @@ const Wrapper = styled.div`
 
 export const GameScene = () => {
     const [loading, setLoading] = useState(true);
+    const [currentGameState, setCurrentGameSate] = useState(0);
 
     const [showGrid, setShowGrid] = useState(false);
 
@@ -27,13 +29,14 @@ export const GameScene = () => {
         await assetsManager.loadModels();
 
         setLoading(false);
-
         if (gameRef.current) return;
 
         gameRef.current = new Game({
             canvas: canvasDivRef.current!,
             assetsManager: assetsManager,
         });
+
+        setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     }, []);
 
     useEffect(() => {
@@ -56,9 +59,13 @@ export const GameScene = () => {
         }
     };
 
-    const currentGameState = gameRef.current
-        ? gameRef.current._stateManager.getCurrentState()
-        : null;
+    const setGameState = (state: number) => {
+        if (gameRef.current) {
+            console.log("game start>>>", state);
+            gameRef.current._stateManager.setState(state);
+            setCurrentGameSate(state);
+        }
+    };
 
     return (
         <Wrapper>
@@ -66,11 +73,10 @@ export const GameScene = () => {
 
             <div ref={canvasDivRef}></div>
 
-            {currentGameState === GAME_STATES["GAME_MENU"] ? (
-                <GameMenuUI />
-            ) : (
-                <></>
+            {currentGameState === GAME_STATES["GAME_MENU"] && (
+                <GameMenuUI setGameState={setGameState} />
             )}
+            {currentGameState === GAME_STATES["PLAYING"] && <GamePlayUI />}
 
             <div className="absolute top-4 right-4">
                 <Toggle

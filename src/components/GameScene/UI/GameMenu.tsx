@@ -2,13 +2,13 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
-
+import { GAME_STATES } from "../../../constants";
 const GameMenu = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    padding: 5%;
     display: flex;
+    padding-left: 5%;
     width: 100vw;
     height: 100vh;
     background: #00000059;
@@ -18,10 +18,10 @@ const GameMenu = styled.div`
     .chain {
         position: absolute;
         width: 500px;
-        height: 60px;
+        height: 110px;
         background-image: url("/assets/images/chain.png");
         background-size: 100% 100%;
-        top: -100px;
+        top: -300px;
     }
     .menu {
         position: relative;
@@ -60,36 +60,60 @@ const GameMenu = styled.div`
     }
 `;
 
-export const GameMenuUI = () => {
+export const GameMenuUI = ({ setGameState }: any) => {
+    const menuDownAnim = gsap.timeline();
+
     useEffect(() => {
-        gsap.to(".menu", {
-            top: "0px",
-            duration: 1,
-            ease: CustomEase.create(
-                "custom",
-                "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
-            ),
-        });
-        gsap.to(".chain", {
-            top: "0px",
-            duration: 1,
-        });
-        gsap.to(".chain", {
-            height: "100px",
-            duration: 0.1,
-            delay: 0.78,
-            yoyo: true,
-            repeat: 1,
-        });
+        menuDownAnim
+            .add("start")
+            .to(
+                ".menu",
+                {
+                    top: "63px",
+                    duration: 1,
+                    ease: CustomEase.create(
+                        "custom",
+                        "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
+                    ),
+                },
+                "start"
+            )
+            .to(
+                ".chain",
+                {
+                    top: "-43px",
+                    duration: 1,
+                    ease: CustomEase.create(
+                        "custom",
+                        "M0,0,C0.53,0.512,0.846,1.448,1,1"
+                    ),
+                },
+                "start"
+            );
     }, []);
 
+    const gamePlay = () => {
+        menuDownAnim.reverse();
+        gsap.to(".gameMenu", {
+            backgroundColor: "#00000000",
+            duration: 1,
+            delay: 1,
+        });
+        gsap.delayedCall(2, () => {
+            setGameState(GAME_STATES.PLAYING);
+        });
+    };
     return (
         <GameMenu className="gameMenu">
             <div className="chain" />
 
             <div className="menu">
                 <div className="button-col">
-                    <button className="warButton" name="play">
+                    <button
+                        className="warButton"
+                        name="play"
+                        onClick={gamePlay}
+                    >
                         PLAY
                     </button>
                     <button className="warButton" name="versus">

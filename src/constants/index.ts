@@ -1,3 +1,4 @@
+import { getPackedSettings } from "http2";
 import * as THREE from "three";
 
 export const MODEL_URLS = {
