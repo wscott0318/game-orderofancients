@@ -6,7 +6,8 @@ import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
-import { GamePlayUI } from "./UI/GamePlay";
+import GamePlayUI from "./UI/GamePlay";
+import GameEndUI from "./UI/GameEnd";
 
 const Wrapper = styled.div`
     position: relative;
@@ -69,14 +70,19 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading && <Loader />}
+            {/* {loading && <Loader />} */}
 
             <div ref={canvasDivRef}></div>
 
             {currentGameState === GAME_STATES["GAME_MENU"] && (
                 <GameMenuUI setGameState={setGameState} />
             )}
+
             {currentGameState === GAME_STATES["PLAYING"] && <GamePlayUI />}
+
+            {currentGameState === GAME_STATES["END"] && (
+                <GameEndUI setGameState={setGameState} />
+            )}
 
             <div className="absolute top-4 right-4">
                 <Toggle

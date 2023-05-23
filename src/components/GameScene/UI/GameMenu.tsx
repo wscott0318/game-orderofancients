@@ -60,7 +60,7 @@ const GameMenu = styled.div`
     }
 `;
 
-export const GameMenuUI = ({ setGameState }: any) => {
+const GameMenuUI = ({ setGameState }: any) => {
     const menuDownAnim = gsap.timeline();
 
     useEffect(() => {
@@ -103,6 +103,7 @@ export const GameMenuUI = ({ setGameState }: any) => {
             setGameState(GAME_STATES.PLAYING);
         });
     };
+
     return (
         <GameMenu className="gameMenu">
             <div className="chain" />
