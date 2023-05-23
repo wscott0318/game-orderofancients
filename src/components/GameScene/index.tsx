@@ -70,7 +70,7 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* {loading && <Loader />} */}
+            {loading && <Loader />}
 
             <div ref={canvasDivRef}></div>
 

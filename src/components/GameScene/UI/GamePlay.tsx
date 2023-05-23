@@ -17,7 +17,7 @@ const GamePlay = styled.div`
         background-image: url("/assets/images/top-bar-remove-center.png");
     }
     .top-center {
-        height: 55px;
+        width: 6.8%;
         position: fixed;
         top: -100px;
         left: 50%;
