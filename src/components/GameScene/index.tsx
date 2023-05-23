@@ -62,12 +62,19 @@ export const GameScene = () => {
 
     const setGameState = (state: number) => {
         if (gameRef.current) {
-            console.log("game start>>>", state);
             gameRef.current._stateManager.setState(state);
             setCurrentGameSate(state);
         }
     };
-
+    useEffect(() => {
+        window.addEventListener("keydown", (e: any) => {
+            if (e.key === "Escape") {
+                console.log("game end");
+                gameRef.current._stateManager.setState(GAME_STATES.END);
+                setCurrentGameSate(GAME_STATES.END);
+            }
+        });
+    }, []);
     return (
         <Wrapper>
             {loading && <Loader />}
