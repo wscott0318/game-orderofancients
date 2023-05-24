@@ -94,6 +94,18 @@ export const GameEndUI = ({ setGameState }: any) => {
             );
     }, []);
 
+    const resumeGame = () => {
+        menuDownAnim.reverse();
+        gsap.to(".gameMenu", {
+            backgroundColor: "#00000000",
+            duration: 1,
+            delay: 1,
+        });
+        gsap.delayedCall(2, () => {
+            setGameState(GAME_STATES.PLAYING);
+        });
+    };
+
     const restartGame = () => {
         menuDownAnim.reverse();
         gsap.to(".gameMenu", {
@@ -115,12 +127,16 @@ export const GameEndUI = ({ setGameState }: any) => {
                     <button
                         className="warButton"
                         name="play"
+                        onClick={resumeGame}
+                    >
+                        RESUME
+                    </button>
+                    <button
+                        className="warButton"
+                        name="versus"
                         onClick={restartGame}
                     >
                         RESTART
-                    </button>
-                    <button className="warButton" name="versus">
-                        QUIT
                     </button>
                 </div>
             </div>
