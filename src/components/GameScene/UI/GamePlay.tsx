@@ -34,6 +34,31 @@ const GamePlay = styled.div`
         aspect-ratio: 1920 / 302;
         background-image: url(/assets/images/bottom-bar.png);
     }
+    .spec {
+        position: relative;
+        display: grid;
+        grid: auto / auto auto auto auto;
+        grid-gap: 6px;
+        padding: 4px;
+        width: 16.5%;
+        height: 77%;
+        top: 20%;
+        left: 70%;
+        .item {
+            background-image: url(/assets/images/rexar.png);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            border: solid 3px darkgray;
+        }
+        .item: nth-child(n + 4) {
+            visibility: hidden;
+        }
+        .item:active {
+            background-size: 90% 90%;
+            transition: background-size 0s;
+        }
+    }
 `;
 
 const GamePlayUI = () => {
@@ -72,7 +97,22 @@ const GamePlayUI = () => {
         <GamePlay className="gameplay">
             <div className="top-bar"></div>
             <div className="top-center"></div>
-            <div className="bottom-bar"></div>
+            <div className="bottom-bar">
+                <div className="spec">
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                    <div className="item"></div>
+                </div>
+            </div>
         </GamePlay>
     );
 };
