@@ -38,8 +38,8 @@ const GamePlay = styled.div`
         position: relative;
         display: grid;
         grid: auto / auto auto auto auto;
-        grid-gap: 6px;
-        padding: 4px;
+        grid-gap: 0.3vw;
+        padding: 0.1vw 0.2vw;
         width: 16.5%;
         height: 77%;
         top: 20%;
@@ -49,7 +49,7 @@ const GamePlay = styled.div`
             background-size: 100% 100%;
             background-repeat: no-repeat;
             background-position: 50% 50%;
-            border: solid 3px darkgray;
+            border: solid 0.1vw darkgray;
         }
         .item: nth-child(n + 4) {
             visibility: hidden;
@@ -57,6 +57,66 @@ const GamePlay = styled.div`
         .item:active {
             background-size: 90% 90%;
             transition: background-size 0s;
+        }
+    }
+    .status {
+        font-size: 1.4vw;
+        position: absolute;
+        background-color: #ff000033;
+        width: 18.5%;
+        height: 68%;
+        left: 41%;
+        bottom: 0px;
+        display: flex;
+        flex-direction: column;
+        .name {
+            position: relative;
+            height: 20%;
+            display: flex;
+            color: white;
+            justify-content: center;
+        }
+        .slider {
+            height: 20%;
+            background-color: #22222222;
+
+            .progress {
+                padding: 0.2vw 0.3vw;
+                height: 100%;
+                border: 0.1vw solid #ffff00;
+                border-radius: 0.7vw;
+                margin-left: 5%;
+                margin-right: 5%;
+
+                .progress-bar {
+                    height: 100%;
+                    background-image: linear-gradient(
+                        0deg,
+                        rgba(24, 34, 84, 1) 0%,
+                        rgba(131, 138, 182, 1) 66%,
+                        rgba(249, 249, 249, 1) 100%
+                    );
+                    width: 40%;
+                }
+            }
+        }
+        .others {
+            position: relative;
+            height: 60%;
+            background-color: #33333333;
+            color: yellow;
+            display: flex;
+            flex-direction: row;
+            gap: 10%;
+            padding: 5%;
+            img {
+                border: 0.1vw solid darkgray;
+                padding: 1%;
+            }
+            ul li {
+                font-size: 1.1vw;
+                height: 30%;
+            }
         }
     }
 `;
@@ -98,6 +158,22 @@ const GamePlayUI = () => {
             <div className="top-bar"></div>
             <div className="top-center"></div>
             <div className="bottom-bar">
+                <div className="status">
+                    <div className="name">Survicor's Shop</div>
+                    <div className="slider">
+                        <div className="progress">
+                            <div className="progress-bar"></div>
+                        </div>
+                    </div>
+                    <div className="others">
+                        <img src="/assets/images/rexar.png"></img>
+                        <ul className="attributes">
+                            <li>Armor: 10</li>
+                            <li>Damage: 100</li>
+                            <li>Range: 20</li>
+                        </ul>
+                    </div>
+                </div>
                 <div className="spec">
                     <div className="item"></div>
                     <div className="item"></div>
