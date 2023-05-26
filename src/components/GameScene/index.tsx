@@ -6,6 +6,8 @@ import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
+import GamePlayUI from "./UI/GamePlay";
+import GameEndUI from "./UI/GameEnd";
 
 const Wrapper = styled.div`
     position: relative;
@@ -15,6 +17,7 @@ const Wrapper = styled.div`
 
 export const GameScene = () => {
     const [loading, setLoading] = useState(true);
+    const [currentGameState, setCurrentGameSate] = useState(0);
 
     const [showGrid, setShowGrid] = useState(false);
 
@@ -27,13 +30,14 @@ export const GameScene = () => {
         await assetsManager.loadModels();
 
         setLoading(false);
-
         if (gameRef.current) return;
 
         gameRef.current = new Game({
             canvas: canvasDivRef.current!,
             assetsManager: assetsManager,
         });
+
+        setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     }, []);
 
     useEffect(() => {
@@ -56,20 +60,35 @@ export const GameScene = () => {
         }
     };
 
-    const currentGameState = gameRef.current
-        ? gameRef.current._stateManager.getCurrentState()
-        : null;
-
+    const setGameState = (state: number) => {
+        if (gameRef.current) {
+            gameRef.current._stateManager.setState(state);
+            setCurrentGameSate(state);
+        }
+    };
+    useEffect(() => {
+        window.addEventListener("keydown", (e: any) => {
+            if (e.key === "Escape") {
+                console.log("game end");
+                gameRef.current._stateManager.setState(GAME_STATES.END);
+                setCurrentGameSate(GAME_STATES.END);
+            }
+        });
+    }, []);
     return (
         <Wrapper>
             {loading && <Loader />}
 
             <div ref={canvasDivRef}></div>
 
-            {currentGameState === GAME_STATES["GAME_MENU"] ? (
-                <GameMenuUI />
-            ) : (
-                <></>
+            {currentGameState === GAME_STATES["GAME_MENU"] && (
+                <GameMenuUI setGameState={setGameState} />
+            )}
+
+            {currentGameState === GAME_STATES["PLAYING"] && <GamePlayUI />}
+
+            {currentGameState === GAME_STATES["END"] && (
+                <GameEndUI setGameState={setGameState} />
             )}
 
             <div className="absolute top-4 right-4">

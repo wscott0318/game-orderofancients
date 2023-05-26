@@ -3,7 +3,8 @@ import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
-const GameMenu = styled.div`
+
+const GameEnd = styled.div`
     position: absolute;
     top: 0;
     left: 0;
@@ -14,6 +15,7 @@ const GameMenu = styled.div`
     background: #00000059;
     backdrop-filter: saturate(0.5);
     z-index: 20;
+    justify-content: center;
 
     .chain {
         position: absolute;
@@ -26,11 +28,11 @@ const GameMenu = styled.div`
     .menu {
         position: relative;
         width: 500px;
-        height: 850px;
+        height: 486px;
         top: -1000px;
         display: flex;
         flex-direction: column;
-        background-image: url("/assets/images/menu.png");
+        background-image: url("/assets/images/end.png");
         background-size: 100% 100%;
         align-items: center;
     }
@@ -39,7 +41,7 @@ const GameMenu = styled.div`
         display: flex;
         flex-direction: column;
         gap: 9px;
-        margin-top: 280px;
+        margin-top: 270px;
         align-items: center;
     }
     .warButton {
@@ -60,7 +62,7 @@ const GameMenu = styled.div`
     }
 `;
 
-const GameMenuUI = ({ setGameState }: any) => {
+export const GameEndUI = ({ setGameState }: any) => {
     const menuDownAnim = gsap.timeline();
 
     useEffect(() => {
@@ -92,7 +94,7 @@ const GameMenuUI = ({ setGameState }: any) => {
             );
     }, []);
 
-    const gamePlay = () => {
+    const resumeGame = () => {
         menuDownAnim.reverse();
         gsap.to(".gameMenu", {
             backgroundColor: "#00000000",
@@ -104,8 +106,20 @@ const GameMenuUI = ({ setGameState }: any) => {
         });
     };
 
+    const restartGame = () => {
+        menuDownAnim.reverse();
+        gsap.to(".gameMenu", {
+            backgroundColor: "#00000000",
+            duration: 1,
+            delay: 1,
+        });
+        gsap.delayedCall(2, () => {
+            setGameState(GAME_STATES.GAME_MENU);
+        });
+    };
+
     return (
-        <GameMenu className="gameMenu">
+        <GameEnd className="GameEnd">
             <div className="chain" />
 
             <div className="menu">
@@ -113,29 +127,21 @@ const GameMenuUI = ({ setGameState }: any) => {
                     <button
                         className="warButton"
                         name="play"
-                        onClick={gamePlay}
+                        onClick={resumeGame}
                     >
-                        PLAY
+                        RESUME
                     </button>
-                    <button className="warButton" name="versus">
-                        DIFFICULTY
-                    </button>
-                    <button className="warButton" name="custom">
-                        SETTINGS
-                    </button>
-                    <button className="warButton" name="localarea">
-                        TUTORIAL
-                    </button>
-                    <button className="warButton" name="setting">
-                        PROVIDER
-                    </button>
-                    <button className="warButton" name="collection">
-                        CONTACT US
+                    <button
+                        className="warButton"
+                        name="versus"
+                        onClick={restartGame}
+                    >
+                        RESTART
                     </button>
                 </div>
             </div>
-        </GameMenu>
+        </GameEnd>
     );
 };
 
-export default GameMenuUI;
+export default GameEndUI;

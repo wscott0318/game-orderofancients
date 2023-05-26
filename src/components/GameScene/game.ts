@@ -1,6 +1,5 @@
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
-import { CameraAnimationManager } from "./Animations/CameraAnimatinManager";
 import { CollisionManager } from "./CollisionManager";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
@@ -8,9 +7,9 @@ import { TowerManager } from "./TowerManager";
 import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import TWEEN, { Easing } from "@tweenjs/tween.js";
-import { lightAnimationManager } from "./Animations/LightAnimationManager";
 import { StateManager } from "./States/StateManager";
 import { GAME_STATES } from "../../constants";
+import { AnimationManager } from "./AnimationManager";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -28,8 +27,7 @@ export class Game {
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
     _stateManager: StateManager;
-    _cameraAnimations: CameraAnimationManager;
-    _lightAnimations: lightAnimationManager;
+    _animationsManager: AnimationManager;
 
     constructor(options: GameOptions) {
         this._assetsManager = options.assetsManager;
@@ -58,19 +56,12 @@ export class Game {
             spriteManager: this._spriteManager,
             particleEffect: this._particleEffect,
         });
-        this._canvasDiv = options.canvas;
-
+        this._animationsManager = new AnimationManager({
+            sceneRenderer: this._sceneRenderer,
+        });
         this._stateManager = new StateManager();
 
-        this._cameraAnimations = new CameraAnimationManager({
-            sceneRenderer: this._sceneRenderer,
-            towerPosition: this._towerManager._towerMesh.position,
-        });
-
-        this._lightAnimations = new lightAnimationManager({
-            hemiLight: this._sceneRenderer._scene.children[1],
-            spotLight: this._sceneRenderer._scene.children[2],
-        });
+        this._canvasDiv = options.canvas;
         this.initialize();
     }
 
