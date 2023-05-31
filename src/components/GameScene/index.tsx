@@ -8,6 +8,7 @@ import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
 import GamePlayUI from "./UI/GamePlay";
 import GameEndUI from "./UI/GameEnd";
+import GamePauseUI from "./UI/GamePause";
 
 const Wrapper = styled.div`
     position: relative;
@@ -35,6 +36,7 @@ export const GameScene = () => {
         gameRef.current = new Game({
             canvas: canvasDivRef.current!,
             assetsManager: assetsManager,
+            setCurrentGameSate: setCurrentGameSate,
         });
 
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
@@ -63,15 +65,16 @@ export const GameScene = () => {
     const setGameState = (state: number) => {
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
-            setCurrentGameSate(state);
         }
     };
     useEffect(() => {
         window.addEventListener("keydown", (e: any) => {
             if (e.key === "Escape") {
-                console.log("game end");
-                gameRef.current._stateManager.setState(GAME_STATES.END);
-                setCurrentGameSate(GAME_STATES.END);
+                if (currentGameState === GAME_STATES.PAUSE) {
+                    gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
+                } else if (currentGameState === GAME_STATES.PLAYING) {
+                    gameRef.current._stateManager.setState(GAME_STATES.PAUSE);
+                }
             }
         });
     }, []);
@@ -87,11 +90,15 @@ export const GameScene = () => {
 
             {currentGameState === GAME_STATES["PLAYING"] && <GamePlayUI />}
 
+            {currentGameState === GAME_STATES["PAUSE"] && (
+                <GamePauseUI setGameState={setGameState} />
+            )}
+
             {currentGameState === GAME_STATES["END"] && (
                 <GameEndUI setGameState={setGameState} />
             )}
 
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-16 right-4">
                 <Toggle
                     title={"Show Grid"}
                     checked={showGrid}

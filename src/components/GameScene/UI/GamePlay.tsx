@@ -121,6 +121,17 @@ const GamePlay = styled.div`
     }
 `;
 
+const Gold = styled.div`
+    position: absolute;
+    transform: translate(-100%, -50%);
+    left: 62.4%;
+    top: 36%;
+    z-index: 999;
+    color: white;
+    font-size: 1vw;
+    text-align: right;
+`;
+
 const GamePlayUI = () => {
     const playControlDown = gsap.timeline();
 
@@ -155,7 +166,9 @@ const GamePlayUI = () => {
 
     return (
         <GamePlay className="gameplay">
-            <div className="top-bar"></div>
+            <div className="top-bar relative">
+                <Gold id="gold">0</Gold>
+            </div>
             <div className="top-center"></div>
             <div className="bottom-bar">
                 <div className="status">

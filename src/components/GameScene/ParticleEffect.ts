@@ -48,12 +48,12 @@ export class ParticleEffect {
         particle.position.y = position.y;
         particle.position.z = position.z;
 
-        particle.scale.set(0.1, 0.1, 0.1);
+        particle.scale.set(0.4, 0.4, 0.4);
 
         this.sceneRenderer.getScene().add(particle);
     }
 
-    addToonProjectTile(position: THREE.Vector3) {
+    ToonProjectTile(position: THREE.Vector3) {
         const particle = createToonProjectile(
             this.sceneRenderer._particleRenderer,
             this.assetsManager._particleTextures
@@ -66,6 +66,8 @@ export class ParticleEffect {
         particle.scale.set(1, 1, 1);
 
         this.sceneRenderer.getScene().add(particle);
+
+        return particle;
     }
 
     addParticle(position: THREE.Vector3) {

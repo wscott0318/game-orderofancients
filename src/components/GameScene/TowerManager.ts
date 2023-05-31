@@ -1,5 +1,5 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { TOWER_HEIGHT, TOWER_POSITION } from "../../constants";
+import { GAME_STATES, TOWER_HEIGHT, TOWER_POSITION } from "../../constants";
 import AssetsManager from "./AssetsManager";
 import { Tower } from "./Instances/Tower";
 import { SceneRenderer } from "./rendering/SceneRenderer";
@@ -9,6 +9,8 @@ import {
     TOWER_HEALTH_WIDTH,
 } from "../../constants/gameUI";
 import { getColorForPercentage } from "../../helper/color";
+import { StateManager } from "./States/StateManager";
+import { ParticleEffect } from "./ParticleEffect";
 
 export class TowerManager {
     _tower: Tower;
@@ -17,10 +19,19 @@ export class TowerManager {
     _assetsManager: AssetsManager;
     _healthBarUI: CSS2DObject;
     _claimTime: number;
+    _stateManager: StateManager;
+    _particleEffect: ParticleEffect;
 
-    constructor({ sceneRenderer, assetsManager }: any) {
+    constructor({
+        sceneRenderer,
+        assetsManager,
+        stateManager,
+        particleEffect,
+    }: any) {
         this._sceneRenderer = sceneRenderer;
         this._assetsManager = assetsManager;
+        this._stateManager = stateManager;
+        this._particleEffect = particleEffect;
 
         this._tower = new Tower();
         this._towerMesh = this._assetsManager.getTowerModel();
@@ -75,7 +86,7 @@ export class TowerManager {
                 .length() / scaleFactor
         );
 
-        this._healthBarUI.element.style.display = "flex";
+        this._healthBarUI.element.classList.add("flex");
         this._healthBarUI.element.style.gap = `${2 / scale}px`;
         this._healthBarUI.element.style.padding = `${2 / scale}px`;
 
@@ -108,8 +119,25 @@ export class TowerManager {
         )}`;
     }
 
+    levelUp() {
+        this._tower.level++;
+
+        // visual effect
+        const newVector = new THREE.Vector3(
+            this._towerMesh.position.x,
+            this._towerMesh.position.y + 5,
+            this._towerMesh.position.z
+        );
+
+        this._particleEffect.addLevelUp(newVector);
+    }
+
     tick() {
         if (this._claimTime > 0) this._claimTime--;
+
+        if (this._tower.hp <= 0) {
+            this._stateManager.setState(GAME_STATES.END);
+        }
 
         this.renderHealthBar();
     }

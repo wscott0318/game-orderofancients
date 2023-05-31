@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
 
-const GameEnd = styled.div`
+const GamePause = styled.div`
     position: absolute;
     top: 0;
     left: 0;
@@ -58,11 +58,10 @@ const GameEnd = styled.div`
         &:hover {
             background-image: url("/assets/images/button-hover.png");
         }
-        text-transform: uppercase;
     }
 `;
 
-export const GameEndUI = ({ setGameState }: any) => {
+export const GamePauseUI = ({ setGameState }: any) => {
     const menuDownAnim = gsap.timeline();
 
     useEffect(() => {
@@ -119,25 +118,29 @@ export const GameEndUI = ({ setGameState }: any) => {
     };
 
     return (
-        <GameEnd className="GameEnd">
+        <GamePause>
             <div className="chain" />
 
             <div className="menu">
                 <div className="button-col">
-                    <button className="warButton" name="play">
-                        view result
+                    <button
+                        className="warButton"
+                        name="play"
+                        onClick={resumeGame}
+                    >
+                        RESUME
                     </button>
                     <button
                         className="warButton"
                         name="versus"
                         onClick={restartGame}
                     >
-                        Main Menu
+                        RESTART
                     </button>
                 </div>
             </div>
-        </GameEnd>
+        </GamePause>
     );
 };
 
-export default GameEndUI;
+export default GamePauseUI;

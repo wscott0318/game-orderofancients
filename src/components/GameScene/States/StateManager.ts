@@ -1,10 +1,16 @@
 import { GAME_STATES } from "../../../constants";
 
+interface StateManagerProps {
+    setCurrentGameSate: Function;
+}
+
 export class StateManager {
     currentState: number;
+    setCurrentGameSate: Function;
 
-    constructor() {
+    constructor({ setCurrentGameSate }: StateManagerProps) {
         this.currentState = GAME_STATES["GAME_MENU"];
+        this.setCurrentGameSate = setCurrentGameSate;
     }
 
     getCurrentState() {
@@ -13,5 +19,6 @@ export class StateManager {
 
     setState(newState: number) {
         this.currentState = newState;
+        this.setCurrentGameSate(newState);
     }
 }

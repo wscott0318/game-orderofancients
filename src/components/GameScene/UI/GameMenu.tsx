@@ -53,7 +53,6 @@ const GameMenu = styled.div`
         color: rgb(212, 212, 3);
         font-size: 20px;
         font-weight: 900;
-        cursor: url("/assets/images/cursor.png"), auto;
         &:hover {
             background-image: url("/assets/images/button-hover.png");
         }

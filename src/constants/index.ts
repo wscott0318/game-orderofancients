@@ -22,7 +22,7 @@ export const CAMERA_PROPS = {
     far: 20000,
     position: {
         x: 15,
-        y: 89,
+        y: 60,
         z: 25,
     },
 };
@@ -125,6 +125,11 @@ export const BOT_PROPS = {
         [BOT_TYPE["swordsman"]]: 10,
         [BOT_TYPE["archer"]]: 17,
     },
+    gold: {
+        [BOT_TYPE["grunt"]]: 20,
+        [BOT_TYPE["swordsman"]]: 10,
+        [BOT_TYPE["archer"]]: 5,
+    },
 };
 
 export const TOWER_RADIUS = 4;
@@ -151,3 +156,7 @@ export const GAME_STATES = {
 export const CAMERA_POS = {
     sideView: new THREE.Vector3(40, 30, 0),
 };
+
+export const ROUND_TIME = 30;
+
+export const START_GOLD = 50;
