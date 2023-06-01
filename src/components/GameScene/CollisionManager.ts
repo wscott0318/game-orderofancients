@@ -1,9 +1,11 @@
-import { BOT_STATUS, TOWER_HEIGHT } from "../../constants";
+import { BOT_PROPS, BOT_STATUS, TOWER_HEIGHT } from "../../constants";
 import { BotManager } from "./BotManager";
 import { Sprite } from "./Instances/Sprite";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { FiringStone } from "./Sprites/FiringStone";
+import { TextSprite } from "./Sprites/Text";
+import { PlayerState } from "./States/PlayerState";
 import { TowerManager } from "./TowerManager";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import * as THREE from "three";
@@ -14,6 +16,7 @@ export class CollisionManager {
     botManager: BotManager;
     spriteManager: SpriteManager;
     particleEffect: ParticleEffect;
+    playerState: PlayerState;
 
     constructor({
         sceneRenderer,
@@ -21,12 +24,14 @@ export class CollisionManager {
         botManager,
         spriteManager,
         particleEffect,
+        playerState,
     }: any) {
         this.sceneRenderer = sceneRenderer;
         this.towerManager = towerManager;
         this.botManager = botManager;
         this.spriteManager = spriteManager;
         this.particleEffect = particleEffect;
+        this.playerState = playerState;
     }
 
     checkIfTowerDetectEnemy() {
@@ -105,6 +110,22 @@ export class CollisionManager {
             const bot = this.botManager.botArray[i];
 
             if (bot.hp <= 0 && bot.status !== BOT_STATUS["dead"]) {
+                const gold = BOT_PROPS.gold[bot.botType];
+                this.playerState.increaseGold(gold);
+
+                const sprite = new TextSprite({
+                    text: `+${gold}`,
+                    color: `#EED734`,
+                    position: new THREE.Vector3(
+                        bot.mesh.position.x,
+                        bot.mesh.position.y,
+                        bot.mesh.position.z
+                    ),
+                    sceneRenderer: this.sceneRenderer,
+                });
+
+                this.spriteManager.addTextSprite(sprite);
+
                 bot.kill();
             }
         }

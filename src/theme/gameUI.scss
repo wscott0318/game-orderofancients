@@ -3,7 +3,6 @@
     position: relative;
 
     &__progress {
-        // transition: all 0.1s;
         background: #096d08;
         position: absolute;
         box-shadow: inset 0.05em 0.05em 0.05em 0 rgba(255, 255, 255, 0.5),
@@ -12,7 +11,9 @@
 }
 
 .towerStatusBar {
-    display: flex;
+    position: relative;
+    z-index: 20;
+    display: none;
     justify-content: center;
     align-items: flex-start;
     gap: 2px;
@@ -20,6 +21,10 @@
     background: rgb(201, 160, 48);
     box-shadow: inset 0.05em 0.05em 0.05em 0 rgba(255, 255, 255, 0.5),
         inset -0.05em -0.05em 0.05em 0 rgba(0, 0, 0, 0.5);
+
+    &.flex {
+        display: flex;
+    }
 
     .level {
         position: relative;
@@ -33,5 +38,22 @@
         border: 1px solid #000;
         padding: 0 5px;
         height: 15px;
+    }
+}
+
+.textSprite {
+    font-weight: 700;
+    position: relative;
+    animation: 3s fadeOut forwards;
+    text-shadow: 2px 2px #1f1f1f;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
     }
 }

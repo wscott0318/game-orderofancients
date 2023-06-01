@@ -4,6 +4,11 @@ import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
+import { GAME_STATES } from "../../constants";
+import GameMenuUI from "./UI/GameMenu";
+import GamePlayUI from "./UI/GamePlay";
+import GameEndUI from "./UI/GameEnd";
+import GamePauseUI from "./UI/GamePause";
 
 const Wrapper = styled.div`
     position: relative;
@@ -12,32 +17,53 @@ const Wrapper = styled.div`
 `;
 
 export const GameScene = () => {
-    const [loading, setLoading] = useState(true);
+    const firstRef = useRef(false);
 
-    const [showGrid, setShowGrid] = useState(true);
+    const canEnterGameRef = useRef() as any;
+
+    const [loading, setLoading] = useState(true);
+    const [canEnterGame, setCanEnterGame] = useState(false);
+    const [currentGameState, setCurrentGameSate] = useState(0);
+
+    canEnterGameRef.current = canEnterGame;
+
+    const [showGrid, setShowGrid] = useState(false);
 
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
+    const assetsManagerRef = useRef(null) as any;
 
     const createGame = useCallback(async () => {
-        const assetsManager = new AssetsManager();
+        assetsManagerRef.current = new AssetsManager();
 
-        await assetsManager.loadModels();
+        await assetsManagerRef.current.loadModels();
 
-        setLoading(false);
+        setCanEnterGame(true);
+    }, []);
 
+    const startGame = () => {
         if (gameRef.current) return;
 
         gameRef.current = new Game({
             canvas: canvasDivRef.current!,
-            assetsManager: assetsManager,
+            assetsManager: assetsManagerRef.current,
+            setCurrentGameSate: setCurrentGameSate,
         });
-    }, []);
+
+        setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
+    };
 
     useEffect(() => {
+        if (firstRef.current) return;
+        firstRef.current = true;
+
         createGame();
 
+        window.addEventListener("keydown", onKeyDown.bind(this));
+
         return () => {
+            window.removeEventListener("keydown", onKeyDown);
+
             // destroy Game
         };
     }, []);
@@ -54,19 +80,61 @@ export const GameScene = () => {
         }
     };
 
+    const setGameState = (state: number) => {
+        if (gameRef.current) {
+            gameRef.current._stateManager.setState(state);
+        }
+    };
+
+    const onKeyDown = (e: any) => {
+        if (canEnterGameRef.current) {
+            document
+                .getElementsByClassName("loader")[0]
+                .classList.add("enterGame");
+
+            setTimeout(() => {
+                setCanEnterGame(false);
+
+                setLoading(false);
+
+                startGame();
+            }, 3000);
+        }
+
+        if (e.key === "Pause") {
+            if (currentGameState === GAME_STATES.PAUSE) {
+                gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
+            } else if (currentGameState === GAME_STATES.PLAYING) {
+                gameRef.current._stateManager.setState(GAME_STATES.PAUSE);
+            }
+        }
+    };
+
     return (
         <Wrapper>
-            {loading && <Loader />}
+            {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
-            <div className="absolute top-4 right-4">
-                <Toggle
-                    title={"Show Grid"}
-                    checked={showGrid}
-                    onChange={onToggleGrid}
-                />
-            </div>
+            {currentGameState === GAME_STATES["GAME_MENU"] ? (
+                <GameMenuUI setGameState={setGameState} />
+            ) : currentGameState === GAME_STATES["PLAYING"] ? (
+                <>
+                    <GamePlayUI />
+
+                    <div className="absolute top-16 right-4">
+                        <Toggle
+                            title={"Show Grid"}
+                            checked={showGrid}
+                            onChange={onToggleGrid}
+                        />
+                    </div>
+                </>
+            ) : currentGameState === GAME_STATES["PAUSE"] ? (
+                <GamePauseUI setGameState={setGameState} />
+            ) : currentGameState === GAME_STATES["END"] ? (
+                <GameEndUI setGameState={setGameState} />
+            ) : null}
         </Wrapper>
     );
 };

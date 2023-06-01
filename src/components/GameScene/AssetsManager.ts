@@ -40,16 +40,30 @@ export class AssetsManager {
 
     loadModels() {
         return new Promise(async (resolve, reject) => {
+            const element = document.getElementsByClassName(
+                "progress-bar2"
+            )[0] as HTMLDivElement;
+            element.style.width = "20%";
+
             this._models.environment = await LoadModel(
                 MODEL_URLS["environment"]
             );
+
+            element.style.width = "50%";
+
             this._models.buildings = await LoadModel(MODEL_URLS["buildings"]);
 
+            element.style.width = "70%";
+
             this._models.bot_grunt = await LoadModel(MODEL_URLS["bot_grunt"]);
+
+            element.style.width = "85%";
 
             this._models.bot_swordsman = await LoadModel(
                 MODEL_URLS["bot_swordsman"]
             );
+
+            element.style.width = "100%";
 
             this._models.bot_archer = await LoadModel(MODEL_URLS["bot_archer"]);
 
