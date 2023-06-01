@@ -1,7 +1,7 @@
 import "./index.scss";
 import "./firefly.scss";
 
-export const Loader = () => {
+export const Loader = ({ canEnterGame }: any) => {
     const renderFirefly = (count: number) => {
         const array = new Array(count);
         array.fill(1);
@@ -18,10 +18,18 @@ export const Loader = () => {
                     <img src="/assets/images/logo.png" alt="background" />
                 </div>
 
-                <div className="progress-container">
+                <div
+                    className={`progress-container ${
+                        canEnterGame ? "hide" : ""
+                    }`}
+                >
                     <div className="progress2 progress-moved">
                         <div className="progress-bar2"></div>
                     </div>
+                </div>
+
+                <div className={`pressAnyKey ${canEnterGame ? "active" : ""}`}>
+                    PRESS ANY KEY
                 </div>
             </div>
         </div>

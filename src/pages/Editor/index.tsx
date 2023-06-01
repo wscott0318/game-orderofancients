@@ -4,7 +4,7 @@ import GameScene from "../../components/GameScene";
 
 const Wrapper = styled.div`
     position: relative;
-    background: #123;
+    background: #000;
 `;
 
 export const Editor = () => {

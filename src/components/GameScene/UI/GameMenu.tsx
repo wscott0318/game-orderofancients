@@ -3,31 +3,35 @@ import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
+
+const getResValue = (value: number) => (value / 937) * 100 + "vh";
+
 const GameMenu = styled.div`
     position: absolute;
     top: 0;
     left: 0;
     display: flex;
-    padding-left: 5%;
+    padding-left: 8%;
     width: 100vw;
     height: 100vh;
     background: #00000059;
     backdrop-filter: saturate(0.5);
     z-index: 20;
+    user-select: none;
 
     .chain {
         position: absolute;
-        width: 500px;
-        height: 110px;
+        width: ${getResValue(500)};
+        height: ${getResValue(110)};
         background-image: url("/assets/images/chain.png");
         background-size: 100% 100%;
-        top: -300px;
+        top: -${getResValue(300)};
     }
     .menu {
         position: relative;
-        width: 500px;
-        height: 850px;
-        top: -1000px;
+        width: ${getResValue(500)};
+        height: ${getResValue(850)};
+        top: -${getResValue(1000)};
         display: flex;
         flex-direction: column;
         background-image: url("/assets/images/menu.png");
@@ -38,20 +42,21 @@ const GameMenu = styled.div`
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: 9px;
-        margin-top: 280px;
+        gap: ${getResValue(9)};
+        margin-top: ${getResValue(280)};
         align-items: center;
     }
     .warButton {
+        cursor: url("../assets/imgs/gameCursor.png");
         background-image: url("/assets/images/button-default.png");
         background-size: contain;
         background-repeat: no-repeat;
         background-repeat: no-repeat;
         background-size: cover;
-        width: 367px;
-        height: 77px;
+        width: ${getResValue(367)};
+        height: ${getResValue(77)};
         color: rgb(212, 212, 3);
-        font-size: 20px;
+        font-size: ${getResValue(20)};
         font-weight: 900;
         &:hover {
             background-image: url("/assets/images/button-hover.png");
@@ -68,7 +73,7 @@ const GameMenuUI = ({ setGameState }: any) => {
             .to(
                 ".menu",
                 {
-                    top: "63px",
+                    top: `${getResValue(63)}`,
                     duration: 1,
                     ease: CustomEase.create(
                         "custom",
@@ -80,7 +85,7 @@ const GameMenuUI = ({ setGameState }: any) => {
             .to(
                 ".chain",
                 {
-                    top: "-43px",
+                    top: `${getResValue(-43)}`,
                     duration: 1,
                     ease: CustomEase.create(
                         "custom",
