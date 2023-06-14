@@ -1,4 +1,5 @@
-import { BOT_PROPS, BOT_STATUS, TOWER_HEIGHT } from "../../constants";
+import { BOT_PROPS, BOT_STATUS } from "../../constants/bot";
+import { TOWER_HEIGHT } from "../../constants/tower";
 import { BotManager } from "./BotManager";
 import { Sprite } from "./Instances/Sprite";
 import { ParticleEffect } from "./ParticleEffect";

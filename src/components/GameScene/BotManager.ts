@@ -1,4 +1,4 @@
-import { BOT_TYPE } from "../../constants";
+import { BOT_TYPE } from "../../constants/bot";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import AssetsManager from "./AssetsManager";
 import { Bot } from "./Instances/Bot";

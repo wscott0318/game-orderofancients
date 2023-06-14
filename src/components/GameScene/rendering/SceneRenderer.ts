@@ -3,9 +3,9 @@ import * as SceneSetup from "./SceneSetting";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { ANG2RAD } from "../../../helper/math";
-import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants";
 import { cleanMaterial } from "../../../helper/three";
 import { BatchedRenderer } from "three.quarks";
+import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants/rendering";
 
 let aspectWidth = window.innerWidth;
 let aspectHeight = window.innerHeight;

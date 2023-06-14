@@ -2,7 +2,7 @@ export class PlayerState {
     gold: number;
 
     constructor() {
-        this.gold = 0;
+        this.gold = 5000;
     }
 
     updateGoldUI() {

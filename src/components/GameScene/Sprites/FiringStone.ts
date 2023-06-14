@@ -230,6 +230,14 @@ let options = {
 const width = window.innerWidth,
     height = window.innerHeight;
 
+const textures = {
+    noise: new THREE.TextureLoader().load("/assets/textures/noise9.jpg"),
+    sparkleNoise: new THREE.TextureLoader().load(
+        "/assets/textures/sparklenoise.jpg"
+    ),
+    waterMin: new THREE.TextureLoader().load("/assets/textures/water-min.jpg"),
+};
+
 export class FiringStone {
     mesh: THREE.Object3D;
     sphereMesh: THREE.Mesh;
@@ -271,15 +279,11 @@ export class FiringStone {
                 },
                 perlinnoise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/noise9.jpg"
-                    ),
+                    value: textures.noise,
                 },
                 sparknoise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/sparklenoise.jpg"
-                    ),
+                    value: textures.sparkleNoise,
                 },
                 color5: {
                     value: new THREE.Vector3(...options.color5),
@@ -317,9 +321,7 @@ export class FiringStone {
             uniforms: {
                 perlinnoise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/water-min.jpg"
-                    ),
+                    value: textures.waterMin,
                 },
                 color4: {
                     value: new THREE.Vector3(...options.color4),
@@ -330,9 +332,7 @@ export class FiringStone {
                 },
                 noise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/noise9.jpg"
-                    ),
+                    value: textures.noise,
                 },
             },
             // wireframe:true,
@@ -357,9 +357,7 @@ export class FiringStone {
             uniforms: {
                 perlinnoise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/water-min.jpg"
-                    ),
+                    value: textures.waterMin,
                 },
                 color4: {
                     value: new THREE.Vector3(...options.color5),
@@ -370,9 +368,7 @@ export class FiringStone {
                 },
                 noise: {
                     type: "t",
-                    value: new THREE.TextureLoader().load(
-                        "/assets/textures/noise9.jpg"
-                    ),
+                    value: textures.noise,
                 },
             },
             // wireframe:true,

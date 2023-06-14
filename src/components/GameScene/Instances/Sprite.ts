@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { generateUUID } from "three/src/math/MathUtils";
-import { BOT_PROPS } from "../../../constants";
+import { BOT_PROPS } from "../../../constants/bot";
 
 export class Sprite {
     object: any;

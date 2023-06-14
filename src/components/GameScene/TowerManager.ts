@@ -1,5 +1,5 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { GAME_STATES, TOWER_HEIGHT, TOWER_POSITION } from "../../constants";
+import { GAME_STATES } from "../../constants";
 import AssetsManager from "./AssetsManager";
 import { Tower } from "./Instances/Tower";
 import { SceneRenderer } from "./rendering/SceneRenderer";
@@ -11,6 +11,7 @@ import {
 import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "./States/StateManager";
 import { ParticleEffect } from "./ParticleEffect";
+import { TOWER_HEIGHT, TOWER_POSITION } from "../../constants/tower";
 
 export class TowerManager {
     _tower: Tower;

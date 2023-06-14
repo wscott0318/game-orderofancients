@@ -1,12 +1,5 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import {
-    ANIMATION_TYPE,
-    BOT_PROPS,
-    BOT_STATUS,
-    FOREST_RADIUS,
-    TOWER_POSITION,
-    TOWER_RADIUS,
-} from "../../../constants";
+import { FOREST_RADIUS } from "../../../constants";
 import { ANG2RAD } from "../../../helper/math";
 import { BotAnimationController } from "../BotAnimationController";
 import * as THREE from "three";
@@ -16,6 +9,8 @@ import { getColorForPercentage } from "../../../helper/color";
 import { cleanMaterial } from "../../../helper/three";
 import TWEEN from "@tweenjs/tween.js";
 import { generateUUID } from "three/src/math/MathUtils";
+import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../../constants/bot";
+import { TOWER_POSITION, TOWER_RADIUS } from "../../../constants/tower";
 
 export class Bot {
     uuid: string;
@@ -195,7 +190,7 @@ export class Bot {
                 this.mesh.position.z + this.direction.z * this.speed
             );
 
-            this.mesh.position.lerp(target, 0.9);
+            this.mesh.position.lerp(target, 0.7);
         }
 
         /**

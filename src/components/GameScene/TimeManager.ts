@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ROUND_TIME, START_GOLD } from "../../constants";
+import { ROUND_TIME, START_GOLD_GEN } from "../../constants";
 import { PlayerState } from "./States/PlayerState";
 import { TowerManager } from "./TowerManager";
 import { TextSprite } from "./Sprites/Text";
@@ -40,7 +40,7 @@ export class TimeManager {
     }
 
     tickSecond() {
-        const value = START_GOLD + 5 * this.towerManager._tower.level;
+        const value = START_GOLD_GEN + 5 * this.towerManager._tower.level;
 
         this.playerState.increaseGold(value);
 

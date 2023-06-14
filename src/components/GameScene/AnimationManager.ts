@@ -1,7 +1,8 @@
 import { gsap, Circ } from "gsap";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import * as THREE from "three";
-import { CAMERA_POS, TOWER_POSITION } from "../../constants";
+import { CAMERA_POS } from "../../constants";
+import { TOWER_POSITION } from "../../constants/tower";
 
 export class AnimationManager {
     _sceneRenderer: SceneRenderer;

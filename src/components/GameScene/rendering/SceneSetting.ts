@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
-import { CAMERA_PROPS, SCENE_PROPS } from "../../../constants";
+import { CAMERA_PROPS, SCENE_PROPS } from "../../../constants/rendering";
 
 export const camera = (width: number, height: number) => {
     const _ASPECT = width / height;
