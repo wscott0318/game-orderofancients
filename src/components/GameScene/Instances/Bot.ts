@@ -6,7 +6,7 @@ import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { HEALTH_PIXEL } from "../../../constants/gameUI";
 import { getColorForPercentage } from "../../../helper/color";
-import { cleanMaterial } from "../../../helper/three";
+import { cleanMaterial, disposeMesh } from "../../../helper/three";
 import TWEEN from "@tweenjs/tween.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../../constants/bot";
@@ -132,17 +132,7 @@ export class Bot {
     dispose() {
         this.animController.dispose();
 
-        this.mesh.traverse((object: any) => {
-            if (!object.isMesh) return;
-
-            object.geometry.dispose();
-
-            if (object.material.isMaterial) {
-                cleanMaterial(object.material);
-            } else {
-                for (const material of object.material) cleanMaterial(material);
-            }
-        });
+        disposeMesh(this.mesh);
 
         this.scene.remove(this.mesh);
     }

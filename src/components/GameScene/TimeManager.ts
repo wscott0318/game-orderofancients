@@ -40,7 +40,7 @@ export class TimeManager {
     }
 
     tickSecond() {
-        const value = START_GOLD_GEN + 5 * this.towerManager._tower.level;
+        const value = START_GOLD_GEN + 5 * this.towerManager.level;
 
         this.playerState.increaseGold(value);
 
@@ -78,6 +78,19 @@ export class TimeManager {
             this.roundTracker = ROUND_TIME;
 
             this.tickRound();
+        }
+
+        /**
+         * Reload Weapons Cooldown.
+         */
+        for (let i = 0; i < this.playerState.Weapons.length; i++) {
+            const weapon = this.playerState.Weapons[i];
+
+            if (weapon.reloadTime > 0) {
+                weapon.reloadTime -= delta;
+                weapon.reloadTime =
+                    weapon.reloadTime < 0 ? 0 : weapon.reloadTime;
+            }
         }
     }
 }

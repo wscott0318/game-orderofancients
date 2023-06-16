@@ -1,3 +1,5 @@
+import { ARMOR_TYPES } from ".";
+
 export const BOT_TYPE = {
     grunt: 0x01,
     swordsman: 0x02,
@@ -133,5 +135,12 @@ export const BOT_PROPS = {
         [BOT_TYPE["archer"]]: 5,
         [BOT_TYPE["king"]]: 30,
         [BOT_TYPE["mage"]]: 8,
+    },
+    armorTypes: {
+        [BOT_TYPE["grunt"]]: ARMOR_TYPES.Divine,
+        [BOT_TYPE["swordsman"]]: ARMOR_TYPES.Medium,
+        [BOT_TYPE["archer"]]: ARMOR_TYPES.Light,
+        [BOT_TYPE["king"]]: ARMOR_TYPES.Heavy,
+        [BOT_TYPE["mage"]]: ARMOR_TYPES.Unarmored,
     },
 };

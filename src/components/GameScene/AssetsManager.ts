@@ -80,6 +80,10 @@ export class AssetsManager {
                 "orc_tower_Lv3_proto_orc_rts_0"
             );
 
+            this._models.throwingAxe = await LoadModel(
+                MODEL_URLS["throwingAxe"]
+            );
+
             resolve(true);
         });
     }

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { SceneRenderer } from "../rendering/SceneRenderer";
-import { cleanMaterial } from "../../../helper/three";
+import { cleanMaterial, disposeMesh } from "../../../helper/three";
 
 const vert = `
     varying vec3 vNormal;
@@ -388,17 +388,7 @@ export class FiringStone {
     }
 
     dispose() {
-        this.mesh.traverse((object: any) => {
-            if (!object.isMesh) return;
-
-            object.geometry.dispose();
-
-            if (object.material.isMaterial) {
-                cleanMaterial(object.material);
-            } else {
-                for (const material of object.material) cleanMaterial(material);
-            }
-        });
+        disposeMesh(this.mesh);
 
         this.sceneRenderer.getScene().remove(this.mesh);
     }
