@@ -1,0 +1,8 @@
+Model Information:
+* title:	Skeleton King
+* source:	https://sketchfab.com/3d-models/skeleton-king-94812cc57dec429eb9acb7547a6622de
+* author:	BitGem (https://sketchfab.com/bitgem)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

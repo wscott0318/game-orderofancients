@@ -11,7 +11,7 @@ export class SpriteManager {
         this.textSpriteArray = [];
     }
 
-    addSprite(sprite: Sprite) {
+    addSprite(sprite: any) {
         this.spriteArray.push(sprite);
     }
 

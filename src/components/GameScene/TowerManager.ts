@@ -1,7 +1,6 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { GAME_STATES, TOWER_HEIGHT, TOWER_POSITION } from "../../constants";
+import { GAME_STATES } from "../../constants";
 import AssetsManager from "./AssetsManager";
-import { Tower } from "./Instances/Tower";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import * as THREE from "three";
 import {
@@ -11,14 +10,16 @@ import {
 import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "./States/StateManager";
 import { ParticleEffect } from "./ParticleEffect";
+import { TOWER_HEIGHT, TOWER_POSITION } from "../../constants/tower";
 
 export class TowerManager {
-    _tower: Tower;
+    level: number;
+    maxHp: number;
+    hp: number;
     _towerMesh: any;
     _sceneRenderer: SceneRenderer;
     _assetsManager: AssetsManager;
     _healthBarUI: CSS2DObject;
-    _claimTime: number;
     _stateManager: StateManager;
     _particleEffect: ParticleEffect;
 
@@ -33,10 +34,11 @@ export class TowerManager {
         this._stateManager = stateManager;
         this._particleEffect = particleEffect;
 
-        this._tower = new Tower();
-        this._towerMesh = this._assetsManager.getTowerModel();
+        this.level = 1;
+        this.hp = 700;
+        this.maxHp = 700;
 
-        this._claimTime = 0;
+        this._towerMesh = this._assetsManager.getTowerModel();
 
         const wrapper = document.createElement("div");
         wrapper.className = "towerStatusBar";
@@ -93,7 +95,7 @@ export class TowerManager {
         const levelDiv = this._healthBarUI.element.getElementsByClassName(
             "level"
         )[0] as HTMLDivElement;
-        levelDiv.textContent = String(this._tower.level);
+        levelDiv.textContent = String(this.level);
         levelDiv.style.fontSize = `${13 / scale}px`;
         levelDiv.style.borderWidth = `${1 / scale}px`;
         levelDiv.style.padding = `0 ${5 / scale}px`;
@@ -108,19 +110,19 @@ export class TowerManager {
 
         const progressBar = healthBar.children[0] as HTMLDivElement;
         progressBar.style.width = `${
-            (TOWER_HEALTH_WIDTH * this._tower.hp) / this._tower.maxHp / scale
+            (TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale
         }px`;
         progressBar.style.height = `${TOWER_HEALTH_HEIGHT / scale}px`;
         progressBar.style.left = `${1 / scale}px`;
         progressBar.style.top = `${1 / scale}px`;
 
         progressBar.style.background = `${getColorForPercentage(
-            this._tower.hp / this._tower.maxHp
+            this.hp / this.maxHp
         )}`;
     }
 
     levelUp() {
-        this._tower.level++;
+        this.level++;
 
         // visual effect
         const newVector = new THREE.Vector3(
@@ -133,11 +135,9 @@ export class TowerManager {
     }
 
     tick() {
-        if (this._claimTime > 0) this._claimTime--;
-
-        if (this._tower.hp <= 0) {
-            this._stateManager.setState(GAME_STATES.END);
-        }
+        // if (this._tower.hp <= 0) {
+        //     this._stateManager.setState(GAME_STATES.END);
+        // }
 
         this.renderHealthBar();
     }

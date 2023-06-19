@@ -1,10 +1,10 @@
-import { BOT_TYPE } from "../../constants";
+import { BOT_TYPE } from "../../constants/bot";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import AssetsManager from "./AssetsManager";
 import { Bot } from "./Instances/Bot";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 
-const botProduceTime = 70;
+const botProduceTime = 300;
 
 export class BotManager {
     botArray: Bot[];

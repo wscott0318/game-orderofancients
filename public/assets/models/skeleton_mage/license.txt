@@ -1,0 +1,8 @@
+Model Information:
+* title:	Skeleton Mage
+* source:	https://sketchfab.com/3d-models/skeleton-mage-0b11ab4414684592b767b08a14c5c0fe
+* author:	BitGem (https://sketchfab.com/bitgem)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

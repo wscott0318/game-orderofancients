@@ -1,21 +1,16 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import {
-    ANIMATION_TYPE,
-    BOT_PROPS,
-    BOT_STATUS,
-    FOREST_RADIUS,
-    TOWER_POSITION,
-    TOWER_RADIUS,
-} from "../../../constants";
+import { FOREST_RADIUS } from "../../../constants";
 import { ANG2RAD } from "../../../helper/math";
 import { BotAnimationController } from "../BotAnimationController";
 import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { HEALTH_PIXEL } from "../../../constants/gameUI";
 import { getColorForPercentage } from "../../../helper/color";
-import { cleanMaterial } from "../../../helper/three";
+import { cleanMaterial, disposeMesh } from "../../../helper/three";
 import TWEEN from "@tweenjs/tween.js";
 import { generateUUID } from "three/src/math/MathUtils";
+import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../../constants/bot";
+import { TOWER_POSITION, TOWER_RADIUS } from "../../../constants/tower";
 
 export class Bot {
     uuid: string;
@@ -137,17 +132,7 @@ export class Bot {
     dispose() {
         this.animController.dispose();
 
-        this.mesh.traverse((object: any) => {
-            if (!object.isMesh) return;
-
-            object.geometry.dispose();
-
-            if (object.material.isMaterial) {
-                cleanMaterial(object.material);
-            } else {
-                for (const material of object.material) cleanMaterial(material);
-            }
-        });
+        disposeMesh(this.mesh);
 
         this.scene.remove(this.mesh);
     }
@@ -195,7 +180,7 @@ export class Bot {
                 this.mesh.position.z + this.direction.z * this.speed
             );
 
-            this.mesh.position.lerp(target, 0.9);
+            this.mesh.position.lerp(target, 0.7);
         }
 
         /**

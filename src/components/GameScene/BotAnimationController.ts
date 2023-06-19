@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../../constants";
+import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../../constants/bot";
 
 export class BotAnimationController {
     mixer: THREE.AnimationMixer;

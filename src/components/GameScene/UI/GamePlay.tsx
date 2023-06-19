@@ -1,8 +1,9 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
+import { SPELLS_INFO } from "../../../constants/spell";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -36,27 +37,26 @@ const GamePlay = styled.div`
     }
     .spec {
         position: relative;
-        display: grid;
-        grid: auto / auto auto auto auto;
-        grid-gap: 0.3vw;
-        padding: 0.1vw 0.2vw;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.26vw;
+        padding: 0.1vw 0.25vw;
         width: 16.5%;
         height: 77%;
         top: 20%;
         left: 70%;
         .item {
-            background-image: url(/assets/images/rexar.png);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            background-position: 50% 50%;
             border: solid 0.1vw darkgray;
-        }
-        .item: nth-child(n + 4) {
-            visibility: hidden;
+            width: 3.8vw;
+            height: 3.7vw;
+
+            img {
+                width: 100%;
+                height: 100%;
+            }
         }
         .item:active {
-            background-size: 90% 90%;
-            transition: background-size 0s;
+            transform: scale(0.95);
         }
     }
     .status {
@@ -132,8 +132,10 @@ const Gold = styled.div`
     text-align: right;
 `;
 
-const GamePlayUI = () => {
+const GamePlayUI = ({ gameRef }: any) => {
     const playControlDown = gsap.timeline();
+
+    const [upgrades, setUpgrades] = useState([SPELLS_INFO["Throwing Axes"]]);
 
     useEffect(() => {
         playControlDown
@@ -164,6 +166,18 @@ const GamePlayUI = () => {
             );
     }, []);
 
+    const onClickUpgrade = (item: any) => {
+        const gold_balance = gameRef.current._playerState.gold;
+
+        const price = item.cost;
+
+        if (gold_balance < price) return;
+
+        gameRef.current._playerState.upgradeSpell(item);
+
+        setUpgrades([]);
+    };
+
     return (
         <GamePlay className="gameplay">
             <div className="top-bar relative">
@@ -188,18 +202,15 @@ const GamePlayUI = () => {
                     </div>
                 </div>
                 <div className="spec">
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
-                    <div className="item"></div>
+                    {upgrades.map((item, index) => (
+                        <div
+                            key={`upgradeItem${index}`}
+                            className="item"
+                            onClick={() => onClickUpgrade(item)}
+                        >
+                            <img src={item.thumbnail} alt="pic" />
+                        </div>
+                    ))}
                 </div>
             </div>
         </GamePlay>

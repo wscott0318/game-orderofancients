@@ -1,4 +1,5 @@
-import { BOT_TYPE, MODEL_URLS } from "../../constants";
+import { MODEL_URLS } from "../../constants";
+import { BOT_TYPE } from "../../constants/bot";
 import { LoadModel } from "./loaders/ModelLoader";
 import * as THREE from "three";
 
@@ -57,18 +58,30 @@ export class AssetsManager {
 
             this._models.bot_grunt = await LoadModel(MODEL_URLS["bot_grunt"]);
 
-            element.style.width = "85%";
+            element.style.width = "77%";
 
             this._models.bot_swordsman = await LoadModel(
                 MODEL_URLS["bot_swordsman"]
             );
 
-            element.style.width = "100%";
+            element.style.width = "85%";
 
             this._models.bot_archer = await LoadModel(MODEL_URLS["bot_archer"]);
 
+            element.style.width = "93%";
+
+            this._models.bot_king = await LoadModel(MODEL_URLS["bot_king"]);
+
+            element.style.width = "100%";
+
+            this._models.bot_mage = await LoadModel(MODEL_URLS["bot_mage"]);
+
             this._models.tower = this._models.buildings.scene.getObjectByName(
                 "orc_tower_Lv3_proto_orc_rts_0"
+            );
+
+            this._models.throwingAxe = await LoadModel(
+                MODEL_URLS["throwingAxe"]
             );
 
             resolve(true);
@@ -89,6 +102,10 @@ export class AssetsManager {
         if (type === BOT_TYPE["swordsman"]) return this._models.bot_swordsman;
 
         if (type === BOT_TYPE["archer"]) return this._models.bot_archer;
+
+        if (type === BOT_TYPE["king"]) return this._models.bot_king;
+
+        if (type === BOT_TYPE["mage"]) return this._models.bot_mage;
     }
 }
 

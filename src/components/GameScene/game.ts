@@ -69,6 +69,7 @@ export class Game {
             spriteManager: this._spriteManager,
             particleEffect: this._particleEffect,
             playerState: this._playerState,
+            assetsManager: this._assetsManager,
         });
         this._animationsManager = new AnimationManager({
             sceneRenderer: this._sceneRenderer,

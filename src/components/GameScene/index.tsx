@@ -120,7 +120,7 @@ export const GameScene = () => {
                 <GameMenuUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (
                 <>
-                    <GamePlayUI />
+                    <GamePlayUI gameRef={gameRef} />
 
                     <div className="absolute top-16 right-4">
                         <Toggle
