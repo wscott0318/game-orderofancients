@@ -10,6 +10,9 @@ export const MODEL_URLS = {
     bot_mage: "/assets/models/skeleton_mage/scene.gltf",
 
     throwingAxe: "/assets/models/weapons/throwingAxe/scene.gltf",
+    arrow: "/assets/models/weapons/arrow/overwatch_-_hanzos_arrow.glb",
+    missile: "/assets/models/weapons/missile/hi-tech_missile.glb",
+    stone: "/assets/models/weapons/stone/groundstone_sphere.glb",
 };
 
 export const FOREST_RADIUS = 35;
@@ -44,4 +47,12 @@ export const ARMOR_TYPES = {
     Heavy: 0x04,
     Fortified: 0x05,
     Divine: 0x06,
+};
+
+export const DAMAGE_TEXT_COLORS = {
+    [DAMAGE_TYPES.Normal]: "#848C92",
+    [DAMAGE_TYPES.Piercing]: "#cfbf46",
+    [DAMAGE_TYPES.Magic]: "#66acc7",
+    [DAMAGE_TYPES.Siege]: "#c7a166",
+    [DAMAGE_TYPES.Chaos]: "#66c76a",
 };

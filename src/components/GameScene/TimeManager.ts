@@ -53,6 +53,7 @@ export class TimeManager {
                 this.towerManager._towerMesh.position.z
             ),
             sceneRenderer: this.sceneRenderer,
+            fastMode: false,
         });
 
         this.spriteManager.addTextSprite(sprite);

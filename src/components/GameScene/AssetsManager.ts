@@ -84,6 +84,12 @@ export class AssetsManager {
                 MODEL_URLS["throwingAxe"]
             );
 
+            this._models.arrow = await LoadModel(MODEL_URLS["arrow"]);
+
+            this._models.missile = await LoadModel(MODEL_URLS["missile"]);
+
+            this._models.stone = await LoadModel(MODEL_URLS["stone"]);
+
             resolve(true);
         });
     }

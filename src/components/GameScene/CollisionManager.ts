@@ -1,3 +1,4 @@
+import { DAMAGE_TEXT_COLORS } from "../../constants";
 import { BOT_PROPS, BOT_STATUS } from "../../constants/bot";
 import { TOWER_HEIGHT } from "../../constants/tower";
 import { getDamageMultiplier } from "../../helper/game";
@@ -8,6 +9,10 @@ import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { FiringStone } from "./Sprites/FiringStone";
 import { TextSprite } from "./Sprites/Text";
+import Boulder from "./Sprites/Weapons/Boulder";
+import Bow from "./Sprites/Weapons/Bow";
+import ChaosOrb from "./Sprites/Weapons/ChaosOrb";
+import MagicMissiles from "./Sprites/Weapons/MagicMissiles";
 import ThrowingAxe from "./Sprites/Weapons/ThrowingAxe";
 import { PlayerState } from "./States/PlayerState";
 import { TowerManager } from "./TowerManager";
@@ -101,13 +106,52 @@ export class CollisionManager {
 
                 // Fire the weapon!
                 let sprite = null;
-                if (weapon.name === "Throwing Axes") {
-                    sprite = new ThrowingAxe({
-                        sceneRenderer: this.sceneRenderer,
-                        assetsManager: this.assetsManager,
-                        launchPos: weaponLaunchPos,
-                        targetBot: targetBot.bot,
-                    });
+
+                switch (weapon.name) {
+                    case "Throwing Axes":
+                        sprite = new ThrowingAxe({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
+                    case "Bow":
+                        sprite = new Bow({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
+                    case "Magic Missiles":
+                        sprite = new MagicMissiles({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
+                    case "Boulder":
+                        sprite = new Boulder({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
+                    case "Chaos Orb":
+                        sprite = new ChaosOrb({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
                 }
 
                 this.spriteManager.addSprite(sprite);
@@ -137,20 +181,21 @@ export class CollisionManager {
 
                 this.spriteManager.addTextSprite(
                     new TextSprite({
-                        text: `${trueDamage}`,
-                        color: `#848C92`,
+                        text: `${Math.ceil(trueDamage)}`,
+                        color: DAMAGE_TEXT_COLORS[damageType],
                         position: new THREE.Vector3(
                             sprite.mesh.position.x,
                             sprite.mesh.position.y,
                             sprite.mesh.position.z
                         ),
                         sceneRenderer: this.sceneRenderer,
+                        fastMode: true,
                     })
                 );
 
-                sprite.dispose();
+                sprite.addCollisionEffect();
 
-                // this.particleEffect.addExplosion(sprite.mesh.position);
+                sprite.dispose();
             } else if (spriteArray[i].targetBot.status === BOT_STATUS["dead"]) {
                 sprite.dispose();
             } else {
@@ -178,6 +223,7 @@ export class CollisionManager {
                         bot.mesh.position.z
                     ),
                     sceneRenderer: this.sceneRenderer,
+                    fastMode: false,
                 });
 
                 this.spriteManager.addTextSprite(sprite);

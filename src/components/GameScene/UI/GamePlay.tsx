@@ -135,7 +135,7 @@ const Gold = styled.div`
 const GamePlayUI = ({ gameRef }: any) => {
     const playControlDown = gsap.timeline();
 
-    const [upgrades, setUpgrades] = useState([SPELLS_INFO["Throwing Axes"]]);
+    const [upgrades, setUpgrades] = useState([SPELLS_INFO["Chaos_Orb"]]);
 
     useEffect(() => {
         playControlDown
