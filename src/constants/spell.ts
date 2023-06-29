@@ -15,6 +15,7 @@ export const SPELLS_INFO = {
         dps: 75,
         cooldown: 1.0,
     },
+
     Bow: {
         name: "Bow",
         propertyName: "Bow",
@@ -29,6 +30,7 @@ export const SPELLS_INFO = {
         dps: 75,
         cooldown: 1.0,
     },
+
     Magic_Missiles: {
         name: "Magic Missiles",
         propertyName: "Magic_Missiles",
@@ -43,6 +45,7 @@ export const SPELLS_INFO = {
         dps: 75,
         cooldown: 1.0,
     },
+
     Boulder: {
         name: "Boulder",
         propertyName: "Boulder",
@@ -57,6 +60,22 @@ export const SPELLS_INFO = {
         dps: 75,
         cooldown: 1.0,
     },
+    Missile_Barrage: {
+        name: "Missile Barrage",
+        propertyName: "Missile_Barrage",
+        spellType: "Weapon",
+        thumbnail: "/assets/images/spells/siege/Missile Barrage.png",
+        cost: 2000,
+        damageType: DAMAGE_TYPES.Siege,
+        attackRange: 1200,
+        targetType: "multiple",
+        targetCount: 3,
+        targetPreference: ARMOR_TYPES.Fortified,
+        attackDamage: 100,
+        dps: 100,
+        cooldown: 1.0,
+    },
+
     Chaos_Orb: {
         name: "Chaos Orb",
         propertyName: "Chaos_Orb",

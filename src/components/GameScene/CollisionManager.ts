@@ -1,5 +1,6 @@
 import { DAMAGE_TEXT_COLORS } from "../../constants";
 import { BOT_PROPS, BOT_STATUS } from "../../constants/bot";
+import { SPELLS_INFO } from "../../constants/spell";
 import { TOWER_HEIGHT } from "../../constants/tower";
 import { getDamageMultiplier } from "../../helper/game";
 import AssetsManager from "./AssetsManager";
@@ -13,6 +14,7 @@ import Boulder from "./Sprites/Weapons/Boulder";
 import Bow from "./Sprites/Weapons/Bow";
 import ChaosOrb from "./Sprites/Weapons/ChaosOrb";
 import MagicMissiles from "./Sprites/Weapons/MagicMissiles";
+import MissileBarrage from "./Sprites/Weapons/MissileBarrage";
 import ThrowingAxe from "./Sprites/Weapons/ThrowingAxe";
 import { PlayerState } from "./States/PlayerState";
 import { TowerManager } from "./TowerManager";
@@ -87,21 +89,25 @@ export class CollisionManager {
                         BOT_PROPS.armorTypes[item.bot.botType] ===
                         weapon.targetPreference
                 );
+                preferTargetArray.sort((first: any, second: any) => {
+                    return first.distance - second.distance;
+                });
+
+                const normalTargetArray = canShootBotArray.filter(
+                    (item: any) =>
+                        BOT_PROPS.armorTypes[item.bot.botType] !==
+                        weapon.targetPreference
+                );
+                normalTargetArray.sort((a: any, b: any) => {
+                    return a.distance - b.distance;
+                });
 
                 let targetBot = null;
 
                 if (preferTargetArray.length > 0) {
-                    preferTargetArray.sort((first: any, second: any) => {
-                        return first.distance - second.distance;
-                    });
-
                     targetBot = preferTargetArray[0];
                 } else {
-                    canShootBotArray.sort((a: any, b: any) => {
-                        return a.distance - b.distance;
-                    });
-
-                    targetBot = canShootBotArray[0];
+                    targetBot = normalTargetArray[0];
                 }
 
                 // Fire the weapon!
@@ -144,6 +150,44 @@ export class CollisionManager {
                         });
                         break;
 
+                    case "Missile Barrage":
+                        const targetCount =
+                            SPELLS_INFO.Missile_Barrage.targetCount;
+
+                        for (let i = 0; i < targetCount; i++) {
+                            console.error(
+                                preferTargetArray.length +
+                                    normalTargetArray.length
+                            );
+
+                            if (
+                                preferTargetArray.length +
+                                    normalTargetArray.length >
+                                0
+                            ) {
+                                if (preferTargetArray.length > 0) {
+                                    targetBot = preferTargetArray[0];
+                                    preferTargetArray.splice(0, 1);
+                                } else {
+                                    targetBot = normalTargetArray[0];
+                                    normalTargetArray.splice(0, 1);
+                                }
+
+                                sprite = new MissileBarrage({
+                                    sceneRenderer: this.sceneRenderer,
+                                    assetsManager: this.assetsManager,
+                                    launchPos: weaponLaunchPos,
+                                    targetBot: targetBot.bot,
+                                });
+
+                                this.spriteManager.addSprite(sprite);
+
+                                sprite = null;
+                            }
+                        }
+
+                        break;
+
                     case "Chaos Orb":
                         sprite = new ChaosOrb({
                             sceneRenderer: this.sceneRenderer,
@@ -154,7 +198,9 @@ export class CollisionManager {
                         break;
                 }
 
-                this.spriteManager.addSprite(sprite);
+                if (sprite) {
+                    this.spriteManager.addSprite(sprite);
+                }
 
                 weapon.reloadTime = weapon.cooldown;
             }
