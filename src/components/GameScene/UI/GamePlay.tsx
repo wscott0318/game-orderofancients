@@ -42,7 +42,8 @@ const GamePlay = styled.div`
         gap: 0.26vw;
         padding: 0.1vw 0.25vw;
         width: 16.5%;
-        height: 77%;
+        height: fit-content;
+        max-height: 77%;
         top: 20%;
         left: 70%;
         .item {
@@ -135,7 +136,13 @@ const Gold = styled.div`
 const GamePlayUI = ({ gameRef }: any) => {
     const playControlDown = gsap.timeline();
 
-    const [upgrades, setUpgrades] = useState([SPELLS_INFO["Chaos_Orb"]]);
+    const [upgrades, setUpgrades] = useState([
+        SPELLS_INFO["Throwing Axes"],
+        SPELLS_INFO["Bow"],
+        SPELLS_INFO["Magic_Missiles"],
+        SPELLS_INFO["Boulder"],
+        SPELLS_INFO["Chaos_Orb"],
+    ]);
 
     useEffect(() => {
         playControlDown
@@ -166,7 +173,7 @@ const GamePlayUI = ({ gameRef }: any) => {
             );
     }, []);
 
-    const onClickUpgrade = (item: any) => {
+    const onClickUpgrade = (item: any, index: number) => {
         const gold_balance = gameRef.current._playerState.gold;
 
         const price = item.cost;
@@ -175,7 +182,10 @@ const GamePlayUI = ({ gameRef }: any) => {
 
         gameRef.current._playerState.upgradeSpell(item);
 
-        setUpgrades([]);
+        const newUpgrades = [...upgrades];
+        (newUpgrades[index] as any).purchased = true;
+
+        setUpgrades(newUpgrades);
     };
 
     return (
@@ -205,8 +215,12 @@ const GamePlayUI = ({ gameRef }: any) => {
                     {upgrades.map((item, index) => (
                         <div
                             key={`upgradeItem${index}`}
-                            className="item"
-                            onClick={() => onClickUpgrade(item)}
+                            className={`${
+                                (item as any).purchased
+                                    ? "opacity-0 pointer-events-none"
+                                    : ""
+                            } item`}
+                            onClick={() => onClickUpgrade(item, index)}
                         >
                             <img src={item.thumbnail} alt="pic" />
                         </div>

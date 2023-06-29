@@ -23,6 +23,6 @@ export const SCENE_PROPS = {
         enable: true,
         color: 0xcccccc,
         near: 90,
-        far: 150,
+        far: 200,
     },
 };

@@ -5,6 +5,7 @@ import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
 import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
+import { createShipTrail } from "../../Particles/ShipTrail";
 
 interface MagicMissilesProps {
     sceneRenderer: SceneRenderer;
@@ -41,8 +42,26 @@ export class MagicMissiles {
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
+        this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
+    }
+
+    initMesh() {
+        const mesh = createShipTrail(
+            this.sceneRenderer._particleRenderer,
+            this.assetsManager._particleTextures
+        );
+
+        mesh.position.x = 0;
+        mesh.position.y = 0;
+        mesh.position.z = 0;
+
+        mesh.scale.set(0.3, 0.3, 0.3);
+
+        this.mesh.add(mesh);
+
+        this.sceneRenderer.getScene().add(this.mesh);
     }
 
     checkIfHit() {
@@ -57,6 +76,8 @@ export class MagicMissiles {
 
     dispose() {
         disposeMesh(this.mesh);
+
+        this.sceneRenderer.getScene().remove(this.mesh);
     }
 
     tick() {
@@ -84,7 +105,7 @@ export class MagicMissiles {
 
         const distance = this.mesh.position.distanceTo(targetPosition);
 
-        const moveSpeed = 100;
+        const moveSpeed = 40;
         if (distance > 0) {
             const amount = Math.min(moveSpeed * deltaTime, distance) / distance;
             this.mesh.position.lerp(targetPosition, amount);
