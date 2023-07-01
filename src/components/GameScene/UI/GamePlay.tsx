@@ -143,6 +143,8 @@ const GamePlayUI = ({ gameRef }: any) => {
         SPELLS_INFO["Boulder"],
         SPELLS_INFO["Chaos_Orb"],
         SPELLS_INFO["Missile_Barrage"],
+        SPELLS_INFO["Flamecaster"],
+        SPELLS_INFO["Chaos_Claw"],
     ]);
 
     useEffect(() => {

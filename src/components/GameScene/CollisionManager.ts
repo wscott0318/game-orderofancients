@@ -5,6 +5,7 @@ import { TOWER_HEIGHT } from "../../constants/tower";
 import { getDamageMultiplier } from "../../helper/game";
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
+import { Bot } from "./Instances/Bot";
 import { Sprite } from "./Instances/Sprite";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
@@ -12,7 +13,9 @@ import { FiringStone } from "./Sprites/FiringStone";
 import { TextSprite } from "./Sprites/Text";
 import Boulder from "./Sprites/Weapons/Boulder";
 import Bow from "./Sprites/Weapons/Bow";
+import ChaosClaw from "./Sprites/Weapons/ChaosClaw";
 import ChaosOrb from "./Sprites/Weapons/ChaosOrb";
+import Flamecaster from "./Sprites/Weapons/FlameCaster";
 import MagicMissiles from "./Sprites/Weapons/MagicMissiles";
 import MissileBarrage from "./Sprites/Weapons/MissileBarrage";
 import ThrowingAxe from "./Sprites/Weapons/ThrowingAxe";
@@ -48,10 +51,65 @@ export class CollisionManager {
         this.assetsManager = assetsManager;
     }
 
+    getTargetBot(weapon: any, launchPos: THREE.Vector3, botArray: Bot[]) {
+        const attackRange = weapon.attackRange / 30 + 6;
+
+        const canShootBotArray = [] as any;
+
+        for (let i = 0; i < botArray.length; i++) {
+            if (botArray[i].status === BOT_STATUS["dead"]) continue;
+
+            const distance = botArray[i].mesh.position.distanceTo(launchPos);
+
+            if (distance < attackRange)
+                canShootBotArray.push({
+                    distance: distance,
+                    bot: botArray[i],
+                });
+        }
+
+        if (!canShootBotArray.length)
+            return {
+                targetBot: null,
+                preferTargetArray: [],
+                normalTargetArray: [],
+            };
+
+        const preferTargetArray = canShootBotArray.filter(
+            (item: any) =>
+                BOT_PROPS.armorTypes[item.bot.botType] ===
+                weapon.targetPreference
+        );
+        preferTargetArray.sort((first: any, second: any) => {
+            return first.distance - second.distance;
+        });
+
+        const normalTargetArray = canShootBotArray.filter(
+            (item: any) =>
+                BOT_PROPS.armorTypes[item.bot.botType] !==
+                weapon.targetPreference
+        );
+        normalTargetArray.sort((a: any, b: any) => {
+            return a.distance - b.distance;
+        });
+
+        let targetBot = null;
+
+        if (preferTargetArray.length > 0) {
+            targetBot = preferTargetArray[0];
+        } else {
+            targetBot = normalTargetArray[0];
+        }
+
+        return {
+            targetBot: targetBot,
+            preferTargetArray: preferTargetArray,
+            normalTargetArray: normalTargetArray,
+        };
+    }
+
     checkIfTowerDetectEnemy() {
         const weapons = this.playerState.Weapons;
-
-        const botArray = this.botManager.botArray;
 
         const weaponLaunchPos = new THREE.Vector3(
             this.towerManager._towerMesh.position.x,
@@ -63,52 +121,14 @@ export class CollisionManager {
             const weapon = weapons[i];
 
             if (weapon.reloadTime === 0) {
-                // Weapon can be fired
-                const attackRange = weapon.attackRange / 30;
-
-                const canShootBotArray = [] as any;
-
-                for (let i = 0; i < botArray.length; i++) {
-                    if (botArray[i].status === BOT_STATUS["dead"]) continue;
-
-                    const distance = botArray[i].mesh.position.distanceTo(
-                        this.towerManager._towerMesh.position
+                let { targetBot, preferTargetArray, normalTargetArray } =
+                    this.getTargetBot(
+                        weapon,
+                        this.towerManager._towerMesh.position,
+                        this.botManager.botArray
                     );
 
-                    if (distance < attackRange)
-                        canShootBotArray.push({
-                            distance: distance,
-                            bot: botArray[i],
-                        });
-                }
-
-                if (!canShootBotArray.length) return;
-
-                const preferTargetArray = canShootBotArray.filter(
-                    (item: any) =>
-                        BOT_PROPS.armorTypes[item.bot.botType] ===
-                        weapon.targetPreference
-                );
-                preferTargetArray.sort((first: any, second: any) => {
-                    return first.distance - second.distance;
-                });
-
-                const normalTargetArray = canShootBotArray.filter(
-                    (item: any) =>
-                        BOT_PROPS.armorTypes[item.bot.botType] !==
-                        weapon.targetPreference
-                );
-                normalTargetArray.sort((a: any, b: any) => {
-                    return a.distance - b.distance;
-                });
-
-                let targetBot = null;
-
-                if (preferTargetArray.length > 0) {
-                    targetBot = preferTargetArray[0];
-                } else {
-                    targetBot = normalTargetArray[0];
-                }
+                if (!targetBot) continue;
 
                 // Fire the weapon!
                 let sprite = null;
@@ -141,6 +161,15 @@ export class CollisionManager {
                         });
                         break;
 
+                    case "Flamecaster":
+                        sprite = new Flamecaster({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
                     case "Boulder":
                         sprite = new Boulder({
                             sceneRenderer: this.sceneRenderer,
@@ -155,11 +184,6 @@ export class CollisionManager {
                             SPELLS_INFO.Missile_Barrage.targetCount;
 
                         for (let i = 0; i < targetCount; i++) {
-                            console.error(
-                                preferTargetArray.length +
-                                    normalTargetArray.length
-                            );
-
                             if (
                                 preferTargetArray.length +
                                     normalTargetArray.length >
@@ -190,6 +214,15 @@ export class CollisionManager {
 
                     case "Chaos Orb":
                         sprite = new ChaosOrb({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+
+                    case "Chaos Claw":
+                        sprite = new ChaosClaw({
                             sceneRenderer: this.sceneRenderer,
                             assetsManager: this.assetsManager,
                             launchPos: weaponLaunchPos,
@@ -241,7 +274,36 @@ export class CollisionManager {
 
                 sprite.addCollisionEffect();
 
-                sprite.dispose();
+                if (sprite.weaponType === "Chaos_Claw") {
+                    sprite.bounceCount--;
+
+                    console.error("hehehe");
+
+                    if (sprite.bounceCount < 0) {
+                        sprite.dispose();
+                    } else {
+                        const botArray = this.botManager.botArray.filter(
+                            (bot: Bot) => bot.uuid !== sprite.targetBot.uuid
+                        );
+
+                        const { targetBot } = this.getTargetBot(
+                            SPELLS_INFO["Chaos_Claw"],
+                            sprite.mesh.position,
+                            botArray
+                        );
+
+                        if (targetBot) {
+                            sprite.targetBot = targetBot.bot;
+                            newSpriteArray.push(spriteArray[i]);
+                        } else {
+                            sprite.dispose();
+                            console.error("--------------");
+                        }
+                    }
+                } else {
+                    sprite.dispose();
+                    console.error("--------------");
+                }
             } else if (spriteArray[i].targetBot.status === BOT_STATUS["dead"]) {
                 sprite.dispose();
             } else {
