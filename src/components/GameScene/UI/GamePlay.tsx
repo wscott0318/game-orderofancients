@@ -45,11 +45,11 @@ const GamePlay = styled.div`
         gap: 30px;
 
         width: 757px;
-        height: 240px;
+        height: 230px;
 
         @media only screen and (max-width: 1920px) {
             width: 40vw;
-            height: 12.5vw;
+            height: 12.15vw;
         }
 
         .profile {
@@ -66,6 +66,31 @@ const GamePlay = styled.div`
         }
     }
 
+    .spec {
+        // position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        // gap: 0.26vw;
+        // padding: 0.1vw 0.25vw;
+        // width: 16.5%;
+        // height: fit-content;
+        // max-height: 77%;
+        // top: 20%;
+        // left: 70%;
+        .item {
+            border: solid 0.1vw darkgray;
+            width: 23%;
+            height: 31%;
+            margin: 1%;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        .item:active {
+            transform: scale(0.95);
+        }
+    }
     .roundfont {
         font-family: "Arial Rounded MT Bold";
     }
@@ -296,10 +321,70 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                         </div>
                     </div>
                     <div className="h-[30%] flex items-center">
-                        <div className="border-4 border-[#252221] rounded-[15px] w-[100%] h-[80%] bg-[#0005] flex items-center"></div>
+                        <div className="border-4 border-[#252221] rounded-[15px] w-[100%] h-[80%] bg-[#0005] flex justify-center items-center">
+                            <img
+                                src="/assets/images/coin.png"
+                                className="h-[80%] "
+                                style={{ marginRight: "10%" }}
+                            ></img>
+                            <div className="statusFont_big">
+                                <span className="text-white"> 200/ </span>
+                                <span className="text-[#e9e502]">+80</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="spell"></div>
+                <div
+                    className="spell flex flex-col "
+                    style={{
+                        gap: "3%",
+                        backgroundColor: "#25222144",
+                    }}
+                >
+                    <div
+                        // className="border-2 bg-[#1558e2] border-black"
+                        style={{
+                            height: "15%",
+                            width: "100%",
+                            borderWidth: "2px",
+                            borderColor: "black",
+                            background:
+                                "linear-gradient(to bottom, #0e42ac 0%, #114fce 38%, #185ff1 83%, #114fce 100%)",
+                            backgroundSize: `${40}%, 100%`,
+                            backgroundPosition: "0, 0",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <div className="spellFont">
+                            <span className="text-[#e9e502]"> 19s /</span>
+                            <span className="text-white">20s</span>
+                        </div>
+                    </div>
+                    <div
+                        style={{
+                            height: "82%",
+                            width: "100%",
+                        }}
+                    >
+                        <div className="spec">
+                            {upgrades.map((item, index) => (
+                                <div
+                                    key={`upgradeItem${index}`}
+                                    className={`${
+                                        (item as any).purchased
+                                            ? "opacity-0 pointer-events-none"
+                                            : ""
+                                    } item`}
+                                    onClick={() => onClickUpgrade(item, index)}
+                                >
+                                    <img src={item.thumbnail} alt="pic" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
         </GamePlay>
     );
