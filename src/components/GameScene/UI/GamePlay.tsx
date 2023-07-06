@@ -1,9 +1,8 @@
 import { gsap } from "gsap";
-import { CustomEase } from "gsap/all";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { GAME_STATES } from "../../../constants";
 import { SPELLS_INFO } from "../../../constants/spell";
+import { Game } from "../game";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -133,7 +132,13 @@ const Gold = styled.div`
     text-align: right;
 `;
 
-const GamePlayUI = ({ gameRef }: any) => {
+interface GamePlayUIProps {
+    gameRef: {
+        current: Game;
+    };
+}
+
+const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
@@ -145,6 +150,7 @@ const GamePlayUI = ({ gameRef }: any) => {
         SPELLS_INFO["Missile_Barrage"],
         SPELLS_INFO["Flamecaster"],
         SPELLS_INFO["Chaos_Claw"],
+        SPELLS_INFO[`Philosopher's Stone`],
     ]);
 
     useEffect(() => {
@@ -184,6 +190,12 @@ const GamePlayUI = ({ gameRef }: any) => {
         if (gold_balance < price) return;
 
         gameRef.current._playerState.upgradeSpell(item);
+
+        // Instant upgrades actions
+        if (item.name === `Philosopher's Stone`) {
+            gameRef.current._towerManager.sacrificeHealth(1000);
+            gameRef.current._playerState.increaseGold(2000);
+        }
 
         const newUpgrades = [...upgrades];
         (newUpgrades[index] as any).purchased = true;

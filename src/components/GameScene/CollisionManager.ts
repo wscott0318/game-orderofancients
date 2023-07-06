@@ -277,8 +277,6 @@ export class CollisionManager {
                 if (sprite.weaponType === "Chaos_Claw") {
                     sprite.bounceCount--;
 
-                    console.error("hehehe");
-
                     if (sprite.bounceCount < 0) {
                         sprite.dispose();
                     } else {
@@ -297,12 +295,10 @@ export class CollisionManager {
                             newSpriteArray.push(spriteArray[i]);
                         } else {
                             sprite.dispose();
-                            console.error("--------------");
                         }
                     }
                 } else {
                     sprite.dispose();
-                    console.error("--------------");
                 }
             } else if (spriteArray[i].targetBot.status === BOT_STATUS["dead"]) {
                 sprite.dispose();
@@ -320,10 +316,12 @@ export class CollisionManager {
 
             if (bot.hp <= 0 && bot.status !== BOT_STATUS["dead"]) {
                 const gold = BOT_PROPS.gold[bot.botType];
-                this.playerState.increaseGold(gold);
+
+                const finalGoldValue =
+                    this.playerState.increaseBotKilledGold(gold);
 
                 const sprite = new TextSprite({
-                    text: `+${gold}`,
+                    text: `+${Math.ceil(finalGoldValue)}`,
                     color: `#EED734`,
                     position: new THREE.Vector3(
                         bot.mesh.position.x,

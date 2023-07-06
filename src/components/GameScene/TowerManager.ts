@@ -23,6 +23,8 @@ export class TowerManager {
     _stateManager: StateManager;
     _particleEffect: ParticleEffect;
 
+    sacrificeHP: number;
+
     constructor({
         sceneRenderer,
         assetsManager,
@@ -35,8 +37,10 @@ export class TowerManager {
         this._particleEffect = particleEffect;
 
         this.level = 1;
-        this.hp = 700;
-        this.maxHp = 700;
+        this.hp = 1700;
+        this.maxHp = 1700;
+
+        this.sacrificeHP = 0;
 
         this._towerMesh = this._assetsManager.getTowerModel();
 
@@ -134,7 +138,23 @@ export class TowerManager {
         this._particleEffect.addLevelUp(newVector);
     }
 
+    sacrificeHealth(value: number) {
+        this.sacrificeHP += value;
+    }
+
     tick() {
+        const sacrificeAmount = 15;
+
+        if (this.sacrificeHP > 0) {
+            if (this.sacrificeHP < sacrificeAmount) {
+                this.hp -= this.sacrificeHP;
+                this.sacrificeHP = 0;
+            } else {
+                this.hp -= sacrificeAmount;
+                this.sacrificeHP -= sacrificeAmount;
+            }
+        }
+
         // if (this._tower.hp <= 0) {
         //     this._stateManager.setState(GAME_STATES.END);
         // }

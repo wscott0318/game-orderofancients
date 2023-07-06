@@ -7,3 +7,5 @@ export const pauseEvent = (e: any) => {
 };
 
 export const COLOR_NUMBER = (value: number) => value / 255;
+
+export const PERCENT2VALUE = (percent: number) => percent / 100;

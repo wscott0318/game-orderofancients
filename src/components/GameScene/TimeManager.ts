@@ -5,6 +5,7 @@ import { TowerManager } from "./TowerManager";
 import { TextSprite } from "./Sprites/Text";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import SpriteManager from "./SpriteManager";
+import { SPELLS_INFO } from "../../constants/spell";
 
 interface TimeManagerProps {
     playerState: PlayerState;
@@ -40,7 +41,10 @@ export class TimeManager {
     }
 
     tickSecond() {
-        const value = START_GOLD_GEN + 5 * this.towerManager.level;
+        const value =
+            START_GOLD_GEN +
+            5 * (this.towerManager.level - 1) +
+            this.playerState.Magic_Coin * SPELLS_INFO["Magic_Coin"].gold;
 
         this.playerState.increaseGold(value);
 

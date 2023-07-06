@@ -119,4 +119,50 @@ export const SPELLS_INFO = {
         dps: 150,
         cooldown: 0.5,
     },
+
+    // Gold Upgrades
+    Magic_Coin: {
+        name: "Magic Coin",
+        propertyName: "Magic_Coin",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 500,
+        gold: 5,
+    },
+    Bounty_Hunter: {
+        name: "Bounty Hunter",
+        propertyName: "Bounty_Hunter",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 2000,
+        effect: 0.5, // 50% additional gold
+    },
+    Transmute: {
+        name: "Transmute",
+        propertyName: "Transmute",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 5000,
+    },
+    "Philosopher's Stone": {
+        name: "Philosopher's Stone",
+        propertyName: "Philosopher_Stone",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 2000,
+    },
+    Underground_Gold_Mine: {
+        name: "Underground Gold Mine",
+        propertyName: "Underground_Gold_Mine",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 2000,
+    },
+    Gems_of_Power: {
+        name: "Gems of Power",
+        propertyName: "Gems_of_Power",
+        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        spellType: "Gold",
+        cost: 2000,
+    },
 };

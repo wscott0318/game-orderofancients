@@ -1,4 +1,5 @@
-import { SPELLS_INFO } from "../../../constants/spell";
+import { GET_RANDOM_VAL } from "../../../helper/math";
+import { PERCENT2VALUE } from "../../../utils/helper";
 
 export class PlayerState {
     gold: number;
@@ -62,6 +63,14 @@ export class PlayerState {
 
     Weapons: any;
 
+    // Gold upgrades
+    Magic_Coin: number;
+    Bounty_Hunter: number;
+    Transmute: number;
+    Philosopher_Stone: number;
+    Underground_Gold_Mine: number;
+    Gems_of_Power: number;
+
     constructor() {
         this.gold = 5000;
 
@@ -123,6 +132,14 @@ export class PlayerState {
         this.Immolation = 0;
 
         this.Weapons = [];
+
+        // Gold upgrades
+        this.Magic_Coin = 0;
+        this.Bounty_Hunter = 0;
+        this.Transmute = 0;
+        this.Philosopher_Stone = 0;
+        this.Underground_Gold_Mine = 0;
+        this.Gems_of_Power = 0;
     }
 
     updateGoldUI() {
@@ -152,5 +169,25 @@ export class PlayerState {
                 reloadTime: 0,
             });
         }
+    }
+
+    increaseBotKilledGold(amount: number) {
+        let value = amount;
+
+        // Handling for "Bounty Hunter" Upgrade
+        for (let i = 0; i < this.Bounty_Hunter; i++) {
+            value = value + value * PERCENT2VALUE(50); // Grant 50% additional gold
+        }
+
+        // Handling for "Transmute" Upgrade
+        for (let i = 0; i < this.Transmute; i++) {
+            value = value + value * PERCENT2VALUE(50);
+
+            if (GET_RANDOM_VAL(20) === 0)
+                // Grant +200% gold by 5% chance
+                value = value + value * PERCENT2VALUE(200);
+        }
+
+        return value;
     }
 }
