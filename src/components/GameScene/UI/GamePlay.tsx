@@ -7,7 +7,7 @@ import { Game } from "../game";
 const GamePlay = styled.div`
     position: fixed;
     z-index: 10;
-    font-size: 1.3vw;
+
     .plant {
         background-image: url("/assets/images/bottom-plant.png");
         background-size: 100% 100%;
@@ -52,21 +52,49 @@ const GamePlay = styled.div`
             height: 12.5vw;
         }
 
-        div {
-            position: relative;
-            height: 100%;
-            bottom: 0px;
-            // background-color: #fff5;
-        }
-
         .profile {
             width: 240px;
+            height: 100%;
         }
         .status {
             width: 260px;
+            height: 100%;
         }
         .spell {
             width: 300px;
+            height: 100%;
+        }
+    }
+
+    .roundfont {
+        font-family: "Arial Rounded MT Bold";
+    }
+
+    .profileFont {
+        font-size: 1.3vw;
+    }
+    .statusFont_big {
+        font-size: 1.3vw;
+    }
+    .statusFont_small {
+        font-size: 1vw;
+    }
+    .spellFont {
+        font-size: 1vw;
+    }
+
+    @media only screen and (min-width: 1920px) {
+        .profileFont {
+            font-size: 25px;
+        }
+        .statusFont_big {
+            font-size: 23px;
+        }
+        .statusFont_small {
+            font-size: 15px;
+        }
+        .spellFont {
+            font-size: 20px;
         }
     }
 `;
@@ -82,6 +110,11 @@ const GamePlay = styled.div`
 //     text-align: right;
 // `;
 
+export const GradientText = styled.span`
+    background: linear-gradient(to top #e56e16, #e9e502);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+`;
 interface GamePlayUIProps {
     gameRef: {
         current: Game;
@@ -220,13 +253,52 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                                 src="/assets/images/profile.png"
                             ></img>
                         </div>
-                        <div className="h-[28%] flex flex-col items-center justify-evenly bg-[#2226]">
+                        <div className="roundfont profileFont h-[28%] flex flex-col items-center justify-evenly bg-[#2226]">
                             <p className="text-white">Jacky555</p>
                             <p className="text-[#e9e502]">Level 1</p>
                         </div>
                     </div>
                 </div>
-                <div className="status"></div>
+                <div className="status flex flex-col gap-[2%] justify-center">
+                    <div className="roundfont statusFont_big h-[20%] text-[#e9e502] font-bold text-center flex align-end justify-center items-end">
+                        <p style={{ height: "min-content" }}>
+                            Survivor's Status
+                        </p>
+                    </div>
+                    <div className="relative h-[16%] flex justify-center items-center">
+                        <div className="absolute border-4 border-[#252221] rounded-[15px] w-[100%] h-[100%] bg-black flex items-center">
+                            <div
+                                className="absolute left-[0.5%] w-[80%] h-[90%] rounded-[10px] "
+                                style={{
+                                    background:
+                                        "linear-gradient(to bottom, #257808 0%, #299f1c 30%,#299f1c 70%, #1d7707 100%)",
+                                }}
+                            ></div>
+                        </div>
+
+                        <div className="absolute statusFont_small">
+                            <span className="text-[#e9e502]">1450 </span>
+                            <span className="text-white">/ 1500</span>
+                        </div>
+                    </div>
+                    <div className="relative h-[30%]flex flex-col justify-center items-centers text-center">
+                        <div className="statusFont_small">
+                            <span className="text-white">{"Armor:  "}</span>
+                            <span className="text-[#e9e502]"> 10</span>
+                        </div>
+                        <div className="statusFont_small">
+                            <span className="text-white">{"Damage: "}</span>
+                            <span className="text-[#e9e502]"> 100</span>
+                        </div>
+                        <div className="statusFont_small">
+                            <span className="text-white">{"Range:    "}</span>
+                            <span className="text-[#e9e502]"> 20</span>
+                        </div>
+                    </div>
+                    <div className="h-[30%] flex items-center">
+                        <div className="border-4 border-[#252221] rounded-[15px] w-[100%] h-[80%] bg-[#0005] flex items-center"></div>
+                    </div>
+                </div>
                 <div className="spell"></div>
             </div>
         </GamePlay>
@@ -235,8 +307,12 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
 
 const ProfileLeft = ({ image, index }: any) => {
     return (
-        <div className="max-h-[20%]" key={`profilespell${index}`}>
+        <div
+            className="relative max-h-[20%] h-[100%]"
+            key={`profilespell${index}`}
+        >
             <img width={"80%"} src={image}></img>
+            <div className="absolute w-[10%] h-[70%] bg-black top-0 left-[90%] border border-[#e7e103]"></div>
         </div>
     );
 };

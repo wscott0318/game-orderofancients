@@ -1,5 +1,13 @@
 @import "./gameUI.scss";
 
+@font-face {
+    font-family: 'Arial Rounded MT Bold';
+    font-style: normal;
+    font-weight: normal;
+    src:  url('../assets/fonts/ARLRDBD.ttf') format('truetype');
+  }
+
+
 body {
     overflow: hidden;
     cursor: url("../assets/imgs/gameCursor.png"), auto;
