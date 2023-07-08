@@ -53,20 +53,20 @@ export const GameScene = () => {
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     };
 
-    useEffect(() => {
-        if (firstRef.current) return;
-        firstRef.current = true;
+    // useEffect(() => {
+    //     if (firstRef.current) return;
+    //     firstRef.current = true;
 
-        createGame();
+    //     createGame();
 
-        window.addEventListener("keydown", onKeyDown.bind(this));
+    //     window.addEventListener("keydown", onKeyDown.bind(this));
 
-        return () => {
-            window.removeEventListener("keydown", onKeyDown);
+    //     return () => {
+    //         window.removeEventListener("keydown", onKeyDown);
 
-            // destroy Game
-        };
-    }, []);
+    //         // destroy Game
+    //     };
+    // }, []);
 
     const onToggleGrid = (e: any) => {
         const isChecked = e.target.checked;
@@ -112,7 +112,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading && <Loader canEnterGame={canEnterGame} />}
+            <GamePlayUI gameRef={gameRef} />
+            {/* {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
@@ -134,7 +135,7 @@ export const GameScene = () => {
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
                 <GameEndUI setGameState={setGameState} />
-            ) : null}
+            ) : null} */}
         </Wrapper>
     );
 };
