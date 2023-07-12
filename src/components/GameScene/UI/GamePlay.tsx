@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { SPELLS_INFO } from "../../../constants/spell";
 import { Game } from "../game";
@@ -246,10 +246,15 @@ const GamePlay = styled.div`
         flex-direction: column;
 
         right: 67px;
-        top: 49px;
+        top: 4.5vh;
         width: 401px;
 
-        div {
+        @media only screen and (max-width: 1920px) {
+            right: 3.5vw;
+            width: 20.9vw;
+        }
+
+        > div {
             background-color: #0004;
             border-radius: 5px;
             border-width: 2px;
@@ -268,6 +273,10 @@ const GamePlay = styled.div`
             width: 67%;
 
             height: 30px;
+
+            @media only screen and (max-width: 1920px) {
+                height: 1.56vw;
+            }
         }
 
         .stats {
@@ -278,8 +287,12 @@ const GamePlay = styled.div`
             justify-content: center;
             position: relative;
 
-            top: 10px;
+            top: 1vh;
             height: 30px;
+
+            @media only screen and (max-width: 1920px) {
+                height: 1.56vw;
+            }
 
             .switch {
                 position: absolute;
@@ -289,11 +302,38 @@ const GamePlay = styled.div`
         }
         .players {
             position: relative;
+            transform-origin: top;
+            padding-left: 2%;
 
-            top: 15px;
-
+            top: 1.9vh;
+            font-size: 13px;
+            @media only screen and (max-width: 1920px) {
+                font-size: 0.68vw;
+            }
+            tr {
+                width: 100%;
+            }
             th {
                 color: #919056;
+            }
+            td {
+                text-align: center;
+                font-size: 15px;
+
+                @media only screen and (max-width: 1920px) {
+                    font-size: 0.78vw;
+                }
+            }
+            .level {
+                width: 100%;
+
+                height: 7px;
+
+                background-color: black;
+                > div {
+                    background-color: #129110;
+                    height: 100%;
+                }
             }
         }
     }
@@ -324,11 +364,13 @@ export const GradientText = styled.span`
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 `;
+
 interface GamePlayUIProps {
     gameRef: {
         current: Game;
     };
 }
+
 interface PlayerData {
     name: string;
     color: string;
@@ -340,7 +382,7 @@ interface PlayerData {
 }
 const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const [detailPos, setDetailPos]: [any, any] = useState({ x: 0, y: 0 });
-
+    const playerDivRef = useRef<HTMLDivElement>(null);
     // const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
@@ -362,11 +404,12 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         SPELLS_INFO["Bow"],
     ]);
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
+
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {
             name: "Jack#2643",
             color: "red",
-            level: 100,
+            level: 80,
             kills: 5,
             income: 2,
             wins: 0,
@@ -375,7 +418,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         {
             name: "Player2",
             color: "blue",
-            level: 100,
+            level: 90,
             kills: 5,
             income: 2,
             wins: 0,
@@ -384,7 +427,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         {
             name: "Player3",
             color: "pink",
-            level: 100,
+            level: 60,
             kills: 5,
             income: 2,
             wins: 0,
@@ -440,12 +483,14 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
 
         setUpgrades(newUpgrades);
     };
+
     const setDetail = () => {
         const fieldBounding = document
             .querySelector(".field")
             ?.getBoundingClientRect() as any;
         setDetailPos({ x: fieldBounding.right + 10, y: fieldBounding.top });
     };
+
     useEffect(() => {
         setDetail();
         window.addEventListener("resize", setDetail);
@@ -457,6 +502,25 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         detail.style.left = `${detailPos.x}px`;
         detail.style.top = `${detailPos.y}px`;
     }, [detailPos]);
+
+    const switchPlayerShow = () => {
+        if (playerDivRef.current) {
+            const playerDiv = playerDivRef.current;
+
+            if (playerShow) {
+                gsap.to(playerDiv, {
+                    transform: "ScaleY(0)",
+                    duration: 0.5,
+                });
+            } else {
+                gsap.to(playerDiv, {
+                    transform: "ScaleY(1)",
+                    duration: 0.5,
+                });
+            }
+        }
+        setPlayerShow(!playerShow);
+    };
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
@@ -642,31 +706,59 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                     <YellowBoldFont>00:00:55</YellowBoldFont>
                 </div>
                 <div className="stats">
-                    <span>stats</span>
+                    <YellowBoldFont>stats</YellowBoldFont>
                     {playerShow ? (
-                        <span className="switch">▲</span>
+                        <YellowBoldFont
+                            className="switch"
+                            onClick={switchPlayerShow}
+                        >
+                            ▲
+                        </YellowBoldFont>
                     ) : (
-                        <span className="switch">▼</span>
+                        <YellowBoldFont
+                            className="switch"
+                            onClick={switchPlayerShow}
+                        >
+                            ▼
+                        </YellowBoldFont>
                     )}
                 </div>
-                <div className="players">
+                <div className="players" ref={playerDivRef}>
                     <table className="player_tabel">
                         <tr>
-                            <th>Player</th>
-                            <th>Level</th>
-                            <th>Kills</th>
-                            <th>Income</th>
-                            <th>Wins</th>
-                            <th>last Stands</th>
+                            <th style={{ width: "20%", textAlign: "start" }}>
+                                Player
+                            </th>
+                            <th style={{ width: "10%" }}></th>
+                            <th style={{ width: "10%" }}>Kills</th>
+                            <th style={{ width: "10%" }}>Income</th>
+                            <th style={{ width: "10%" }}>Wins</th>
+                            <th style={{ width: "30%" }}>last Stands</th>
                         </tr>
                         {players.map((player: PlayerData, index: number) => (
                             <tr style={{ color: player.color }}>
-                                <td>{player.name}</td>
-                                <td>{player.level}</td>
-                                <td>{player.kills}</td>
-                                <td>{player.income}</td>
-                                <td>{player.wins}</td>
-                                <td>{player.lastStands}</td>
+                                <td
+                                    style={{ width: "20%", textAlign: "start" }}
+                                >
+                                    {player.name}
+                                </td>
+                                <td style={{ width: "20%" }}>
+                                    <div className="level">
+                                        <div
+                                            style={{
+                                                width: `${player.level}%`,
+                                            }}
+                                        ></div>
+                                    </div>
+                                </td>
+                                <td style={{ width: "10%" }}>{player.kills}</td>
+                                <td style={{ width: "10%" }}>
+                                    {player.income}
+                                </td>
+                                <td style={{ width: "10%" }}>{player.wins}</td>
+                                <td style={{ width: "20%" }}>
+                                    {player.lastStands}
+                                </td>
                             </tr>
                         ))}
                     </table>
