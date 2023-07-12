@@ -53,20 +53,16 @@ export const GameScene = () => {
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     };
 
-    // useEffect(() => {
-    //     if (firstRef.current) return;
-    //     firstRef.current = true;
-
-    //     createGame();
-
-    //     window.addEventListener("keydown", onKeyDown.bind(this));
-
-    //     return () => {
-    //         window.removeEventListener("keydown", onKeyDown);
-
-    //         // destroy Game
-    //     };
-    // }, []);
+    useEffect(() => {
+        // if (firstRef.current) return;
+        // firstRef.current = true;
+        // createGame();
+        // window.addEventListener("keydown", onKeyDown.bind(this));
+        // return () => {
+        //     window.removeEventListener("keydown", onKeyDown);
+        //     // destroy Game
+        // };
+    }, []);
 
     const onToggleGrid = (e: any) => {
         const isChecked = e.target.checked;

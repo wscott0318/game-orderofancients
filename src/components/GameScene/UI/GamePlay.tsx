@@ -9,6 +9,8 @@ const GamePlay = styled.div`
     z-index: 10;
     width: 100vw;
     height: 100vh;
+    top: 0px;
+    pointer-events: none;
 
     .plant {
         background-image: url("/assets/images/bottom-plant.png");
@@ -26,6 +28,7 @@ const GamePlay = styled.div`
     }
 
     .back {
+        pointer-events: all;
         background-image: url("/assets/images/bottom-back.png");
         background-size: 100% 100%;
         left: 50vw;
@@ -41,6 +44,7 @@ const GamePlay = styled.div`
     }
 
     .field {
+        pointer-events: all;
         left: 50vw;
         transform: translateX(-50%);
         align-items: end;
@@ -196,6 +200,7 @@ const GamePlay = styled.div`
     }
 
     .map {
+        pointer-events: all;
         position: absolute;
         background-image: url("/assets/images/map-back.png");
         width: 24vw;
@@ -209,6 +214,7 @@ const GamePlay = styled.div`
         }
     }
     .self {
+        pointer-events: all;
         position: absolute;
         width: 4.15vw;
         margin: 1.03vw;
@@ -241,6 +247,7 @@ const GamePlay = styled.div`
     }
 
     .player_stats {
+        pointer-events: all;
         position: absolute;
         display: flex;
         flex-direction: column;
@@ -348,17 +355,6 @@ const YellowBoldFont = styled.span`
     }
 `;
 
-// const Gold = styled.div`
-//     position: absolute;
-//     transform: translate(-100%, -50%);
-//     left: 62.4%;
-//     top: 36%;
-//     z-index: 999;
-//     color: white;
-//     font-size: 1vw;
-//     text-align: right;
-// `;
-
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
     -webkit-background-clip: text;
@@ -383,7 +379,6 @@ interface PlayerData {
 const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const [detailPos, setDetailPos]: [any, any] = useState({ x: 0, y: 0 });
     const playerDivRef = useRef<HTMLDivElement>(null);
-    // const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
         SPELLS_INFO["Throwing Axes"],
@@ -434,6 +429,9 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
             lastStands: 0,
         },
     ]);
+
+    // const playControlDown = gsap.timeline();
+
     // useEffect(() => {
     //     playControlDown
     //         .add("start")
@@ -498,7 +496,6 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
 
     useEffect(() => {
         const detail = document.querySelector(".detail") as any;
-
         detail.style.left = `${detailPos.x}px`;
         detail.style.top = `${detailPos.y}px`;
     }, [detailPos]);
@@ -521,6 +518,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         }
         setPlayerShow(!playerShow);
     };
+
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
@@ -530,7 +528,13 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                 <div className="profile flex gap-[2%]">
                     <div className="left w-[20%] flex flex-col gap-[2%]">
                         {profileSpells.map((el: any, index: number) => (
-                            <ProfileLeft image={el.thumbnail} index={index} />
+                            <div
+                                key={`profilespell${index}`}
+                                className="relative max-h-[20%] h-[100%]"
+                            >
+                                <img width={"80%"} src={el.thumbnail}></img>
+                                <div className="absolute w-[10%] h-[70%] bg-black top-0 left-[90%] border border-[#e7e103]"></div>
+                            </div>
                         ))}
                     </div>
 
@@ -591,7 +595,10 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                                 style={{ marginRight: "10%" }}
                             ></img>
                             <div className="statusFont_big">
-                                <span className="text-white"> 200/ </span>
+                                <span className="text-white" id="gold">
+                                    200
+                                </span>
+                                <span className="text-white"> / </span>
                                 <span className="text-[#e9e502]">+80</span>
                             </div>
                         </div>
@@ -725,42 +732,59 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                 </div>
                 <div className="players" ref={playerDivRef}>
                     <table className="player_tabel">
-                        <tr>
-                            <th style={{ width: "20%", textAlign: "start" }}>
-                                Player
-                            </th>
-                            <th style={{ width: "10%" }}></th>
-                            <th style={{ width: "10%" }}>Kills</th>
-                            <th style={{ width: "10%" }}>Income</th>
-                            <th style={{ width: "10%" }}>Wins</th>
-                            <th style={{ width: "30%" }}>last Stands</th>
-                        </tr>
-                        {players.map((player: PlayerData, index: number) => (
-                            <tr style={{ color: player.color }}>
-                                <td
+                        <tbody>
+                            <tr>
+                                <th
                                     style={{ width: "20%", textAlign: "start" }}
                                 >
-                                    {player.name}
-                                </td>
-                                <td style={{ width: "20%" }}>
-                                    <div className="level">
-                                        <div
-                                            style={{
-                                                width: `${player.level}%`,
-                                            }}
-                                        ></div>
-                                    </div>
-                                </td>
-                                <td style={{ width: "10%" }}>{player.kills}</td>
-                                <td style={{ width: "10%" }}>
-                                    {player.income}
-                                </td>
-                                <td style={{ width: "10%" }}>{player.wins}</td>
-                                <td style={{ width: "20%" }}>
-                                    {player.lastStands}
-                                </td>
+                                    Player
+                                </th>
+                                <th style={{ width: "10%" }}></th>
+                                <th style={{ width: "10%" }}>Kills</th>
+                                <th style={{ width: "10%" }}>Income</th>
+                                <th style={{ width: "10%" }}>Wins</th>
+                                <th style={{ width: "30%" }}>last Stands</th>
                             </tr>
-                        ))}
+
+                            {players.map(
+                                (player: PlayerData, index: number) => (
+                                    <tr
+                                        style={{ color: player.color }}
+                                        key={`player${index}`}
+                                    >
+                                        <td
+                                            style={{
+                                                width: "20%",
+                                                textAlign: "start",
+                                            }}
+                                        >
+                                            {player.name}
+                                        </td>
+                                        <td style={{ width: "20%" }}>
+                                            <div className="level">
+                                                <div
+                                                    style={{
+                                                        width: `${player.level}%`,
+                                                    }}
+                                                ></div>
+                                            </div>
+                                        </td>
+                                        <td style={{ width: "10%" }}>
+                                            {player.kills}
+                                        </td>
+                                        <td style={{ width: "10%" }}>
+                                            {player.income}
+                                        </td>
+                                        <td style={{ width: "10%" }}>
+                                            {player.wins}
+                                        </td>
+                                        <td style={{ width: "20%" }}>
+                                            {player.lastStands}
+                                        </td>
+                                    </tr>
+                                )
+                            )}
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -769,15 +793,4 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     );
 };
 
-const ProfileLeft = ({ image, index }: any) => {
-    return (
-        <div
-            className="relative max-h-[20%] h-[100%]"
-            key={`profilespell${index}`}
-        >
-            <img width={"80%"} src={image}></img>
-            <div className="absolute w-[10%] h-[70%] bg-black top-0 left-[90%] border border-[#e7e103]"></div>
-        </div>
-    );
-};
 export default GamePlayUI;
