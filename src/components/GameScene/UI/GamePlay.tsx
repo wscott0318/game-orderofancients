@@ -75,8 +75,31 @@ const GamePlay = styled.div`
     .spec {
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+
+        background: repeating-linear-gradient(
+                to bottom,
+                #fff1 0%,
+                #fff1 1%,
+                rgba(255, 255, 255, 0) 1%,
+                rgba(255, 255, 255, 0) 32%,
+                #fff1 32%,
+                #fff1 33%
+            ),
+            repeating-linear-gradient(
+                to right,
+                transparent 0%,
+                transparent 1%,
+                black 1%,
+                black 24%,
+                transparent 24%,
+                transparent 25%
+            );
+
+        background-repeat: no-repeat;
+
         .item {
-            border: solid 0.1vw darkgray;
             width: 23%;
             height: 31%;
             margin: 1%;
