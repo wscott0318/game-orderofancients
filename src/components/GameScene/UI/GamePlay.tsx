@@ -142,15 +142,21 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
-        SPELLS_INFO["Throwing Axes"],
-        SPELLS_INFO["Bow"],
-        SPELLS_INFO["Magic_Missiles"],
-        SPELLS_INFO["Boulder"],
-        SPELLS_INFO["Chaos_Orb"],
+        // SPELLS_INFO["Throwing Axes"],
+        // SPELLS_INFO["Bow"],
+        // SPELLS_INFO["Magic_Missiles"],
+        // SPELLS_INFO["Boulder"],
+        // SPELLS_INFO["Chaos_Orb"],
         SPELLS_INFO["Missile_Barrage"],
         SPELLS_INFO["Flamecaster"],
         SPELLS_INFO["Chaos_Claw"],
-        SPELLS_INFO[`Philosopher's Stone`],
+        SPELLS_INFO["Magic_Coin"],
+        // SPELLS_INFO["Bounty_Hunter"],
+        // SPELLS_INFO["Transmute"],
+        // SPELLS_INFO["Cursed_Treasure"],
+        // SPELLS_INFO[`Philosopher's Stone`],
+        // SPELLS_INFO["Underground_Gold_Mine"],
+        SPELLS_INFO["Gems_of_Power"],
     ]);
 
     useEffect(() => {
@@ -192,9 +198,14 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         gameRef.current._playerState.upgradeSpell(item);
 
         // Instant upgrades actions
-        if (item.name === `Philosopher's Stone`) {
-            gameRef.current._towerManager.sacrificeHealth(1000);
-            gameRef.current._playerState.increaseGold(2000);
+        if (
+            item.name === `Philosopher's Stone` ||
+            item.name === "Cursed Treasure"
+        ) {
+            gameRef.current._towerManager.sacrificeHealth(
+                ((SPELLS_INFO as any)[item.propertyName] as any).sacrifiHealth
+            );
+            gameRef.current._playerState.increaseUpgradeGold(item);
         }
 
         const newUpgrades = [...upgrades];

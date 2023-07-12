@@ -6,6 +6,7 @@ import { TextSprite } from "./Sprites/Text";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import SpriteManager from "./SpriteManager";
 import { SPELLS_INFO } from "../../constants/spell";
+import { PERCENT2VALUE } from "../../utils/helper";
 
 interface TimeManagerProps {
     playerState: PlayerState;
@@ -41,10 +42,27 @@ export class TimeManager {
     }
 
     tickSecond() {
-        const value =
-            START_GOLD_GEN +
-            5 * (this.towerManager.level - 1) +
+        // Default gold generation
+        let value = START_GOLD_GEN + 5 * (this.towerManager.level - 1);
+
+        // Magic Coin effect
+        let magicCoinValue =
             this.playerState.Magic_Coin * SPELLS_INFO["Magic_Coin"].gold;
+        value += magicCoinValue;
+
+        // Gold Mine effect
+        let goldMineValue =
+            this.playerState.Underground_Gold_Mine *
+            SPELLS_INFO["Underground_Gold_Mine"].gold;
+        value += goldMineValue;
+
+        for (let i = 0; i < this.playerState.Underground_Gold_Mine; i++) {
+            value += magicCoinValue * PERCENT2VALUE(10);
+            magicCoinValue += magicCoinValue * PERCENT2VALUE(10);
+
+            value += goldMineValue * PERCENT2VALUE(10);
+            goldMineValue += goldMineValue * PERCENT2VALUE(10);
+        }
 
         this.playerState.increaseGold(value);
 
@@ -65,6 +83,11 @@ export class TimeManager {
 
     tickRound() {
         this.towerManager.levelUp();
+
+        // Games of Power: 1 less additional upgrade if you don't use it right away
+        if (this.playerState.Gems_of_Power > 0) {
+            this.playerState.Gems_of_Power--;
+        }
     }
 
     tick() {

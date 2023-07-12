@@ -1,3 +1,4 @@
+import { SPELLS_INFO } from "../../../constants/spell";
 import { GET_RANDOM_VAL } from "../../../helper/math";
 import { PERCENT2VALUE } from "../../../utils/helper";
 
@@ -161,7 +162,13 @@ export class PlayerState {
     upgradeSpell(spell: any) {
         this.decreaseGold(spell.cost);
 
-        (this as any)[spell.propertyName]++;
+        if (spell.name === "Gems of Power") {
+            this.Gems_of_Power = SPELLS_INFO.Gems_of_Power.chargeCount;
+        } else if (spell.name === "Magic Coin") {
+            this.Magic_Coin += this.Gems_of_Power > 0 ? this.Gems_of_Power : 1;
+        } else {
+            (this as any)[spell.propertyName]++;
+        }
 
         if (spell.spellType === "Weapon") {
             this.Weapons.push({
@@ -189,5 +196,21 @@ export class PlayerState {
         }
 
         return value;
+    }
+
+    increaseUpgradeGold(item: any) {
+        if (item.name === `Philosopher's Stone`) {
+            this.increaseGold(SPELLS_INFO[`Philosopher's Stone`].cost);
+        } else if (item.name === "Cursed Treasure") {
+            this.increaseGold(SPELLS_INFO[`Cursed_Treasure`].cost);
+        }
+
+        let gold = ((SPELLS_INFO as any)[item.propertyName] as any).gold;
+
+        for (let i = 0; i < this.Underground_Gold_Mine; i++) {
+            gold *= PERCENT2VALUE(110);
+        }
+
+        this.increaseGold(gold);
     }
 }
