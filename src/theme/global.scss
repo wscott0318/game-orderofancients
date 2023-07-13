@@ -13,3 +13,7 @@ body {
     cursor: url("../assets/imgs/gameCursor.png"), auto;
     user-select: none;
 }
+
+.ScrollSmoother-wrapper{
+  overflow: initial !important;
+}

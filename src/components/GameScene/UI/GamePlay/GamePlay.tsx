@@ -167,7 +167,14 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                 />
             </BrowserView>
             <MobileView>
-                <Mobile />
+                <Mobile
+                    upgrades={upgrades}
+                    profileSpells={profileSpells}
+                    players={players}
+                    onClickUpgrade={onClickUpgrade}
+                    playerShow={playerShow}
+                    setPlayerShow={setPlayerShow}
+                />
             </MobileView>
         </>
     );
