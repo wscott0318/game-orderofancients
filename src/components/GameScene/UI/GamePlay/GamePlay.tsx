@@ -1,10 +1,11 @@
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
-import { BrowserView, MobileView } from "react-device-detect";
+import { BrowserView, MobileOnlyView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import { Game } from "../../game";
 import { Desktop } from "./Desktop";
+import { Mobile } from "./Mobile";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -165,7 +166,9 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
                     setPlayerShow={setPlayerShow}
                 />
             </BrowserView>
-            <MobileView></MobileView>
+            <MobileView>
+                <Mobile />
+            </MobileView>
         </>
     );
 };
