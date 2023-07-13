@@ -24,7 +24,7 @@
                 fade_out(#000, 0.7) 0%,
                 fade_out(#000, 0.7) 100%
             );
-            background-size: 0%, 100%;
+            background-size: 100%, 100%;
             background-repeat: no-repeat;
             background-position-x: right;
             content: "";
@@ -35,6 +35,8 @@
             width: 100%;
             z-index: 2;
             mask-image: url("../../assets/imgs/logo.png");
+            mask-size: 100% 100%;
+            // -webkit-mask-size: 100% 100%;
             animation: shine 3s;
         }
         @keyframes shine {
