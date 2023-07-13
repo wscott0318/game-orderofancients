@@ -10,6 +10,8 @@ import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
+import { isBrowser, isMobile } from "react-device-detect";
+
 const Wrapper = styled.div`
     position: relative;
     width: 100vw;
@@ -53,15 +55,28 @@ export const GameScene = () => {
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     };
 
+    if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
+        alert("change the oriented mode to landscape");
+
+        // let portrait = window.matchMedia("(orientation: portrait)");
+        // portrait.addEventListener("change", function (e) {
+        //     if (e.matches) {
+        //         console.log("portrait mode");
+        //     } else {
+        //         console.log("landscape mode");
+        //     }
+        // });
+    }
+
     useEffect(() => {
-        if (firstRef.current) return;
-        firstRef.current = true;
-        createGame();
-        window.addEventListener("keydown", onKeyDown.bind(this));
-        return () => {
-            window.removeEventListener("keydown", onKeyDown);
-            // destroy Game
-        };
+        // if (firstRef.current) return;
+        // firstRef.current = true;
+        // createGame();
+        // window.addEventListener("keydown", onKeyDown.bind(this));
+        // return () => {
+        //     window.removeEventListener("keydown", onKeyDown);
+        //     // destroy Game
+        // };
     }, []);
 
     const onToggleGrid = (e: any) => {
@@ -87,16 +102,12 @@ export const GameScene = () => {
             document
                 .getElementsByClassName("loader")[0]
                 .classList.add("enterGame");
-
             setTimeout(() => {
                 setCanEnterGame(false);
-
                 setLoading(false);
-
                 startGame();
             }, 3000);
         }
-
         if (e.key === "Pause") {
             if (currentGameState === GAME_STATES.PAUSE) {
                 gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
@@ -108,8 +119,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* <GamePlayUI gameRef={gameRef} /> */}
-            {loading && <Loader canEnterGame={canEnterGame} />}
+            <GamePlayUI gameRef={gameRef} />
+            {/* {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
@@ -131,7 +142,7 @@ export const GameScene = () => {
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
                 <GameEndUI setGameState={setGameState} />
-            ) : null}
+            ) : null} */}
         </Wrapper>
     );
 };

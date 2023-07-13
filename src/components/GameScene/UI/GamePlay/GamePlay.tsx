@@ -1,5 +1,6 @@
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
+import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import { Game } from "../../game";
@@ -27,21 +28,6 @@ interface PlayerData {
     lastStands: number;
 }
 
-const isMobile = () => {
-    if (
-        navigator.userAgent.match(/Android/i) ||
-        navigator.userAgent.match(/webOS/i) ||
-        navigator.userAgent.match(/iPhone/i) ||
-        navigator.userAgent.match(/iPad/i) ||
-        navigator.userAgent.match(/iPod/i) ||
-        navigator.userAgent.match(/BlackBerry/i) ||
-        navigator.userAgent.match(/Windows Phone/i)
-    ) {
-        return true;
-    } else {
-        return false;
-    }
-};
 const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const [detailPos, setDetailPos]: [any, any] = useState({ x: 0, y: 0 });
 
@@ -149,17 +135,17 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         setUpgrades(newUpgrades);
     };
 
-    const setDetail = () => {
-        const fieldBounding = document
-            .querySelector(".field")
-            ?.getBoundingClientRect() as any;
-        setDetailPos({ x: fieldBounding.right + 10, y: fieldBounding.top });
-    };
+    // const setDetail = () => {
+    //     const fieldBounding = document
+    //         .querySelector(".field")
+    //         ?.getBoundingClientRect() as any;
+    //     setDetailPos({ x: fieldBounding.right + 10, y: fieldBounding.top });
+    // };
 
-    useEffect(() => {
-        setDetail();
-        window.addEventListener("resize", setDetail);
-    }, []);
+    // useEffect(() => {
+    //     setDetail();
+    //     window.addEventListener("resize", setDetail);
+    // }, []);
 
     // useEffect(() => {
     //     const detail = document.querySelector(".detail") as any;
@@ -167,18 +153,20 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     //     detail.style.top = `${detailPos.y}px`;
     // }, [detailPos]);
 
-    return isMobile() ? (
-        <></>
-    ) : (
-        <Desktop
-            upgrades={upgrades}
-            profileSpells={profileSpells}
-            players={players}
-            onClickUpgrade={onClickUpgrade}
-            playerShow={playerShow}
-            setPlayerShow={setPlayerShow}
-        />
+    return (
+        <>
+            <BrowserView>
+                <Desktop
+                    upgrades={upgrades}
+                    profileSpells={profileSpells}
+                    players={players}
+                    onClickUpgrade={onClickUpgrade}
+                    playerShow={playerShow}
+                    setPlayerShow={setPlayerShow}
+                />
+            </BrowserView>
+            <MobileView></MobileView>
+        </>
     );
 };
-
 export default GamePlayUI;
