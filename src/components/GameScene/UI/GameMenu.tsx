@@ -89,7 +89,7 @@ const GameMenuUI = ({ setGameState }: any) => {
             className="absolute top-0 left-0 w-full h-full bg-[#00000059] flex justify-center pointer"
             ref={gameMenuRef}
         >
-            <div className="menu relative w-[28.7vw] h-[33vw] top-[-30vh] translate-y-[-50%]">
+            <div className="menu relative w-[28.7vw] h-[33vw] top-[-50vh] translate-y-[-50%]">
                 <div className="button-col">
                     <button
                         className="warButton"
