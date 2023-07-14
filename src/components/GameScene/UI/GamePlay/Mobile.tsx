@@ -1,8 +1,8 @@
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
-import Slider from "rc-slider";
-import "rc-slider/assets/index.css";
+
 import styled from "styled-components";
+import { CustomProgressBar } from "../../../../theme/components";
 
 const MobileGamePlay = styled.div`
     position: fixed;
@@ -13,24 +13,17 @@ const MobileGamePlay = styled.div`
     // pointer-events: none;
     background-image: url("/assets/images/mobile/1.jpg");
     background-size: 100% 100%;
+    color: white;
 
     .spell {
         border-radius: 10px;
-        border-width: 5px;
+        border-width: 0.3vw;
         border-color: #634401;
     }
     .spell:active {
         transform: scale(0.95);
     }
 `;
-// const YellowBoldFont = styled.span`
-//     color: #e9e502;
-//     font-size: 15px;
-
-//     @media only screen and (max-width: 1920px) {
-//         font-size: 0.78vw;
-//     }
-// `;
 
 interface PlayerData {
     name: string;
@@ -99,28 +92,98 @@ export const Mobile = ({
                     ))}
                 </div>
                 <div className="level_slider h-[20%] flex items-center">
-                    <Slider
-                        value={50}
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            height: "80%",
-                        }}
-                        handleStyle={{ display: "none" }}
-                        railStyle={{
-                            backgroundColor: "black",
-                            height: "100%",
-                            borderRadius: "20px",
-                        }}
-                        trackStyle={{
-                            backgroundColor: "#1252d5",
-                            height: "83%",
-                            borderRadius: "20px",
-                        }}
+                    <CustomProgressBar
+                        borderRadius={"20px"}
+                        trackColor={"#1252d5"}
+                        value={40}
                     />
                 </div>
             </div>
             {/* -------  field end --------- */}
+
+            {/* -------  self start --------- */}
+            <div className="self absolute left-[1.5vw] top-[1vw] flex flex-col gap-[1vw]">
+                <div className="flex gap-[0.5vw]">
+                    <img
+                        src="/assets/images/profile.png"
+                        className="w-[5.5vw] h-[5.5vw] rounded"
+                    ></img>
+                    <div className="fs-lg ff-round flex flex-col ">
+                        <span>Jack555</span>
+                        <span className="fc-orange">Level 1</span>
+                    </div>
+                </div>
+                <div className="flex flex-col">
+                    <div className="inline-flex items-center">
+                        <span className="fs-md">Armor: </span>{" "}
+                        <span className="fc-orange fs-lg ff-round">10</span>
+                    </div>
+                    <div className="inline-flex items-center">
+                        <span className="fs-md">Damage: </span>{" "}
+                        <span className="fc-orange fs-lg ff-round">100</span>
+                    </div>
+                    <div className="inline-flex items-center">
+                        <span className="fs-md">Range: </span>{" "}
+                        <span className="fc-orange fs-lg ff-round">20</span>
+                    </div>
+                </div>
+            </div>
+            {/* -------  self end --------- */}
+            {/* -------  health start --------- */}
+            <div className="health absolute left-[21vw] top-[1vw] w-[17vw] h-[2.3vw] bg-[#fff4]">
+                <CustomProgressBar
+                    value={75}
+                    borderRadius={"4px"}
+                    padding="1px"
+                    trackColor="#489631"
+                />
+                <img
+                    className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                    src="/assets/images/heart.png"
+                />
+                <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+                    <span className="fc-orange">1450 </span>
+                    <span className="">/ 1500</span>
+                </div>
+            </div>
+            {/* -------  health end --------- */}
+
+            {/* -------  coin start --------- */}
+            <div className="coin absolute left-[44vw] top-[1vw] w-[13vw] h-[2.3vw] bg-[#fff4]">
+                <CustomProgressBar
+                    value={0}
+                    borderRadius={"4px"}
+                    padding="1px"
+                    trackColor="#489631"
+                />
+                <img
+                    className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                    src="/assets/images/coin-left.png"
+                />
+                <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+                    <span className="fc-orange">200 /</span>
+                    <span className=""> +80</span>
+                </div>
+            </div>
+            {/* -------  coin end --------- */}
+
+            {/* -------  clock start --------- */}
+            <div className="clock absolute left-[63vw] top-[1vw] w-[12vw] h-[2.3vw] bg-[#fff4]">
+                <CustomProgressBar
+                    value={0}
+                    borderRadius={"4px"}
+                    padding="1px"
+                    trackColor="#489631"
+                />
+                <img
+                    className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
+                    src="/assets/images/clock.png"
+                />
+                <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
+                    <span className="">00:00:55</span>
+                </div>
+            </div>
+            {/* -------  clock end --------- */}
         </MobileGamePlay>
     );
 };
