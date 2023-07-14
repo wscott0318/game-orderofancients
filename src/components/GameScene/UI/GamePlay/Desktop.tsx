@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const GamePlay = styled.div`
@@ -413,6 +413,18 @@ export const Desktop = ({
         }
         setPlayerShow(!playerShow);
     };
+
+    const gameMenuFadeInAnim = gsap.timeline();
+    useEffect(() => {
+        gameMenuFadeInAnim
+            .add("start")
+            .from(".back", { bottom: "-16.5vh", duration: 2 }, "start")
+            .from(".plant", { bottom: "-16.5vh", duration: 2 }, "start")
+            .from(".field", { bottom: "-16.5vh", duration: 2 }, "start")
+            .from(".map", { left: "-24vw", duration: 2 }, "start")
+            .from(".self", { top: "-6vw", duration: 2 }, "start")
+            .from(".player_stats", { right: "-22vw", duration: 2 }, "start");
+    });
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
