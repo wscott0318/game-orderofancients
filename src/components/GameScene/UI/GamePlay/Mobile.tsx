@@ -10,11 +10,13 @@ const MobileGamePlay = styled.div`
     width: 100vw;
     height: 100vh;
     top: 0px;
-    // pointer-events: none;
-    background-image: url("/assets/images/mobile/1.jpg");
+    pointer-events: none;
     background-size: 100% 100%;
     color: white;
 
+    > div {
+        pointer-events: all;
+    }
     .spell {
         border-radius: 10px;
         border-width: 0.3vw;
@@ -40,8 +42,6 @@ export const Mobile = ({
     profileSpells,
     players,
     onClickUpgrade,
-    playerShow,
-    setPlayerShow,
 }: any) => {
     const [upgradeSpells, setUpgradeSpells]: [any[], any] = useState([]);
 
@@ -59,7 +59,6 @@ export const Mobile = ({
     return (
         <MobileGamePlay className="gameplay_mobile">
             {/* -------  field start --------- */}
-
             <img
                 src="/assets/images/mobile/back.png"
                 className="plant absolute w-[89%] bottom-0 left-[50%] translate-x-[-50%]"
@@ -68,7 +67,6 @@ export const Mobile = ({
                 src="/assets/images/mobile/plant.png"
                 className="plant absolute w-[92%] bottom-0 left-[50%] translate-x-[-50%]"
             />
-
             <div className="field absolute w-[87vw] h-[9vw] bottom-0 left-[50%] translate-x-[-50%] flex flex-col gap-[5%]">
                 <div className="spells h-[80%] flex gap-[0.8%] pl-[0.8%]">
                     {upgradeSpells.map((el: any, index: number) => (
@@ -130,7 +128,7 @@ export const Mobile = ({
             </div>
             {/* -------  self end --------- */}
             {/* -------  health start --------- */}
-            <div className="health absolute left-[21vw] top-[1vw] w-[17vw] h-[2.3vw] bg-[#fff4]">
+            <div className="health absolute left-[21vw] top-[1vw] w-[17vw] h-[2.3vw]">
                 <CustomProgressBar
                     value={75}
                     borderRadius={"4px"}
@@ -149,7 +147,7 @@ export const Mobile = ({
             {/* -------  health end --------- */}
 
             {/* -------  coin start --------- */}
-            <div className="coin absolute left-[44vw] top-[1vw] w-[13vw] h-[2.3vw] bg-[#fff4]">
+            <div className="coin absolute left-[44vw] top-[1vw] w-[13vw] h-[2.3vw]">
                 <CustomProgressBar
                     value={0}
                     borderRadius={"4px"}
@@ -161,14 +159,16 @@ export const Mobile = ({
                     src="/assets/images/coin-left.png"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    <span className="fc-orange">200 /</span>
+                    <span className="fc-orange" id="gold">
+                        200 /
+                    </span>
                     <span className=""> +80</span>
                 </div>
             </div>
             {/* -------  coin end --------- */}
 
             {/* -------  clock start --------- */}
-            <div className="clock absolute left-[63vw] top-[1vw] w-[12vw] h-[2.3vw] bg-[#fff4]">
+            <div className="clock absolute left-[63vw] top-[1vw] w-[12vw] h-[2.3vw]">
                 <CustomProgressBar
                     value={0}
                     borderRadius={"4px"}
@@ -184,6 +184,29 @@ export const Mobile = ({
                 </div>
             </div>
             {/* -------  clock end --------- */}
+
+            {/* -------  player start --------- */}
+            <div className="player absolute right-[3vw] top-[1vw] w-[12vw]  flex flex-col gap-[0.3vw]">
+                {players.map((player: PlayerData, index: number) => (
+                    <div className="relative" key={`player${index}`}>
+                        <CustomProgressBar
+                            height={"2.3vw"}
+                            trackColor={player.color}
+                            borderRadius="2px"
+                            value={player.level}
+                        />
+
+                        <div className="absolute top-0 fs-sm w-[90%] flex left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] ">
+                            <span className="w-[50%]">{player.name}</span>
+                            <span className="ff-round">100/</span>
+                            <span className="ff-round fc-orange">
+                                +{player.level}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            {/* -------  player end --------- */}
         </MobileGamePlay>
     );
 };
