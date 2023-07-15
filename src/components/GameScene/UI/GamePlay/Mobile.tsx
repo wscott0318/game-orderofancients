@@ -56,12 +56,27 @@ export const Mobile = ({
         }
         setUpgradeSpells(array);
     }, [upgrades]);
+
+    const gameMenuFadeInAnim = gsap.timeline();
+    useEffect(() => {
+        gameMenuFadeInAnim
+            .add("start")
+            .from(".back", { bottom: "-10vw", duration: 2 }, "start")
+            .from(".plant", { bottom: "-10vw", duration: 2 }, "start")
+            .from(".field", { bottom: "-10vw", duration: 2 }, "start")
+            .from(".self", { left: "-15vw", duration: 2 }, "start")
+            .from(".health", { top: "-3vw", duration: 2 }, "start")
+            .from(".coin", { top: "-3vw", duration: 2 }, "start")
+            .from(".clock", { top: "-3vw", duration: 2 }, "start")
+            .from(".player", { right: "-12vw", duration: 2 }, "start");
+    }, []);
+
     return (
         <MobileGamePlay className="gameplay_mobile">
             {/* -------  field start --------- */}
             <img
                 src="/assets/images/mobile/back.png"
-                className="plant absolute w-[89%] bottom-0 left-[50%] translate-x-[-50%]"
+                className="back absolute w-[89%] bottom-0 left-[50%] translate-x-[-50%]"
             />
             <img
                 src="/assets/images/mobile/plant.png"
@@ -74,7 +89,7 @@ export const Mobile = ({
                             key={`spell${index}`}
                             className=" w-[7.5%] flex items-center"
                         >
-                            {el ? (
+                            {el && !el.purchased ? (
                                 <img
                                     src={upgrades[index].thumbnail}
                                     alt="pic"
@@ -97,6 +112,7 @@ export const Mobile = ({
                     />
                 </div>
             </div>
+
             {/* -------  field end --------- */}
 
             {/* -------  self start --------- */}

@@ -84,37 +84,6 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         },
     ]);
 
-    // const playControlDown = gsap.timeline();
-
-    // useEffect(() => {
-    //     playControlDown
-    //         .add("start")
-    //         .to(
-    //             ".top-bar",
-    //             {
-    //                 top: "0px",
-    //                 duration: 1,
-    //             },
-    //             "start"
-    //         )
-    //         .to(
-    //             ".top-center",
-    //             {
-    //                 top: "0px",
-    //                 duration: 1,
-    //             },
-    //             "start"
-    //         )
-    //         .to(
-    //             ".bottom-bar",
-    //             {
-    //                 bottom: "0px",
-    //                 duration: 1,
-    //             },
-    //             "start"
-    //         );
-    // }, []);
-
     const onClickUpgrade = (item: any, index: number) => {
         const gold_balance = gameRef.current._playerState.gold;
 
