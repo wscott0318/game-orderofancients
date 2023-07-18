@@ -141,7 +141,7 @@ export const GameEndUI = ({ setGameState }: any) => {
                 </div>
             </div>
 
-            <Fireworks className="absolute w-full h-full top-0" />
+            <Fireworks className="absolute w-full h-full top-0 pointer-events-none" />
         </GameEnd>
     );
 };
