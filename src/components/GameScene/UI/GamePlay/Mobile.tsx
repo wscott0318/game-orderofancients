@@ -69,6 +69,9 @@ export const Mobile = ({
             .from(".coin", { top: "-3vw", duration: 2 }, "start")
             .from(".clock", { top: "-3vw", duration: 2 }, "start")
             .from(".player", { right: "-12vw", duration: 2 }, "start");
+        return () => {
+            gameMenuFadeInAnim.kill();
+        };
     }, []);
 
     return (

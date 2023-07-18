@@ -93,7 +93,9 @@ export const GameEndUI = ({ setGameState }: any) => {
                 },
                 "start"
             );
-
+        return () => {
+            menuDownAnim.kill();
+        };
         // const container = document.querySelector("GameEnd");
         // const firework = new Fireworks(container, {})
     }, []);

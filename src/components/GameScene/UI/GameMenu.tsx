@@ -66,6 +66,9 @@ const GameMenuUI = ({ setGameState }: any) => {
                 "start"
             );
         }
+        return () => {
+            menuDownAnim.kill();
+        };
     }, []);
 
     const gamePlay = () => {
