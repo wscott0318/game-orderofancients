@@ -56,8 +56,7 @@ export const GameScene = () => {
     };
 
     if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
-        alert("change the oriented mode to landscape");
-
+        // alert("change the oriented mode to landscape");
         // let portrait = window.matchMedia("(orientation: portrait)");
         // portrait.addEventListener("change", function (e) {
         //     if (e.matches) {
@@ -69,14 +68,14 @@ export const GameScene = () => {
     }
 
     useEffect(() => {
-        if (firstRef.current) return;
-        firstRef.current = true;
-        createGame();
-        window.addEventListener("keydown", onKeyDown.bind(this));
-        return () => {
-            window.removeEventListener("keydown", onKeyDown);
-            // destroy Game
-        };
+        // if (firstRef.current) return;
+        // firstRef.current = true;
+        // createGame();
+        // window.addEventListener("keydown", onKeyDown.bind(this));
+        // return () => {
+        //     window.removeEventListener("keydown", onKeyDown);
+        //     // destroy Game
+        // };
     }, []);
 
     const onToggleGrid = (e: any) => {
@@ -108,6 +107,7 @@ export const GameScene = () => {
                 startGame();
             }, 3000);
         }
+
         if (e.key === "Pause") {
             if (currentGameState === GAME_STATES.PAUSE) {
                 gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
@@ -119,8 +119,8 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* <GamePlayUI gameRef={gameRef} /> */}
-            {loading && <Loader canEnterGame={canEnterGame} />}
+            <GameEndUI setGameState={setGameState} />
+            {/* {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
@@ -142,7 +142,7 @@ export const GameScene = () => {
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
                 <GameEndUI setGameState={setGameState} />
-            ) : null}
+            ) : null} */}
         </Wrapper>
     );
 };
