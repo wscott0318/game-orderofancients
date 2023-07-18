@@ -1230,6 +1230,13 @@
     minimatch "^3.1.2"
     strip-json-comments "^3.1.1"
 
+"@fireworks-js/react@^2.10.7":
+  version "2.10.7"
+  resolved "https://registry.yarnpkg.com/@fireworks-js/react/-/react-2.10.7.tgz#8e06a3121f8a4717e7836de95cb0c5045129a281"
+  integrity sha512-hxfEB0vRUX7nNznhc5SEw0W8jamgF32oUiMvd5c8dOAFZgkidF8qylRw/V1Xp6In1QsjUQXnv/gvOKCe2o8JOg==
+  dependencies:
+    fireworks-js "2.10.7"
+
 "@humanwhocodes/config-array@^0.10.5":
   version "0.10.5"
   resolved "https://registry.npmjs.org/@humanwhocodes/config-array/-/config-array-0.10.5.tgz"
@@ -4540,6 +4547,11 @@ find-up@^5.0.0:
   dependencies:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
+
+fireworks-js@2.10.7:
+  version "2.10.7"
+  resolved "https://registry.yarnpkg.com/fireworks-js/-/fireworks-js-2.10.7.tgz#eb099652304356aef160ec00869fc60f00c6277a"
+  integrity sha512-FyRNiqlgu9ZeFCjfN0UiGUlj5dUWNYLyFaWN/Q8sOMf0E+KGA4dMROaBZpCtym85fChgCspoa3jHoLTRZiy74A==
 
 flat-cache@^3.0.4:
   version "3.0.4"

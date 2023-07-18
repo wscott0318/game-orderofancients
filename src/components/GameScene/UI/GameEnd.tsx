@@ -3,6 +3,7 @@ import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
+import Fireworks from "@fireworks-js/react";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -92,6 +93,9 @@ export const GameEndUI = ({ setGameState }: any) => {
                 },
                 "start"
             );
+
+        // const container = document.querySelector("GameEnd");
+        // const firework = new Fireworks(container, {})
     }, []);
 
     const resumeGame = () => {
@@ -136,6 +140,8 @@ export const GameEndUI = ({ setGameState }: any) => {
                     </button>
                 </div>
             </div>
+
+            <Fireworks className="absolute w-full h-full top-0" />
         </GameEnd>
     );
 };
