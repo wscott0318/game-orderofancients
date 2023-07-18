@@ -69,8 +69,6 @@ const GameMenuUI = ({ setGameState }: any) => {
     }, []);
 
     const gamePlay = () => {
-        console.log(1231231);
-
         menuDownAnim.reverse();
         if (gameMenuRef.current) {
             gsap.to(gameMenuRef.current, {
