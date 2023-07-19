@@ -18,6 +18,7 @@ export const BOT_STATUS = {
     walk: 0x01,
     attack: 0x02,
     dead: 0x03,
+    stun: 0x04,
 } as any;
 
 export const BOT_ANIMATION_CLIPS = {

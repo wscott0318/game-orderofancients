@@ -18,6 +18,7 @@ import ChaosOrb from "./Sprites/Weapons/ChaosOrb";
 import Flamecaster from "./Sprites/Weapons/FlameCaster";
 import MagicMissiles from "./Sprites/Weapons/MagicMissiles";
 import MissileBarrage from "./Sprites/Weapons/MissileBarrage";
+import Rifle from "./Sprites/Weapons/Rifle";
 import ThrowingAxe from "./Sprites/Weapons/ThrowingAxe";
 import { PlayerState } from "./States/PlayerState";
 import { TowerManager } from "./TowerManager";
@@ -153,6 +154,14 @@ export class CollisionManager {
                             bounceCount: 3,
                         });
                         break;
+                    case "Rifle":
+                        sprite = new Rifle({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
 
                     case "Bow":
                         sprite = new Bow({
@@ -284,6 +293,10 @@ export class CollisionManager {
                 );
 
                 sprite.addCollisionEffect();
+
+                if (sprite.weaponType === "Rifle") {
+                    sprite.targetBot.stun(SPELLS_INFO["Rifle"].stunDuration);
+                }
 
                 if (
                     sprite.weaponType === "Chaos_Claw" ||

@@ -1,14 +1,6 @@
 import AssetsManager from "./AssetsManager";
-import { createBlackHole } from "./Particles/Blackhole";
-import { createBulletMuzzle } from "./Particles/BulletMuzzle";
-import { createElectricBall } from "./Particles/ElectricBall";
-import { createEnergyRifleMuzzle } from "./Particles/EnergyRifleMuzzle";
 import { createExplosion } from "./Particles/Explosion2";
 import { createLevelUp } from "./Particles/LevelUp";
-import { createPickUp } from "./Particles/PickUp";
-import { createShipSmoke } from "./Particles/ShipSmoke";
-import { createShipTrail } from "./Particles/ShipTrail";
-import { createToonExplosion } from "./Particles/ToonExplosion";
 import { createToonProjectile } from "./Particles/ToonProjectile";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 
