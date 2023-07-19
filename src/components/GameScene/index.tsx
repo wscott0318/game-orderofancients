@@ -13,6 +13,8 @@ import GamePauseUI from "./UI/GamePause";
 import { isBrowser, isMobile } from "react-device-detect";
 
 const Wrapper = styled.div`
+    background-image: url("/assets/images/bbb.jpg");
+    background-size: 100% 100%;
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -68,14 +70,14 @@ export const GameScene = () => {
     }
 
     useEffect(() => {
-        if (firstRef.current) return;
-        firstRef.current = true;
-        createGame();
-        window.addEventListener("keydown", onKeyDown.bind(this));
-        return () => {
-            window.removeEventListener("keydown", onKeyDown);
-            // destroy Game
-        };
+        // if (firstRef.current) return;
+        // firstRef.current = true;
+        // createGame();
+        // window.addEventListener("keydown", onKeyDown.bind(this));
+        // return () => {
+        //     window.removeEventListener("keydown", onKeyDown);
+        //     // destroy Game
+        // };
     }, []);
 
     const onToggleGrid = (e: any) => {
@@ -119,8 +121,9 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* <GameEndUI setGameState={setGameState} /> */}
-            {loading && <Loader canEnterGame={canEnterGame} />}
+            <GameEndUI setGameState={setGameState} />
+            {/* <GamePlayUI gameRef={gameRef} /> */}
+            {/* {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
@@ -142,7 +145,7 @@ export const GameScene = () => {
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
                 <GameEndUI setGameState={setGameState} />
-            ) : null}
+            ) : null} */}
         </Wrapper>
     );
 };

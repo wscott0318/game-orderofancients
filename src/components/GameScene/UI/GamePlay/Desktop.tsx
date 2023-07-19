@@ -1,6 +1,7 @@
 import { gsap } from "gsap";
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
+import { PlayerData } from "../../../../constants/gameUI";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -374,16 +375,6 @@ const YellowBoldFont = styled.span`
         font-size: 0.78vw;
     }
 `;
-
-interface PlayerData {
-    name: string;
-    color: string;
-    level: number;
-    kills: number;
-    income: number;
-    wins: number;
-    lastStands: number;
-}
 
 export const Desktop = ({
     upgrades,

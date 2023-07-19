@@ -29,7 +29,7 @@ const GameMenu = styled.div`
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png");
-        background-image: url("/assets/images/menu-button-back.png");
+        background-image: url("/assets/images/button-back-bright.png");
         background-size: contain;
         background-repeat: no-repeat;
         background-size: cover;

@@ -6,6 +6,7 @@ import { SPELLS_INFO } from "../../../../constants/spell";
 import { Game } from "../../game";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
+import { PlayerData } from "../../../../constants/gameUI";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -17,16 +18,6 @@ interface GamePlayUIProps {
     gameRef: {
         current: Game;
     };
-}
-
-interface PlayerData {
-    name: string;
-    color: string;
-    level: number;
-    kills: number;
-    income: number;
-    wins: number;
-    lastStands: number;
 }
 
 const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
@@ -57,6 +48,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {
             name: "Jack#2643",
+            avata: "/assets/users/jack.png",
             color: "red",
             level: 80,
             kills: 5,
@@ -66,6 +58,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         },
         {
             name: "Player2",
+            avata: "/assets/users/2.png",
             color: "blue",
             level: 90,
             kills: 5,
@@ -75,6 +68,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         },
         {
             name: "Player3",
+            avata: "/assets/users/3.png",
             color: "pink",
             level: 60,
             kills: 5,

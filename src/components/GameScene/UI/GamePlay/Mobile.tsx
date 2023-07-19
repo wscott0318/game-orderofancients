@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import styled from "styled-components";
 import { CustomProgressBar } from "../../../../theme/components";
+import { PlayerData } from "../../../../constants/gameUI";
 
 const MobileGamePlay = styled.div`
     position: fixed;
@@ -26,16 +27,6 @@ const MobileGamePlay = styled.div`
         transform: scale(0.95);
     }
 `;
-
-interface PlayerData {
-    name: string;
-    color: string;
-    level: number;
-    kills: number;
-    income: number;
-    wins: number;
-    lastStands: number;
-}
 
 export const Mobile = ({
     upgrades,
