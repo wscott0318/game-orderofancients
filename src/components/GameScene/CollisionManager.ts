@@ -140,6 +140,17 @@ export class CollisionManager {
                             assetsManager: this.assetsManager,
                             launchPos: weaponLaunchPos,
                             targetBot: targetBot.bot,
+                            bounceCount: 0,
+                        });
+                        break;
+
+                    case "Seeker Axe":
+                        sprite = new ThrowingAxe({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                            bounceCount: 3,
                         });
                         break;
 
@@ -274,7 +285,10 @@ export class CollisionManager {
 
                 sprite.addCollisionEffect();
 
-                if (sprite.weaponType === "Chaos_Claw") {
+                if (
+                    sprite.weaponType === "Chaos_Claw" ||
+                    sprite.weaponType === "Throwing Axes"
+                ) {
                     sprite.bounceCount--;
 
                     if (sprite.bounceCount < 0) {
@@ -285,7 +299,9 @@ export class CollisionManager {
                         );
 
                         const { targetBot } = this.getTargetBot(
-                            SPELLS_INFO["Chaos_Claw"],
+                            SPELLS_INFO[
+                                sprite.weaponType as keyof typeof SPELLS_INFO
+                            ],
                             sprite.mesh.position,
                             botArray
                         );

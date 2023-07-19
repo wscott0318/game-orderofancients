@@ -15,6 +15,21 @@ export const SPELLS_INFO = {
         dps: 75,
         cooldown: 1.0,
     },
+    Seeker_Axe: {
+        name: "Seeker Axe",
+        propertyName: "Seeker_Axe",
+        spellType: "Weapon",
+        thumbnail: "/assets/images/spells/normal/Seeker Axe.png",
+        cost: 2000,
+        damageType: DAMAGE_TYPES.Normal,
+        attackRange: 600,
+        targetType: "Bounce(3)",
+        BounceCount: 3,
+        targetPreference: ARMOR_TYPES.Medium,
+        attackDamage: 150,
+        dps: 150,
+        cooldown: 1.0,
+    },
 
     Bow: {
         name: "Bow",

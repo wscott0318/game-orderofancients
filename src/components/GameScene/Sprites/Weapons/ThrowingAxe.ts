@@ -13,6 +13,7 @@ interface ThrowingAxeProps {
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetBot: Bot;
+    bounceCount: number;
 }
 
 export class ThrowingAxe {
@@ -27,19 +28,23 @@ export class ThrowingAxe {
 
     lastTime: number;
 
+    bounceCount: number;
+
     constructor({
         sceneRenderer,
         assetsManager,
         launchPos,
         targetBot,
+        bounceCount = 0,
     }: ThrowingAxeProps) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
-        this.weaponType = "Throwing Axe";
+        this.weaponType = "Throwing Axes";
         this.attackDamage = SPELLS_INFO["Throwing Axes"].attackDamage;
         this.damageType = SPELLS_INFO["Throwing Axes"].damageType;
         this.targetBot = targetBot;
+        this.bounceCount = bounceCount;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);

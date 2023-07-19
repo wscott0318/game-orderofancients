@@ -142,21 +142,9 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
-        // SPELLS_INFO["Throwing Axes"],
-        // SPELLS_INFO["Bow"],
-        // SPELLS_INFO["Magic_Missiles"],
-        // SPELLS_INFO["Boulder"],
-        // SPELLS_INFO["Chaos_Orb"],
-        SPELLS_INFO["Missile_Barrage"],
-        SPELLS_INFO["Flamecaster"],
+        SPELLS_INFO["Throwing Axes"],
+        SPELLS_INFO["Seeker_Axe"],
         SPELLS_INFO["Chaos_Claw"],
-        SPELLS_INFO["Magic_Coin"],
-        // SPELLS_INFO["Bounty_Hunter"],
-        // SPELLS_INFO["Transmute"],
-        // SPELLS_INFO["Cursed_Treasure"],
-        // SPELLS_INFO[`Philosopher's Stone`],
-        // SPELLS_INFO["Underground_Gold_Mine"],
-        SPELLS_INFO["Gems_of_Power"],
     ]);
 
     useEffect(() => {
