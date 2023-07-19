@@ -8,6 +8,9 @@ const getResValue = (value: number) => (value / 937) * 100 + "vh";
 
 const GameMenu = styled.div`
     z-index: 20;
+    background-image: url("/assets/images/loading-back.png");
+    background-size: 100% 100%;
+
     // backdrop-filter: saturate(0.5);
     // user-select: none;
 
