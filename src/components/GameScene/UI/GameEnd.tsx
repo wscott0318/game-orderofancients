@@ -10,14 +10,16 @@ const GameEnd = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
-    padding-left: 5%;
     width: 100vw;
     height: 100vh;
+
     background: rgb(0, 0, 0, 0.8);
     backdrop-filter: saturate(0.5);
+
     z-index: 20;
+    display: flex;
     justify-content: center;
+
     .players {
         background-color: #0004;
         border-radius: 5px;
@@ -45,6 +47,7 @@ const GameEnd = styled.div`
 `;
 
 export const GameEndUI = ({ setGameState }: any) => {
+    const isvictory = true;
     // const menuDownAnim = gsap.timeline();
 
     // useEffect(() => {
@@ -144,7 +147,11 @@ export const GameEndUI = ({ setGameState }: any) => {
             <div className="gameend w-[34%] h-fit flex flex-col items-center">
                 <img
                     className="vitory-logo relative w-full"
-                    src="/assets/images/victory-logo.png"
+                    src={
+                        isvictory
+                            ? "/assets/images/victory-logo.png"
+                            : "/assets/images/defeat-logo.png"
+                    }
                 />
 
                 <div className="players relative top-[-6vw] w-[72%] ff-micro">
@@ -183,16 +190,25 @@ export const GameEndUI = ({ setGameState }: any) => {
                     </table>
                 </div>
 
-                <div className="buttons relative top-[-5vw] flex justify-between w-[70%] fs-sm font-bold">
+                <div
+                    className="buttons relative top-[-5vw] flex w-[70%] fs-sm font-bold"
+                    style={{
+                        justifyContent: isvictory ? "space-between" : "center",
+                    }}
+                >
                     <button className="exit relative w-[45%] aspect-[652/170] text-[#ca663b]">
                         Exit Game
                     </button>
-                    <button className="playanother relative w-[45%] aspect-[652/170] text-[#e9c967]">
-                        Play Another
-                    </button>
+
+                    {isvictory && (
+                        <button className="playanother relative w-[45%] aspect-[652/170] text-[#e9c967]">
+                            Play Another
+                        </button>
+                    )}
                 </div>
             </div>
-            {true && ( // is victory?
+
+            {isvictory && (
                 <Fireworks className="absolute w-full h-full top-0 pointer-events-none" />
             )}
         </GameEnd>
