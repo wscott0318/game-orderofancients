@@ -15,7 +15,9 @@ import Boulder from "./Sprites/Weapons/Boulder";
 import Bow from "./Sprites/Weapons/Bow";
 import ChaosClaw from "./Sprites/Weapons/ChaosClaw";
 import ChaosOrb from "./Sprites/Weapons/ChaosOrb";
+import FireBow from "./Sprites/Weapons/FireBow";
 import Flamecaster from "./Sprites/Weapons/FlameCaster";
+import FrostBow from "./Sprites/Weapons/FrostBow";
 import MagicMissiles from "./Sprites/Weapons/MagicMissiles";
 import MissileBarrage from "./Sprites/Weapons/MissileBarrage";
 import Rifle from "./Sprites/Weapons/Rifle";
@@ -171,6 +173,22 @@ export class CollisionManager {
                             targetBot: targetBot.bot,
                         });
                         break;
+                    case "Frost Bow":
+                        sprite = new FrostBow({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
+                    case "Fire Bow":
+                        sprite = new FireBow({
+                            sceneRenderer: this.sceneRenderer,
+                            assetsManager: this.assetsManager,
+                            launchPos: weaponLaunchPos,
+                            targetBot: targetBot.bot,
+                        });
+                        break;
 
                     case "Magic Missiles":
                         sprite = new MagicMissiles({
@@ -293,10 +311,6 @@ export class CollisionManager {
                 );
 
                 sprite.addCollisionEffect();
-
-                if (sprite.weaponType === "Rifle") {
-                    sprite.targetBot.stun(SPELLS_INFO["Rifle"].stunDuration);
-                }
 
                 if (
                     sprite.weaponType === "Chaos_Claw" ||

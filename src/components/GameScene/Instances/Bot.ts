@@ -14,6 +14,7 @@ import { TOWER_POSITION, TOWER_RADIUS } from "../../../constants/tower";
 import { createStun } from "../Particles/weapons/Stun";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import AssetsManager from "../AssetsManager";
+import { COLOR_NUMBER } from "../../../utils/helper";
 
 export class Bot {
     clock: THREE.Clock;
@@ -42,6 +43,7 @@ export class Bot {
     canRemove: boolean;
     stunTime: number;
     stunMesh: THREE.Object3D | null;
+    slowTime: number;
 
     constructor({ sceneRenderer, assetsManager, botType }: any) {
         this.sceneRenderer = sceneRenderer;
@@ -81,6 +83,7 @@ export class Bot {
         this.canRemove = false;
         this.stunTime = 0;
         this.stunMesh = null;
+        this.slowTime = 0;
 
         const healthBarDiv = document.createElement("div");
         healthBarDiv.className = "healthBar";
@@ -221,6 +224,19 @@ export class Bot {
         this.animController.stopAnimation();
     }
 
+    slow(duration: number) {
+        this.slowTime = duration;
+
+        this.mesh.traverse((obj: any) => {
+            if (obj.isMesh || obj.isSkinnedMesh) {
+                const material = obj.material.clone();
+
+                material.color = new THREE.Color(2, 5, 6);
+                obj.material = material;
+            }
+        });
+    }
+
     tick() {
         const delta = this.clock.getDelta();
 
@@ -245,6 +261,22 @@ export class Bot {
             if (this.stunMesh) this.disposeStunMesh();
         }
 
+        if (this.slowTime > 0) {
+            this.slowTime -= delta;
+
+            if (this.slowTime <= 0) {
+                this.slowTime = 0;
+
+                this.mesh.traverse((obj: any) => {
+                    if (obj.isMesh || obj.isSkinnedMesh) {
+                        const material = obj.material.clone();
+                        material.color = new THREE.Color(1, 1, 1);
+                        obj.material = material;
+                    }
+                });
+            }
+        }
+
         if (this.claimTime > 0) this.claimTime--;
 
         const distance = this.mesh.position.distanceTo(this.targetPos);
@@ -261,7 +293,8 @@ export class Bot {
                 this.mesh.position.z + this.direction.z * this.speed
             );
 
-            this.mesh.position.lerp(target, 0.7);
+            const speedValue = this.slowTime > 0 ? 0.3 : 0.7;
+            this.mesh.position.lerp(target, speedValue);
         }
 
         /**

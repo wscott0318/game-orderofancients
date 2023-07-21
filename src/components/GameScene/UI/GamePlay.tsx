@@ -142,6 +142,7 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
     const playControlDown = gsap.timeline();
 
     const [upgrades, setUpgrades] = useState([
+        SPELLS_INFO["Magic_Missiles"],
         SPELLS_INFO["Seeker_Axe"],
         SPELLS_INFO["Rifle"],
         SPELLS_INFO["Frost_Bow"],

@@ -73,6 +73,7 @@ export const SPELLS_INFO = {
         attackDamage: 100,
         dps: 200,
         cooldown: 0.5,
+        slowTime: 2.0,
     },
     Fire_Bow: {
         name: "Fire Bow",

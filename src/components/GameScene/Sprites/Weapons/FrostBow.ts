@@ -5,8 +5,7 @@ import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
 import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
-import { createElectricBall } from "../../Particles/ElectricBall";
-import { createBulletMuzzle } from "../../Particles/BulletMuzzle";
+import { createFrostBow } from "../../Particles/weapons/FrostBow";
 
 interface Props {
     sceneRenderer: SceneRenderer;
@@ -15,7 +14,7 @@ interface Props {
     targetBot: Bot;
 }
 
-export class Rifle {
+export class FrostBow {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
 
@@ -31,9 +30,9 @@ export class Rifle {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
-        this.weaponType = "Rifle";
-        this.attackDamage = SPELLS_INFO["Rifle"].attackDamage;
-        this.damageType = SPELLS_INFO["Rifle"].damageType;
+        this.weaponType = "Frost_Bow";
+        this.attackDamage = SPELLS_INFO["Frost_Bow"].attackDamage;
+        this.damageType = SPELLS_INFO["Frost_Bow"].damageType;
         this.targetBot = targetBot;
 
         this.mesh = new THREE.Group();
@@ -43,7 +42,22 @@ export class Rifle {
         this.lastTime = Date.now() * 0.001;
     }
 
-    initMesh() {}
+    initMesh() {
+        const mesh = createFrostBow(
+            this.sceneRenderer._particleRenderer,
+            this.assetsManager._particleTextures
+        );
+
+        mesh.position.x = 0;
+        mesh.position.y = 0;
+        mesh.position.z = 0;
+
+        mesh.scale.set(0.2, 0.2, 0.2);
+
+        this.mesh.add(mesh);
+
+        this.sceneRenderer.getScene().add(this.mesh);
+    }
 
     checkIfHit() {
         const distance = this.mesh.position.distanceTo(
@@ -54,28 +68,15 @@ export class Rifle {
     }
 
     addCollisionEffect() {
-        const particle = createBulletMuzzle(
-            this.sceneRenderer._particleRenderer,
-            this.assetsManager._particleTextures
-        );
-
-        particle.position.x = this.mesh.position.x;
-        particle.position.y = this.mesh.position.y;
-        particle.position.z = this.mesh.position.z;
-
-        particle.scale.set(1.5, 1.5, 1.5);
-
-        this.sceneRenderer.getScene().add(particle);
-
-        this.targetBot.stun(SPELLS_INFO["Rifle"].stunDuration);
+        this.targetBot.slow(SPELLS_INFO["Frost_Bow"].slowTime);
     }
 
     dispose() {
         disposeMesh(this.mesh);
 
-        setTimeout(() => {
-            this.sceneRenderer.getScene().remove(this.mesh);
-        }, 200);
+        new THREE.Color(0, 0, 255);
+
+        this.sceneRenderer.getScene().remove(this.mesh);
     }
 
     tick() {
@@ -103,7 +104,7 @@ export class Rifle {
 
         const distance = this.mesh.position.distanceTo(targetPosition);
 
-        const moveSpeed = 15;
+        const moveSpeed = 30;
         if (distance > 0) {
             const amount = Math.min(moveSpeed * deltaTime, distance) / distance;
             this.mesh.position.lerp(targetPosition, amount);
@@ -111,4 +112,4 @@ export class Rifle {
     }
 }
 
-export default Rifle;
+export default FrostBow;
