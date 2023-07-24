@@ -167,13 +167,13 @@ export const Loader = ({ canEnterGame }: any) => {
                         </div>
                     </div>
 
-                    <div
+                    {/* <div
                         className={`pressAnyKey ${
                             canEnterGame ? "active" : ""
                         }`}
                     >
                         PRESS ANY KEY
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

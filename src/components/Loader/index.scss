@@ -49,12 +49,8 @@
     }
 
     .progress-container {
-        position: absolute;
-        bottom: 100px;
-        width: 1000px;
-        max-width: 90%;
-        transform: translateX(-50%);
-        left: 50%;
+        margin-top: 50px;
+        width: 100%;
         opacity: 1;
         transition: all 0.5s;
 
