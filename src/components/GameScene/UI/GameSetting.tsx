@@ -18,6 +18,14 @@ const GameSetting = styled.div`
         background-image: url("/assets/images/setting-back.png");
         background-size: 100% 100%;
 
+        width: 60vw;
+        height: 37vw;
+
+        @media only screen and (min-width: 1920px) {
+            width: 1152px;
+            height: 710px;
+        }
+
         .panel {
             .navbar {
                 button {
@@ -110,7 +118,7 @@ const GameSettingUI = ({ setGameState }: any) => {
             className="absolute top-0 left-0 w-full h-full flex justify-center"
             ref={gameSettingRef}
         >
-            <div className="setting relative w-[60vw] h-[37vw] top-[50%] translate-y-[-50%] flex flex-col items-center">
+            <div className="setting relative top-[50%] translate-y-[-50%] flex flex-col items-center">
                 <div className="panel relative w-[80%] h-[64%] top-[17%]  flex flex-col">
                     <div className="navbar relative w-[100%] h-[8%] flex">
                         <button className="video h-[100%]"></button>
