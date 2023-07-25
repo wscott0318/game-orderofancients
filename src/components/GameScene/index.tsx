@@ -11,6 +11,7 @@ import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
 import { isBrowser, isMobile } from "react-device-detect";
+import GameSettingUI from "./UI/GameSetting";
 
 const Wrapper = styled.div`
     // background-image: url("/assets/images/bbb.jpg");
@@ -123,7 +124,8 @@ export const GameScene = () => {
         <Wrapper>
             {/* <GameEndUI setGameState={setGameState} /> */}
             {/* <GamePlayUI gameRef={gameRef} /> */}
-            <Loader canEnterGame={canEnterGame} />
+            {/* <Loader canEnterGame={canEnterGame} /> */}
+            <GameSettingUI />
 
             {/* {loading && <Loader canEnterGame={canEnterGame} />}
 
