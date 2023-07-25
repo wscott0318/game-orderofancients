@@ -4,21 +4,23 @@
     
     border-width: 3px;
     border-color: #2c322f;
-
+    border-radius: 4px;
+    padding: 1px;
     .example-thumb {
         background-color: #4f4f52;
         cursor: pointer;
         box-sizing: border-box;
         
-        height: 150%;
-        transform: translate(-25%, -25%);
+        height: 100%;
+        // transform: translate(-25%, -25%);
         aspect-ratio: 1;
         line-height: 38px;
     }
     
     .example-track {
         position: relative;
-        background: #ff0;
+        background: linear-gradient(to top, #e94402 30%,  #e9e502 30%, #e9e502);
+        // background: #e9e502;
     
         height: 100%;
     }
