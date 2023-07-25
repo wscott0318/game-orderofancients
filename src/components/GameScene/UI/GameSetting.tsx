@@ -130,7 +130,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                         <div className="relative h-[80%] w-[80%] flex flex-col">
                             <div className="h-[20%] w-full flex justify-between items-center  ff-micro fs-md">
                                 <p className="text-white">Scrren Resolution</p>
-                                <div className="w-[35%] h-[80%] ">
+                                <div className="w-[35%] h-[80%] shadow-[2px_3px_rgba(0,0,0,0.3)]">
                                     <select
                                         name="resolution"
                                         className="resolutions"
@@ -148,7 +148,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                 <p className="text-white">Fullscreen</p>
                                 <div className="fullscreen w-[35%] h-[80%] ">
                                     <div
-                                        className="h-full aspect-square"
+                                        className="h-full aspect-square shadow-[2px_3px_rgba(0,0,0,0.3)]"
                                         style={{
                                             borderWidth: "2px",
                                             borderColor: "#2c322f",
@@ -176,9 +176,9 @@ const GameSettingUI = ({ setGameState }: any) => {
                             </div>
                             <div className="h-[20%] w-full flex justify-between items-center ff-micro fs-md">
                                 <p className="text-white">Luminosity</p>
-                                <div className="w-[35%] h-[80%]  flex items-center">
+                                <div className="w-[35%] h-[80%]  flex items-center ">
                                     <ReactSlider
-                                        className="horizontal-slider"
+                                        className="horizontal-slider shadow-[2px_3px_rgba(0,0,0,0.3)]"
                                         thumbClassName="example-thumb"
                                         trackClassName="example-track"
                                         max={5}
@@ -194,7 +194,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                 <p className="text-white">Target Framerate</p>
                                 <div className="w-[35%] h-[80%]  flex items-center">
                                     <ReactSlider
-                                        className="horizontal-slider"
+                                        className="horizontal-slider shadow-[2px_3px_rgba(0,0,0,0.3)]"
                                         thumbClassName="example-thumb"
                                         trackClassName="example-track"
                                         max={5}
@@ -219,7 +219,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                     }}
                                 >
                                     <div
-                                        className="w-full h-full"
+                                        className="w-full h-full shadow-[2px_3px_rgba(0,0,0,0.3)]"
                                         style={{
                                             background:
                                                 "linear-gradient(to right, #000, #e9e502)",
