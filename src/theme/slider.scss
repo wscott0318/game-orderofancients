@@ -1,0 +1,35 @@
+.horizontal-slider {
+    width: 100%;
+    aspect-ratio: 15/1;
+    
+    border-width: 3px;
+    border-color: #2c322f;
+
+    .example-thumb {
+        background-color: #4f4f52;
+        cursor: pointer;
+        box-sizing: border-box;
+        
+        height: 150%;
+        transform: translate(-25%, -25%);
+        aspect-ratio: 1;
+        line-height: 38px;
+    }
+    
+    .example-track {
+        position: relative;
+        background: #ff0;
+    
+        height: 100%;
+    }
+    
+    .example-track-1 {
+        background: #000;
+    }
+    
+    .example-track-2 {
+        background: #0f0;
+    }
+    
+}
+
