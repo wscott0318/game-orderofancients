@@ -88,6 +88,7 @@ export const SPELLS_INFO = {
         attackDamage: 75,
         dps: 150,
         cooldown: 0.5,
+        duration: 1.0,
     },
 
     Magic_Missiles: {

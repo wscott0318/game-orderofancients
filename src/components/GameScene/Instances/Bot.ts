@@ -15,6 +15,7 @@ import { createStun } from "../Particles/weapons/Stun";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import AssetsManager from "../AssetsManager";
 import { COLOR_NUMBER } from "../../../utils/helper";
+import { createToonProjectile } from "../Particles/ToonProjectile";
 
 export class Bot {
     clock: THREE.Clock;
@@ -44,6 +45,8 @@ export class Bot {
     stunTime: number;
     stunMesh: THREE.Object3D | null;
     slowTime: number;
+    fireMesh: THREE.Object3D | null;
+    fireTime: number;
 
     constructor({ sceneRenderer, assetsManager, botType }: any) {
         this.sceneRenderer = sceneRenderer;
@@ -84,6 +87,9 @@ export class Bot {
         this.stunTime = 0;
         this.stunMesh = null;
         this.slowTime = 0;
+
+        this.fireMesh = null;
+        this.fireTime = 0;
 
         const healthBarDiv = document.createElement("div");
         healthBarDiv.className = "healthBar";
@@ -163,6 +169,13 @@ export class Bot {
         }
     }
 
+    disposeFireMesh() {
+        if( this.fireMesh ) {
+            disposeMesh(this.fireMesh);
+            this.scene.remove(this.fireMesh);
+        }
+    }
+
     kill() {
         this.animController.playAnimation(ANIMATION_TYPE["dead"]);
 
@@ -171,6 +184,8 @@ export class Bot {
         this.disposeHealthBar();
 
         this.disposeStunMesh();
+
+        this.disposeFireMesh();
 
         const tweenAnimation = new TWEEN.Tween(this.mesh.position)
             .to(
@@ -231,10 +246,27 @@ export class Bot {
             if (obj.isMesh || obj.isSkinnedMesh) {
                 const material = obj.material.clone();
 
-                material.color = new THREE.Color(2, 5, 6);
+                material.color = new THREE.Color(2, 10, 30);
                 obj.material = material;
             }
         });
+    }
+
+    fire( duration: number ) {
+        this.fireTime = duration;
+        if( !this.fireMesh ) {
+            const particle = createToonProjectile(
+                this.sceneRenderer._particleRenderer,
+                this.assetsManager._particleTextures
+            );
+
+            const scaleOffset = BOT_PROPS['modelHeight'][this.botType] / 3 * 1.5;
+            particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
+
+            this.fireMesh = particle;
+
+            this.scene.add(this.fireMesh);
+        }
     }
 
     tick() {
@@ -274,6 +306,23 @@ export class Bot {
                         obj.material = material;
                     }
                 });
+            }
+        }
+
+        if( this.fireTime > 0 ) {
+            this.fireTime -= delta;
+
+            if( this.fireMesh ) {
+                this.fireMesh.position.x = this.mesh.position.x;
+                this.fireMesh.position.y = this.mesh.position.y + BOT_PROPS['modelHeight'][this.botType] / 2;
+                this.fireMesh.position.z = this.mesh.position.z;
+            }
+
+            if( this.fireTime <= 0 ) {
+                this.fireTime = 0;
+
+                this.disposeFireMesh();
+                this.fireMesh = null;
             }
         }
 
