@@ -97,6 +97,7 @@ export const Loader = ({ canEnterGame }: any) => {
         <div className="loader">
             <div className="content z-20 relative select-none flex justify-center items-center">
                 <div className="stars">{renderFirefly(30)}</div>
+
                 {/* <div className="image-wrapper shine">
                     <img src="/assets/images/logo.png" alt="background" />
                 </div> */}
@@ -115,7 +116,7 @@ export const Loader = ({ canEnterGame }: any) => {
                     PRESS ANY KEY
                 </div> */}
 
-                <div className="w-[60vw] flex flex-col items-center">
+                <div className="loader w-[50vw] flex flex-col items-center">
                     <img
                         className="w-[50%]"
                         src="/assets/images/logo2.png"
@@ -134,15 +135,15 @@ export const Loader = ({ canEnterGame }: any) => {
                                 (player: PlayerData, index: number) => (
                                     <div
                                         style={{
-                                            color: player.color,
+                                            color: "white",
                                             borderRadius: "5px",
                                             borderWidth: "2px",
                                             borderColor: "#2c322f",
                                         }}
                                         key={`player${index}`}
-                                        className="fs-md bg-[#0004] flex"
+                                        className="fs-sm bg-[#0007] flex"
                                     >
-                                        <div className="w-[50%] flex h-[3vw] flex items-center pl-[5%] gap-[20%]">
+                                        <div className="w-[50%] flex h-[2vw] flex items-center pl-[5%] gap-[20%]">
                                             <img
                                                 className="h-[80%]"
                                                 src={player.avata}
@@ -156,17 +157,10 @@ export const Loader = ({ canEnterGame }: any) => {
                             )}
                         </div>
                     </div>
-
-                    <div
-                        className={`progress-container ${
-                            canEnterGame ? "hide" : ""
-                        }`}
-                    >
-                        <div className="progress2 progress-moved">
-                            <div className="progress-bar2"></div>
-                        </div>
-                    </div>
-
+                    <CustomLoaderSlider
+                        value={10}
+                        canEnterGame={canEnterGame}
+                    />
                     {/* <div
                         className={`pressAnyKey ${
                             canEnterGame ? "active" : ""
@@ -176,6 +170,27 @@ export const Loader = ({ canEnterGame }: any) => {
                     </div> */}
                 </div>
             </div>
+        </div>
+    );
+};
+
+const CustomLoaderSlider = ({ value, canEnterGame }: any) => {
+    return (
+        <div className={`progress-container ${canEnterGame ? "hide" : ""}`}>
+            {/* <div className="progress2 progress-moved">
+                <div className="progress-bar2"></div>
+            </div> */}
+            <div
+                className="progress h-full"
+                style={{ backgroundSize: `${value}% 100%` }}
+            />
+            <img
+                src="/assets/images/loader-slider-shine.png"
+                style={{ left: `${value}%` }}
+            />
+            <p className="absolute text-white top-0 left-[50%] translate-x-[-50%] text-[1.4vw]">
+                Loading...
+            </p>
         </div>
     );
 };
