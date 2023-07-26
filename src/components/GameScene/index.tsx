@@ -122,9 +122,9 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* <GameEndUI setGameState={setGameState} /> */}
+            <GameEndUI setGameState={setGameState} />
             {/* <GamePlayUI gameRef={gameRef} /> */}
-            <Loader canEnterGame={canEnterGame} />
+            {/* <Loader canEnterGame={canEnterGame} /> */}
             {/* <GameSettingUI /> */}
 
             {/* {loading && <Loader canEnterGame={canEnterGame} />}

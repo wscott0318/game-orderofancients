@@ -20,28 +20,45 @@ const GameEnd = styled.div`
     display: flex;
     justify-content: center;
 
-    .players {
-        background-color: #0004;
-        border-radius: 5px;
-        border-width: 2px;
-        border-color: #697249;
+    .gameend {
+        width: 34vw;
 
-        .head {
-            border-bottom-width: 2px;
-            border-bottom-color: #697249;
+        .players {
+            background-color: #0004;
+            border-radius: 5px;
+            border-width: 2px;
+            border-color: #697249;
+
+            .head {
+                border-bottom-width: 2px;
+                border-bottom-color: #697249;
+            }
         }
-    }
-    .buttons {
-        button {
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-        .exit {
-            background-image: url("/assets/images/button-back-dark.png");
+        .buttons {
+            button {
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .exit {
+                background-image: url("/assets/images/button-back-dark.png");
+            }
+
+            .playanother {
+                background-image: url("/assets/images/button-back-bright.png");
+            }
         }
 
-        .playanother {
-            background-image: url("/assets/images/button-back-bright.png");
+        @media only screen and (min-width: 1920px) {
+            width: 658px;
+            .players {
+                top: -115.2px;
+            }
+            .player-name {
+                height: 57.6px;
+            }
+            .buttons {
+                top: -96px;
+            }
         }
     }
 `;
@@ -144,7 +161,7 @@ export const GameEndUI = ({ setGameState }: any) => {
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">
-            <div className="gameend w-[34%] h-fit flex flex-col items-center">
+            <div className="gameend h-fit flex flex-col items-center">
                 <img
                     className="vitory-logo relative w-full"
                     src={
@@ -170,7 +187,7 @@ export const GameEndUI = ({ setGameState }: any) => {
                                         key={`player${index}`}
                                         className="fs-md"
                                     >
-                                        <td className="w-[50%] flex h-[3vw] flex items-center pl-[5%] gap-[20%]">
+                                        <td className="player-name w-[50%] flex h-[3vw] flex items-center pl-[5%] gap-[20%]">
                                             <img
                                                 className="h-[80%]"
                                                 src={player.avata}
@@ -196,7 +213,7 @@ export const GameEndUI = ({ setGameState }: any) => {
                         justifyContent: isvictory ? "space-between" : "center",
                     }}
                 >
-                    <button className="exit relative w-[45%] aspect-[652/170] text-[#ca663b]">
+                    <button className="exit   w-[45%] aspect-[652/170] text-[#ca663b]">
                         Exit Game
                     </button>
 
