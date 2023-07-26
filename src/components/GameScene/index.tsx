@@ -6,11 +6,16 @@ import AssetsManager from "./AssetsManager";
 import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
-import GamePlayUI from "./UI/GamePlay";
+import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
+import { isBrowser, isMobile } from "react-device-detect";
+import GameSettingUI from "./UI/GameSetting";
+
 const Wrapper = styled.div`
+    // background-image: url("/assets/images/bbb.jpg");
+    // background-size: 100% 100%;
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -53,17 +58,25 @@ export const GameScene = () => {
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
     };
 
+    if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
+        // alert("change the oriented mode to landscape");
+        // let portrait = window.matchMedia("(orientation: portrait)");
+        // portrait.addEventListener("change", function (e) {
+        //     if (e.matches) {
+        //         console.log("portrait mode");
+        //     } else {
+        //         console.log("landscape mode");
+        //     }
+        // });
+    }
+
     useEffect(() => {
         if (firstRef.current) return;
         firstRef.current = true;
-
         createGame();
-
         window.addEventListener("keydown", onKeyDown.bind(this));
-
         return () => {
             window.removeEventListener("keydown", onKeyDown);
-
             // destroy Game
         };
     }, []);
@@ -91,12 +104,9 @@ export const GameScene = () => {
             document
                 .getElementsByClassName("loader")[0]
                 .classList.add("enterGame");
-
             setTimeout(() => {
                 setCanEnterGame(false);
-
                 setLoading(false);
-
                 startGame();
             }, 3000);
         }
@@ -112,6 +122,11 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
+            {/* <GameEndUI setGameState={setGameState} /> */}
+            {/* <GamePlayUI gameRef={gameRef} /> */}
+            {/* <Loader canEnterGame={canEnterGame} /> */}
+            {/* <GameSettingUI /> */}
+
             {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>

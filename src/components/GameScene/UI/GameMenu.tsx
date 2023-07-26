@@ -1,40 +1,23 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
 
 const getResValue = (value: number) => (value / 937) * 100 + "vh";
 
 const GameMenu = styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    padding-left: 8%;
-    width: 100vw;
-    height: 100vh;
-    background: #00000059;
-    backdrop-filter: saturate(0.5);
     z-index: 20;
-    user-select: none;
+    background-image: url("/assets/images/loading-back.png");
+    background-size: 100% 100%;
 
-    .chain {
-        position: absolute;
-        width: ${getResValue(500)};
-        height: ${getResValue(110)};
-        background-image: url("/assets/images/chain.png");
-        background-size: 100% 100%;
-        top: -${getResValue(300)};
-    }
+    // backdrop-filter: saturate(0.5);
+    // user-select: none;
+
     .menu {
-        position: relative;
-        width: ${getResValue(500)};
-        height: ${getResValue(850)};
-        top: -${getResValue(1000)};
         display: flex;
         flex-direction: column;
-        background-image: url("/assets/images/menu.png");
+        background-image: url("/assets/images/menu-back.png");
         background-size: 100% 100%;
         align-items: center;
     }
@@ -42,38 +25,41 @@ const GameMenu = styled.div`
         position: relative;
         display: flex;
         flex-direction: column;
-        gap: ${getResValue(9)};
-        margin-top: ${getResValue(280)};
-        align-items: center;
+
+        gap: 3vw;
+        margin-top: 10vw;
+        // align-items: center;
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png");
-        background-image: url("/assets/images/button-default.png");
+        background-image: url("/assets/images/button-back-bright.png");
         background-size: contain;
         background-repeat: no-repeat;
-        background-repeat: no-repeat;
         background-size: cover;
-        width: ${getResValue(367)};
-        height: ${getResValue(77)};
+
+        width: 16vw;
+        height: 4.17vw;
         color: rgb(212, 212, 3);
-        font-size: ${getResValue(20)};
+        font-size: 2vw;
         font-weight: 900;
-        &:hover {
-            background-image: url("/assets/images/button-hover.png");
-        }
+        // &:hover {
+        //     background-image: url("/assets/images/button-hover.png");
+        // }
     }
 `;
 
 const GameMenuUI = ({ setGameState }: any) => {
+    const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
     useEffect(() => {
-        menuDownAnim
-            .add("start")
-            .to(
-                ".menu",
+        if (gameMenuRef.current) {
+            const menu = gameMenuRef.current.childNodes[0];
+
+            menuDownAnim.add("start").to(
+                menu,
                 {
-                    top: `${getResValue(63)}`,
+                    top: "50vh",
                     duration: 1,
                     ease: CustomEase.create(
                         "custom",
@@ -81,38 +67,33 @@ const GameMenuUI = ({ setGameState }: any) => {
                     ),
                 },
                 "start"
-            )
-            .to(
-                ".chain",
-                {
-                    top: `${getResValue(-43)}`,
-                    duration: 1,
-                    ease: CustomEase.create(
-                        "custom",
-                        "M0,0,C0.53,0.512,0.846,1.448,1,1"
-                    ),
-                },
-                "start"
             );
+        }
+        return () => {
+            menuDownAnim.kill();
+        };
     }, []);
 
     const gamePlay = () => {
         menuDownAnim.reverse();
-        gsap.to(".gameMenu", {
-            backgroundColor: "#00000000",
-            duration: 1,
-            delay: 1,
-        });
+        if (gameMenuRef.current) {
+            gsap.to(gameMenuRef.current, {
+                backgroundColor: "#00000000",
+                duration: 1,
+                delay: 1,
+            });
+        }
         gsap.delayedCall(2, () => {
             setGameState(GAME_STATES.PLAYING);
         });
     };
 
     return (
-        <GameMenu className="gameMenu">
-            <div className="chain" />
-
-            <div className="menu">
+        <GameMenu
+            className="absolute top-0 left-0 w-full h-full bg-[#00000059] flex justify-center pointer"
+            ref={gameMenuRef}
+        >
+            <div className="menu relative w-[28.7vw] h-[33vw] top-[-50vh] translate-y-[-50%]">
                 <div className="button-col">
                     <button
                         className="warButton"
@@ -122,19 +103,10 @@ const GameMenuUI = ({ setGameState }: any) => {
                         PLAY
                     </button>
                     <button className="warButton" name="versus">
-                        DIFFICULTY
+                        Setting
                     </button>
                     <button className="warButton" name="custom">
-                        SETTINGS
-                    </button>
-                    <button className="warButton" name="localarea">
-                        TUTORIAL
-                    </button>
-                    <button className="warButton" name="setting">
-                        PROVIDER
-                    </button>
-                    <button className="warButton" name="collection">
-                        CONTACT US
+                        Provider
                     </button>
                 </div>
             </div>
