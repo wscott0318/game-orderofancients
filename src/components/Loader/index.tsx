@@ -1,173 +1,192 @@
 import "./index.scss";
 import "./firefly.scss";
 import { PlayerData } from "../../constants/gameUI";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { GET_RANDOM_VAL } from "../../helper/math";
+import styled from "styled-components";
+
+const playerInfo = [
+    {
+        name: "Jack#2643",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player2",
+        avata: "/assets/users/2.png",
+        color: "blue",
+        level: 90,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player3",
+        avata: "/assets/users/3.png",
+        color: "pink",
+        level: 60,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player4",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player5",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player6",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player7",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+    {
+        name: "Player8",
+        avata: "/assets/users/jack.png",
+        color: "red",
+        level: 80,
+        kills: 5,
+        income: 2,
+        wins: 0,
+        lastStands: 0,
+    },
+];
+
+const TopLogo = styled.div`
+    top: 0;
+    width: 660px;
+`;
+
+const LoadingProgress = styled.div`
+    width: 800px;
+    bottom: 20px;
+`;
 
 export const Loader = ({ canEnterGame }: any) => {
+    const [progressValue, setProgressValue] = useState(0);
+
+    const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);
+
+    // Firefly particle effects
     const renderFirefly = (count: number) => {
         const array = new Array(count);
         array.fill(1);
+
         return array.map((val: number, index: number) => (
             <div key={index} className="firefly"></div>
         ));
     };
-    const [players, setPlayers]: [PlayerData[], any] = useState([
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player2",
-            avata: "/assets/users/2.png",
-            color: "blue",
-            level: 90,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player3",
-            avata: "/assets/users/3.png",
-            color: "pink",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Jack#2643",
-            avata: "/assets/users/jack.png",
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-    ]);
+
+    const handleProgress = () => {
+        setTimeout(() => {
+            handleProgress();
+
+            setProgressValue((prev: number) =>
+                prev + GET_RANDOM_VAL(10) + 10 > 95
+                    ? 95
+                    : prev + GET_RANDOM_VAL(10) + 10
+            );
+        }, (0.5 + GET_RANDOM_VAL(5) / 10) * 1000);
+    };
+
+    useEffect(() => {
+        handleProgress();
+    }, []);
+
+    useEffect(() => {
+        if (canEnterGame) {
+            setProgressValue(100);
+        }
+    }, [canEnterGame]);
+
     return (
         <div className="loader">
-            <div className="content z-20 relative select-none flex justify-center items-center">
-                <div className="stars">{renderFirefly(30)}</div>
+            <div className="content z-20 relative select-none flex flex-col justify-between items-center">
+                <div className="stars absolute">{renderFirefly(30)}</div>
 
-                {/* <div className="image-wrapper shine">
-                    <img src="/assets/images/logo.png" alt="background" />
-                </div> */}
+                <TopLogo>
+                    <img src="/assets/images/loading_logo.png" alt="logo" />
+                </TopLogo>
 
-                {/* <div
-                    className={`progress-container ${
-                        canEnterGame ? "hide" : ""
-                    }`}
-                >
-                    <div className="progress2 progress-moved">
-                        <div className="progress-bar2"></div>
-                    </div>
-                </div> */}
-
-                {/* <div className={`pressAnyKey ${canEnterGame ? "active" : ""}`}>
-                    PRESS ANY KEY
-                </div> */}
-
-                <div className="loader w-[50vw] flex flex-col items-center">
-                    <img
-                        className="w-[50%]"
-                        src="/assets/images/logo2.png"
-                        alt="logo"
-                    />
-
-                    <div className="players relative w-[60%] ff-micro">
-                        <div className="w-[100%] text-center border-separate border-spacing-y-[15px] flex flex-col gap-[10px]">
-                            <div className="head text-[#919056] fs-sm flex">
-                                <div className="w-[50%]">Player</div>
-                                <div className="w-[25%]">Played</div>
-                                <div className="w-[25%]">Win </div>
-                            </div>
-
-                            {players.map(
-                                (player: PlayerData, index: number) => (
-                                    <div
-                                        style={{
-                                            color: "white",
-                                            borderRadius: "5px",
-                                            borderWidth: "2px",
-                                            borderColor: "#2c322f",
-                                        }}
-                                        key={`player${index}`}
-                                        className="fs-sm bg-[#0007] flex"
-                                    >
-                                        <div className="w-[50%] flex h-[2vw] flex items-center pl-[5%] gap-[20%]">
-                                            <img
-                                                className="h-[80%]"
-                                                src={player.avata}
-                                            />
-                                            {player.name}
-                                        </div>
-                                        <div className="w-[25%]">10</div>
-                                        <div className="w-[25%]">10</div>
-                                    </div>
-                                )
-                            )}
+                <div className="players relative ff-micro">
+                    <div className="w-[100%] text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
+                        <div className="head text-[#ecea8c] fs-sm flex">
+                            <div className="w-[50%]">Player</div>
+                            <div className="w-[25%]">Played</div>
+                            <div className="w-[25%]">Win </div>
                         </div>
+
+                        {players.map((player: PlayerData, index: number) => (
+                            <div
+                                style={{
+                                    color: "white",
+                                    borderRadius: "5px",
+                                    borderWidth: "2px",
+                                    borderColor: "#2c322f",
+                                }}
+                                key={`player${index}`}
+                                className="fs-sm bg-[#0007] flex p-1"
+                            >
+                                <div className="w-[50%] flex items-center gap-[20%]">
+                                    <img width={40} src={player.avata} />
+                                    <span>{player.name}</span>
+                                </div>
+                                <div className="w-[25%] flex justify-center items-center">
+                                    <span>10</span>
+                                </div>
+                                <div className="w-[25%] flex justify-center items-center">
+                                    <span>10</span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
+                </div>
+
+                <LoadingProgress className="relative">
                     <CustomLoaderSlider
-                        value={10}
+                        value={progressValue}
                         canEnterGame={canEnterGame}
                     />
-                    {/* <div
-                        className={`pressAnyKey ${
-                            canEnterGame ? "active" : ""
-                        }`}
-                    >
-                        PRESS ANY KEY
-                    </div> */}
+                </LoadingProgress>
+
+                <div className={`pressAnyKey ${canEnterGame ? "active" : ""}`}>
+                    PRESS ANY KEY
                 </div>
             </div>
         </div>
@@ -177,9 +196,6 @@ export const Loader = ({ canEnterGame }: any) => {
 const CustomLoaderSlider = ({ value, canEnterGame }: any) => {
     return (
         <div className={`progress-container ${canEnterGame ? "hide" : ""}`}>
-            {/* <div className="progress2 progress-moved">
-                <div className="progress-bar2"></div>
-            </div> */}
             <div
                 className="progress h-full"
                 style={{ backgroundSize: `${value}% 100%` }}
@@ -188,8 +204,8 @@ const CustomLoaderSlider = ({ value, canEnterGame }: any) => {
                 src="/assets/images/loader-slider-shine.png"
                 style={{ left: `${value}%` }}
             />
-            <p className="absolute text-white top-0 left-[50%] translate-x-[-50%] text-[1.4vw]">
-                Loading...
+            <p className="absolute text-white top-0 left-[50%] translate-x-[-50%] text-[24px] uppercase">
+                Loading
             </p>
         </div>
     );

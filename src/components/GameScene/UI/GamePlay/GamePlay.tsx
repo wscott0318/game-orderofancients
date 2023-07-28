@@ -88,9 +88,14 @@ const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
         gameRef.current._playerState.upgradeSpell(item);
 
         // Instant upgrades actions
-        if (item.name === `Philosopher's Stone`) {
-            gameRef.current._towerManager.sacrificeHealth(1000);
-            gameRef.current._playerState.increaseGold(2000);
+        if (
+            item.name === `Philosopher's Stone` ||
+            item.name === "Cursed Treasure"
+        ) {
+            gameRef.current._towerManager.sacrificeHealth(
+                ((SPELLS_INFO as any)[item.propertyName] as any).sacrifiHealth
+            );
+            gameRef.current._playerState.increaseUpgradeGold(item);
         }
 
         const newUpgrades = [...upgrades];

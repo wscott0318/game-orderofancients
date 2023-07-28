@@ -10,12 +10,9 @@ import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
-import { isBrowser, isMobile } from "react-device-detect";
-import GameSettingUI from "./UI/GameSetting";
+import { isMobile } from "react-device-detect";
 
 const Wrapper = styled.div`
-    // background-image: url("/assets/images/bbb.jpg");
-    // background-size: 100% 100%;
     position: relative;
     width: 100vw;
     height: 100vh;
@@ -73,7 +70,10 @@ export const GameScene = () => {
     useEffect(() => {
         if (firstRef.current) return;
         firstRef.current = true;
+
         createGame();
+
+        /** KeyDown Eventhandler for `Press Any Key` */
         window.addEventListener("keydown", onKeyDown.bind(this));
         return () => {
             window.removeEventListener("keydown", onKeyDown);
@@ -104,6 +104,7 @@ export const GameScene = () => {
             document
                 .getElementsByClassName("loader")[0]
                 .classList.add("enterGame");
+
             setTimeout(() => {
                 setCanEnterGame(false);
                 setLoading(false);
@@ -122,11 +123,6 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {/* <GameEndUI setGameState={setGameState} /> */}
-            {/* <GamePlayUI gameRef={gameRef} /> */}
-            {/* <Loader canEnterGame={canEnterGame} /> */}
-            {/* <GameSettingUI /> */}
-
             {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
