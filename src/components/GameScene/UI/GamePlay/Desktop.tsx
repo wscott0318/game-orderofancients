@@ -119,6 +119,7 @@ const GamePlay = styled.div`
     }
     .statusFont_small {
         font-size: 1vw;
+        font-wie
     }
     .spellFont {
         font-size: 1vw;
@@ -480,7 +481,7 @@ export const Desktop = ({
                         <div className="absolute border-4 border-[#252221] rounded-[15px] w-[100%] h-[100%] bg-black flex items-center">
                             <div
                                 id="towerHealthBar"
-                                className="absolute left-[0.5%] w-[80%] h-[90%] rounded-[10px] "
+                                className="absolute w-[100%] h-[100%] rounded-[10px] border-[2px] border-black"
                                 style={{
                                     background:
                                         "linear-gradient(to bottom, #257808 0%, #299f1c 30%,#299f1c 70%, #1d7707 100%)",
@@ -497,17 +498,15 @@ export const Desktop = ({
                             </span>
                         </div>
                     </div>
-                    <div className="relative h-[30%]flex flex-col justify-center items-centers text-center">
-                        <div className="statusFont_small">
-                            <span className="text-white">{"Armor:  "}</span>
+                    <div className="relative h-[30%] w-[60%] flex flex-row statusFont_small gap-[30%] left-[50%] translate-x-[-50%]">
+                        <div className="flex flex-col w-[50%] justify-center items-centers text-start ">
+                            <span className="text-white">Armor:</span>
+                            <span className="text-white">Damage:</span>
+                            <span className="text-white">Range: </span>
+                        </div>
+                        <div className="flex flex-col w-[50%] justify-center items-centers text-start ">
                             <span className="text-[#e9e502]"> 10</span>
-                        </div>
-                        <div className="statusFont_small">
-                            <span className="text-white">{"Damage: "}</span>
                             <span className="text-[#e9e502]"> 100</span>
-                        </div>
-                        <div className="statusFont_small">
-                            <span className="text-white">{"Range:    "}</span>
                             <span className="text-[#e9e502]"> 20</span>
                         </div>
                     </div>
@@ -515,7 +514,7 @@ export const Desktop = ({
                         <div className="border-4 border-[#252221] rounded-[15px] w-[100%] h-[80%] bg-[#0005] flex justify-center items-center">
                             <img
                                 src="/assets/images/coin.png"
-                                className="h-[60%] "
+                                className="h-[60%]"
                                 style={{ marginRight: "10%" }}
                             ></img>
                             <div className="statusFont_big">
@@ -530,6 +529,7 @@ export const Desktop = ({
                         </div>
                     </div>
                 </div>
+
                 <div
                     className="spell flex flex-col "
                     style={{
@@ -576,7 +576,7 @@ export const Desktop = ({
                                         (item as any).purchased
                                             ? "opacity-0 pointer-events-none"
                                             : ""
-                                    } item`}
+                                    } item hover:border-[1px] hover:border-[yellow]`}
                                     onClick={() => onClickUpgrade(item, index)}
                                 >
                                     <img src={item.thumbnail} alt="pic" />
