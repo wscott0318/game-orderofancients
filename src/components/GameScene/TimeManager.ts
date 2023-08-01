@@ -6,7 +6,7 @@ import { TextSprite } from "./Sprites/Text";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import SpriteManager from "./SpriteManager";
 import { SPELLS_INFO } from "../../constants/spell";
-import { PERCENT2VALUE } from "../../utils/helper";
+import { CONVERT_TIME, PERCENT2VALUE } from "../../utils/helper";
 
 interface TimeManagerProps {
     playerState: PlayerState;
@@ -19,6 +19,7 @@ export class TimeManager {
     clock: THREE.Clock;
     secondTracker: number;
     roundTracker: number;
+    totalTimeTracker: number;
     playerState: PlayerState;
     towerManager: TowerManager;
     sceneRenderer: SceneRenderer;
@@ -34,6 +35,7 @@ export class TimeManager {
 
         this.secondTracker = 1;
         this.roundTracker = ROUND_TIME;
+        this.totalTimeTracker = 0;
 
         this.playerState = playerState;
         this.towerManager = towerManager;
@@ -79,6 +81,11 @@ export class TimeManager {
         });
 
         this.spriteManager.addTextSprite(sprite);
+
+        const divEl = document.getElementById("income");
+        if (divEl) {
+            divEl.textContent = `+ ${value}`;
+        }
     }
 
     tickRound() {
@@ -96,6 +103,20 @@ export class TimeManager {
         this.secondTracker -= delta;
         this.roundTracker -= delta;
 
+        this.totalTimeTracker += delta;
+
+        const totalTimeDiv = document.getElementById("elapsedTime");
+        if (totalTimeDiv) {
+            totalTimeDiv.textContent = CONVERT_TIME(
+                Math.floor(this.totalTimeTracker)
+            );
+        }
+
+        const barDiv = document.getElementById("timeBar");
+        if (barDiv) {
+            barDiv.style.width = `${(this.roundTracker / ROUND_TIME) * 100}%`;
+        }
+
         if (this.secondTracker < 0) {
             this.secondTracker = 1;
 
@@ -106,6 +127,20 @@ export class TimeManager {
             this.roundTracker = ROUND_TIME;
 
             this.tickRound();
+
+            if (barDiv) {
+                const temp = barDiv.style.transition;
+                barDiv.style.transition = "none";
+
+                setTimeout(() => {
+                    barDiv.style.transition = temp;
+                }, 50);
+            }
+        }
+
+        const divEl = document.getElementById("remainingRoundTime");
+        if (divEl) {
+            divEl.textContent = `${Math.ceil(this.roundTracker)}s`;
         }
 
         /**

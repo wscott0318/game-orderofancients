@@ -367,6 +367,7 @@ const GamePlay = styled.div`
         }
     }
 `;
+
 const YellowBoldFont = styled.span`
     color: #e9e502;
     font-size: 15px;
@@ -374,6 +375,22 @@ const YellowBoldFont = styled.span`
     @media only screen and (max-width: 1920px) {
         font-size: 0.78vw;
     }
+`;
+
+const TimeBar = styled.div`
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+        to bottom,
+        #0e42ac 0%,
+        #114fce 38%,
+        #185ff1 83%,
+        #114fce 100%
+    );
+    transition: all 1s;
 `;
 
 export const Desktop = ({
@@ -450,7 +467,9 @@ export const Desktop = ({
                         </div>
                         <div className="roundfont profileFont h-[28%] flex flex-col items-center justify-evenly bg-[#2226]">
                             <p className="text-white">Jacky555</p>
-                            <p className="text-[#e9e502]">Level 1</p>
+                            <p className="text-[#e9e502]" id="gameLevel">
+                                Level 1
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -463,6 +482,7 @@ export const Desktop = ({
                     <div className="relative h-[16%] flex justify-center items-center">
                         <div className="absolute border-4 border-[#252221] rounded-[15px] w-[100%] h-[100%] bg-black flex items-center">
                             <div
+                                id="towerHealthBar"
                                 className="absolute left-[0.5%] w-[80%] h-[90%] rounded-[10px] "
                                 style={{
                                     background:
@@ -472,8 +492,12 @@ export const Desktop = ({
                         </div>
 
                         <div className="absolute statusFont_small">
-                            <span className="text-[#e9e502]">1450 </span>
-                            <span className="text-white">/ 1500</span>
+                            <span className="text-[#e9e502]" id="currentHP">
+                                1450{" "}
+                            </span>
+                            <span className="text-white" id="maxHP">
+                                / 1500
+                            </span>
                         </div>
                     </div>
                     <div className="relative h-[30%]flex flex-col justify-center items-centers text-center">
@@ -502,7 +526,9 @@ export const Desktop = ({
                                     200
                                 </span>
                                 <span className="text-white"> / </span>
-                                <span className="text-[#e9e502]">+80</span>
+                                <span className="text-[#e9e502]" id="income">
+                                    +80
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -515,24 +541,28 @@ export const Desktop = ({
                     }}
                 >
                     <div
-                        // className="border-2 bg-[#1558e2] border-black"
+                        className="relative"
                         style={{
                             height: "15%",
                             width: "100%",
                             borderWidth: "2px",
                             borderColor: "black",
-                            background:
-                                "linear-gradient(to bottom, #0e42ac 0%, #114fce 38%, #185ff1 83%, #114fce 100%)",
-                            backgroundSize: `${40}%, 100%`,
-                            backgroundPosition: "0, 0",
+                            background: "black",
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
                         }}
                     >
-                        <div className="spellFont">
-                            <span className="text-[#e9e502]"> 19s /</span>
-                            <span className="text-white">20s</span>
+                        <TimeBar id="timeBar" />
+
+                        <div className="spellFont relative">
+                            <span
+                                className="text-[#e9e502]"
+                                id="remainingRoundTime"
+                            >
+                                19s
+                            </span>
+                            <span className="text-white"> / 30s</span>
                         </div>
                     </div>
                     <div
@@ -598,22 +628,22 @@ export const Desktop = ({
             {/* -------  detail end --------- */}
 
             {/* -------  map start --------- */}
-            <div className="map"></div>
+            {/* <div className="map"></div> */}
             {/* -------  map end --------- */}
 
             {/* -------  self start --------- */}
-            <div className="self">
+            {/* <div className="self">
                 <img src="/assets/images/profile.png"></img>
                 <div className="health"></div>
                 <div className="mana"></div>
-            </div>
+            </div> */}
             {/* -------  self end --------- */}
 
             {/* -------  player_stats start --------- */}
             <div className="player_stats">
                 <div className="time">
                     <YellowBoldFont>Time</YellowBoldFont>
-                    <YellowBoldFont>00:00:55</YellowBoldFont>
+                    <YellowBoldFont id="elapsedTime">00:00:55</YellowBoldFont>
                 </div>
                 <div className="stats">
                     <YellowBoldFont>stats</YellowBoldFont>

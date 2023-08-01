@@ -1,18 +1,38 @@
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
-import { useEffect, useRef } from "react";
-import styled from "styled-components";
+import { useEffect, useRef, useState } from "react";
+import styled, { keyframes } from "styled-components";
 import { GAME_STATES } from "../../../constants";
 
-const getResValue = (value: number) => (value / 937) * 100 + "vh";
+const FadeIn = keyframes`
+    from {
+        filter: brightness(0);
+    }
+
+    to {
+        filter: brightness(1);
+    }
+`;
+
+const FadeOut = keyframes`
+    from {
+        filter: brightness(1);
+    }
+
+    to {
+        filter: brightness(0);
+    }
+`;
 
 const GameMenu = styled.div`
     z-index: 20;
     background-image: url("/assets/images/loading-back.png");
     background-size: 100% 100%;
+    animation: 2s alternate ${FadeIn};
 
-    // backdrop-filter: saturate(0.5);
-    // user-select: none;
+    &.inactive {
+        animation: 2s alternate ${FadeOut};
+    }
 
     .menu {
         display: flex;
@@ -28,10 +48,9 @@ const GameMenu = styled.div`
 
         gap: 3vw;
         margin-top: 10vw;
-        // align-items: center;
     }
     .warButton {
-        cursor: url("../assets/imgs/gameCursor.png");
+        cursor: url("../assets/imgs/gameCursor.png") !important;
         background-image: url("/assets/images/button-back-bright.png");
         background-size: contain;
         background-repeat: no-repeat;
@@ -42,15 +61,27 @@ const GameMenu = styled.div`
         color: rgb(212, 212, 3);
         font-size: 2vw;
         font-weight: 900;
-        // &:hover {
-        //     background-image: url("/assets/images/button-hover.png");
-        // }
+        user-select: none;
+
+        &.menuPlay {
+            background-image: url("/assets/images/menuBtns/play.png");
+        }
+
+        &.menuSetting {
+            background-image: url("/assets/images/menuBtns/settings.png");
+        }
+
+        &.menuTraining {
+            background-image: url("/assets/images/menuBtns/tranining.png");
+        }
     }
 `;
 
 const GameMenuUI = ({ setGameState }: any) => {
     const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
+
+    const [active, setActive] = useState(true);
 
     useEffect(() => {
         if (gameMenuRef.current) {
@@ -75,6 +106,8 @@ const GameMenuUI = ({ setGameState }: any) => {
     }, []);
 
     const gamePlay = () => {
+        setActive(false);
+
         menuDownAnim.reverse();
         if (gameMenuRef.current) {
             gsap.to(gameMenuRef.current, {
@@ -83,6 +116,7 @@ const GameMenuUI = ({ setGameState }: any) => {
                 delay: 1,
             });
         }
+
         gsap.delayedCall(2, () => {
             setGameState(GAME_STATES.PLAYING);
         });
@@ -90,24 +124,20 @@ const GameMenuUI = ({ setGameState }: any) => {
 
     return (
         <GameMenu
-            className="absolute top-0 left-0 w-full h-full bg-[#00000059] flex justify-center pointer"
+            className={`${
+                active ? "active" : "inactive"
+            } absolute top-0 left-0 w-full h-full bg-[#00000059] flex justify-center pointer`}
             ref={gameMenuRef}
         >
             <div className="menu relative w-[28.7vw] h-[33vw] top-[-50vh] translate-y-[-50%]">
                 <div className="button-col">
                     <button
-                        className="warButton"
+                        className="warButton menuPlay"
                         name="play"
                         onClick={gamePlay}
-                    >
-                        PLAY
-                    </button>
-                    <button className="warButton" name="versus">
-                        Setting
-                    </button>
-                    <button className="warButton" name="custom">
-                        Provider
-                    </button>
+                    />
+                    <button className="warButton menuSetting" name="versus" />
+                    <button className="warButton menuTraining" name="custom" />
                 </div>
             </div>
         </GameMenu>

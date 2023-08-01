@@ -133,13 +133,13 @@ export const GameScene = () => {
                 <>
                     <GamePlayUI gameRef={gameRef} />
 
-                    <div className="absolute top-16 right-4">
+                    {/* <div className="absolute top-2 right-16">
                         <Toggle
                             title={"Show Grid"}
                             checked={showGrid}
                             onChange={onToggleGrid}
                         />
-                    </div>
+                    </div> */}
                 </>
             ) : currentGameState === GAME_STATES["PAUSE"] ? (
                 <GamePauseUI setGameState={setGameState} />

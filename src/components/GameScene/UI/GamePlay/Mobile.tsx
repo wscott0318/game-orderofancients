@@ -118,7 +118,9 @@ export const Mobile = ({
                     ></img>
                     <div className="fs-lg ff-round flex flex-col ">
                         <span>Jack555</span>
-                        <span className="fc-orange">Level 1</span>
+                        <span className="fc-orange" id="gameLevel">
+                            Level 1
+                        </span>
                     </div>
                 </div>
                 <div className="flex flex-col">
@@ -150,8 +152,12 @@ export const Mobile = ({
                     src="/assets/images/heart.png"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    <span className="fc-orange">1450 </span>
-                    <span className="">/ 1500</span>
+                    <span className="fc-orange" id="currentHP">
+                        1450{" "}
+                    </span>
+                    <span className="relative" id="maxHP">
+                        / 1500
+                    </span>
                 </div>
             </div>
             {/* -------  health end --------- */}
@@ -172,7 +178,10 @@ export const Mobile = ({
                     <span className="fc-orange" id="gold">
                         200 /
                     </span>
-                    <span className=""> +80</span>
+                    <span className="" id="income">
+                        {" "}
+                        +80
+                    </span>
                 </div>
             </div>
             {/* -------  coin end --------- */}
@@ -190,7 +199,9 @@ export const Mobile = ({
                     src="/assets/images/clock.png"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
-                    <span className="">00:00:55</span>
+                    <span className="relative" id="elapsedTime">
+                        00:00:55
+                    </span>
                 </div>
             </div>
             {/* -------  clock end --------- */}

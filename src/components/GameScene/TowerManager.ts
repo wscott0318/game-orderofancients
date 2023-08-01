@@ -123,10 +123,30 @@ export class TowerManager {
         progressBar.style.background = `${getColorForPercentage(
             this.hp / this.maxHp
         )}`;
+
+        const currentHealthDiv = document.getElementById("currentHP");
+        if (currentHealthDiv) {
+            currentHealthDiv.textContent = `${this.hp}`;
+        }
+
+        const maxHealthDiv = document.getElementById("maxHP");
+        if (maxHealthDiv) {
+            maxHealthDiv.textContent = ` / ${this.maxHp}`;
+        }
+
+        const healthBarDiv = document.getElementById("towerHealthBar");
+        if (healthBarDiv) {
+            healthBarDiv.style.width = `${(this.hp / this.maxHp) * 100}%`;
+        }
     }
 
     levelUp() {
         this.level++;
+
+        const element = document.getElementById("gameLevel");
+        if (element) {
+            element.textContent = `Level ${this.level}`;
+        }
 
         // visual effect
         const newVector = new THREE.Vector3(
@@ -155,7 +175,7 @@ export class TowerManager {
             }
         }
 
-        // if (this._tower.hp <= 0) {
+        // if (this.hp <= 0) {
         //     this._stateManager.setState(GAME_STATES.END);
         // }
 
