@@ -1,5 +1,5 @@
 import { gsap } from "gsap";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
 
@@ -11,34 +11,19 @@ const GamePlay = styled.div`
     top: 0px;
     pointer-events: none;
 
-    .plant {
-        background-image: url("/assets/images/bottom-plant.png");
-        background-size: 100% 100%;
-        left: 50vw;
-        transform: translateX(-50%);
-        pointer-event: none;
-        width: 891px;
-        height: 321px;
-
-        @media only screen and (max-width: 1920px) {
-            width: 46vw;
-            height: 16.5vw;
-        }
-    }
-
     .back {
         pointer-events: all;
-        background-image: url("/assets/images/bottom-back.png");
+        background-image: url("/assets/images/gameui-spells-back.png");
         background-size: 100% 100%;
         left: 50vw;
         transform: translateX(-50%);
 
-        width: 873px;
-        height: 266px;
+        width: 921.6px;
+        height: 326.4px;
 
         @media only screen and (max-width: 1920px) {
-            width: 45vw;
-            height: 14vw;
+            width: 48vw;
+            height: 17vw;
         }
     }
 
@@ -347,18 +332,22 @@ const GamePlay = styled.div`
             }
             td {
                 text-align: center;
-                font-size: 15px;
+                font-size: 11.5px;
 
                 @media only screen and (max-width: 1920px) {
-                    font-size: 0.78vw;
+                    font-size: 0.6vw;
                 }
             }
             .level {
-                width: 100%;
-
-                height: 7px;
-
+                width: 80%;
                 background-color: black;
+                height: 5.7px;
+                left: 50%;
+                position: relative;
+                transform: translateX(-50%);
+                @media only screen and (max-width: 1920px) {
+                    height: 0.3vw;
+                }
                 > div {
                     background-color: #129110;
                     height: 100%;
@@ -402,23 +391,22 @@ export const Desktop = ({
     setPlayerShow,
 }: any) => {
     const playerDivRef = useRef<HTMLDivElement>(null);
-
     const switchPlayerShow = () => {
-        if (playerDivRef.current) {
-            const playerDiv = playerDivRef.current;
+        // if (playerDivRef.current) {
+        //     const playerDiv = playerDivRef.current;
 
-            if (playerShow) {
-                gsap.to(playerDiv, {
-                    transform: "ScaleY(0)",
-                    duration: 0.5,
-                });
-            } else {
-                gsap.to(playerDiv, {
-                    transform: "ScaleY(1)",
-                    duration: 0.5,
-                });
-            }
-        }
+        //     if (playerShow) {
+        //         gsap.to(playerDiv, {
+        //             transform: "ScaleY(0)",
+        //             duration: 0.5,
+        //         });
+        //     } else {
+        //         gsap.to(playerDiv, {
+        //             transform: "ScaleY(1)",
+        //             duration: 0.5,
+        //         });
+        //     }
+        // }
         setPlayerShow(!playerShow);
     };
 
@@ -428,7 +416,6 @@ export const Desktop = ({
         gameMenuFadeInAnim
             .add("start")
             .from(".back", { bottom: "-16.5vw", duration: 2 }, "start")
-            .from(".plant", { bottom: "-16.5vw", duration: 2 }, "start")
             .from(".field", { bottom: "-16.5vw", duration: 2 }, "start")
             .from(".map", { left: "-24vw", duration: 2 }, "start")
             .from(".self", { top: "-6vw", duration: 2 }, "start")
@@ -443,7 +430,6 @@ export const Desktop = ({
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
             <div className="back fixed bottom-0 "></div>
-            <div className="plant fixed bottom-0"></div>
             <div className="field fixed flex bottom-0">
                 <div className="profile flex gap-[2%]">
                     <div className="left w-[20%] flex flex-col gap-[2%]">
@@ -518,7 +504,7 @@ export const Desktop = ({
                         <div className="border-4 border-[#252221] rounded-[15px] w-[100%] h-[80%] bg-[#0005] flex justify-center items-center">
                             <img
                                 src="/assets/images/coin.png"
-                                className="h-[80%] "
+                                className="h-[60%] "
                                 style={{ marginRight: "10%" }}
                             ></img>
                             <div className="statusFont_big">
@@ -663,63 +649,70 @@ export const Desktop = ({
                         </YellowBoldFont>
                     )}
                 </div>
-                <div className="players" ref={playerDivRef}>
-                    <table className="player_tabel">
-                        <tbody>
-                            <tr>
-                                <th
-                                    style={{ width: "20%", textAlign: "start" }}
-                                >
-                                    Player
-                                </th>
-                                <th style={{ width: "10%" }}></th>
-                                <th style={{ width: "10%" }}>Kills</th>
-                                <th style={{ width: "10%" }}>Income</th>
-                                <th style={{ width: "10%" }}>Wins</th>
-                                <th style={{ width: "30%" }}>last Stands</th>
-                            </tr>
-
-                            {players.map(
-                                (player: PlayerData, index: number) => (
-                                    <tr
-                                        style={{ color: player.color }}
-                                        key={`player${index}`}
+                {playerShow && (
+                    <div className="players" ref={playerDivRef}>
+                        <table className="player_tabel">
+                            <tbody>
+                                <tr>
+                                    <th
+                                        style={{
+                                            width: "20%",
+                                            textAlign: "start",
+                                        }}
                                     >
-                                        <td
-                                            style={{
-                                                width: "20%",
-                                                textAlign: "start",
-                                            }}
+                                        Player
+                                    </th>
+                                    <th style={{ width: "10%" }}></th>
+                                    <th style={{ width: "10%" }}>Kills</th>
+                                    <th style={{ width: "10%" }}>Income</th>
+                                    <th style={{ width: "10%" }}>Wins</th>
+                                    <th style={{ width: "30%" }}>
+                                        last Stands
+                                    </th>
+                                </tr>
+
+                                {players.map(
+                                    (player: PlayerData, index: number) => (
+                                        <tr
+                                            style={{ color: player.color }}
+                                            key={`player${index}`}
                                         >
-                                            {player.name}
-                                        </td>
-                                        <td style={{ width: "20%" }}>
-                                            <div className="level">
-                                                <div
-                                                    style={{
-                                                        width: `${player.level}%`,
-                                                    }}
-                                                ></div>
-                                            </div>
-                                        </td>
-                                        <td style={{ width: "10%" }}>
-                                            {player.kills}
-                                        </td>
-                                        <td style={{ width: "10%" }}>
-                                            {player.income}
-                                        </td>
-                                        <td style={{ width: "10%" }}>
-                                            {player.wins}
-                                        </td>
-                                        <td style={{ width: "20%" }}>
-                                            {player.lastStands}
-                                        </td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                                            <td
+                                                style={{
+                                                    width: "20%",
+                                                    textAlign: "start",
+                                                }}
+                                            >
+                                                {player.name}
+                                            </td>
+                                            <td style={{ width: "30%" }}>
+                                                <div className="level">
+                                                    <div
+                                                        style={{
+                                                            width: `${player.level}%`,
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                            </td>
+                                            <td style={{ width: "10%" }}>
+                                                {player.kills}
+                                            </td>
+                                            <td style={{ width: "10%" }}>
+                                                {player.income}
+                                            </td>
+                                            <td style={{ width: "10%" }}>
+                                                {player.wins}
+                                            </td>
+                                            <td style={{ width: "20%" }}>
+                                                {player.lastStands}
+                                            </td>
+                                        </tr>
+                                    )
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
             {/* -------  player_stats end --------- */}
         </GamePlay>
