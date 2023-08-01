@@ -45,6 +45,17 @@ const GamePlay = styled.div`
         .profile {
             width: 240px;
             height: 100%;
+
+            .left::-webkit-scrollbar {
+                width: 5px;
+                height: 10px;
+                background-color: transparent;
+            }
+
+            .left::-webkit-scrollbar-thumb {
+                background-color: black;
+                border: 0.5px solid #ff0;
+            }
         }
         .status {
             width: 260px;
@@ -415,11 +426,11 @@ export const Desktop = ({
     useEffect(() => {
         gameMenuFadeInAnim
             .add("start")
-            .from(".back", { bottom: "-16.5vw", duration: 2 }, "start")
-            .from(".field", { bottom: "-16.5vw", duration: 2 }, "start")
-            .from(".map", { left: "-24vw", duration: 2 }, "start")
-            .from(".self", { top: "-6vw", duration: 2 }, "start")
-            .from(".player_stats", { right: "-22vw", duration: 2 }, "start");
+            .from(".back", { bottom: "-16.5vw", duration: 0 }, "start")
+            .from(".field", { bottom: "-16.5vw", duration: 0 }, "start")
+            .from(".map", { left: "-24vw", duration: 0 }, "start")
+            .from(".self", { top: "-6vw", duration: 0 }, "start")
+            .from(".player_stats", { right: "-22vw", duration: 0 }, "start");
 
         return () => {
             gameMenuFadeInAnim.kill();
@@ -432,14 +443,13 @@ export const Desktop = ({
             <div className="back fixed bottom-0 "></div>
             <div className="field fixed flex bottom-0">
                 <div className="profile flex gap-[2%]">
-                    <div className="left w-[20%] flex flex-col gap-[2%]">
+                    <div className="left relative w-[20%] h-[100%] flex flex-col gap-[5%] overflow-y-scroll overflow-x-hidden">
                         {profileSpells.map((el: any, index: number) => (
                             <div
                                 key={`profilespell${index}`}
-                                className="relative max-h-[20%] h-[100%]"
+                                className="relative h-[100px]"
                             >
-                                <img width={"80%"} src={el.thumbnail}></img>
-                                <div className="absolute w-[10%] h-[70%] bg-black top-0 left-[90%] border border-[#e7e103]"></div>
+                                <img width={"90%"} src={el.thumbnail}></img>
                             </div>
                         ))}
                     </div>
@@ -451,14 +461,15 @@ export const Desktop = ({
                                 src="/assets/images/profile.png"
                             ></img>
                         </div>
-                        <div className="roundfont profileFont h-[28%] flex flex-col items-center justify-evenly bg-[#2226]">
+                        <div className="roundfont fs-sm h-[28%] flex flex-col items-center justify-evenly bg-[#2226]">
                             <p className="text-white">Jacky555</p>
-                            <p className="text-[#e9e502]" id="gameLevel">
+                            <p className="gradient-text1" id="gameLevel">
                                 Level 1
                             </p>
                         </div>
                     </div>
                 </div>
+
                 <div className="status flex flex-col gap-[2%] justify-center">
                     <div className="roundfont statusFont_big h-[20%] text-[#e9e502] font-bold text-center flex align-end justify-center items-end">
                         <p style={{ height: "min-content" }}>

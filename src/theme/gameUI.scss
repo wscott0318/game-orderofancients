@@ -77,3 +77,9 @@
 .ff-micro {
     // font-family: "Microsoft Tai Le";
 }
+.gradient-text1{
+    background: linear-gradient(to top, #e56e16, #e9e502);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
