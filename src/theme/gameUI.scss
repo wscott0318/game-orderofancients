@@ -61,15 +61,29 @@
 .fc-orange {
     color: #e9e502;
 }
+
 .fs-lg {
-    font-size: 1.7vw;
+    font-size: 17.4px;
 }
 .fs-md {
-    font-size: 1.4vw;
+    font-size: 14.3px;
 }
 .fs-sm {
-    font-size: 1.2vw;
+    font-size: 12.3px;
 }
+
+@media only screen and (max-width: 1024px) {
+    .fs-lg {
+        font-size: 1.7vw;
+    }
+    .fs-md {
+        font-size: 1.4vw;
+    }
+    .fs-sm {
+        font-size: 1.2vw;
+    }
+}
+
 
 .ff-round {
     font-family: "Arial Rounded MT Bold";

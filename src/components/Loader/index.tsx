@@ -97,7 +97,22 @@ const LoadingProgress = styled.div`
     width: 800px;
     bottom: 20px;
 `;
+const PlayerScrollDiv = styled.div`
+    height: calc(100vh - 387px);
+    .scroll {
+        overflow-y: scroll;
 
+        ::-webkit-scrollbar {
+            width: 10px;
+            background-color: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: #919056;
+            border-radius: 10px;
+        }
+    }
+`;
 export const Loader = ({ canEnterGame }: any) => {
     const [progressValue, setProgressValue] = useState(0);
 
@@ -144,39 +159,45 @@ export const Loader = ({ canEnterGame }: any) => {
                     <img src="/assets/images/loading_logo.png" alt="logo" />
                 </TopLogo>
 
-                <div className="players relative ff-micro">
-                    <div className="w-[100%] text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
-                        <div className="head text-[#ecea8c] fs-sm flex">
+                <PlayerScrollDiv className="players relative ff-micro">
+                    <div className="w-full h-full text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
+                        <div className="head text-[#ecea8c] text-[17.4px] flex">
                             <div className="w-[50%]">Player</div>
                             <div className="w-[25%]">Played</div>
                             <div className="w-[25%]">Win </div>
                         </div>
-
-                        {players.map((player: PlayerData, index: number) => (
-                            <div
-                                style={{
-                                    color: "white",
-                                    borderRadius: "5px",
-                                    borderWidth: "2px",
-                                    borderColor: "#2c322f",
-                                }}
-                                key={`player${index}`}
-                                className="fs-sm bg-[#0007] flex p-1"
-                            >
-                                <div className="w-[50%] flex items-center gap-[20%]">
-                                    <img width={40} src={player.avata} />
-                                    <span>{player.name}</span>
-                                </div>
-                                <div className="w-[25%] flex justify-center items-center">
-                                    <span>10</span>
-                                </div>
-                                <div className="w-[25%] flex justify-center items-center">
-                                    <span>10</span>
-                                </div>
-                            </div>
-                        ))}
+                        <div className="scroll">
+                            {players.map(
+                                (player: PlayerData, index: number) => (
+                                    <div
+                                        style={{
+                                            color: "white",
+                                            borderRadius: "5px",
+                                            borderWidth: "2px",
+                                            borderColor: "#2c322f",
+                                        }}
+                                        key={`player${index}`}
+                                        className="text-[17.4px] bg-[#0007] flex p-1"
+                                    >
+                                        <div className="w-[50%] flex items-center gap-[20%]">
+                                            <img
+                                                width={40}
+                                                src={player.avata}
+                                            />
+                                            <span>{player.name}</span>
+                                        </div>
+                                        <div className="w-[25%] flex justify-center items-center">
+                                            <span>10</span>
+                                        </div>
+                                        <div className="w-[25%] flex justify-center items-center">
+                                            <span>10</span>
+                                        </div>
+                                    </div>
+                                )
+                            )}
+                        </div>
                     </div>
-                </div>
+                </PlayerScrollDiv>
 
                 <LoadingProgress className="relative">
                     <CustomLoaderSlider
