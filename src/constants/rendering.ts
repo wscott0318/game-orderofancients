@@ -13,7 +13,7 @@ export const CAMERA_PROPS = {
     far: 20000,
     position: {
         x: 15,
-        y: 60,
+        y: 80,
         z: 25,
     },
 };

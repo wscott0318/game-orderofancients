@@ -175,9 +175,9 @@ export class TowerManager {
             }
         }
 
-        // if (this.hp <= 0) {
-        //     this._stateManager.setState(GAME_STATES.END);
-        // }
+        if (this.hp <= 0) {
+            this._stateManager.setState(GAME_STATES.END);
+        }
 
         this.renderHealthBar();
     }

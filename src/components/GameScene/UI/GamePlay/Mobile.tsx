@@ -200,10 +200,10 @@ export const Mobile = ({
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
                     <span className="fc-orange" id="gold">
-                        200 /
+                        200
                     </span>
+                    <span> / </span>
                     <span className="" id="income">
-                        {" "}
                         +80
                     </span>
                 </div>
