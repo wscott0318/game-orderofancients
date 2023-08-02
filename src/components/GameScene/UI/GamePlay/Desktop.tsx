@@ -428,15 +428,50 @@ export const Desktop = ({
             <div className="back fixed bottom-0 "></div>
             <div className="field fixed flex bottom-0">
                 <div className="profile flex gap-[2%]">
-                    <div className="left relative w-[20%] h-[100%] flex flex-col gap-[5%] overflow-y-scroll overflow-x-hidden">
-                        {profileSpells.map((el: any, index: number) => (
-                            <div
-                                key={`profilespell${index}`}
-                                className="relative h-[100px]"
-                            >
-                                <img width={"90%"} src={el.thumbnail}></img>
-                            </div>
-                        ))}
+                    <div className="left relative w-[20%] h-[100%] flex flex-col gap-[5%] overflow-y-scroll">
+                        {profileSpells.length > 12
+                            ? profileSpells.map((el: any, index: number) => (
+                                  <div
+                                      key={`profilespell${index}`}
+                                      className="relative h-[100px]"
+                                  >
+                                      <img
+                                          width={"90%"}
+                                          src={el.thumbnail}
+                                      ></img>
+                                  </div>
+                              ))
+                            : Array(12)
+                                  .fill(1)
+                                  .map((value: any, index: number) =>
+                                      profileSpells[index] ? (
+                                          <div
+                                              key={`profilespell${index}`}
+                                              className="w-[100%] aspect-square"
+                                          >
+                                              <img
+                                                  width={"90%"}
+                                                  src={
+                                                      profileSpells[index]
+                                                          .thumbnail
+                                                  }
+                                              ></img>
+                                          </div>
+                                      ) : (
+                                          <div
+                                              key={`profilespell${index}`}
+                                              className="w-[100%]"
+                                              style={{ height: "600%" }}
+                                          >
+                                              <img
+                                                  width={"90%"}
+                                                  src={
+                                                      "assets/images/black.png"
+                                                  }
+                                              ></img>
+                                          </div>
+                                      )
+                                  )}
                     </div>
 
                     <div className="profile-data w-[78%] flex flex-col gap-[2%]">
