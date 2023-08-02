@@ -2,6 +2,7 @@ import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
+import { url } from "inspector";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -64,49 +65,37 @@ const GamePlay = styled.div`
         .spell {
             width: 300px;
             height: 100%;
-        }
-    }
 
-    .spec {
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        height: 100%;
+            .specs {
+                div{
+                    display: flex;
+                    flex-wrap: wrap;
+                    width: 100%;
+                    height: 100%;
 
-        background: repeating-linear-gradient(
-                to bottom,
-                #fff1 0%,
-                #fff1 1%,
-                rgba(255, 255, 255, 0) 1%,
-                rgba(255, 255, 255, 0) 32%,
-                #fff1 32%,
-                #fff1 33%
-            ),
-            repeating-linear-gradient(
-                to right,
-                transparent 0%,
-                transparent 1%,
-                black 1%,
-                black 24%,
-                transparent 24%,
-                transparent 25%
-            );
-
-        background-repeat: no-repeat;
-
-        .item {
-            width: 23%;
-            height: 31%;
-            margin: 1%;
-            img {
-                width: 100%;
-                height: 100%;
+                    div{
+                        width: 23%;
+                    height: 31%;
+                    margin: 1%;
+                    }
+                }
+                .item {
+                    width: 23%;
+                    height: 31%;
+                    margin: 1%;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+                .item:active {
+                    transform: scale(0.95);
+                }
             }
         }
-        .item:active {
-            transform: scale(0.95);
-        }
     }
+
+    
     .roundfont {
         font-family: "Arial Rounded MT Bold";
     }
@@ -384,13 +373,15 @@ const TimeBar = styled.div`
     top: 0;
     height: 100%;
     width: 100%;
-    background: linear-gradient(
-        to bottom,
-        #0e42ac 0%,
-        #114fce 38%,
-        #185ff1 83%,
-        #114fce 100%
-    );
+    // background: linear-gradient(
+    //     to bottom,
+    //     #0e42ac 0%,
+    //     #114fce 38%,
+    //     #185ff1 83%,
+    //     #114fce 100%
+    // );
+    background-image: url("assets/images/spell-slider.png");
+    background-size: auto 100%;
     transition: all 1s;
 `;
 
@@ -421,7 +412,7 @@ export const Desktop = ({
         // }
         setPlayerShow(!playerShow);
     };
-
+    const twelveArray = Array(12);
     const gameMenuFadeInAnim = gsap.timeline();
 
     useEffect(() => {
@@ -481,10 +472,11 @@ export const Desktop = ({
                         <div className="absolute border-4 border-[#252221] rounded-[15px] w-[100%] h-[100%] bg-black flex items-center">
                             <div
                                 id="towerHealthBar"
-                                className="absolute w-[100%] h-[100%] rounded-[10px] border-[2px] border-black"
+                                className="absolute w-[100%] h-[100%] rounded-[10px] border-[px] border-black"
                                 style={{
-                                    background:
-                                        "linear-gradient(to bottom, #257808 0%, #299f1c 30%,#299f1c 70%, #1d7707 100%)",
+                                    backgroundImage:
+                                        "url('assets/images/status-slider.png')",
+                                    backgroundSize: "auto 100%",
                                 }}
                             ></div>
                         </div>
@@ -562,13 +554,15 @@ export const Desktop = ({
                             <span className="text-white"> / 30s</span>
                         </div>
                     </div>
-                    <div
-                        style={{
-                            height: "82%",
-                            width: "100%",
-                        }}
-                    >
-                        <div className="spec">
+                    <div className="specs relative w-full h-[80%]">
+                        <div className="absolute w-full h-full">
+                            {Array(12)
+                                .fill(1)
+                                .map(() => (
+                                    <div className="bg-black "></div>
+                                ))}
+                        </div>
+                        <div className="spec absolute">
                             {upgrades.map((item: any, index: number) => (
                                 <div
                                     key={`upgradeItem${index}`}

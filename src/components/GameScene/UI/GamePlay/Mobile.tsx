@@ -22,6 +22,13 @@ const MobileGamePlay = styled.div`
         border-radius: 10px;
         border-width: 0.3vw;
         border-color: #634401;
+        overflow: hidden;
+    }
+    .spell-price {
+        border-width: 1px;
+        border-color: #5e2f17;
+        border-top-right-radius: 8px;
+        border-bottom-left-radius: 8px;
     }
     .spell:active {
         transform: scale(0.95);
@@ -81,19 +88,26 @@ export const Mobile = ({
                     {upgradeSpells.map((el: any, index: number) => (
                         <div
                             key={`spell${index}`}
-                            className=" w-[7.5%] flex items-center"
+                            className="spell relative w-[7.5%] aspect-square"
                         >
                             {el && !el.purchased ? (
-                                <img
-                                    src={upgrades[index].thumbnail}
-                                    alt="pic"
-                                    className="spell w-full"
-                                    onClick={() => {
-                                        onClickUpgrade(el, index);
-                                    }}
-                                />
+                                <>
+                                    <img
+                                        src={upgrades[index].thumbnail}
+                                        alt="pic"
+                                        className="w-full h-full"
+                                        onClick={() => {
+                                            onClickUpgrade(el, index);
+                                        }}
+                                    />
+                                    <div className="spell-price absolute w-[70%] h-[30%] bottom-0 bg-[#0004] flex justify-center items-center">
+                                        <span className="text-[#e9e502] fs-sm">
+                                            {el.cost}
+                                        </span>
+                                    </div>
+                                </>
                             ) : (
-                                <div className="spell bg-black aspect-square w-[100%]"></div>
+                                <div className=" bg-black w-full h-full"></div>
                             )}
                         </div>
                     ))}
@@ -103,6 +117,11 @@ export const Mobile = ({
                         borderRadius={"20px"}
                         trackColor={"#1252d5"}
                         value={40}
+                        props={{
+                            backgroundImage:
+                                "url('assets/images/mobile-spell-slider1.png')",
+                            backgroundSize: "auto 100%",
+                        }}
                     />
                 </div>
             </div>
@@ -146,6 +165,11 @@ export const Mobile = ({
                     borderRadius={"4px"}
                     padding="1px"
                     trackColor="#489631"
+                    props={{
+                        backgroundImage:
+                            "url('assets/images/status-slider.png')",
+                        backgroundSize: "auto 100%",
+                    }}
                 />
                 <img
                     className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
@@ -207,7 +231,7 @@ export const Mobile = ({
             {/* -------  clock end --------- */}
 
             {/* -------  player start --------- */}
-            <div className="player absolute right-[3vw] top-[1vw] w-[12vw]  flex flex-col gap-[0.3vw]">
+            <div className="player absolute right-[3vw] top-[1vw] w-[16vw]  flex flex-col gap-[0.3vw]">
                 {players.map((player: PlayerData, index: number) => (
                     <div className="relative" key={`player${index}`}>
                         <CustomProgressBar

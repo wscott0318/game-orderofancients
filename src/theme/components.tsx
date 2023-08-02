@@ -26,6 +26,8 @@ interface CustomProgressBarProps {
     backgroundColor?: string;
     value?: number;
     padding?: string;
+    gradient?: boolean;
+    props?: any;
 }
 export const CustomProgressBar = ({
     width = "100%",
@@ -35,6 +37,8 @@ export const CustomProgressBar = ({
     borderRadius = "20px",
     trackColor = "blue",
     value = 50,
+    gradient = false,
+    props,
 }: CustomProgressBarProps) => {
     return (
         <div
@@ -57,7 +61,14 @@ export const CustomProgressBar = ({
                         width: `${value}%`,
                         height: "100%",
                         borderRadius,
-                        backgroundColor: trackColor,
+                        background: `linear-gradient(
+                            to top,
+                            #80808044 0%,
+                            #76767644 29%,
+                            #ffffff44 79%,
+                            #c0c0c044 100%
+                            ), ${trackColor}`,
+                        ...props,
                     }}
                 ></div>
             </div>
