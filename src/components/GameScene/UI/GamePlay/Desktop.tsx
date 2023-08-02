@@ -1,7 +1,8 @@
 import { gsap } from "gsap";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
+import { url } from "inspector";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -65,19 +66,12 @@ const GamePlay = styled.div`
             width: 300px;
             height: 100%;
 
-            .specs {
-                div{
-                    display: flex;
-                    flex-wrap: wrap;
-                    width: 100%;
-                    height: 100%;
+            .spec {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                height: 100%;
 
-                    div{
-                        width: 23%;
-                        height: 31%;
-                        margin: 1%;
-                    }
-                }
                 .item {
                     width: 23%;
                     height: 31%;
@@ -372,6 +366,13 @@ const TimeBar = styled.div`
     top: 0;
     height: 100%;
     width: 100%;
+    // background: linear-gradient(
+    //     to bottom,
+    //     #0e42ac 0%,
+    //     #114fce 38%,
+    //     #185ff1 83%,
+    //     #114fce 100%
+    // );
     background-image: url("assets/images/spell-slider.png");
     background-size: auto 100%;
     transition: all 1s;
@@ -456,10 +457,7 @@ export const Desktop = ({
 
                 <div className="status flex flex-col gap-[2%] justify-center">
                     <div className="roundfont statusFont_big h-[20%] text-[#e9e502] font-bold text-center flex align-end justify-center items-end">
-                        <p
-                            className="gradient-text1 text-bold"
-                            style={{ height: "min-content" }}
-                        >
+                        <p style={{ height: "min-content" }}>
                             Survivor's Status
                         </p>
                     </div>
@@ -550,30 +548,42 @@ export const Desktop = ({
                         </div>
                     </div>
                     <div className="specs relative w-full h-[80%]">
-                        <div className="absolute w-full h-full">
+                        {/* <div className="absolute w-full h-full">
                             {Array(12)
                                 .fill(1)
-                                .map((item, index) => (
-                                    <div
-                                        className="bg-black"
-                                        key={`specs${index}`}
-                                    ></div>
+                                .map(() => (
+                                    <div className="bg-black "></div>
                                 ))}
-                        </div>
+                        </div> */}
                         <div className="spec absolute">
-                            {upgrades.map((item: any, index: number) => (
-                                <div
-                                    key={`upgradeItem${index}`}
-                                    className={`${
-                                        (item as any).purchased
-                                            ? "opacity-0 pointer-events-none"
-                                            : ""
-                                    } item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
-                                    onClick={() => onClickUpgrade(item, index)}
-                                >
-                                    <img src={item.thumbnail} alt="pic" />
-                                </div>
-                            ))}
+                            {Array(12)
+                                .fill(1)
+                                .map((value: any, index: number) =>
+                                    upgrades[index] ? (
+                                        <div
+                                            key={`upgradeItem${index}`}
+                                            className={`${
+                                                (upgrades[index] as any)
+                                                    .purchased
+                                                    ? "opacity-0 pointer-events-none"
+                                                    : ""
+                                            } item hover:border-[1px] hover:border-[yellow]`}
+                                            onClick={() =>
+                                                onClickUpgrade(
+                                                    upgrades[index],
+                                                    index
+                                                )
+                                            }
+                                        >
+                                            <img
+                                                src={upgrades[index].thumbnail}
+                                                alt="pic"
+                                            />
+                                        </div>
+                                    ) : (
+                                        <div className="bg-black m-[1%] w-[23%] h-[31%]"></div>
+                                    )
+                                )}
                         </div>
                     </div>
                 </div>
@@ -635,7 +645,7 @@ export const Desktop = ({
                     <YellowBoldFont id="elapsedTime">00:00:55</YellowBoldFont>
                 </div>
                 <div className="stats">
-                    <YellowBoldFont>Stats</YellowBoldFont>
+                    <YellowBoldFont>stats</YellowBoldFont>
                     {playerShow ? (
                         <YellowBoldFont
                             className="switch"
