@@ -17,6 +17,7 @@ interface GameOptions {
     canvas: HTMLDivElement;
     assetsManager: AssetsManager;
     setCurrentGameSate: Function;
+    setUpgrades: Function;
 }
 
 export class Game {
@@ -80,6 +81,7 @@ export class Game {
             towerManager: this._towerManager,
             sceneRenderer: this._sceneRenderer,
             spriteManager: this._spriteManager,
+            setUpgrades: options.setUpgrades,
         });
 
         this._canvasDiv = options.canvas;

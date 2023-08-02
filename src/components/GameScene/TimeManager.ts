@@ -7,12 +7,14 @@ import { SceneRenderer } from "./rendering/SceneRenderer";
 import SpriteManager from "./SpriteManager";
 import { SPELLS_INFO } from "../../constants/spell";
 import { CONVERT_TIME, PERCENT2VALUE } from "../../utils/helper";
+import { generateUpgrades } from "../../helper/game";
 
 interface TimeManagerProps {
     playerState: PlayerState;
     towerManager: TowerManager;
     sceneRenderer: SceneRenderer;
     spriteManager: SpriteManager;
+    setUpgrades: Function;
 }
 
 export class TimeManager {
@@ -24,12 +26,14 @@ export class TimeManager {
     towerManager: TowerManager;
     sceneRenderer: SceneRenderer;
     spriteManager: SpriteManager;
+    setUpgrades: Function;
 
     constructor({
         playerState,
         towerManager,
         sceneRenderer,
         spriteManager,
+        setUpgrades,
     }: TimeManagerProps) {
         this.clock = new THREE.Clock();
 
@@ -41,6 +45,8 @@ export class TimeManager {
         this.towerManager = towerManager;
         this.sceneRenderer = sceneRenderer;
         this.spriteManager = spriteManager;
+
+        this.setUpgrades = setUpgrades;
     }
 
     tickSecond() {
@@ -95,6 +101,11 @@ export class TimeManager {
         if (this.playerState.Gems_of_Power > 0) {
             this.playerState.Gems_of_Power--;
         }
+
+        /**
+         * Re-generate the spells for round
+         */
+        this.setUpgrades(generateUpgrades());
     }
 
     tick() {

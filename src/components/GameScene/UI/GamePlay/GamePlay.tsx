@@ -18,34 +18,14 @@ interface GamePlayUIProps {
     gameRef: {
         current: Game;
     };
+    upgrades: any;
+    setUpgrades: any;
 }
 
-const GamePlayUI = ({ gameRef }: GamePlayUIProps) => {
-    const [detailPos, setDetailPos]: [any, any] = useState({ x: 0, y: 0 });
-
-    const [upgrades, setUpgrades] = useState([
-        SPELLS_INFO["Throwing Axes"],
-        SPELLS_INFO["Bow"],
-        SPELLS_INFO["Magic_Missiles"],
-        SPELLS_INFO["Boulder"],
-        SPELLS_INFO["Chaos_Orb"],
-        SPELLS_INFO["Missile_Barrage"],
-        SPELLS_INFO["Flamecaster"],
-        SPELLS_INFO["Chaos_Claw"],
-        SPELLS_INFO[`Philosopher's Stone`],
-    ]);
-
+const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
     const [profileSpells, setProfilSpells] = useState([
         SPELLS_INFO["Magic_Missiles"],
         SPELLS_INFO["Flamecaster"],
-        SPELLS_INFO["Chaos_Claw"],
-        SPELLS_INFO[`Philosopher's Stone`],
-        SPELLS_INFO["Bow"],
-        SPELLS_INFO["Magic_Missiles"],
-        SPELLS_INFO["Flamecaster"],
-        SPELLS_INFO["Chaos_Claw"],
-        SPELLS_INFO[`Philosopher's Stone`],
-        SPELLS_INFO["Bow"],
     ]);
 
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);

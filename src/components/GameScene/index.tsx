@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
-import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
 import GamePlayUI from "./UI/GamePlay/GamePlay";
@@ -11,6 +10,7 @@ import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
 import { isMobile } from "react-device-detect";
+import { generateUpgrades } from "../../helper/game";
 
 const Wrapper = styled.div`
     position: relative;
@@ -27,10 +27,16 @@ export const GameScene = () => {
     const [canEnterGame, setCanEnterGame] = useState(false);
     const [currentGameState, setCurrentGameSate] = useState(0);
 
+    // Spells that can be purhcase per round
+    const [upgrades, setUpgrades] = useState(generateUpgrades());
+
     canEnterGameRef.current = canEnterGame;
 
     const [showGrid, setShowGrid] = useState(false);
 
+    /**
+     * Canvas Game Ref
+     */
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
     const assetsManagerRef = useRef(null) as any;
@@ -50,6 +56,7 @@ export const GameScene = () => {
             canvas: canvasDivRef.current!,
             assetsManager: assetsManagerRef.current,
             setCurrentGameSate: setCurrentGameSate,
+            setUpgrades: setUpgrades,
         });
 
         setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
@@ -131,12 +138,16 @@ export const GameScene = () => {
                 <GameMenuUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (
                 <>
-                    <GamePlayUI gameRef={gameRef} />
+                    <GamePlayUI
+                        gameRef={gameRef}
+                        upgrades={upgrades}
+                        setUpgrades={setUpgrades}
+                    />
 
                     {/* <div className="absolute top-2 right-16">
                         <Toggle
                             title={"Show Grid"}
-                            checked={showGrid}
+                            checked={showGrid}  
                             onChange={onToggleGrid}
                         />
                     </div> */}

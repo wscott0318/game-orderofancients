@@ -1,8 +1,7 @@
 import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
-import { url } from "inspector";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -75,8 +74,8 @@ const GamePlay = styled.div`
 
                     div{
                         width: 23%;
-                    height: 31%;
-                    margin: 1%;
+                        height: 31%;
+                        margin: 1%;
                     }
                 }
                 .item {
@@ -373,13 +372,6 @@ const TimeBar = styled.div`
     top: 0;
     height: 100%;
     width: 100%;
-    // background: linear-gradient(
-    //     to bottom,
-    //     #0e42ac 0%,
-    //     #114fce 38%,
-    //     #185ff1 83%,
-    //     #114fce 100%
-    // );
     background-image: url("assets/images/spell-slider.png");
     background-size: auto 100%;
     transition: all 1s;
@@ -464,7 +456,10 @@ export const Desktop = ({
 
                 <div className="status flex flex-col gap-[2%] justify-center">
                     <div className="roundfont statusFont_big h-[20%] text-[#e9e502] font-bold text-center flex align-end justify-center items-end">
-                        <p style={{ height: "min-content" }}>
+                        <p
+                            className="gradient-text1 text-bold"
+                            style={{ height: "min-content" }}
+                        >
                             Survivor's Status
                         </p>
                     </div>
@@ -558,8 +553,11 @@ export const Desktop = ({
                         <div className="absolute w-full h-full">
                             {Array(12)
                                 .fill(1)
-                                .map(() => (
-                                    <div className="bg-black "></div>
+                                .map((item, index) => (
+                                    <div
+                                        className="bg-black"
+                                        key={`specs${index}`}
+                                    ></div>
                                 ))}
                         </div>
                         <div className="spec absolute">
@@ -570,7 +568,7 @@ export const Desktop = ({
                                         (item as any).purchased
                                             ? "opacity-0 pointer-events-none"
                                             : ""
-                                    } item hover:border-[1px] hover:border-[yellow]`}
+                                    } item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
                                     onClick={() => onClickUpgrade(item, index)}
                                 >
                                     <img src={item.thumbnail} alt="pic" />
@@ -637,7 +635,7 @@ export const Desktop = ({
                     <YellowBoldFont id="elapsedTime">00:00:55</YellowBoldFont>
                 </div>
                 <div className="stats">
-                    <YellowBoldFont>stats</YellowBoldFont>
+                    <YellowBoldFont>Stats</YellowBoldFont>
                     {playerShow ? (
                         <YellowBoldFont
                             className="switch"
