@@ -40,14 +40,27 @@ const GameMenu = styled.div`
         background-image: url("/assets/images/menu-back.png");
         background-size: 100% 100%;
         align-items: center;
+
+        width: 551px;
+        height: 633px;
+
+        // @media only screen and (max-width: 1024px) {
+        //     width: 28.7vw;
+        //     height: 33vw;
+        // }
     }
     .button-col {
         position: relative;
         display: flex;
         flex-direction: column;
 
-        gap: 3vw;
-        margin-top: 10vw;
+        gap: 57.6px;
+        margin-top: 192px;
+
+        // @media only screen and (max-width: 1024px) {
+        // gap: 3vw;
+        // margin-top: 10vw;
+        // }
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png") !important;
@@ -56,10 +69,13 @@ const GameMenu = styled.div`
         background-repeat: no-repeat;
         background-size: cover;
 
-        width: 16vw;
-        height: 4.17vw;
-        color: rgb(212, 212, 3);
-        font-size: 2vw;
+        width: 307px;
+        height: 80px;
+        // @media only screen and (max-width: 1024px) {
+        // width: 16vw;
+        // height: 4.17vw;
+        // }
+
         font-weight: 900;
         user-select: none;
 
@@ -129,7 +145,7 @@ const GameMenuUI = ({ setGameState }: any) => {
             } absolute top-0 left-0 w-full h-full bg-[#00000059] flex justify-center pointer`}
             ref={gameMenuRef}
         >
-            <div className="menu relative w-[28.7vw] h-[33vw] top-[-50vh] translate-y-[-50%]">
+            <div className="menu relative top-[-50vh] translate-y-[-50%]">
                 <div className="button-col">
                     <button
                         className="warButton menuPlay"
