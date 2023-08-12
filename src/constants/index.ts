@@ -40,6 +40,14 @@ export const DAMAGE_TYPES = {
     Chaos: 0x05,
 };
 
+export const DAMAGE_TYPES_TEXT = {
+    0x01: "Normal",
+    0x02: "Piercing",
+    0x03: "Magic",
+    0x04: "Siege",
+    0x05: "Chaos",
+};
+
 export const ARMOR_TYPES = {
     Unarmored: 0x01,
     Light: 0x02,
@@ -47,6 +55,15 @@ export const ARMOR_TYPES = {
     Heavy: 0x04,
     Fortified: 0x05,
     Divine: 0x06,
+};
+
+export const ARMOR_TYPES_TEXT = {
+    0x01: "Unarmored",
+    0x02: "Light",
+    0x03: "Medium",
+    0x04: "Heavy",
+    0x05: "Fortified",
+    0x06: "Divine",
 };
 
 export const DAMAGE_TEXT_COLORS = {

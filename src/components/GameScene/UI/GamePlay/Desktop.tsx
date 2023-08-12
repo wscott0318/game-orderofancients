@@ -2,7 +2,7 @@ import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
-import { url } from "inspector";
+import { ARMOR_TYPES_TEXT, DAMAGE_TYPES_TEXT } from "../../../../constants";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -134,8 +134,6 @@ const GamePlay = styled.div`
 
     .detail {
         width: 300px;
-        height: 173px;
-
         position: absolute;
         background-color: #0004;
         border-radius: 5px;
@@ -144,8 +142,8 @@ const GamePlay = styled.div`
         display: flex;
         flex-direction: column;
         color: white;
-        bottom: 326px;
-        right: calc(50vw - 460.8px);
+        bottom: -50px;
+        right: 64px;
 
         @media only screen and (max-width: 1024px) {
             bottom: 31.8vw;
@@ -170,7 +168,7 @@ const GamePlay = styled.div`
                 display: flex;
                 align-items: center;
                 img {
-                    height: 80%;
+                    height: 25px;
                     margin-right: 10px;
                 }
             }
@@ -275,11 +273,6 @@ const GamePlay = styled.div`
         top: 4.5vh;
         width: 401px;
 
-        // @media only screen and (max-width: 1024px) {
-        //     right: 6.5vw;
-        //     width: 39.2vw;
-        // }
-
         > div {
             background-color: #0004;
             border-radius: 5px;
@@ -299,10 +292,6 @@ const GamePlay = styled.div`
             width: 67%;
 
             height: 30px;
-
-            // @media only screen and (max-width: 1024px) {
-            //     height: 2.92vw;
-            // }
         }
 
         .stats {
@@ -315,10 +304,6 @@ const GamePlay = styled.div`
 
             top: 1vh;
             height: 30px;
-
-            // @media only screen and (max-width: 1024px) {
-            //     height: 2.92vw;
-            // }
 
             .switch {
                 position: absolute;
@@ -333,23 +318,20 @@ const GamePlay = styled.div`
 
             top: 1.9vh;
             font-size: 13px;
-            // @media only screen and (max-width: 1024px) {
-            //     font-size: 1.27vw;
-            // }
+
             tr {
                 width: 100%;
             }
+
             th {
                 color: #919056;
             }
+
             td {
                 text-align: center;
                 font-size: 11.5px;
-
-                // @media only screen and (max-width: 1024px) {
-                //     font-size: 1.12vw;
-                // }
             }
+
             .level {
                 width: 80%;
                 background-color: black;
@@ -357,9 +339,7 @@ const GamePlay = styled.div`
                 left: 50%;
                 position: relative;
                 transform: translateX(-50%);
-                // @media only screen and (max-width: 1024px) {
-                //     height: 0.56vw;
-                // }
+
                 > div {
                     background-color: #129110;
                     height: 100%;
@@ -384,13 +364,6 @@ const TimeBar = styled.div`
     top: 0;
     height: 100%;
     width: 100%;
-    // background: linear-gradient(
-    //     to bottom,
-    //     #0e42ac 0%,
-    //     #114fce 38%,
-    //     #185ff1 83%,
-    //     #114fce 100%
-    // );
     background-image: url("assets/images/spell-slider.png");
     background-size: auto 100%;
     transition: all 1s;
@@ -450,7 +423,98 @@ export const Desktop = ({
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
-            <div className="back fixed bottom-0 "></div>
+            <div className="back fixed bottom-0">
+                {/* -------  detail start --------- */}
+                <div className="relative">
+                    {hoveredSpell && (
+                        <div className="detail">
+                            <div className="detail_title flex flex-row py-2">
+                                <span>
+                                    {hoveredSpell.name}
+                                    {/* <YellowBoldFont>Q</YellowBoldFont> */}
+                                </span>
+                                <div className="price">
+                                    <img src="/assets/images/coin.png"></img>
+                                    <YellowBoldFont>
+                                        {hoveredSpell.cost}
+                                    </YellowBoldFont>
+                                </div>
+                            </div>
+                            <div className="detail_data py-2">
+                                {hoveredSpell.spellType === "Upgrade" ? (
+                                    <>
+                                        <p className="mb-2">
+                                            {hoveredSpell.spellType}
+                                            {`( `}
+                                            <span
+                                                style={{
+                                                    margin: 0,
+                                                    color: "#e9e502",
+                                                }}
+                                            >
+                                                {hoveredSpell.upgradeType}
+                                            </span>
+                                            {` )`}
+                                        </p>
+
+                                        <p>{hoveredSpell.description}</p>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="mb-2">
+                                            {hoveredSpell.spellType}
+                                        </p>
+                                        <p>
+                                            Damage Type:{" "}
+                                            <YellowBoldFont>
+                                                {
+                                                    DAMAGE_TYPES_TEXT[
+                                                        hoveredSpell.damageType as keyof typeof DAMAGE_TYPES_TEXT
+                                                    ]
+                                                }
+                                            </YellowBoldFont>
+                                        </p>
+                                        <p>
+                                            Damage:{" "}
+                                            <YellowBoldFont>
+                                                {hoveredSpell.attackDamage}
+                                            </YellowBoldFont>
+                                        </p>
+                                        <p>
+                                            DPS:{" "}
+                                            <YellowBoldFont>
+                                                {hoveredSpell.dps}
+                                            </YellowBoldFont>
+                                        </p>
+                                        <p>
+                                            Attack Cooldown:{" "}
+                                            <YellowBoldFont>
+                                                {hoveredSpell.cooldown}
+                                            </YellowBoldFont>
+                                        </p>
+                                        <p>
+                                            Range:{" "}
+                                            <YellowBoldFont>
+                                                {hoveredSpell.attackRange}
+                                            </YellowBoldFont>
+                                        </p>
+                                        <p>
+                                            Target Reference:
+                                            <YellowBoldFont>
+                                                {!hoveredSpell.targetPreference
+                                                    ? "Any"
+                                                    : ARMOR_TYPES_TEXT[
+                                                          hoveredSpell.targetPreference as keyof typeof ARMOR_TYPES_TEXT
+                                                      ]}
+                                            </YellowBoldFont>
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
             <div className="field fixed flex bottom-0">
                 <div className="profile flex gap-[2%]">
                     <div className="left relative w-[20%] h-[100%] flex flex-col gap-[5%] overflow-y-scroll">
@@ -628,7 +692,7 @@ export const Desktop = ({
                                                     .purchased
                                                     ? "opacity-0 pointer-events-none"
                                                     : ""
-                                            } item hover:border-[1px] hover:border-[yellow]`}
+                                            } item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
                                             onClick={() =>
                                                 onClickUpgrade(
                                                     upgrades[index],
@@ -656,48 +720,6 @@ export const Desktop = ({
                 </div>
             </div>
             {/* ------- profile end --------- */}
-
-            {/* -------  detail start --------- */}
-            {hoveredSpell && (
-                <div className="detail">
-                    <div className="detail_title flex flex-row">
-                        <span>
-                            {hoveredSpell.name} ({" "}
-                            <YellowBoldFont>Q</YellowBoldFont> )
-                        </span>
-                        <div className="price">
-                            <img src="/assets/images/coin.png"></img>
-                            <YellowBoldFont>500</YellowBoldFont>
-                        </div>
-                    </div>
-                    <div className="detail_data">
-                        <p>Weapon</p>
-                        <p>
-                            Damage Type:{" "}
-                            <YellowBoldFont> Normal</YellowBoldFont>
-                        </p>
-                        <p>
-                            Damage: <YellowBoldFont> 75</YellowBoldFont>
-                        </p>
-                        <p>
-                            DPS: <YellowBoldFont> 75</YellowBoldFont>
-                        </p>
-                        <p>
-                            Attack Cooldown:{" "}
-                            <YellowBoldFont> 1.0</YellowBoldFont>
-                        </p>
-                        <p>
-                            Range: <YellowBoldFont> 900</YellowBoldFont>
-                        </p>
-                        <p>
-                            Target Reference:
-                            <YellowBoldFont> Medium Armor</YellowBoldFont>
-                        </p>
-                    </div>
-                </div>
-            )}
-
-            {/* -------  detail end --------- */}
 
             {/* -------  player_stats start --------- */}
             <div className="player_stats">
