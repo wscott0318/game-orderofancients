@@ -11,6 +11,7 @@ import GamePauseUI from "./UI/GamePause";
 
 import { isMobile } from "react-device-detect";
 import { generateUpgrades } from "../../helper/game";
+import GameSettingUI from "./UI/GameSetting";
 
 const Wrapper = styled.div`
     position: relative;
@@ -158,6 +159,8 @@ export const GameScene = () => {
                     setGameState={setGameState}
                     startGameAction={startGame}
                 />
+            ) : currentGameState === GAME_STATES.SETTING ? (
+                <GameSettingUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (
                 <>
                     <GamePlayUI

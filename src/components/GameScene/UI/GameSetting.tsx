@@ -9,9 +9,9 @@ import { GAME_STATES } from "../../../constants";
 
 const GameSetting = styled.div`
     z-index: 20;
-    background: rgb(0, 0, 0, 0.8);
-
-    backdrop-filter: saturate(0.5);
+    background-image: url("/assets/images/loading-back.png");
+    background-size: cover;
+    background-position: center;
     user-select: none;
 
     .setting {
@@ -79,7 +79,11 @@ const GameSetting = styled.div`
     }
 `;
 
-const GameSettingUI = ({ setGameState }: any) => {
+interface GameSettingUIProps {
+    setGameState: (state: number) => void;
+}
+
+const GameSettingUI = ({ setGameState }: GameSettingUIProps) => {
     const gameSettingRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
@@ -108,9 +112,9 @@ const GameSettingUI = ({ setGameState }: any) => {
     const exit = () => {
         menuDownAnim.reverse();
 
-        // gsap.delayedCall(2, () => {
-        //     setGameState(GAME_STATES.PLAYING);
-        // });
+        gsap.delayedCall(1, () => {
+            setGameState(GAME_STATES.GAME_MENU);
+        });
     };
 
     return (
@@ -233,9 +237,9 @@ const GameSettingUI = ({ setGameState }: any) => {
                     </div>
                 </div>
                 <div className="buttons relative w-[50%] h-[7%] top-[20%] flex justify-between">
-                    <button className="apply" />
-                    <button className="default" />
-                    <button className="exit" onClick={exit} />
+                    <button className="imageButton apply" />
+                    <button className="imageButton default" />
+                    <button className="imageButton exit" onClick={exit} />
                 </div>
             </div>
         </GameSetting>

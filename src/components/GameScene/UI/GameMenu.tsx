@@ -147,6 +147,7 @@ const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
                     <button
                         className="warButton imageButton menuSetting"
                         name="versus"
+                        onClick={() => setGameState(GAME_STATES.SETTING)}
                     />
                     <button
                         className="warButton imageButton menuTraining"
