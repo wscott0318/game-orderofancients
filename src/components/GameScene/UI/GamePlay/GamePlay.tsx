@@ -23,10 +23,7 @@ interface GamePlayUIProps {
 }
 
 const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
-    const [profileSpells, setProfilSpells] = useState([
-        SPELLS_INFO["Magic_Missiles"],
-        SPELLS_INFO["Flamecaster"],
-    ]);
+    const [profileSpells, setProfilSpells] = useState([]) as any;
 
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
 
@@ -121,6 +118,25 @@ const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
         if (gold_balance < price) return;
 
         gameRef.current._playerState.upgradeSpell(item);
+
+        if (item.spellType === "Weapon") {
+            const userSpells = [...profileSpells];
+
+            const index = userSpells.findIndex(
+                (spell: any) => spell.name === item.name
+            );
+
+            if (index !== -1) {
+                userSpells[index].count++;
+            } else {
+                userSpells.push({
+                    ...item,
+                    count: 1,
+                });
+            }
+
+            setProfilSpells(userSpells);
+        }
 
         // Instant upgrades actions
         if (

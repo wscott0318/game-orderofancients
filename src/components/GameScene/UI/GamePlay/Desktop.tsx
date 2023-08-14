@@ -47,18 +47,34 @@ const GamePlay = styled.div`
             width: 240px;
             height: 100%;
 
-            .left::-webkit-scrollbar {
-                width: 5px;
-                background-color: transparent;
-                @media only screen and (max-width: 1024px) {
-                    width: 0.5vw;
+            .left {
+                &::-webkit-scrollbar {
+                    width: 5px;
+                    background-color: transparent;
+                    @media only screen and (max-width: 1024px) {
+                        width: 0.5vw;
+                    }
+                }
+    
+                &::-webkit-scrollbar-thumb {
+                    background-color: black;
+                    border: 1px solid #ff0;
+                }
+
+                .profileSpellCount {
+                    position: absolute;
+                    right: 10%;
+                    bottom: 0;
+                    width: 15px;
+                    height: 15px;
+                    background: #000;
+                    color: #ff0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                 }
             }
 
-            .left::-webkit-scrollbar-thumb {
-                background-color: black;
-                border: 1px solid #ff0;
-            }
             .name{
                 background-image: url("assets/images/profile-name-back.png");
                 background-size: 100% 100%;
@@ -521,12 +537,16 @@ export const Desktop = ({
                             ? profileSpells.map((el: any, index: number) => (
                                   <div
                                       key={`profilespell${index}`}
-                                      className="relative h-[100px]"
+                                      className="relative h-[100px] relative"
                                   >
                                       <img
                                           width={"90%"}
                                           src={el.thumbnail}
                                       ></img>
+
+                                      <div className="profileSpellCount">
+                                          {profileSpells[index].count}
+                                      </div>
                                   </div>
                               ))
                             : Array(12)
@@ -535,7 +555,7 @@ export const Desktop = ({
                                       profileSpells[index] ? (
                                           <div
                                               key={`profilespell${index}`}
-                                              className="w-[100%] aspect-square"
+                                              className="w-[100%] aspect-square relative"
                                           >
                                               <img
                                                   width={"90%"}
@@ -544,6 +564,10 @@ export const Desktop = ({
                                                           .thumbnail
                                                   }
                                               ></img>
+
+                                              <div className="profileSpellCount">
+                                                  {profileSpells[index].count}
+                                              </div>
                                           </div>
                                       ) : (
                                           <div
@@ -683,7 +707,8 @@ export const Desktop = ({
                             {Array(12)
                                 .fill(1)
                                 .map((value: any, index: number) =>
-                                    upgrades[index] ? (
+                                    upgrades[index] &&
+                                    !upgrades[index].purchased ? (
                                         <div
                                             key={`upgradeItem${index}`}
                                             className={`${
@@ -711,7 +736,10 @@ export const Desktop = ({
                                             />
                                         </div>
                                     ) : (
-                                        <div className="bg-black m-[1%] w-[23%] h-[31%]"></div>
+                                        <div
+                                            key={`upgradeItemBlack${index}`}
+                                            className="bg-black m-[1%] w-[23%] h-[31%]"
+                                        ></div>
                                     )
                                 )}
                         </div>
