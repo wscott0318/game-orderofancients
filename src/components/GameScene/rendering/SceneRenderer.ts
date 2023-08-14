@@ -149,6 +149,8 @@ export class SceneRenderer {
         this._renderer.domElement.remove();
         this._renderer.dispose();
 
+        this._uiRenderer.domElement.remove();
+
         disposeMesh(this._scene);
     }
 }

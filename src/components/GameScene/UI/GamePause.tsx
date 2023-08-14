@@ -91,6 +91,9 @@ export const GamePauseUI = ({ setGameState }: any) => {
                 },
                 "start"
             );
+        return () => {
+            menuDownAnim.kill();
+        };
     }, []);
 
     const resumeGame = () => {

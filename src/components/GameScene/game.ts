@@ -17,6 +17,7 @@ interface GameOptions {
     canvas: HTMLDivElement;
     assetsManager: AssetsManager;
     setCurrentGameSate: Function;
+    setUpgrades: Function;
 }
 
 export class Game {
@@ -80,6 +81,7 @@ export class Game {
             towerManager: this._towerManager,
             sceneRenderer: this._sceneRenderer,
             spriteManager: this._spriteManager,
+            setUpgrades: options.setUpgrades,
         });
 
         this._canvasDiv = options.canvas;
@@ -91,7 +93,13 @@ export class Game {
         this.animate();
     }
 
+    dispose() {
+        this._sceneRenderer.dispose();
+    }
+
     animate() {
+        if (this._stateManager.getCurrentState() === GAME_STATES.END) return;
+
         requestAnimationFrame(this.animate.bind(this));
 
         if (this._stateManager.getCurrentState() === GAME_STATES["PLAYING"]) {

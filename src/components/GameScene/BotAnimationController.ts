@@ -59,6 +59,10 @@ export class BotAnimationController {
         action.play();
     }
 
+    stopAnimation() {
+        this.mixer.stopAllAction();
+    }
+
     initialize() {
         this.initAnimationClips();
 

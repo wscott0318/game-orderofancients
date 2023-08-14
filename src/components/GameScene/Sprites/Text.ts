@@ -8,6 +8,7 @@ interface TextSpriteProps {
     color: string;
     position: THREE.Vector3;
     sceneRenderer: SceneRenderer;
+    fastMode: null | boolean;
 }
 
 export class TextSprite {
@@ -15,7 +16,13 @@ export class TextSprite {
     sceneRenderer: SceneRenderer;
     shouldRemove: boolean;
 
-    constructor({ text, color, position, sceneRenderer }: TextSpriteProps) {
+    constructor({
+        text,
+        color,
+        position,
+        sceneRenderer,
+        fastMode = false,
+    }: TextSpriteProps) {
         this.sceneRenderer = sceneRenderer;
         this.shouldRemove = false;
 
@@ -33,10 +40,10 @@ export class TextSprite {
             .to(
                 {
                     x: this.textUI.position.x,
-                    y: this.textUI.position.y + 15,
+                    y: this.textUI.position.y + (fastMode ? 5 : 15),
                     z: this.textUI.position.z,
                 },
-                3000
+                fastMode ? 300 : 3000
             )
             .easing(TWEEN.Easing.Linear.None)
             .start();

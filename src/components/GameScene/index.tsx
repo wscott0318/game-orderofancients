@@ -3,12 +3,15 @@ import styled from "styled-components";
 import { Game } from "./game";
 import { Loader } from "../Loader";
 import AssetsManager from "./AssetsManager";
-import { Toggle } from "../Toggle";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
-import GamePlayUI from "./UI/GamePlay";
+import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
+
+import { isMobile } from "react-device-detect";
+import { generateUpgrades } from "../../helper/game";
+import GameSettingUI from "./UI/GameSetting";
 
 const Wrapper = styled.div`
     position: relative;
@@ -25,10 +28,16 @@ export const GameScene = () => {
     const [canEnterGame, setCanEnterGame] = useState(false);
     const [currentGameState, setCurrentGameSate] = useState(0);
 
+    // Spells that can be purhcase per round
+    const [upgrades, setUpgrades] = useState(generateUpgrades());
+
     canEnterGameRef.current = canEnterGame;
 
     const [showGrid, setShowGrid] = useState(false);
 
+    /**
+     * Canvas Game Ref
+     */
     const canvasDivRef = useRef(null);
     const gameRef = useRef(null) as any;
     const assetsManagerRef = useRef(null) as any;
@@ -48,10 +57,23 @@ export const GameScene = () => {
             canvas: canvasDivRef.current!,
             assetsManager: assetsManagerRef.current,
             setCurrentGameSate: setCurrentGameSate,
+            setUpgrades: setUpgrades,
         });
 
-        setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
+        setGameState(GAME_STATES.PLAYING);
     };
+
+    if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
+        // alert("change the oriented mode to landscape");
+        // let portrait = window.matchMedia("(orientation: portrait)");
+        // portrait.addEventListener("change", function (e) {
+        //     if (e.matches) {
+        //         console.log("portrait mode");
+        //     } else {
+        //         console.log("landscape mode");
+        //     }
+        // });
+    }
 
     useEffect(() => {
         if (firstRef.current) return;
@@ -59,11 +81,10 @@ export const GameScene = () => {
 
         createGame();
 
+        /** KeyDown Eventhandler for `Press Any Key` */
         window.addEventListener("keydown", onKeyDown.bind(this));
-
         return () => {
             window.removeEventListener("keydown", onKeyDown);
-
             // destroy Game
         };
     }, []);
@@ -84,6 +105,8 @@ export const GameScene = () => {
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
         }
+
+        setCurrentGameSate(state);
     };
 
     const onKeyDown = (e: any) => {
@@ -94,10 +117,9 @@ export const GameScene = () => {
 
             setTimeout(() => {
                 setCanEnterGame(false);
-
                 setLoading(false);
 
-                startGame();
+                setGameState(GAME_STATES.GAME_MENU);
             }, 3000);
         }
 
@@ -110,6 +132,22 @@ export const GameScene = () => {
         }
     };
 
+    const exitGameAction = () => {
+        if (gameRef.current) (gameRef.current as Game).dispose();
+
+        gameRef.current = null;
+
+        setGameState(GAME_STATES.GAME_MENU);
+    };
+
+    const restartGameAction = () => {
+        if (gameRef.current) (gameRef.current as Game).dispose();
+
+        gameRef.current = null;
+
+        startGame();
+    };
+
     return (
         <Wrapper>
             {loading && <Loader canEnterGame={canEnterGame} />}
@@ -117,23 +155,36 @@ export const GameScene = () => {
             <div ref={canvasDivRef}></div>
 
             {currentGameState === GAME_STATES["GAME_MENU"] ? (
-                <GameMenuUI setGameState={setGameState} />
+                <GameMenuUI
+                    setGameState={setGameState}
+                    startGameAction={startGame}
+                />
+            ) : currentGameState === GAME_STATES.SETTING ? (
+                <GameSettingUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (
                 <>
-                    <GamePlayUI gameRef={gameRef} />
+                    <GamePlayUI
+                        gameRef={gameRef}
+                        upgrades={upgrades}
+                        setUpgrades={setUpgrades}
+                    />
 
-                    <div className="absolute top-16 right-4">
+                    {/* <div className="absolute top-2 right-16">
                         <Toggle
                             title={"Show Grid"}
-                            checked={showGrid}
+                            checked={showGrid}  \
                             onChange={onToggleGrid}
                         />
-                    </div>
+                    </div> */}
                 </>
             ) : currentGameState === GAME_STATES["PAUSE"] ? (
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
-                <GameEndUI setGameState={setGameState} />
+                <GameEndUI
+                    gameRef={gameRef}
+                    exitGameAction={exitGameAction}
+                    restartGameAction={restartGameAction}
+                />
             ) : null}
         </Wrapper>
     );

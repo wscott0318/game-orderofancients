@@ -57,3 +57,58 @@
         opacity: 0;
     }
 }
+
+.fc-orange {
+    color: #e9e502;
+}
+
+.fs-lg {
+    font-size: 17.4px;
+}
+.fs-md {
+    font-size: 14.3px;
+}
+.fs-sm {
+    font-size: 12.3px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .fs-lg {
+        font-size: 1.7vw;
+    }
+    .fs-md {
+        font-size: 1.4vw;
+    }
+    .fs-sm {
+        font-size: 1.2vw;
+    }
+}
+
+.ff-round {
+    font-family: "Arial Rounded MT Bold";
+}
+
+.ff-micro {
+    font-family: "Microsoft Tai Le";
+}
+// background: linear-gradient(0deg, rgba(229,110,22,1) 0%, rgba(233,229,2,1) 39%);
+
+.gradient-text1 {
+    background-image: linear-gradient(
+        0deg,
+        rgba(229, 110, 22, 1) 0%,
+        rgba(233, 229, 2, 1) 60%
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.imageButton {
+    transition: all 0.2s;
+    filter: contrast(1);
+
+    &:hover {
+        filter: contrast(1.3);
+    }
+}

@@ -1,6 +1,21 @@
 @import "./gameUI.scss";
 
+@font-face {
+    font-family: "Arial Rounded MT Bold";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../assets/fonts/ARLRDBD.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "Microsoft Tai Le";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../assets/fonts/taile.ttf") format("truetype");
+}
+
 body {
+    font-family: "Arial Rounded MT Bold" !important;
     overflow: hidden;
     cursor: url("../assets/imgs/gameCursor.png"), auto;
     user-select: none;

@@ -23,6 +23,8 @@ export class TowerManager {
     _stateManager: StateManager;
     _particleEffect: ParticleEffect;
 
+    sacrificeHP: number;
+
     constructor({
         sceneRenderer,
         assetsManager,
@@ -35,8 +37,10 @@ export class TowerManager {
         this._particleEffect = particleEffect;
 
         this.level = 1;
-        this.hp = 700;
-        this.maxHp = 700;
+        this.hp = 1700;
+        this.maxHp = 1700;
+
+        this.sacrificeHP = 0;
 
         this._towerMesh = this._assetsManager.getTowerModel();
 
@@ -119,10 +123,30 @@ export class TowerManager {
         progressBar.style.background = `${getColorForPercentage(
             this.hp / this.maxHp
         )}`;
+
+        const currentHealthDiv = document.getElementById("currentHP");
+        if (currentHealthDiv) {
+            currentHealthDiv.textContent = `${this.hp}`;
+        }
+
+        const maxHealthDiv = document.getElementById("maxHP");
+        if (maxHealthDiv) {
+            maxHealthDiv.textContent = ` / ${this.maxHp}`;
+        }
+
+        const healthBarDiv = document.getElementById("towerHealthBar");
+        if (healthBarDiv) {
+            healthBarDiv.style.width = `${(this.hp / this.maxHp) * 100}%`;
+        }
     }
 
     levelUp() {
         this.level++;
+
+        const element = document.getElementById("gameLevel");
+        if (element) {
+            element.textContent = `Level ${this.level}`;
+        }
 
         // visual effect
         const newVector = new THREE.Vector3(
@@ -134,10 +158,26 @@ export class TowerManager {
         this._particleEffect.addLevelUp(newVector);
     }
 
+    sacrificeHealth(value: number) {
+        this.sacrificeHP += value;
+    }
+
     tick() {
-        // if (this._tower.hp <= 0) {
-        //     this._stateManager.setState(GAME_STATES.END);
-        // }
+        const sacrificeAmount = 15;
+
+        if (this.sacrificeHP > 0) {
+            if (this.sacrificeHP < sacrificeAmount) {
+                this.hp -= this.sacrificeHP;
+                this.sacrificeHP = 0;
+            } else {
+                this.hp -= sacrificeAmount;
+                this.sacrificeHP -= sacrificeAmount;
+            }
+        }
+
+        if (this.hp <= 0) {
+            this._stateManager.setState(GAME_STATES.END);
+        }
 
         this.renderHealthBar();
     }

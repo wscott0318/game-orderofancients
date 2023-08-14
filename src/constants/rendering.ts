@@ -13,7 +13,7 @@ export const CAMERA_PROPS = {
     far: 20000,
     position: {
         x: 15,
-        y: 60,
+        y: 80,
         z: 25,
     },
 };
@@ -23,6 +23,6 @@ export const SCENE_PROPS = {
         enable: true,
         color: 0xcccccc,
         near: 90,
-        far: 150,
+        far: 200,
     },
 };

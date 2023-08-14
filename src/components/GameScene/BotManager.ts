@@ -4,7 +4,7 @@ import AssetsManager from "./AssetsManager";
 import { Bot } from "./Instances/Bot";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 
-const botProduceTime = 300;
+const botProduceTime = 150;
 
 export class BotManager {
     botArray: Bot[];
