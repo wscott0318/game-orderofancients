@@ -717,12 +717,14 @@ export const Desktop = ({
                                                     ? "opacity-0 pointer-events-none"
                                                     : ""
                                             } item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
-                                            onClick={() =>
+                                            onClick={() => {
+                                                setHoveredSpell(null);
+
                                                 onClickUpgrade(
                                                     upgrades[index],
                                                     index
-                                                )
-                                            }
+                                                );
+                                            }}
                                             onMouseEnter={() => {
                                                 spellEnter(upgrades[index]);
                                             }}

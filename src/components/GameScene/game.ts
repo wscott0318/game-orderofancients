@@ -93,7 +93,13 @@ export class Game {
         this.animate();
     }
 
+    dispose() {
+        this._sceneRenderer.dispose();
+    }
+
     animate() {
+        if (this._stateManager.getCurrentState() === GAME_STATES.END) return;
+
         requestAnimationFrame(this.animate.bind(this));
 
         if (this._stateManager.getCurrentState() === GAME_STATES["PLAYING"]) {

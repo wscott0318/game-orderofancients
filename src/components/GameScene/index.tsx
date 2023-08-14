@@ -59,7 +59,7 @@ export const GameScene = () => {
             setUpgrades: setUpgrades,
         });
 
-        setCurrentGameSate(gameRef.current._stateManager.getCurrentState());
+        setGameState(GAME_STATES.PLAYING);
     };
 
     if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
@@ -104,6 +104,8 @@ export const GameScene = () => {
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
         }
+
+        setCurrentGameSate(state);
     };
 
     const onKeyDown = (e: any) => {
@@ -115,7 +117,8 @@ export const GameScene = () => {
             setTimeout(() => {
                 setCanEnterGame(false);
                 setLoading(false);
-                startGame();
+
+                setGameState(GAME_STATES.GAME_MENU);
             }, 3000);
         }
 
@@ -128,6 +131,22 @@ export const GameScene = () => {
         }
     };
 
+    const exitGameAction = () => {
+        if (gameRef.current) (gameRef.current as Game).dispose();
+
+        gameRef.current = null;
+
+        setGameState(GAME_STATES.GAME_MENU);
+    };
+
+    const restartGameAction = () => {
+        if (gameRef.current) (gameRef.current as Game).dispose();
+
+        gameRef.current = null;
+
+        startGame();
+    };
+
     return (
         <Wrapper>
             {loading && <Loader canEnterGame={canEnterGame} />}
@@ -135,7 +154,10 @@ export const GameScene = () => {
             <div ref={canvasDivRef}></div>
 
             {currentGameState === GAME_STATES["GAME_MENU"] ? (
-                <GameMenuUI setGameState={setGameState} />
+                <GameMenuUI
+                    setGameState={setGameState}
+                    startGameAction={startGame}
+                />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (
                 <>
                     <GamePlayUI
@@ -147,7 +169,7 @@ export const GameScene = () => {
                     {/* <div className="absolute top-2 right-16">
                         <Toggle
                             title={"Show Grid"}
-                            checked={showGrid}  
+                            checked={showGrid}  \
                             onChange={onToggleGrid}
                         />
                     </div> */}
@@ -155,7 +177,11 @@ export const GameScene = () => {
             ) : currentGameState === GAME_STATES["PAUSE"] ? (
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
-                <GameEndUI setGameState={setGameState} gameRef={gameRef} />
+                <GameEndUI
+                    gameRef={gameRef}
+                    exitGameAction={exitGameAction}
+                    restartGameAction={restartGameAction}
+                />
             ) : null}
         </Wrapper>
     );

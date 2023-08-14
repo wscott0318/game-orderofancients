@@ -80,7 +80,12 @@ const GameMenu = styled.div`
     }
 `;
 
-const GameMenuUI = ({ setGameState }: any) => {
+interface GameMenuUIProps {
+    setGameState: (state: number) => void;
+    startGameAction: () => void;
+}
+
+const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
     const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
@@ -121,7 +126,7 @@ const GameMenuUI = ({ setGameState }: any) => {
         }
 
         gsap.delayedCall(2, () => {
-            setGameState(GAME_STATES.PLAYING);
+            startGameAction();
         });
     };
 

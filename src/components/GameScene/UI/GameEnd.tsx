@@ -76,74 +76,23 @@ const GameEnd = styled.div`
     }
 `;
 
-export const GameEndUI = ({ setGameState, gameRef }: any) => {
+interface GameEndUIProps {
+    gameRef: { current: Game };
+    exitGameAction: () => void;
+    restartGameAction: () => void;
+}
+
+export const GameEndUI = ({
+    gameRef,
+    exitGameAction,
+    restartGameAction,
+}: GameEndUIProps) => {
     const { current: game } = gameRef;
 
     /**
-     * Win if player stands up for 300 seconds...
+     * Win if player stands up for 30 seconds...
      */
     const isvictory = (game as Game)._timeManager.totalTimeTracker > 30;
-
-    // const menuDownAnim = gsap.timeline();
-
-    // useEffect(() => {
-    //     menuDownAnim
-    //         .add("start")
-    //         .to(
-    //             ".menu",
-    //             {
-    //                 top: "63px",
-    //                 duration: 1,
-    //                 ease: CustomEase.create(
-    //                     "custom",
-    //                     "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
-    //                 ),
-    //             },
-    //             "start"
-    //         )
-    //         .to(
-    //             ".chain",
-    //             {
-    //                 top: "-43px",
-    //                 duration: 1,
-    //                 ease: CustomEase.create(
-    //                     "custom",
-    //                     "M0,0,C0.53,0.512,0.846,1.448,1,1"
-    //                 ),
-    //             },
-    //             "start"
-    //         );
-
-    //     return () => {
-    //         menuDownAnim.kill();
-    //     };
-    //     // const container = document.querySelector("GameEnd");
-    //     // const firework = new Fireworks(container, {})
-    // }, []);
-
-    // const resumeGame = () => {
-    //     menuDownAnim.reverse();
-    //     gsap.to(".gameMenu", {
-    //         backgroundColor: "#00000000",
-    //         duration: 1,
-    //         delay: 1,
-    //     });
-    //     gsap.delayedCall(2, () => {
-    //         setGameState(GAME_STATES.PLAYING);
-    //     });
-    // };
-
-    // const restartGame = () => {
-    //     menuDownAnim.reverse();
-    //     gsap.to(".gameMenu", {
-    //         backgroundColor: "#00000000",
-    //         duration: 1,
-    //         delay: 1,
-    //     });
-    //     gsap.delayedCall(2, () => {
-    //         setGameState(GAME_STATES.GAME_MENU);
-    //     });
-    // };
 
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {
@@ -232,10 +181,16 @@ export const GameEndUI = ({ setGameState, gameRef }: any) => {
                         justifyContent: isvictory ? "space-between" : "center",
                     }}
                 >
-                    <button className="exit imageButton w-[45%] aspect-[652/170] text-[#ca663b]" />
+                    <button
+                        className="exit imageButton w-[45%] aspect-[652/170] text-[#ca663b]"
+                        onClick={exitGameAction}
+                    />
 
                     {isvictory && (
-                        <button className="playanother imageButton relative w-[45%] aspect-[652/170] text-[#e9c967]" />
+                        <button
+                            className="playanother imageButton relative w-[45%] aspect-[652/170] text-[#e9c967]"
+                            onClick={restartGameAction}
+                        />
                     )}
                 </div>
             </div>
