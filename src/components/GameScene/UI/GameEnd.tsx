@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
 import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
+import { Game } from "../game";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -63,8 +64,14 @@ const GameEnd = styled.div`
     }
 `;
 
-export const GameEndUI = ({ setGameState }: any) => {
-    const isvictory = true;
+export const GameEndUI = ({ setGameState, gameRef }: any) => {
+    const { current: game } = gameRef;
+
+    /**
+     * Win if player stands up for 300 seconds...
+     */
+    const isvictory = (game as Game)._timeManager.totalTimeTracker > 300;
+
     // const menuDownAnim = gsap.timeline();
 
     // useEffect(() => {

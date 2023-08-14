@@ -142,7 +142,7 @@ export const Mobile = ({
                         </span>
                     </div>
                 </div>
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                     <div className="inline-flex items-center">
                         <span className="fs-md">Armor: </span>{" "}
                         <span className="fc-orange fs-lg ff-round">10</span>
@@ -155,7 +155,7 @@ export const Mobile = ({
                         <span className="fs-md">Range: </span>{" "}
                         <span className="fc-orange fs-lg ff-round">20</span>
                     </div>
-                </div>
+                </div> */}
             </div>
             {/* -------  self end --------- */}
             {/* -------  health start --------- */}

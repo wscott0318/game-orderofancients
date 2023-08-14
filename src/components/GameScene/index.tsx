@@ -155,7 +155,7 @@ export const GameScene = () => {
             ) : currentGameState === GAME_STATES["PAUSE"] ? (
                 <GamePauseUI setGameState={setGameState} />
             ) : currentGameState === GAME_STATES["END"] ? (
-                <GameEndUI setGameState={setGameState} />
+                <GameEndUI setGameState={setGameState} gameRef={gameRef} />
             ) : null}
         </Wrapper>
     );

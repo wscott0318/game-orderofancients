@@ -396,7 +396,6 @@ export const Desktop = ({
         // }
         setPlayerShow(!playerShow);
     };
-    const twelveArray = Array(12);
     const gameMenuFadeInAnim = gsap.timeline();
     const [hoveredSpell, setHoveredSpell]: [any, any] = useState(null);
 
