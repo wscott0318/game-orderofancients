@@ -28,6 +28,7 @@ interface CustomProgressBarProps {
     padding?: string;
     gradient?: boolean;
     props?: any;
+    id?: string;
 }
 export const CustomProgressBar = ({
     width = "100%",
@@ -39,6 +40,7 @@ export const CustomProgressBar = ({
     value = 50,
     gradient = false,
     props,
+    id,
 }: CustomProgressBarProps) => {
     return (
         <div
@@ -57,6 +59,7 @@ export const CustomProgressBar = ({
                 }}
             >
                 <div
+                    id={id}
                     style={{
                         width: `${value}%`,
                         height: "100%",

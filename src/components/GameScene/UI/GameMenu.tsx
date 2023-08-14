@@ -27,7 +27,8 @@ const FadeOut = keyframes`
 const GameMenu = styled.div`
     z-index: 20;
     background-image: url("/assets/images/loading-back.png");
-    background-size: 100% 100%;
+    background-size: cover;
+    background-position: center;
     animation: 2s alternate ${FadeIn};
 
     &.inactive {
@@ -43,11 +44,6 @@ const GameMenu = styled.div`
 
         width: 551px;
         height: 633px;
-
-        // @media only screen and (max-width: 1024px) {
-        //     width: 28.7vw;
-        //     height: 33vw;
-        // }
     }
     .button-col {
         position: relative;
@@ -56,11 +52,6 @@ const GameMenu = styled.div`
 
         gap: 57.6px;
         margin-top: 192px;
-
-        // @media only screen and (max-width: 1024px) {
-        // gap: 3vw;
-        // margin-top: 10vw;
-        // }
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png") !important;
@@ -71,10 +62,6 @@ const GameMenu = styled.div`
 
         width: 307px;
         height: 80px;
-        // @media only screen and (max-width: 1024px) {
-        // width: 16vw;
-        // height: 4.17vw;
-        // }
 
         font-weight: 900;
         user-select: none;
@@ -148,12 +135,18 @@ const GameMenuUI = ({ setGameState }: any) => {
             <div className="menu relative top-[-50vh] translate-y-[-50%]">
                 <div className="button-col">
                     <button
-                        className="warButton menuPlay"
+                        className="warButton imageButton menuPlay"
                         name="play"
                         onClick={gamePlay}
                     />
-                    <button className="warButton menuSetting" name="versus" />
-                    <button className="warButton menuTraining" name="custom" />
+                    <button
+                        className="warButton imageButton menuSetting"
+                        name="versus"
+                    />
+                    <button
+                        className="warButton imageButton menuTraining"
+                        name="custom"
+                    />
                 </div>
             </div>
         </GameMenu>

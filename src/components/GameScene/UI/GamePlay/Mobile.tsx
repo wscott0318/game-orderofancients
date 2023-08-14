@@ -114,6 +114,7 @@ export const Mobile = ({
                 </div>
                 <div className="level_slider h-[20%] flex items-center">
                     <CustomProgressBar
+                        id="timeBar"
                         borderRadius={"20px"}
                         trackColor={"#1252d5"}
                         value={40}
@@ -137,7 +138,7 @@ export const Mobile = ({
                     ></img>
                     <div className="fs-lg ff-round flex flex-col ">
                         <span>Jack555</span>
-                        <span className="fc-orange" id="gameLevel">
+                        <span className="gradient-text1" id="gameLevel">
                             Level 1
                         </span>
                     </div>
@@ -161,7 +162,7 @@ export const Mobile = ({
             {/* -------  health start --------- */}
             <div className="health absolute left-[21vw] top-[1vw] w-[17vw] h-[2.3vw]">
                 <CustomProgressBar
-                    value={75}
+                    value={100}
                     borderRadius={"4px"}
                     padding="1px"
                     trackColor="#489631"
@@ -170,6 +171,7 @@ export const Mobile = ({
                             "url('assets/images/status-slider.png')",
                         backgroundSize: "auto 100%",
                     }}
+                    id="towerHealthBar"
                 />
                 <img
                     className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"

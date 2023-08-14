@@ -84,7 +84,6 @@
     }
 }
 
-
 .ff-round {
     font-family: "Arial Rounded MT Bold";
 }
@@ -103,4 +102,13 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.imageButton {
+    transition: all 0.2s;
+    filter: contrast(1);
+
+    &:hover {
+        filter: contrast(1.3);
+    }
 }

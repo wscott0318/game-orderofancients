@@ -128,8 +128,8 @@ const GameSettingUI = ({ setGameState }: any) => {
                     </div>
                     <div className="value relative w-[100%] h-[92%] border-[2px] border-[#ad794a] bg-[#0004] flex justify-center items-center">
                         <div className="relative h-[80%] w-[80%] flex flex-col">
-                            <div className="h-[20%] w-full flex justify-between items-center  ff-micro fs-md">
-                                <p className="text-white">Scrren Resolution</p>
+                            <div className="h-[20%] w-full flex justify-between items-center  ff-round fs-md">
+                                <p className="text-white">Screen Resolution</p>
                                 <div className="w-[35%] h-[80%] shadow-[2px_3px_rgba(0,0,0,0.3)]">
                                     <select
                                         name="resolution"
@@ -144,7 +144,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                     </select>
                                 </div>
                             </div>
-                            <div className="h-[20%] w-full flex justify-between items-center  ff-micro fs-md">
+                            <div className="h-[20%] w-full flex justify-between items-center  ff-round fs-md">
                                 <p className="text-white">Fullscreen</p>
                                 <div className="fullscreen w-[35%] h-[80%] ">
                                     <div
@@ -174,7 +174,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="h-[20%] w-full flex justify-between items-center ff-micro fs-md">
+                            <div className="h-[20%] w-full flex justify-between items-center ff-round fs-md">
                                 <p className="text-white">Luminosity</p>
                                 <div className="w-[35%] h-[80%]  flex items-center ">
                                     <ReactSlider
@@ -190,7 +190,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                     </p>
                                 </div>
                             </div>
-                            <div className="h-[20%] w-full flex justify-between items-center ff-micro fs-md">
+                            <div className="h-[20%] w-full flex justify-between items-center ff-round fs-md">
                                 <p className="text-white">Target Framerate</p>
                                 <div className="w-[35%] h-[80%]  flex items-center">
                                     <ReactSlider
@@ -207,7 +207,7 @@ const GameSettingUI = ({ setGameState }: any) => {
                                 </div>
                             </div>
 
-                            <div className="h-[20%] w-full flex justify-between items-center  ff-micro fs-md">
+                            <div className="h-[20%] w-full flex justify-between items-center  ff-round fs-md">
                                 <p className="text-white">Display FPS</p>
                                 <div
                                     className="w-[35%] h-[80%] "

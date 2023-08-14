@@ -91,9 +91,11 @@ const playerInfo = [
 const TopLogo = styled.div`
     top: 0;
     width: 660px;
+    max-width: 100%;
 `;
 
 const LoadingProgress = styled.div`
+    max-width: 90%;
     width: 800px;
     bottom: 20px;
 `;
@@ -103,12 +105,13 @@ const PlayerScrollDiv = styled.div`
         overflow-y: scroll;
 
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 7px;
             background-color: transparent;
         }
 
         ::-webkit-scrollbar-thumb {
-            background-color: #919056;
+            background-color: #000;
+            border: 1px solid #ddaf41;
             border-radius: 10px;
         }
     }
@@ -159,7 +162,7 @@ export const Loader = ({ canEnterGame }: any) => {
                     <img src="/assets/images/loading_logo.png" alt="logo" />
                 </TopLogo>
 
-                <PlayerScrollDiv className="players relative ff-micro">
+                <PlayerScrollDiv className="players relative ff-round">
                     <div className="w-full h-full text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
                         <div className="head text-[#ecea8c] text-[17.4px] flex">
                             <div className="w-[50%]">Player</div>
@@ -177,7 +180,7 @@ export const Loader = ({ canEnterGame }: any) => {
                                             borderColor: "#2c322f",
                                         }}
                                         key={`player${index}`}
-                                        className="text-[17.4px] bg-[#0007] flex p-1"
+                                        className="text-[17.4px] bg-[#0007] flex p-1 my-2"
                                     >
                                         <div className="w-[50%] flex items-center gap-[20%]">
                                             <img
@@ -206,7 +209,11 @@ export const Loader = ({ canEnterGame }: any) => {
                     />
                 </LoadingProgress>
 
-                <div className={`pressAnyKey ${canEnterGame ? "active" : ""}`}>
+                <div
+                    className={`pressAnyKey w-full text-center ${
+                        canEnterGame ? "active" : ""
+                    }`}
+                >
                     PRESS ANY KEY
                 </div>
             </div>

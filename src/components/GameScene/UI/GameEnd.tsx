@@ -22,9 +22,18 @@ const GameEnd = styled.div`
     justify-content: center;
 
     .gameend {
-        width: 34vw;
+        max-height: 80%;
+        max-width: 80%;
+
+        .vitory-logo {
+            width: 650px;
+            max-height: 55vh;
+            max-width: 66vw;
+        }
 
         .players {
+            width: 470px;
+            max-width: 100%;
             background-color: #0004;
             border-radius: 5px;
             border-width: 2px;
@@ -39,13 +48,16 @@ const GameEnd = styled.div`
             button {
                 background-repeat: no-repeat;
                 background-size: cover;
+
+                width: 300px;
+                font-size: 30px;
             }
             .exit {
-                background-image: url("/assets/images/button-back-dark.png");
+                background-image: url("/assets/images/buttons/exit_btn.png");
             }
 
             .playanother {
-                background-image: url("/assets/images/button-back-bright.png");
+                background-image: url("/assets/images/buttons/another_btn.png");
             }
         }
 
@@ -70,7 +82,7 @@ export const GameEndUI = ({ setGameState, gameRef }: any) => {
     /**
      * Win if player stands up for 300 seconds...
      */
-    const isvictory = (game as Game)._timeManager.totalTimeTracker > 300;
+    const isvictory = (game as Game)._timeManager.totalTimeTracker > 30;
 
     // const menuDownAnim = gsap.timeline();
 
@@ -178,10 +190,10 @@ export const GameEndUI = ({ setGameState, gameRef }: any) => {
                     }
                 />
 
-                <div className="players relative top-[-6vw] w-[72%] ff-micro">
+                <div className="players relative top-[-6vw] w-[72%] ff-round">
                     <table className="w-[100%] text-center">
                         <tbody>
-                            <tr className="head text-[#919056] fs-sm">
+                            <tr className="head text-[#ecea8c] text-[17.4px]">
                                 <td className="w-[50%]">Player</td>
                                 <td className="w-[25%]">Kills</td>
                                 <td className="w-[25%]">Income</td>
@@ -192,11 +204,11 @@ export const GameEndUI = ({ setGameState, gameRef }: any) => {
                                     <tr
                                         style={{ color: player.color }}
                                         key={`player${index}`}
-                                        className="fs-md"
+                                        className="text-[17.4px] bg-[#0007] h-[50px]"
                                     >
-                                        <td className="player-name w-[50%] flex h-[3vw] flex items-center pl-[5%] gap-[20%]">
+                                        <td className="player-name w-[50%] h-[50px] flex items-center pl-[5%] gap-[20%]">
                                             <img
-                                                className="h-[80%]"
+                                                className="w-[30px]"
                                                 src={player.avata}
                                             />
                                             {player.name}
@@ -215,19 +227,15 @@ export const GameEndUI = ({ setGameState, gameRef }: any) => {
                 </div>
 
                 <div
-                    className="buttons relative top-[-5vw] flex w-[70%] fs-sm font-bold"
+                    className="buttons relative top-[-5vw] flex font-bold"
                     style={{
                         justifyContent: isvictory ? "space-between" : "center",
                     }}
                 >
-                    <button className="exit   w-[45%] aspect-[652/170] text-[#ca663b]">
-                        Exit Game
-                    </button>
+                    <button className="exit imageButton w-[45%] aspect-[652/170] text-[#ca663b]" />
 
                     {isvictory && (
-                        <button className="playanother relative w-[45%] aspect-[652/170] text-[#e9c967]">
-                            Play Another
-                        </button>
+                        <button className="playanother imageButton relative w-[45%] aspect-[652/170] text-[#e9c967]" />
                     )}
                 </div>
             </div>
