@@ -17,7 +17,7 @@ const GameEnd = styled.div`
     background: rgb(0, 0, 0, 0.8);
     backdrop-filter: saturate(0.5);
 
-    z-index: 20;
+    z-index: 99;
     display: flex;
     justify-content: center;
 
