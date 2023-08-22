@@ -68,7 +68,7 @@ export class SceneRenderer {
 
     initStats() {
         this._stats = SceneSetup.StatGUI();
-        document.body.appendChild(this._stats.dom);
+        // document.body.appendChild(this._stats.dom);
     }
 
     initCameraControl() {
@@ -93,8 +93,6 @@ export class SceneRenderer {
         gridHelper.position.y = 0.01;
 
         this._gridHelper = gridHelper;
-
-        // this.addGrid();
     }
 
     onResize() {
