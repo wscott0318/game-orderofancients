@@ -170,7 +170,7 @@ export class Bot {
     }
 
     disposeFireMesh() {
-        if( this.fireMesh ) {
+        if (this.fireMesh) {
             disposeMesh(this.fireMesh);
             this.scene.remove(this.fireMesh);
         }
@@ -252,15 +252,16 @@ export class Bot {
         });
     }
 
-    fire( duration: number ) {
+    fire(duration: number) {
         this.fireTime = duration;
-        if( !this.fireMesh ) {
+        if (!this.fireMesh) {
             const particle = createToonProjectile(
                 this.sceneRenderer._particleRenderer,
                 this.assetsManager._particleTextures
             );
 
-            const scaleOffset = BOT_PROPS['modelHeight'][this.botType] / 3 * 1.5;
+            const scaleOffset =
+                (BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
             particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
 
             this.fireMesh = particle;
@@ -309,16 +310,18 @@ export class Bot {
             }
         }
 
-        if( this.fireTime > 0 ) {
+        if (this.fireTime > 0) {
             this.fireTime -= delta;
 
-            if( this.fireMesh ) {
+            if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
-                this.fireMesh.position.y = this.mesh.position.y + BOT_PROPS['modelHeight'][this.botType] / 2;
+                this.fireMesh.position.y =
+                    this.mesh.position.y +
+                    BOT_PROPS["modelHeight"][this.botType] / 2;
                 this.fireMesh.position.z = this.mesh.position.z;
             }
 
-            if( this.fireTime <= 0 ) {
+            if (this.fireTime <= 0) {
                 this.fireTime = 0;
 
                 this.disposeFireMesh();

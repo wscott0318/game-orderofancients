@@ -73,6 +73,13 @@ const GameEnd = styled.div`
                 top: -96px;
             }
         }
+
+        @media only screen and (max-width: 650px) {
+            .buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
     }
 `;
 
