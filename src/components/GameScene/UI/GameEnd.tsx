@@ -17,7 +17,7 @@ const GameEnd = styled.div`
     background: rgb(0, 0, 0, 0.8);
     backdrop-filter: saturate(0.5);
 
-    z-index: 99;
+    z-index: 20;
     display: flex;
     justify-content: center;
 
@@ -71,13 +71,6 @@ const GameEnd = styled.div`
             }
             .buttons {
                 top: -96px;
-            }
-        }
-
-        @media only screen and (max-width: 650px) {
-            .buttons {
-                flex-wrap: wrap;
-                justify-content: center;
             }
         }
     }
