@@ -6,7 +6,7 @@ import { ARMOR_TYPES_TEXT, DAMAGE_TYPES_TEXT } from "../../../../constants";
 
 const GamePlay = styled.div`
     position: fixed;
-    z-index: 999;
+    z-index: 10;
     width: 100vw;
     height: 100vh;
     top: 0px;

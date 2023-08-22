@@ -38,37 +38,44 @@ const GameMenu = styled.div`
     .menu {
         display: flex;
         flex-direction: column;
+        background-image: url("/assets/images/menu-back.png");
+        background-size: 100% 100%;
         align-items: center;
-        justify-content: center;
 
-        width: fit-content;
-        height: fit-content;
-
-        .backPic {
-            width: 551px;
-            position: relative;
-        }
+        width: 551px;
+        height: 633px;
     }
     .button-col {
+        position: relative;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        padding-top: 13%;
-        gap: 8%;
+
+        gap: 57.6px;
+        margin-top: 192px;
     }
     .warButton {
+        cursor: url("../assets/imgs/gameCursor.png") !important;
+        background-image: url("/assets/images/button-back-bright.png");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-size: cover;
+
         width: 307px;
-        max-width: 64%;
+        height: 80px;
 
         font-weight: 900;
         user-select: none;
 
-        img {
-            width: 100%;
+        &.menuPlay {
+            background-image: url("/assets/images/menuBtns/play.png");
+        }
+
+        &.menuSetting {
+            background-image: url("/assets/images/menuBtns/settings.png");
+        }
+
+        &.menuTraining {
+            background-image: url("/assets/images/menuBtns/tranining.png");
         }
     }
 `;
@@ -131,41 +138,21 @@ const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
             ref={gameMenuRef}
         >
             <div className="menu relative top-[-50vh] translate-y-[-50%]">
-                <img
-                    className="backPic"
-                    alt="pic"
-                    src="/assets/images/menu-back.png"
-                ></img>
-
                 <div className="button-col">
                     <button
-                        className="warButton imageButton"
+                        className="warButton imageButton menuPlay"
                         name="play"
                         onClick={gamePlay}
-                    >
-                        <img
-                            alt="pic"
-                            src="/assets/images/menuBtns/play.png"
-                        ></img>
-                    </button>
-
+                    />
                     <button
-                        className="warButton imageButton"
+                        className="warButton imageButton menuSetting"
                         name="versus"
                         onClick={() => setGameState(GAME_STATES.SETTING)}
-                    >
-                        <img
-                            alt="pic"
-                            src="/assets/images/menuBtns/settings.png"
-                        ></img>
-                    </button>
-
-                    <button className="warButton imageButton" name="custom">
-                        <img
-                            alt="pic"
-                            src="/assets/images/menuBtns/tranining.png"
-                        ></img>
-                    </button>
+                    />
+                    <button
+                        className="warButton imageButton menuTraining"
+                        name="custom"
+                    />
                 </div>
             </div>
         </GameMenu>

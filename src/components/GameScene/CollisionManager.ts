@@ -404,9 +404,6 @@ export class CollisionManager {
     }
 
     tick() {
-        if (this.botManager.level !== this.towerManager.level)
-            this.botManager.level = this.towerManager.level;
-
         /** Remove dead bots */
         this.removeDeadBots();
 
