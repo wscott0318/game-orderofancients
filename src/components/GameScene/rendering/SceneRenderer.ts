@@ -68,7 +68,7 @@ export class SceneRenderer {
 
     initStats() {
         this._stats = SceneSetup.StatGUI();
-        // document.body.appendChild(this._stats.dom);
+        document.body.appendChild(this._stats.dom);
     }
 
     initCameraControl() {

@@ -33,7 +33,6 @@ export class AnimationManager {
             onUpdate: () => {
                 this._camera.lookAt(this._towerPosition);
             },
-            // onComplete: this.initRotateAroundToserAnimation.bind(this),
         });
     }
 

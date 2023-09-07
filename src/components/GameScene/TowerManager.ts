@@ -74,6 +74,24 @@ export class TowerManager {
         this._sceneRenderer.getScene().add(this._towerMesh);
     }
 
+    levelUp() {
+        this.level++;
+
+        const element = document.getElementById("gameLevel");
+        if (element) {
+            element.textContent = `Level ${this.level}`;
+        }
+
+        // visual effect
+        const newVector = new THREE.Vector3(
+            this._towerMesh.position.x,
+            this._towerMesh.position.y + 5,
+            this._towerMesh.position.z
+        );
+
+        this._particleEffect.addLevelUp(newVector);
+    }
+
     renderHealthBar() {
         this._healthBarUI.position.set(
             this._towerMesh.position.x,
@@ -140,24 +158,6 @@ export class TowerManager {
         }
     }
 
-    levelUp() {
-        this.level++;
-
-        const element = document.getElementById("gameLevel");
-        if (element) {
-            element.textContent = `Level ${this.level}`;
-        }
-
-        // visual effect
-        const newVector = new THREE.Vector3(
-            this._towerMesh.position.x,
-            this._towerMesh.position.y + 5,
-            this._towerMesh.position.z
-        );
-
-        this._particleEffect.addLevelUp(newVector);
-    }
-
     sacrificeHealth(value: number) {
         this.sacrificeHP += value;
     }
@@ -175,9 +175,9 @@ export class TowerManager {
             }
         }
 
-        // if (this.hp <= 0) {
-        //     this._stateManager.setState(GAME_STATES.END);
-        // }
+        if (this.hp <= 0) {
+            this._stateManager.setState(GAME_STATES.END);
+        }
 
         this.renderHealthBar();
     }
