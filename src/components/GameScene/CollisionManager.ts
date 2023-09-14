@@ -111,6 +111,81 @@ export class CollisionManager {
         };
     }
 
+    checkSpriteCollision() {
+        const spriteArray = this.spriteManager.spriteArray;
+        const newSpriteArray = [];
+
+        for (let i = 0; i < spriteArray.length; i++) {
+            const sprite = spriteArray[i];
+
+            if (spriteArray[i].checkIfHit()) {
+                const damageType = sprite.damageType;
+                const armorType =
+                    BOT_PROPS.armorTypes[sprite.targetBot.botType];
+
+                const multiplier = getDamageMultiplier(damageType, armorType);
+
+                const trueDamage = sprite.attackDamage * multiplier;
+
+                sprite.targetBot.hp -= trueDamage;
+
+                this.spriteManager.addTextSprite(
+                    new TextSprite({
+                        text: `${Math.ceil(trueDamage)}`,
+                        color: DAMAGE_TEXT_COLORS[damageType],
+                        position: new THREE.Vector3(
+                            sprite.mesh.position.x,
+                            sprite.mesh.position.y,
+                            sprite.mesh.position.z
+                        ),
+                        sceneRenderer: this.sceneRenderer,
+                        fastMode: true,
+                    })
+                );
+
+                sprite.addCollisionEffect();
+
+                if (
+                    sprite.weaponType === "Chaos_Claw" ||
+                    sprite.weaponType === "Throwing Axes"
+                ) {
+                    sprite.bounceCount--;
+
+                    if (sprite.bounceCount < 0) {
+                        sprite.dispose();
+                    } else {
+                        const botArray = this.botManager.botArray.filter(
+                            (bot: Bot) => bot.uuid !== sprite.targetBot.uuid
+                        );
+
+                        const { targetBot } = this.getTargetBot(
+                            SPELLS_INFO[
+                                sprite.weaponType as keyof typeof SPELLS_INFO
+                            ],
+                            sprite.mesh.position,
+                            botArray
+                        );
+
+                        if (targetBot) {
+                            sprite.targetBot = targetBot.bot;
+                            newSpriteArray.push(spriteArray[i]);
+                        } else {
+                            sprite.dispose();
+                        }
+                    }
+                } else {
+                    sprite.dispose();
+                }
+            } else if (spriteArray[i].targetBot.status === BOT_STATUS["dead"]) {
+                sprite.dispose();
+            } else {
+                newSpriteArray.push(spriteArray[i]);
+            }
+        }
+
+        this.spriteManager.spriteArray = newSpriteArray;
+    }
+
     checkIfTowerDetectEnemy() {
         const weapons = this.playerState.Weapons;
 
@@ -278,79 +353,25 @@ export class CollisionManager {
         }
     }
 
-    checkSpriteCollision() {
-        const spriteArray = this.spriteManager.spriteArray;
-        const newSpriteArray = [];
-
-        for (let i = 0; i < spriteArray.length; i++) {
-            const sprite = spriteArray[i];
-
-            if (spriteArray[i].checkIfHit()) {
-                const damageType = sprite.damageType;
-                const armorType =
-                    BOT_PROPS.armorTypes[sprite.targetBot.botType];
-
-                const multiplier = getDamageMultiplier(damageType, armorType);
-
-                const trueDamage = sprite.attackDamage * multiplier;
-
-                sprite.targetBot.hp -= trueDamage;
-
-                this.spriteManager.addTextSprite(
-                    new TextSprite({
-                        text: `${Math.ceil(trueDamage)}`,
-                        color: DAMAGE_TEXT_COLORS[damageType],
-                        position: new THREE.Vector3(
-                            sprite.mesh.position.x,
-                            sprite.mesh.position.y,
-                            sprite.mesh.position.z
-                        ),
-                        sceneRenderer: this.sceneRenderer,
-                        fastMode: true,
-                    })
-                );
-
-                sprite.addCollisionEffect();
-
-                if (
-                    sprite.weaponType === "Chaos_Claw" ||
-                    sprite.weaponType === "Throwing Axes"
-                ) {
-                    sprite.bounceCount--;
-
-                    if (sprite.bounceCount < 0) {
-                        sprite.dispose();
-                    } else {
-                        const botArray = this.botManager.botArray.filter(
-                            (bot: Bot) => bot.uuid !== sprite.targetBot.uuid
-                        );
-
-                        const { targetBot } = this.getTargetBot(
-                            SPELLS_INFO[
-                                sprite.weaponType as keyof typeof SPELLS_INFO
-                            ],
-                            sprite.mesh.position,
-                            botArray
-                        );
-
-                        if (targetBot) {
-                            sprite.targetBot = targetBot.bot;
-                            newSpriteArray.push(spriteArray[i]);
-                        } else {
-                            sprite.dispose();
-                        }
-                    }
-                } else {
-                    sprite.dispose();
-                }
-            } else if (spriteArray[i].targetBot.status === BOT_STATUS["dead"]) {
-                sprite.dispose();
-            } else {
-                newSpriteArray.push(spriteArray[i]);
+    checkBotAttack() {
+        for (let i = 0; i < this.botManager.botArray.length; i++) {
+            const bot = this.botManager.botArray[i];
+            if (bot.claimTime <= 0 && bot.status === BOT_STATUS["attack"]) {
+                this.towerManager.hp -= bot.attackDamage;
+                bot.claimTime = bot.attackSpeed;
             }
         }
+    }
 
-        this.spriteManager.spriteArray = newSpriteArray;
+    removeDeadBots() {
+        const newArray = [];
+
+        for (let i = 0; i < this.botManager.botArray.length; i++) {
+            const bot = this.botManager.botArray[i];
+            if (!bot.canRemove) newArray.push(bot);
+        }
+
+        this.botManager.botArray = newArray;
     }
 
     checkBotHealth() {
@@ -380,27 +401,6 @@ export class CollisionManager {
                 bot.kill();
             }
         }
-    }
-
-    checkBotAttack() {
-        for (let i = 0; i < this.botManager.botArray.length; i++) {
-            const bot = this.botManager.botArray[i];
-            if (bot.claimTime <= 0 && bot.status === BOT_STATUS["attack"]) {
-                this.towerManager.hp -= bot.attackDamage;
-                bot.claimTime = bot.attackSpeed;
-            }
-        }
-    }
-
-    removeDeadBots() {
-        const newArray = [];
-
-        for (let i = 0; i < this.botManager.botArray.length; i++) {
-            const bot = this.botManager.botArray[i];
-            if (!bot.canRemove) newArray.push(bot);
-        }
-
-        this.botManager.botArray = newArray;
     }
 
     tick() {
