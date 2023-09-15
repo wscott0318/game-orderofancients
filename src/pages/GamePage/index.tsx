@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { Loader } from "../../components/Loader";
 import GameScene from "../../components/GameScene";
 
 const Wrapper = styled.div`
@@ -7,7 +6,7 @@ const Wrapper = styled.div`
     background: #000;
 `;
 
-export const Editor = () => {
+export const GamePage = () => {
     return (
         <Wrapper className="w-full h-full">
             <GameScene />
@@ -15,4 +14,4 @@ export const Editor = () => {
     );
 };
 
-export default Editor;
+export default GamePage;
