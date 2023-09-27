@@ -117,10 +117,7 @@ const PlayerScrollDiv = styled.div`
         }
     }
 `;
-export const Loader = () => {
-    const { canEnterGameRef } = useGame();
-    const canEnterGame = canEnterGameRef.current;
-
+export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
     const [progressValue, setProgressValue] = useState(0);
 
     const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);

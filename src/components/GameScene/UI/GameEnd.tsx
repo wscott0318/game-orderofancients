@@ -7,6 +7,7 @@ import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
 import { useGame } from "../../../hooks/useGame";
+import { useGameContext } from "../../../contexts/game-context";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -78,9 +79,9 @@ const GameEnd = styled.div`
 `;
 
 export const GameEndUI = () => {
-    const { gameRef, exitGameAction, restartGameAction } = useGame();
+    const { exitGameAction, restartGameAction, gameRef } = useGame();
 
-    const { current: game } = gameRef;
+    const game = gameRef.current!;
 
     /**
      * Win if player stands up for 30 seconds...

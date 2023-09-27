@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Loader } from "../Loader";
 import { GAME_STATES } from "../../constants";
@@ -10,6 +10,8 @@ import GamePauseUI from "./UI/GamePause";
 import GameSettingUI from "./UI/GameSetting";
 import { useGame } from "../../hooks/useGame";
 import { Toggle } from "../Toggle";
+import AssetsManager from "./AssetsManager";
+import { useGameContext } from "../../contexts/game-context";
 
 const Wrapper = styled.div`
     position: relative;
@@ -21,18 +23,26 @@ export const GameScene = () => {
     const firstRef = useRef(false);
 
     const {
-        createGame,
-        canEnterGameRef,
-        currentGameState,
-        gameRef,
+        canEnterGame,
         loading,
+        setLoading,
+        currentGameState,
+        showGrid,
+        setCanEnterGame,
+    } = useGameContext();
+
+    const {
+        createGame,
+        startGame,
+        startMultiGame,
         canvasDivRef,
         setGameState,
-        setLoading,
-        setCanEnterGame,
-        showGrid,
         onToggleGrid,
+        gameRef,
     } = useGame();
+
+    const canEnterGameRef = useRef(false);
+    canEnterGameRef.current = canEnterGame;
 
     useEffect(() => {
         if (firstRef.current) return;
@@ -64,21 +74,25 @@ export const GameScene = () => {
 
         if (e.key === "Pause") {
             if (currentGameState === GAME_STATES.PAUSE) {
-                gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
+                gameRef.current!._stateManager.setState(GAME_STATES.PLAYING);
             } else if (currentGameState === GAME_STATES.PLAYING) {
-                gameRef.current._stateManager.setState(GAME_STATES.PAUSE);
+                gameRef.current!._stateManager.setState(GAME_STATES.PAUSE);
             }
         }
     };
 
     return (
         <Wrapper>
-            {loading && <Loader />}
+            {loading && <Loader canEnterGame={canEnterGame} />}
 
             <div ref={canvasDivRef}></div>
 
             {currentGameState === GAME_STATES["GAME_MENU"] ? (
-                <GameMenuUI />
+                <GameMenuUI
+                    setGameState={setGameState}
+                    startGameAction={startGame}
+                    startMultiAction={startMultiGame}
+                />
             ) : currentGameState === GAME_STATES.SETTING ? (
                 <GameSettingUI />
             ) : currentGameState === GAME_STATES["PLAYING"] ? (

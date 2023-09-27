@@ -86,9 +86,17 @@ const GameMenu = styled.div`
     }
 `;
 
-const GameMenuUI = () => {
-    const { setGameState, startGame, startMultiGame } = useGame();
+interface GameMenuUIProps {
+    setGameState: (state: number) => void;
+    startGameAction: () => void;
+    startMultiAction: () => void;
+}
 
+const GameMenuUI = ({
+    setGameState,
+    startGameAction,
+    startMultiAction,
+}: GameMenuUIProps) => {
     const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
@@ -129,8 +137,8 @@ const GameMenuUI = () => {
         }
 
         gsap.delayedCall(2, () => {
-            if (mode === GAME_MODES.Single) startGame();
-            else if (mode === GAME_MODES.Lobby) startMultiGame();
+            if (mode === GAME_MODES.Single) startGameAction();
+            else if (mode === GAME_MODES.Lobby) startMultiAction();
         });
     };
 

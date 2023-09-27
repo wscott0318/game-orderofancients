@@ -1,32 +1,37 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { generateUpgrades } from "../helper/game";
 import { GAME_MODES, GAME_STATES } from "../constants";
 import AssetsManager from "../components/GameScene/AssetsManager";
 import { Game } from "../components/GameScene/game";
+import { useGameContext } from "../contexts/game-context";
 
 export const useGame = () => {
-    const canEnterGameRef = useRef() as any;
-    const [canEnterGame, setCanEnterGame] = useState(false);
-    canEnterGameRef.current = canEnterGame;
-
-    const [loading, setLoading] = useState(true);
-    const [currentGameState, setCurrentGameSate] = useState(GAME_STATES.NONE);
-    const [upgrades, setUpgrades] = useState(generateUpgrades());
-    const [gameMode, setGameMode] = useState(GAME_MODES.Single);
-
-    const [showGrid, setShowGrid] = useState(false);
+    const {
+        assetsManager,
+        setAssetsManager,
+        setCanEnterGame,
+        gameInstance,
+        setGameInstance,
+        setCurrentGameSate,
+        setUpgrades,
+        setGameMode,
+        setShowGrid,
+    } = useGameContext();
 
     /**
      * Canvas Game Ref
      */
     const canvasDivRef = useRef(null);
-    const gameRef = useRef(null) as any;
-    const assetsManagerRef = useRef<AssetsManager>();
+
+    const gameRef = useRef<Game | undefined>();
+    gameRef.current = gameInstance;
 
     const createGame = useCallback(async () => {
-        assetsManagerRef.current = new AssetsManager();
+        const assetsManagerRef = new AssetsManager();
 
-        await assetsManagerRef.current.loadModels();
+        await assetsManagerRef.loadModels();
+
+        setAssetsManager(assetsManagerRef);
 
         setCanEnterGame(true);
     }, []);
@@ -34,12 +39,15 @@ export const useGame = () => {
     const startGame = () => {
         if (gameRef.current) return;
 
-        gameRef.current = new Game({
+        const game = new Game({
             canvas: canvasDivRef.current!,
-            assetsManager: assetsManagerRef.current!,
+            assetsManager: assetsManager!,
             setCurrentGameSate: setCurrentGameSate,
             setUpgrades: setUpgrades,
         });
+
+        setGameInstance(game);
+        gameRef.current = game;
 
         setGameState(GAME_STATES.PLAYING);
     };
@@ -49,6 +57,8 @@ export const useGame = () => {
     };
 
     const setGameState = (state: number) => {
+        console.error(gameRef.current);
+
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
         }
@@ -57,17 +67,17 @@ export const useGame = () => {
     };
 
     const exitGameAction = () => {
-        if (gameRef.current) (gameRef.current as Game).dispose();
+        if (gameRef.current) gameRef.current.dispose();
 
-        gameRef.current = null;
+        setGameInstance(undefined);
 
         setGameState(GAME_STATES.GAME_MENU);
     };
 
     const restartGameAction = () => {
-        if (gameRef.current) (gameRef.current as Game).dispose();
+        if (gameRef.current) gameRef.current.dispose();
 
-        gameRef.current = null;
+        setGameInstance(undefined);
 
         startGame();
     };
@@ -76,7 +86,7 @@ export const useGame = () => {
         const isChecked = e.target.checked;
         setShowGrid(isChecked);
 
-        const game = gameRef.current;
+        const game = gameRef.current!;
         if (isChecked) {
             game._sceneRenderer.addGrid();
         } else {
@@ -85,25 +95,14 @@ export const useGame = () => {
     };
 
     return {
-        canEnterGameRef,
-        loading,
-        currentGameState,
-        upgrades,
-        gameMode,
         canvasDivRef,
         gameRef,
-        assetsManagerRef,
         createGame,
         exitGameAction,
         restartGameAction,
         startGame,
         startMultiGame,
-        showGrid,
-
         setGameState,
-        setUpgrades,
-        setLoading,
-        setCanEnterGame,
         onToggleGrid,
     };
 };

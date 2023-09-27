@@ -7,6 +7,7 @@ import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { PlayerData } from "../../../../constants/gameUI";
 import { useGame } from "../../../../hooks/useGame";
+import { useGameContext } from "../../../../contexts/game-context";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -15,7 +16,9 @@ export const GradientText = styled.span`
 `;
 
 const GamePlayUI = () => {
-    const { gameRef, upgrades, setUpgrades } = useGame();
+    const { upgrades, setUpgrades } = useGameContext();
+
+    const { gameRef } = useGame();
 
     const [profileSpells, setProfilSpells] = useState([]) as any;
 
@@ -105,13 +108,13 @@ const GamePlayUI = () => {
     ]);
 
     const onClickUpgrade = (item: any, index: number) => {
-        const gold_balance = gameRef.current._playerState.gold;
+        const gold_balance = gameRef.current!._playerState.gold;
 
         const price = item.cost;
 
         if (gold_balance < price) return;
 
-        gameRef.current._playerState.upgradeSpell(item);
+        gameRef.current!._playerState.upgradeSpell(item);
 
         if (item.spellType === "Weapon") {
             const userSpells = [...profileSpells];
@@ -137,10 +140,10 @@ const GamePlayUI = () => {
             item.name === `Philosopher's Stone` ||
             item.name === "Cursed Treasure"
         ) {
-            gameRef.current._towerManager.sacrificeHealth(
+            gameRef.current!._towerManager.sacrificeHealth(
                 ((SPELLS_INFO as any)[item.propertyName] as any).sacrifiHealth
             );
-            gameRef.current._playerState.increaseUpgradeGold(item);
+            gameRef.current!._playerState.increaseUpgradeGold(item);
         }
 
         const newUpgrades = [...upgrades];
