@@ -3,6 +3,7 @@ import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
+import { useGame } from "../../../hooks/useGame";
 
 const GamePause = styled.div`
     position: absolute;
@@ -61,7 +62,9 @@ const GamePause = styled.div`
     }
 `;
 
-export const GamePauseUI = ({ setGameState }: any) => {
+export const GamePauseUI = () => {
+    const { setGameState } = useGame();
+
     const menuDownAnim = gsap.timeline();
 
     useEffect(() => {

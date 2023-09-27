@@ -6,6 +6,7 @@ import { GAME_STATES } from "../../../constants";
 import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
+import { useGame } from "../../../hooks/useGame";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -76,17 +77,9 @@ const GameEnd = styled.div`
     }
 `;
 
-interface GameEndUIProps {
-    gameRef: { current: Game };
-    exitGameAction: () => void;
-    restartGameAction: () => void;
-}
+export const GameEndUI = () => {
+    const { gameRef, exitGameAction, restartGameAction } = useGame();
 
-export const GameEndUI = ({
-    gameRef,
-    exitGameAction,
-    restartGameAction,
-}: GameEndUIProps) => {
     const { current: game } = gameRef;
 
     /**

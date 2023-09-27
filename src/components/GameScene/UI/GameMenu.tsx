@@ -2,7 +2,8 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { GAME_STATES } from "../../../constants";
+import { GAME_MODES, GAME_STATES } from "../../../constants";
+import { useGame } from "../../../hooks/useGame";
 
 const FadeIn = keyframes`
     from {
@@ -45,13 +46,14 @@ const GameMenu = styled.div`
         width: 551px;
         height: 633px;
     }
+
     .button-col {
         position: relative;
         display: flex;
         flex-direction: column;
 
-        gap: 57.6px;
-        margin-top: 192px;
+        gap: 17.6px;
+        margin-top: 172px;
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png") !important;
@@ -70,6 +72,10 @@ const GameMenu = styled.div`
             background-image: url("/assets/images/menuBtns/play.png");
         }
 
+        &.menuMultiplayer {
+            background-image: url("/assets/images/menuBtns/multiplayer.png");
+        }
+
         &.menuSetting {
             background-image: url("/assets/images/menuBtns/settings.png");
         }
@@ -80,12 +86,9 @@ const GameMenu = styled.div`
     }
 `;
 
-interface GameMenuUIProps {
-    setGameState: (state: number) => void;
-    startGameAction: () => void;
-}
+const GameMenuUI = () => {
+    const { setGameState, startGame, startMultiGame } = useGame();
 
-const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
     const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
@@ -113,7 +116,7 @@ const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
         };
     }, []);
 
-    const gamePlay = () => {
+    const gamePlay = (mode: number) => {
         setActive(false);
 
         menuDownAnim.reverse();
@@ -126,7 +129,8 @@ const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
         }
 
         gsap.delayedCall(2, () => {
-            startGameAction();
+            if (mode === GAME_MODES.Single) startGame();
+            else if (mode === GAME_MODES.Lobby) startMultiGame();
         });
     };
 
@@ -142,8 +146,14 @@ const GameMenuUI = ({ setGameState, startGameAction }: GameMenuUIProps) => {
                     <button
                         className="warButton imageButton menuPlay"
                         name="play"
-                        onClick={gamePlay}
+                        onClick={() => gamePlay(GAME_MODES.Single)}
                     />
+
+                    <button
+                        className="warButton imageButton menuMultiplayer"
+                        onClick={() => gamePlay(GAME_MODES.Lobby)}
+                    />
+
                     <button
                         className="warButton imageButton menuSetting"
                         name="versus"

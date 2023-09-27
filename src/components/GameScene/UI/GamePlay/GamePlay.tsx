@@ -3,10 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import { BrowserView, MobileOnlyView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { Game } from "../../game";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { PlayerData } from "../../../../constants/gameUI";
+import { useGame } from "../../../../hooks/useGame";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -14,15 +14,9 @@ export const GradientText = styled.span`
     -webkit-text-fill-color: transparent;
 `;
 
-interface GamePlayUIProps {
-    gameRef: {
-        current: Game;
-    };
-    upgrades: any;
-    setUpgrades: any;
-}
+const GamePlayUI = () => {
+    const { gameRef, upgrades, setUpgrades } = useGame();
 
-const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
     const [profileSpells, setProfilSpells] = useState([]) as any;
 
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
@@ -155,24 +149,6 @@ const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
         setUpgrades(newUpgrades);
     };
 
-    // const setDetail = () => {
-    //     const fieldBounding = document
-    //         .querySelector(".field")
-    //         ?.getBoundingClientRect() as any;
-    //     setDetailPos({ x: fieldBounding.right + 10, y: fieldBounding.top });
-    // };
-
-    // useEffect(() => {
-    //     setDetail();
-    //     window.addEventListener("resize", setDetail);
-    // }, []);
-
-    // useEffect(() => {
-    //     const detail = document.querySelector(".detail") as any;
-    //     detail.style.left = `${detailPos.x}px`;
-    //     detail.style.top = `${detailPos.y}px`;
-    // }, [detailPos]);
-
     return (
         <>
             <BrowserView>
@@ -185,6 +161,7 @@ const GamePlayUI = ({ gameRef, upgrades, setUpgrades }: GamePlayUIProps) => {
                     setPlayerShow={setPlayerShow}
                 />
             </BrowserView>
+
             <MobileView>
                 <Mobile
                     upgrades={upgrades}

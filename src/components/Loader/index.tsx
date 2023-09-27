@@ -4,6 +4,7 @@ import { PlayerData } from "../../constants/gameUI";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import styled from "styled-components";
+import { useGame } from "../../hooks/useGame";
 
 const playerInfo = [
     {
@@ -116,7 +117,10 @@ const PlayerScrollDiv = styled.div`
         }
     }
 `;
-export const Loader = ({ canEnterGame }: any) => {
+export const Loader = () => {
+    const { canEnterGameRef } = useGame();
+    const canEnterGame = canEnterGameRef.current;
+
     const [progressValue, setProgressValue] = useState(0);
 
     const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);

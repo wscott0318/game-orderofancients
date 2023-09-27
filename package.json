@@ -37,6 +37,7 @@
     "react-slider": "^2.0.6",
     "react-tsparticles": "^2.9.3",
     "sass": "^1.53.0",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^5.3.5",
     "tailwindcss": "^3.1.4",
     "three": "^0.151.3",
