@@ -6,6 +6,8 @@ import { GAME_STATES } from "../../../constants";
 import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
+import { useGame } from "../../../hooks/useGame";
+import { useGameContext } from "../../../contexts/game-context";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -17,7 +19,7 @@ const GameEnd = styled.div`
     background: rgb(0, 0, 0, 0.8);
     backdrop-filter: saturate(0.5);
 
-    z-index: 20;
+    z-index: 999;
     display: flex;
     justify-content: center;
 
@@ -76,23 +78,17 @@ const GameEnd = styled.div`
     }
 `;
 
-interface GameEndUIProps {
-    gameRef: { current: Game };
-    exitGameAction: () => void;
-    restartGameAction: () => void;
-}
+export const GameEndUI = () => {
+    const { exitGameAction, restartGameAction, gameRef } = useGame();
 
-export const GameEndUI = ({
-    gameRef,
-    exitGameAction,
-    restartGameAction,
-}: GameEndUIProps) => {
-    const { current: game } = gameRef;
+    const game = gameRef.current!;
 
     /**
      * Win if player stands up for 30 seconds...
      */
-    const isvictory = (game as Game)._timeManager.totalTimeTracker > 30;
+    const isvictory =
+        (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker >
+        30;
 
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {

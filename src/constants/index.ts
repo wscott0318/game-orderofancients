@@ -17,12 +17,19 @@ export const MODEL_URLS = {
 
 export const FOREST_RADIUS = 35;
 
+export const GAME_MODES = {
+    Single: 0x01,
+    Lobby: 0x02,
+};
+
 export const GAME_STATES = {
+    NONE: 0x00,
     GAME_MENU: 0x01,
     PLAYING: 0x02,
     PAUSE: 0x03,
     END: 0x04,
     SETTING: 0x05,
+    GAME_LOBBY: 0x06,
 };
 
 export const CAMERA_POS = {

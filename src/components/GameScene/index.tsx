@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Game } from "./game";
 import { Loader } from "../Loader";
-import AssetsManager from "./AssetsManager";
 import { GAME_STATES } from "../../constants";
 import GameMenuUI from "./UI/GameMenu";
 import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
 
-import { isMobile } from "react-device-detect";
-import { generateUpgrades } from "../../helper/game";
 import GameSettingUI from "./UI/GameSetting";
+import { useGame } from "../../hooks/useGame";
+import { Toggle } from "../Toggle";
+import { useGameContext } from "../../contexts/game-context";
+import { useSocket } from "../../hooks/useSocket";
+import GameLobby from "./UI/GameLobby";
 
 const Wrapper = styled.div`
     position: relative;
@@ -22,58 +23,30 @@ const Wrapper = styled.div`
 export const GameScene = () => {
     const firstRef = useRef(false);
 
-    const canEnterGameRef = useRef() as any;
+    const { socket } = useSocket();
 
-    const [loading, setLoading] = useState(true);
-    const [canEnterGame, setCanEnterGame] = useState(false);
-    const [currentGameState, setCurrentGameSate] = useState(0);
+    const {
+        canEnterGame,
+        loading,
+        setLoading,
+        currentGameState,
+        showGrid,
+        setCanEnterGame,
+    } = useGameContext();
 
-    // Spells that can be purhcase per round
-    const [upgrades, setUpgrades] = useState(generateUpgrades());
+    const {
+        createGame,
+        startGame,
+        startLobbyGame,
+        enterLooby,
+        canvasDivRef,
+        setGameState,
+        onToggleGrid,
+        gameRef,
+    } = useGame();
 
+    const canEnterGameRef = useRef(false);
     canEnterGameRef.current = canEnterGame;
-
-    const [showGrid, setShowGrid] = useState(false);
-
-    /**
-     * Canvas Game Ref
-     */
-    const canvasDivRef = useRef(null);
-    const gameRef = useRef(null) as any;
-    const assetsManagerRef = useRef(null) as any;
-
-    const createGame = useCallback(async () => {
-        assetsManagerRef.current = new AssetsManager();
-
-        await assetsManagerRef.current.loadModels();
-
-        setCanEnterGame(true);
-    }, []);
-
-    const startGame = () => {
-        if (gameRef.current) return;
-
-        gameRef.current = new Game({
-            canvas: canvasDivRef.current!,
-            assetsManager: assetsManagerRef.current,
-            setCurrentGameSate: setCurrentGameSate,
-            setUpgrades: setUpgrades,
-        });
-
-        setGameState(GAME_STATES.PLAYING);
-    };
-
-    if (isMobile && window.matchMedia("(orientation: portrait)").matches) {
-        // alert("change the oriented mode to landscape");
-        // let portrait = window.matchMedia("(orientation: portrait)");
-        // portrait.addEventListener("change", function (e) {
-        //     if (e.matches) {
-        //         console.log("portrait mode");
-        //     } else {
-        //         console.log("landscape mode");
-        //     }
-        // });
-    }
 
     useEffect(() => {
         if (firstRef.current) return;
@@ -88,26 +61,6 @@ export const GameScene = () => {
             // destroy Game
         };
     }, []);
-
-    const onToggleGrid = (e: any) => {
-        const isChecked = e.target.checked;
-        setShowGrid(isChecked);
-
-        const game = gameRef.current;
-        if (isChecked) {
-            game._sceneRenderer.addGrid();
-        } else {
-            game._sceneRenderer.removeGrid();
-        }
-    };
-
-    const setGameState = (state: number) => {
-        if (gameRef.current) {
-            gameRef.current._stateManager.setState(state);
-        }
-
-        setCurrentGameSate(state);
-    };
 
     const onKeyDown = (e: any) => {
         if (canEnterGameRef.current) {
@@ -125,67 +78,50 @@ export const GameScene = () => {
 
         if (e.key === "Pause") {
             if (currentGameState === GAME_STATES.PAUSE) {
-                gameRef.current._stateManager.setState(GAME_STATES.PLAYING);
+                gameRef.current!._stateManager.setState(GAME_STATES.PLAYING);
             } else if (currentGameState === GAME_STATES.PLAYING) {
-                gameRef.current._stateManager.setState(GAME_STATES.PAUSE);
+                gameRef.current!._stateManager.setState(GAME_STATES.PAUSE);
             }
         }
     };
 
-    const exitGameAction = () => {
-        if (gameRef.current) (gameRef.current as Game).dispose();
-
-        gameRef.current = null;
-
-        setGameState(GAME_STATES.GAME_MENU);
-    };
-
-    const restartGameAction = () => {
-        if (gameRef.current) (gameRef.current as Game).dispose();
-
-        gameRef.current = null;
-
-        startGame();
-    };
-
     return (
         <Wrapper>
-            {loading && <Loader canEnterGame={canEnterGame} />}
-
             <div ref={canvasDivRef}></div>
 
-            {currentGameState === GAME_STATES["GAME_MENU"] ? (
+            {loading && <Loader canEnterGame={canEnterGame} />}
+
+            {currentGameState === GAME_STATES.GAME_MENU && (
                 <GameMenuUI
                     setGameState={setGameState}
                     startGameAction={startGame}
+                    startMultiAction={enterLooby}
                 />
-            ) : currentGameState === GAME_STATES.SETTING ? (
-                <GameSettingUI setGameState={setGameState} />
-            ) : currentGameState === GAME_STATES["PLAYING"] ? (
-                <>
-                    <GamePlayUI
-                        gameRef={gameRef}
-                        upgrades={upgrades}
-                        setUpgrades={setUpgrades}
-                    />
+            )}
 
-                    {/* <div className="absolute top-2 right-16">
+            {currentGameState === GAME_STATES.SETTING && <GameSettingUI />}
+
+            {currentGameState === GAME_STATES.PLAYING && (
+                <>
+                    <GamePlayUI />
+
+                    <div className="absolute top-2 right-16">
                         <Toggle
                             title={"Show Grid"}
-                            checked={showGrid}  \
+                            checked={showGrid}
                             onChange={onToggleGrid}
                         />
-                    </div> */}
+                    </div>
                 </>
-            ) : currentGameState === GAME_STATES["PAUSE"] ? (
-                <GamePauseUI setGameState={setGameState} />
-            ) : currentGameState === GAME_STATES["END"] ? (
-                <GameEndUI
-                    gameRef={gameRef}
-                    exitGameAction={exitGameAction}
-                    restartGameAction={restartGameAction}
-                />
-            ) : null}
+            )}
+
+            {currentGameState === GAME_STATES.PAUSE && <GamePauseUI />}
+
+            {currentGameState === GAME_STATES.END && <GameEndUI />}
+
+            {currentGameState === GAME_STATES.GAME_LOBBY && (
+                <GameLobby startLobbyGame={startLobbyGame} />
+            )}
         </Wrapper>
     );
 };

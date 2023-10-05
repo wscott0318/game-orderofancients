@@ -6,15 +6,14 @@ import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import { HEALTH_PIXEL } from "../../../constants/gameUI";
 import { getColorForPercentage } from "../../../helper/color";
-import { cleanMaterial, disposeMesh } from "../../../helper/three";
+import { disposeMesh } from "../../../helper/three";
 import TWEEN from "@tweenjs/tween.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../../constants/bot";
-import { TOWER_POSITION, TOWER_RADIUS } from "../../../constants/tower";
+import { TOWER_POSITIONS, TOWER_RADIUS } from "../../../constants/tower";
 import { createStun } from "../Particles/weapons/Stun";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import AssetsManager from "../AssetsManager";
-import { COLOR_NUMBER } from "../../../utils/helper";
 import { createToonProjectile } from "../Particles/ToonProjectile";
 
 export class Bot {
@@ -47,8 +46,11 @@ export class Bot {
     slowTime: number;
     fireMesh: THREE.Object3D | null;
     fireTime: number;
+    towerIndex: number;
 
-    constructor({ sceneRenderer, assetsManager, botType }: any) {
+    constructor({ sceneRenderer, assetsManager, botType, towerIndex }: any) {
+        this.towerIndex = towerIndex;
+
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
         this.clock = new THREE.Clock();
@@ -75,9 +77,9 @@ export class Bot {
         this.camera = sceneRenderer.getCamera();
         this.direction = new THREE.Vector3();
         this.targetPos = new THREE.Vector3(
-            TOWER_POSITION.x,
-            TOWER_POSITION.y,
-            TOWER_POSITION.z
+            TOWER_POSITIONS[towerIndex].x,
+            TOWER_POSITIONS[towerIndex].y,
+            TOWER_POSITIONS[towerIndex].z
         );
         this.status = BOT_STATUS.walk;
         this.oldStatus = BOT_STATUS.walk;
@@ -108,8 +110,12 @@ export class Bot {
         const angle = THREE.MathUtils.randInt(0, 360);
         const distance = FOREST_RADIUS;
 
-        this.position.x = -Math.cos(ANG2RAD(angle)) * distance;
-        this.position.z = -Math.sin(ANG2RAD(angle)) * distance;
+        this.position.x =
+            TOWER_POSITIONS[this.towerIndex].x -
+            Math.cos(ANG2RAD(angle)) * distance;
+        this.position.z =
+            TOWER_POSITIONS[this.towerIndex].z -
+            Math.sin(ANG2RAD(angle)) * distance;
 
         this.mesh.scale.x = 0.01;
         this.mesh.scale.y = 0.01;
@@ -170,7 +176,7 @@ export class Bot {
     }
 
     disposeFireMesh() {
-        if( this.fireMesh ) {
+        if (this.fireMesh) {
             disposeMesh(this.fireMesh);
             this.scene.remove(this.fireMesh);
         }
@@ -252,15 +258,16 @@ export class Bot {
         });
     }
 
-    fire( duration: number ) {
+    fire(duration: number) {
         this.fireTime = duration;
-        if( !this.fireMesh ) {
+        if (!this.fireMesh) {
             const particle = createToonProjectile(
                 this.sceneRenderer._particleRenderer,
                 this.assetsManager._particleTextures
             );
 
-            const scaleOffset = BOT_PROPS['modelHeight'][this.botType] / 3 * 1.5;
+            const scaleOffset =
+                (BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
             particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
 
             this.fireMesh = particle;
@@ -309,16 +316,18 @@ export class Bot {
             }
         }
 
-        if( this.fireTime > 0 ) {
+        if (this.fireTime > 0) {
             this.fireTime -= delta;
 
-            if( this.fireMesh ) {
+            if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
-                this.fireMesh.position.y = this.mesh.position.y + BOT_PROPS['modelHeight'][this.botType] / 2;
+                this.fireMesh.position.y =
+                    this.mesh.position.y +
+                    BOT_PROPS["modelHeight"][this.botType] / 2;
                 this.fireMesh.position.z = this.mesh.position.z;
             }
 
-            if( this.fireTime <= 0 ) {
+            if (this.fireTime <= 0) {
                 this.fireTime = 0;
 
                 this.disposeFireMesh();

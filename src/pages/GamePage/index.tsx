@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import GameScene from "../../components/GameScene";
+import { GameProvider } from "../../contexts/game-context";
 
 const Wrapper = styled.div`
     position: relative;
@@ -8,9 +9,11 @@ const Wrapper = styled.div`
 
 export const GamePage = () => {
     return (
-        <Wrapper className="w-full h-full">
-            <GameScene />
-        </Wrapper>
+        <GameProvider>
+            <Wrapper className="w-full h-full">
+                <GameScene />
+            </Wrapper>
+        </GameProvider>
     );
 };
 

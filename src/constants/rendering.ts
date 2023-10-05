@@ -12,7 +12,7 @@ export const CAMERA_PROPS = {
     near: 0.1,
     far: 20000,
     position: {
-        x: 15,
+        x: 0,
         y: 80,
         z: 25,
     },
@@ -20,9 +20,17 @@ export const CAMERA_PROPS = {
 
 export const SCENE_PROPS = {
     fog: {
-        enable: true,
+        enable: false,
         color: 0xcccccc,
         near: 90,
         far: 200,
+    },
+};
+
+export const SPOT_LIGHT_PROPS = {
+    position: {
+        x: 10,
+        y: 80,
+        z: 20,
     },
 };

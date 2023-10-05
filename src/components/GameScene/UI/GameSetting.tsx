@@ -6,6 +6,7 @@ import ReactSlider from "react-slider";
 import "../../../theme/slider.scss";
 
 import { GAME_STATES } from "../../../constants";
+import { useGame } from "../../../hooks/useGame";
 
 const GameSetting = styled.div`
     z-index: 20;
@@ -79,11 +80,9 @@ const GameSetting = styled.div`
     }
 `;
 
-interface GameSettingUIProps {
-    setGameState: (state: number) => void;
-}
+const GameSettingUI = () => {
+    const { setGameState } = useGame();
 
-const GameSettingUI = ({ setGameState }: GameSettingUIProps) => {
     const gameSettingRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
