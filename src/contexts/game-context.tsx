@@ -3,6 +3,17 @@ import { GAME_MODES, GAME_STATES } from "../constants";
 import { generateUpgrades } from "../helper/game";
 import AssetsManager from "../components/GameScene/AssetsManager";
 import { Game } from "../components/GameScene/game";
+import { Socket } from "socket.io-client";
+
+export interface PlayerInfo {
+    socketId: string;
+}
+
+export interface LobbyInfo {
+    id: string;
+    players: PlayerInfo[];
+    status: number;
+}
 
 interface GameContextProps {
     canEnterGame: boolean;
@@ -21,6 +32,10 @@ interface GameContextProps {
     setGameInstance: (value: Game | undefined) => void;
     assetsManager: AssetsManager | undefined;
     setAssetsManager: (value: AssetsManager) => void;
+    socket: Socket | undefined;
+    setSocket: (value: Socket) => void;
+    lobbyInfo: LobbyInfo | undefined;
+    setLobbyInfo: (value: LobbyInfo) => void;
 }
 
 export const initialContext: GameContextProps = {
@@ -40,6 +55,10 @@ export const initialContext: GameContextProps = {
     setGameInstance: () => {},
     assetsManager: undefined,
     setAssetsManager: () => {},
+    socket: undefined,
+    setSocket: () => {},
+    lobbyInfo: undefined,
+    setLobbyInfo: () => {},
 };
 
 export const GameContext = createContext<GameContextProps>(initialContext);
@@ -65,6 +84,10 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     const [gameInstance, setGameInstance] = useState<Game>();
     const [assetsManager, setAssetsManager] = useState<AssetsManager>();
 
+    const [socket, setSocket] = useState<Socket>();
+
+    const [lobbyInfo, setLobbyInfo] = useState<LobbyInfo>();
+
     return (
         <GameContext.Provider
             value={{
@@ -84,6 +107,10 @@ export const GameProvider = ({ children }: GameProviderProps) => {
                 setGameInstance,
                 assetsManager,
                 setAssetsManager,
+                socket,
+                setSocket,
+                lobbyInfo,
+                setLobbyInfo,
             }}
         >
             {children}

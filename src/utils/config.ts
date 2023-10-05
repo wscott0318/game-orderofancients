@@ -5,4 +5,6 @@ export const Config = {
         name: process.env.REACT_APP_NAME ?? "Order Of Ancients",
         shortName: process.env.REACT_APP_SHORT_NAME ?? "OrderOfAncients",
     },
+    socketServerUrl:
+        process.env.REACT_APP_SOCKET_SERVER_URL ?? "ws://localhost:3001/",
 };

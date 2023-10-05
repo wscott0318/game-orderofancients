@@ -12,13 +12,15 @@ export class BotManager {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     botClaimTime: number;
+    index: number;
 
-    constructor({ sceneRenderer, assetsManager }: any) {
+    constructor({ sceneRenderer, assetsManager, index }: any) {
         this.botArray = [];
         this.level = 1;
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
         this.botClaimTime = 0;
+        this.index = index;
     }
 
     produceBots(count: number) {
@@ -32,6 +34,7 @@ export class BotManager {
                     sceneRenderer: this.sceneRenderer,
                     assetsManager: this.assetsManager,
                     botType: BOT_TYPE[type],
+                    towerIndex: this.index,
                 })
             );
         }

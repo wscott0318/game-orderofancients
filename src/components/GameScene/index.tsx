@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Loader } from "../Loader";
 import { GAME_STATES } from "../../constants";
@@ -10,8 +10,9 @@ import GamePauseUI from "./UI/GamePause";
 import GameSettingUI from "./UI/GameSetting";
 import { useGame } from "../../hooks/useGame";
 import { Toggle } from "../Toggle";
-import AssetsManager from "./AssetsManager";
 import { useGameContext } from "../../contexts/game-context";
+import { useSocket } from "../../hooks/useSocket";
+import GameLobby from "./UI/GameLobby";
 
 const Wrapper = styled.div`
     position: relative;
@@ -21,6 +22,8 @@ const Wrapper = styled.div`
 
 export const GameScene = () => {
     const firstRef = useRef(false);
+
+    const { socket } = useSocket();
 
     const {
         canEnterGame,
@@ -34,7 +37,8 @@ export const GameScene = () => {
     const {
         createGame,
         startGame,
-        startMultiGame,
+        startLobbyGame,
+        enterLooby,
         canvasDivRef,
         setGameState,
         onToggleGrid,
@@ -83,19 +87,21 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            {loading && <Loader canEnterGame={canEnterGame} />}
-
             <div ref={canvasDivRef}></div>
 
-            {currentGameState === GAME_STATES["GAME_MENU"] ? (
+            {loading && <Loader canEnterGame={canEnterGame} />}
+
+            {currentGameState === GAME_STATES.GAME_MENU && (
                 <GameMenuUI
                     setGameState={setGameState}
                     startGameAction={startGame}
-                    startMultiAction={startMultiGame}
+                    startMultiAction={enterLooby}
                 />
-            ) : currentGameState === GAME_STATES.SETTING ? (
-                <GameSettingUI />
-            ) : currentGameState === GAME_STATES["PLAYING"] ? (
+            )}
+
+            {currentGameState === GAME_STATES.SETTING && <GameSettingUI />}
+
+            {currentGameState === GAME_STATES.PLAYING && (
                 <>
                     <GamePlayUI />
 
@@ -107,11 +113,15 @@ export const GameScene = () => {
                         />
                     </div>
                 </>
-            ) : currentGameState === GAME_STATES["PAUSE"] ? (
-                <GamePauseUI />
-            ) : currentGameState === GAME_STATES["END"] ? (
-                <GameEndUI />
-            ) : null}
+            )}
+
+            {currentGameState === GAME_STATES.PAUSE && <GamePauseUI />}
+
+            {currentGameState === GAME_STATES.END && <GameEndUI />}
+
+            {currentGameState === GAME_STATES.GAME_LOBBY && (
+                <GameLobby startLobbyGame={startLobbyGame} />
+            )}
         </Wrapper>
     );
 };

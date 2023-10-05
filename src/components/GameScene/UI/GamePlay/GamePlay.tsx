@@ -1,6 +1,6 @@
 import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
-import { BrowserView, MobileOnlyView, MobileView } from "react-device-detect";
+import { useEffect, useState } from "react";
+import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import { Desktop } from "./Desktop";
@@ -8,6 +8,8 @@ import { Mobile } from "./Mobile";
 import { PlayerData } from "../../../../constants/gameUI";
 import { useGame } from "../../../../hooks/useGame";
 import { useGameContext } from "../../../../contexts/game-context";
+import { useSocket } from "../../../../hooks/useSocket";
+import { SOCKET_EVENTS } from "../../../../constants/socket";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -19,6 +21,8 @@ const GamePlayUI = () => {
     const { upgrades, setUpgrades } = useGameContext();
 
     const { gameRef } = useGame();
+
+    const { socket } = useSocket();
 
     const [profileSpells, setProfilSpells] = useState([]) as any;
 
@@ -55,84 +59,44 @@ const GamePlayUI = () => {
             wins: 0,
             lastStands: 0,
         },
-        {
-            name: "Player4",
-            avata: "/assets/users/3.png",
-            color: "#eed52d",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player5",
-            avata: "/assets/users/3.png",
-            color: "#ea7711",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player6",
-            avata: "/assets/users/3.png",
-            color: "#68ee2d",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player7",
-            avata: "/assets/users/3.png",
-            color: "#ac2dee",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player8",
-            avata: "/assets/users/3.png",
-            color: "#ee632d",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
     ]);
 
     const onClickUpgrade = (item: any, index: number) => {
-        const gold_balance = gameRef.current!._playerState.gold;
+        socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, index);
+    };
 
+    const upgradeSpell = (...args: any[]) => {
+        const item = args[0];
+        const uiIndex = args[1];
+        const playerIndex = args[2];
+
+        const playerState = gameRef.current!._playerStateArray[playerIndex];
+
+        const gold_balance = playerState.gold;
         const price = item.cost;
-
         if (gold_balance < price) return;
 
-        gameRef.current!._playerState.upgradeSpell(item);
+        playerState.upgradeSpell(item);
 
-        if (item.spellType === "Weapon") {
-            const userSpells = [...profileSpells];
+        /** Do action if it's me */
+        if (playerIndex === gameRef.current!._playerIndex) {
+            if (item.spellType === "Weapon") {
+                console.error(profileSpells);
 
-            const index = userSpells.findIndex(
-                (spell: any) => spell.name === item.name
-            );
-
-            if (index !== -1) {
-                userSpells[index].count++;
-            } else {
-                userSpells.push({
-                    ...item,
-                    count: 1,
-                });
+                const userSpells = [...profileSpells];
+                const index = userSpells.findIndex(
+                    (spell: any) => spell.name === item.name
+                );
+                if (index !== -1) {
+                    userSpells[index].count++;
+                } else {
+                    userSpells.push({
+                        ...item,
+                        count: 1,
+                    });
+                }
+                setProfilSpells(userSpells);
             }
-
-            setProfilSpells(userSpells);
         }
 
         // Instant upgrades actions
@@ -140,17 +104,27 @@ const GamePlayUI = () => {
             item.name === `Philosopher's Stone` ||
             item.name === "Cursed Treasure"
         ) {
-            gameRef.current!._towerManager.sacrificeHealth(
+            gameRef.current!._towerManagerArray[playerIndex].sacrificeHealth(
                 ((SPELLS_INFO as any)[item.propertyName] as any).sacrifiHealth
             );
-            gameRef.current!._playerState.increaseUpgradeGold(item);
+            playerState.increaseUpgradeGold(item);
         }
 
-        const newUpgrades = [...upgrades];
-        (newUpgrades[index] as any).purchased = true;
-
-        setUpgrades(newUpgrades);
+        /** Do action if it's me */
+        if (playerIndex === gameRef.current!._playerIndex) {
+            const newUpgrades = [...upgrades];
+            (newUpgrades[uiIndex] as any).purchased = true;
+            setUpgrades(newUpgrades);
+        }
     };
+
+    useEffect(() => {
+        socket?.on(SOCKET_EVENTS.UPGRADE_SPELL, upgradeSpell);
+
+        return () => {
+            socket?.off(SOCKET_EVENTS.UPGRADE_SPELL, upgradeSpell);
+        };
+    }, []);
 
     return (
         <>

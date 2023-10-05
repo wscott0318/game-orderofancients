@@ -3,12 +3,22 @@ import * as SceneSetup from "./SceneSetting";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer.js";
 import { ANG2RAD } from "../../../helper/math";
-import { cleanMaterial, disposeMesh } from "../../../helper/three";
+import { disposeMesh } from "../../../helper/three";
 import { BatchedRenderer } from "three.quarks";
-import { CAMERA_PROPS, RENDERER_PROPS } from "../../../constants/rendering";
+import {
+    CAMERA_PROPS,
+    RENDERER_PROPS,
+    SPOT_LIGHT_PROPS,
+} from "../../../constants/rendering";
+import { LobbyInfo } from "../../../contexts/game-context";
+import { TOWER_POSITIONS } from "../../../constants/tower";
+import { GAME_MODES } from "../../../constants";
 
-let aspectWidth = window.innerWidth;
-let aspectHeight = window.innerHeight;
+interface SceneRendererProps {
+    playerIndex: number;
+    gameMode: number;
+    lobbyInfo: LobbyInfo;
+}
 
 export class SceneRenderer {
     _camera: any;
@@ -20,19 +30,27 @@ export class SceneRenderer {
     _particleRenderer: BatchedRenderer;
     _clock: THREE.Clock;
     _gridHelper: THREE.GridHelper;
+    _playerIndex: number;
+    _gameMode: number;
+    _lobbyInfo: LobbyInfo;
 
-    constructor() {
+    constructor({ playerIndex, gameMode, lobbyInfo }: SceneRendererProps) {
         this._uiRenderer = new CSS2DRenderer();
         this._particleRenderer = new BatchedRenderer();
         this._clock = new THREE.Clock();
         this._gridHelper = new THREE.GridHelper();
+
+        this._playerIndex = playerIndex;
+        this._gameMode = gameMode;
+        this._lobbyInfo = lobbyInfo;
 
         this.initialize();
     }
 
     initRenderer() {
         this._renderer = SceneSetup.renderer({ antialias: true });
-        this._renderer.setSize(aspectWidth, aspectHeight);
+
+        this._renderer.setSize(window.innerWidth, window.innerHeight);
         this._renderer.setPixelRatio(window.devicePixelRatio);
         this._renderer.outputEncoding = RENDERER_PROPS.outputEncoding;
         this._renderer.toneMapping = RENDERER_PROPS.toneMapping;
@@ -40,18 +58,18 @@ export class SceneRenderer {
         this._renderer.shadowMap.enabled = RENDERER_PROPS.shadowMapEnable;
         this._renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        this._uiRenderer.setSize(aspectWidth, aspectHeight);
+        this._uiRenderer.setSize(window.innerWidth, window.innerHeight);
         this._uiRenderer.domElement.style.position = "absolute";
         this._uiRenderer.domElement.style.top = "0px";
         document.body.appendChild(this._uiRenderer.domElement);
     }
 
     initCamera() {
-        this._camera = SceneSetup.camera(aspectWidth, aspectHeight);
+        this._camera = SceneSetup.camera(window.innerWidth, window.innerHeight);
         this._camera.position.set(
-            CAMERA_PROPS.position.x,
-            CAMERA_PROPS.position.y,
-            CAMERA_PROPS.position.z
+            TOWER_POSITIONS[this._playerIndex].x + CAMERA_PROPS.position.x,
+            TOWER_POSITIONS[this._playerIndex].y + CAMERA_PROPS.position.y,
+            TOWER_POSITIONS[this._playerIndex].z + CAMERA_PROPS.position.z
         );
     }
 
@@ -63,7 +81,28 @@ export class SceneRenderer {
 
     initLights() {
         this._scene.add(SceneSetup.HemiLight());
-        this._scene.add(SceneSetup.SpotLight());
+
+        if (this._gameMode === GAME_MODES.Single) {
+            this._scene.add(SceneSetup.SpotLight());
+        } else {
+            for (let i = 0; i < this._lobbyInfo.players.length; i++) {
+                const light = SceneSetup.SpotLight();
+                light.position.set(
+                    TOWER_POSITIONS[i].x + SPOT_LIGHT_PROPS.position.x,
+                    TOWER_POSITIONS[i].y + SPOT_LIGHT_PROPS.position.y,
+                    TOWER_POSITIONS[i].z + SPOT_LIGHT_PROPS.position.z
+                );
+
+                light.target.position.set(
+                    TOWER_POSITIONS[i].x,
+                    TOWER_POSITIONS[i].y,
+                    TOWER_POSITIONS[i].z
+                );
+
+                this._scene.add(light.target);
+                this._scene.add(light);
+            }
+        }
     }
 
     initStats() {
@@ -76,11 +115,31 @@ export class SceneRenderer {
             this._camera,
             this._uiRenderer.domElement
         );
-        this._camControls.enablePan = false;
+        this._camControls.screenSpacePanning = false;
+        this._camControls.mouseButtons = {
+            LEFT: THREE.MOUSE.PAN,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.ROTATE,
+        };
+
+        this._camControls.touches = {
+            ONE: THREE.TOUCH.PAN,
+            TWO: THREE.TOUCH.DOLLY_ROTATE,
+        };
+        this._camControls.enableRotate = false;
+        this._camControls.enableDamping = true;
+        this._camControls.dampingFactor = 0.05;
+
         this._camControls.minPolarAngle = ANG2RAD(10);
         this._camControls.maxPolarAngle = ANG2RAD(65);
         this._camControls.maxDistance = 100;
         this._camControls.minDistance = 25;
+
+        this._camControls.target.set(
+            TOWER_POSITIONS[this._playerIndex].x,
+            TOWER_POSITIONS[this._playerIndex].y,
+            TOWER_POSITIONS[this._playerIndex].z
+        );
     }
 
     initGridHelper() {
@@ -98,8 +157,8 @@ export class SceneRenderer {
     }
 
     onResize() {
-        aspectWidth = window.innerWidth;
-        aspectHeight = window.innerHeight;
+        const aspectWidth = window.innerWidth;
+        const aspectHeight = window.innerHeight;
         this._camera.aspect = aspectWidth / aspectHeight;
         this._camera.updateProjectionMatrix();
         this._renderer.setSize(aspectWidth, aspectHeight);
@@ -139,6 +198,8 @@ export class SceneRenderer {
         this._particleRenderer.update(delta);
 
         this._stats.update();
+
+        this._camControls.update();
 
         this._renderer.render(this._scene, this._camera);
 

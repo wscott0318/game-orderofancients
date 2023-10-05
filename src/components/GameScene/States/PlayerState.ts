@@ -3,6 +3,9 @@ import { GET_RANDOM_VAL } from "../../../helper/math";
 import { PERCENT2VALUE } from "../../../utils/helper";
 
 export class PlayerState {
+    index: number;
+    playerIndex: number;
+
     gold: number;
 
     // Normal Weapon Spells
@@ -72,7 +75,10 @@ export class PlayerState {
     Underground_Gold_Mine: number;
     Gems_of_Power: number;
 
-    constructor() {
+    constructor({ index, playerIndex }: any) {
+        this.index = index;
+        this.playerIndex = playerIndex;
+
         this.gold = 5000;
 
         // Normal
@@ -144,7 +150,8 @@ export class PlayerState {
     }
 
     updateGoldUI() {
-        (document.getElementById("gold") as any).textContent = this.gold;
+        if (this.index === this.playerIndex)
+            (document.getElementById("gold") as any).textContent = this.gold;
     }
 
     increaseGold(amount: number) {

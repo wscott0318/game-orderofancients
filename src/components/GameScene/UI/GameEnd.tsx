@@ -19,7 +19,7 @@ const GameEnd = styled.div`
     background: rgb(0, 0, 0, 0.8);
     backdrop-filter: saturate(0.5);
 
-    z-index: 20;
+    z-index: 999;
     display: flex;
     justify-content: center;
 
@@ -86,7 +86,9 @@ export const GameEndUI = () => {
     /**
      * Win if player stands up for 30 seconds...
      */
-    const isvictory = (game as Game)._timeManager.totalTimeTracker > 30;
+    const isvictory =
+        (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker >
+        30;
 
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {

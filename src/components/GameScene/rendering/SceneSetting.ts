@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
-import { CAMERA_PROPS, SCENE_PROPS } from "../../../constants/rendering";
+import {
+    CAMERA_PROPS,
+    SCENE_PROPS,
+    SPOT_LIGHT_PROPS,
+} from "../../../constants/rendering";
 
 export const camera = (width: number, height: number) => {
     const _ASPECT = width / height;
@@ -24,8 +28,6 @@ export const scene = () => {
             SCENE_PROPS.fog.near,
             SCENE_PROPS.fog.far
         );
-
-        // scene.fog = new THREE.FogExp2(SCENE_PROPS.fog.color, 0.009);
     }
 
     return scene;
@@ -57,7 +59,11 @@ export const PointLight = () => {
 
 export const SpotLight = () => {
     const spotLight = new THREE.SpotLight(0xffffff, 6);
-    spotLight.position.set(10, 80, 20);
+    spotLight.position.set(
+        SPOT_LIGHT_PROPS.position.x,
+        SPOT_LIGHT_PROPS.position.y,
+        SPOT_LIGHT_PROPS.position.z
+    );
     spotLight.angle = Math.PI / 5;
     spotLight.penumbra = 1;
     spotLight.decay = 2;

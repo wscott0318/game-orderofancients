@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { generateUpgrades } from "../helper/game";
+import { useCallback, useRef } from "react";
 import { GAME_MODES, GAME_STATES } from "../constants";
 import AssetsManager from "../components/GameScene/AssetsManager";
 import { Game } from "../components/GameScene/game";
-import { useGameContext } from "../contexts/game-context";
+import { LobbyInfo, useGameContext } from "../contexts/game-context";
 
 export const useGame = () => {
     const {
@@ -16,8 +15,13 @@ export const useGame = () => {
         setUpgrades,
         setGameMode,
         setShowGrid,
+        gameMode,
+        lobbyInfo,
+        socket,
     } = useGameContext();
 
+    const lobbyInfoRef = useRef<LobbyInfo>();
+    lobbyInfoRef.current = lobbyInfo;
     /**
      * Canvas Game Ref
      */
@@ -36,29 +40,50 @@ export const useGame = () => {
         setCanEnterGame(true);
     }, []);
 
-    const startGame = () => {
+    const createGameInstance = () => {
         if (gameRef.current) return;
+
+        let playerIndex: any = 0;
+
+        if (gameMode === GAME_MODES.Lobby) {
+            playerIndex = lobbyInfoRef.current?.players.findIndex(
+                (player) => player.socketId === socket?.id
+            );
+        }
 
         const game = new Game({
             canvas: canvasDivRef.current!,
             assetsManager: assetsManager!,
             setCurrentGameSate: setCurrentGameSate,
             setUpgrades: setUpgrades,
+            gameMode: gameMode,
+            lobbyInfo: lobbyInfoRef.current as any,
+            playerIndex: playerIndex,
         });
 
         setGameInstance(game);
         gameRef.current = game;
+    };
+
+    const startGame = () => {
+        createGameInstance();
+
+        setGameMode(GAME_MODES.Single);
+        setGameState(GAME_STATES.PLAYING);
+    };
+
+    const startLobbyGame = () => {
+        createGameInstance();
 
         setGameState(GAME_STATES.PLAYING);
     };
 
-    const startMultiGame = () => {
+    const enterLooby = () => {
         setGameMode(GAME_MODES.Lobby);
+        setGameState(GAME_STATES.GAME_LOBBY);
     };
 
     const setGameState = (state: number) => {
-        console.error(gameRef.current);
-
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
         }
@@ -101,7 +126,8 @@ export const useGame = () => {
         exitGameAction,
         restartGameAction,
         startGame,
-        startMultiGame,
+        startLobbyGame,
+        enterLooby,
         setGameState,
         onToggleGrid,
     };

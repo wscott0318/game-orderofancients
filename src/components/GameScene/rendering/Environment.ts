@@ -45,13 +45,13 @@ export class Environment {
         );
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(200, 200);
+        texture.repeat.set(400, 400);
         texture.anisotropy = 16;
         texture.encoding = THREE.sRGBEncoding;
         texture.magFilter = THREE.LinearFilter;
         texture.minFilter = THREE.LinearMipMapLinearFilter;
 
-        const geometry = new THREE.PlaneGeometry(500, 500);
+        const geometry = new THREE.PlaneGeometry(1000, 1000);
         const material = new THREE.MeshStandardMaterial({
             side: THREE.DoubleSide,
             map: texture,

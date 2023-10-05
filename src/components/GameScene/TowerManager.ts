@@ -3,6 +3,7 @@ import { GAME_STATES } from "../../constants";
 import AssetsManager from "./AssetsManager";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import * as THREE from "three";
+import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import {
     TOWER_HEALTH_HEIGHT,
     TOWER_HEALTH_WIDTH,
@@ -10,18 +11,21 @@ import {
 import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "./States/StateManager";
 import { ParticleEffect } from "./ParticleEffect";
-import { TOWER_HEIGHT, TOWER_POSITION } from "../../constants/tower";
+import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../constants/tower";
 
 export class TowerManager {
     level: number;
     maxHp: number;
     hp: number;
+    isDead: boolean;
     _towerMesh: any;
     _sceneRenderer: SceneRenderer;
     _assetsManager: AssetsManager;
     _healthBarUI: CSS2DObject;
     _stateManager: StateManager;
     _particleEffect: ParticleEffect;
+    _playerIndex: number;
+    _index: number;
 
     sacrificeHP: number;
 
@@ -30,19 +34,26 @@ export class TowerManager {
         assetsManager,
         stateManager,
         particleEffect,
+        index,
+        playerIndex,
     }: any) {
         this._sceneRenderer = sceneRenderer;
         this._assetsManager = assetsManager;
         this._stateManager = stateManager;
         this._particleEffect = particleEffect;
+        this._playerIndex = playerIndex;
+        this._index = index;
 
         this.level = 1;
         this.hp = 1700;
         this.maxHp = 1700;
+        this.isDead = false;
 
         this.sacrificeHP = 0;
 
-        this._towerMesh = this._assetsManager.getTowerModel();
+        this._towerMesh = SkeletonUtils.clone(
+            this._assetsManager.getTowerModel()
+        );
 
         const wrapper = document.createElement("div");
         wrapper.className = "towerStatusBar";
@@ -68,9 +79,9 @@ export class TowerManager {
     }
 
     initialize() {
-        this._towerMesh.position.x = TOWER_POSITION.x;
-        this._towerMesh.position.y = TOWER_POSITION.y;
-        this._towerMesh.position.z = TOWER_POSITION.z;
+        this._towerMesh.position.x = TOWER_POSITIONS[this._index].x;
+        this._towerMesh.position.y = TOWER_POSITIONS[this._index].y;
+        this._towerMesh.position.z = TOWER_POSITIONS[this._index].z;
         this._sceneRenderer.getScene().add(this._towerMesh);
     }
 
@@ -142,6 +153,8 @@ export class TowerManager {
             this.hp / this.maxHp
         )}`;
 
+        if (this._index !== this._playerIndex) return;
+
         const currentHealthDiv = document.getElementById("currentHP");
         if (currentHealthDiv) {
             currentHealthDiv.textContent = `${this.hp}`;
@@ -176,7 +189,10 @@ export class TowerManager {
         }
 
         if (this.hp <= 0) {
-            this._stateManager.setState(GAME_STATES.END);
+            this.isDead = true;
+
+            if (this._index === this._playerIndex)
+                this._stateManager.setState(GAME_STATES.END);
         }
 
         this.renderHealthBar();
