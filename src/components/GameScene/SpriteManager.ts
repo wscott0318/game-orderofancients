@@ -1,4 +1,3 @@
-import { Sprite } from "./Instances/Sprite";
 import { TextSprite } from "./Sprites/Text";
 
 export class SpriteManager {

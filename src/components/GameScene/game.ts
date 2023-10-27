@@ -34,7 +34,6 @@ export class Game {
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
     _stateManager: StateManager;
-    // _animationsManager: AnimationManager;
     _playerStateArray: PlayerState[];
     _timeManagerArray: TimeManager[];
     _lobbyInfo: LobbyInfo;
@@ -42,8 +41,6 @@ export class Game {
     _gameMode: number;
 
     constructor(options: GameOptions) {
-        console.error("options----", options);
-
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
         this._lobbyInfo = options.lobbyInfo;

@@ -1,4 +1,3 @@
-import { gsap } from "gsap";
 import { useEffect, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
