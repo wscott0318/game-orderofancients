@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import GameScene from "../../components/GameScene";
 import { GameProvider } from "../../contexts/game-context";
+import "../../theme/global.scss";
 
 const Wrapper = styled.div`
     position: relative;
