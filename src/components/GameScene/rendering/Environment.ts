@@ -1,6 +1,13 @@
 import * as THREE from "three";
 import { ANG2RAD } from "../../../helper/math";
 import { SceneRenderer } from "./SceneRenderer";
+import groundTex from "../../../assets/textures/ground/small2.png";
+import tourPX from "../../../assets/textures/sky/tour_px.jpg";
+import tourNX from "../../../assets/textures/sky/tour_nx.jpg";
+import tourPY from "../../../assets/textures/sky/tour_py.jpg";
+import tourNY from "../../../assets/textures/sky/tour_ny.jpg";
+import tourPZ from "../../../assets/textures/sky/tour_pz.jpg";
+import tourNZ from "../../../assets/textures/sky/tour_nz.jpg";
 
 export class Environment {
     _sceneRenderer: SceneRenderer;
@@ -17,14 +24,7 @@ export class Environment {
 
     initSkyBox() {
         const geometry = new THREE.BoxGeometry(1000, 1000, 1000);
-        const texturesString = [
-            "./assets/images/textures/sky/tour_px.jpg",
-            "./assets/images/textures/sky/tour_nx.jpg",
-            "./assets/images/textures/sky/tour_py.jpg",
-            "./assets/images/textures/sky/tour_ny.jpg",
-            "./assets/images/textures/sky/tour_pz.jpg",
-            "./assets/images/textures/sky/tour_nz.jpg",
-        ];
+        const texturesString = [tourPX, tourNX, tourPY, tourNY, tourPZ, tourNZ];
         const materialArray = texturesString.map((textureString: string) => {
             const texture = new THREE.TextureLoader().load(textureString);
             const material = new THREE.MeshStandardMaterial({
@@ -40,9 +40,7 @@ export class Environment {
     }
 
     initGround() {
-        const texture = new THREE.TextureLoader().load(
-            "/assets/textures/ground/small2.png"
-        );
+        const texture = new THREE.TextureLoader().load(groundTex);
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(400, 400);

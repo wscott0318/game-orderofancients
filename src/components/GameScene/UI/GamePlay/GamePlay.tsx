@@ -9,6 +9,9 @@ import { useGame } from "../../../../hooks/useGame";
 import { useGameContext } from "../../../../contexts/game-context";
 import { useSocket } from "../../../../hooks/useSocket";
 import { SOCKET_EVENTS } from "../../../../constants/socket";
+import playerImg1 from "../../../../assets/users/jack.png";
+import playerImg2 from "../../../../assets/users/2.png";
+import playerImg3 from "../../../../assets/users/3.png";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -30,7 +33,7 @@ const GamePlayUI = () => {
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {
             name: "Jack#2643",
-            avata: "/assets/users/jack.png",
+            avata: playerImg1,
             color: "red",
             level: 80,
             kills: 5,
@@ -40,7 +43,7 @@ const GamePlayUI = () => {
         },
         {
             name: "Player2",
-            avata: "/assets/users/2.png",
+            avata: playerImg2,
             color: "blue",
             level: 90,
             kills: 5,
@@ -50,7 +53,7 @@ const GamePlayUI = () => {
         },
         {
             name: "Player3",
-            avata: "/assets/users/3.png",
+            avata: playerImg3,
             color: "pink",
             level: 60,
             kills: 5,
@@ -80,8 +83,6 @@ const GamePlayUI = () => {
         /** Do action if it's me */
         if (playerIndex === gameRef.current!._playerIndex) {
             if (item.spellType === "Weapon") {
-                console.error(profileSpells);
-
                 const userSpells = [...profileSpells];
                 const index = userSpells.findIndex(
                     (spell: any) => spell.name === item.name

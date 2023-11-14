@@ -1,9 +1,14 @@
 import { gsap } from "gsap";
-import { useEffect, useRef, useState } from "react";
-
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CustomProgressBar } from "../../../../theme/components";
 import { PlayerData } from "../../../../constants/gameUI";
+import backImg from "../../../../assets/images/mobile/back.png";
+import plantImg from "../../../../assets/images/mobile/plant.png";
+import profileImg from "../../../../assets/images/profile.png";
+import heartImg from "../../../../assets/images/heart.png";
+import coinImg from "../../../../assets/images/coin-left.png";
+import clockImg from "../../../../assets/images/clock.png";
 
 const MobileGamePlay = styled.div`
     position: fixed;
@@ -76,12 +81,14 @@ export const Mobile = ({
         <MobileGamePlay className="gameplay_mobile">
             {/* -------  field start --------- */}
             <img
-                src="/assets/images/mobile/back.png"
+                src={backImg}
                 className="back absolute w-[89%] bottom-0 left-[50%] translate-x-[-50%]"
+                alt="pic"
             />
             <img
-                src="/assets/images/mobile/plant.png"
+                src={plantImg}
                 className="plant absolute w-[92%] bottom-0 left-[50%] translate-x-[-50%]"
+                alt="pic"
             />
             <div className="field absolute w-[87vw] h-[9vw] bottom-0 left-[50%] translate-x-[-50%] flex flex-col gap-[5%]">
                 <div className="spells h-[80%] flex gap-[0.8%] pl-[0.8%]">
@@ -133,8 +140,9 @@ export const Mobile = ({
             <div className="self absolute left-[1.5vw] top-[1vw] flex flex-col gap-[1vw]">
                 <div className="flex gap-[0.5vw]">
                     <img
-                        src="/assets/images/profile.png"
+                        src={profileImg}
                         className="w-[5.5vw] h-[5.5vw] rounded"
+                        alt="pic"
                     ></img>
                     <div className="fs-lg ff-round flex flex-col ">
                         <span>Jack555</span>
@@ -175,7 +183,8 @@ export const Mobile = ({
                 />
                 <img
                     className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
-                    src="/assets/images/heart.png"
+                    src={heartImg}
+                    alt="pic"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
                     <span className="fc-orange" id="currentHP">
@@ -198,7 +207,8 @@ export const Mobile = ({
                 />
                 <img
                     className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
-                    src="/assets/images/coin-left.png"
+                    src={coinImg}
+                    alt="pic"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
                     <span className="fc-orange" id="gold">
@@ -222,7 +232,8 @@ export const Mobile = ({
                 />
                 <img
                     className="absolute h-[160%] top-[50%] translate-x-[-50%] translate-y-[-50%]"
-                    src="/assets/images/clock.png"
+                    src={clockImg}
+                    alt="pic"
                 />
                 <div className="absolute fs-md ff-round left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%]">
                     <span className="relative" id="elapsedTime">

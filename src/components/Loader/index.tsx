@@ -1,15 +1,17 @@
+import styled from "styled-components";
 import "./index.scss";
 import "./firefly.scss";
 import { PlayerData } from "../../constants/gameUI";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
-import styled from "styled-components";
-import { useGame } from "../../hooks/useGame";
+import avatarImg from "../../assets/users/jack.png";
+import logoImg from "../../assets/images/loading_logo.png";
+import sliderImg from "../../assets/images/loader-slider-shine.png";
 
 const playerInfo = [
     {
         name: "Jack#2643",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -19,7 +21,7 @@ const playerInfo = [
     },
     {
         name: "Player2",
-        avata: "/assets/users/2.png",
+        avata: avatarImg,
         color: "blue",
         level: 90,
         kills: 5,
@@ -29,7 +31,7 @@ const playerInfo = [
     },
     {
         name: "Player3",
-        avata: "/assets/users/3.png",
+        avata: avatarImg,
         color: "pink",
         level: 60,
         kills: 5,
@@ -39,7 +41,7 @@ const playerInfo = [
     },
     {
         name: "Player4",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -49,7 +51,7 @@ const playerInfo = [
     },
     {
         name: "Player5",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -59,7 +61,7 @@ const playerInfo = [
     },
     {
         name: "Player6",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -69,7 +71,7 @@ const playerInfo = [
     },
     {
         name: "Player7",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -79,7 +81,7 @@ const playerInfo = [
     },
     {
         name: "Player8",
-        avata: "/assets/users/jack.png",
+        avata: avatarImg,
         color: "red",
         level: 80,
         kills: 5,
@@ -160,7 +162,7 @@ export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
                 <div className="stars absolute">{renderFirefly(30)}</div>
 
                 <TopLogo>
-                    <img src="/assets/images/loading_logo.png" alt="logo" />
+                    <img src={logoImg} alt="logo" />
                 </TopLogo>
 
                 <PlayerScrollDiv className="players relative ff-round">
@@ -229,10 +231,7 @@ const CustomLoaderSlider = ({ value, canEnterGame }: any) => {
                 className="progress h-full"
                 style={{ backgroundSize: `${value}% 100%` }}
             />
-            <img
-                src="/assets/images/loader-slider-shine.png"
-                style={{ left: `${value}%` }}
-            />
+            <img src={sliderImg} style={{ left: `${value}%` }} />
             <p className="absolute text-white top-0 left-[50%] translate-x-[-50%] text-[24px] uppercase">
                 Loading
             </p>

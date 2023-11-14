@@ -1,7 +1,7 @@
 import { Group } from "three";
 import { BatchedRenderer, QuarksLoader } from "three.quarks";
-
 import { TextureImage } from "../../AssetsManager";
+import { S3_BUCKET_URL } from "../../../../constants";
 
 export async function createStun(
     renderer: BatchedRenderer,
@@ -13,9 +13,12 @@ export async function createStun(
     const loader = new QuarksLoader();
 
     const obj: THREE.Object3D = await new Promise((resolve, reject) => {
-        loader.load("/assets/particle_json/stun.json", (res: any) => {
-            resolve(res);
-        });
+        loader.load(
+            S3_BUCKET_URL + "/assets/particle_json/stun.json",
+            (res: any) => {
+                resolve(res);
+            }
+        );
     });
 
     const particleObj: any = obj.getObjectByName("tornado");

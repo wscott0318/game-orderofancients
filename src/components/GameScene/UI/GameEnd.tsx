@@ -1,13 +1,16 @@
-import { gsap } from "gsap";
-import { CustomEase } from "gsap/all";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import { GAME_STATES } from "../../../constants";
 import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
 import { useGame } from "../../../hooks/useGame";
-import { useGameContext } from "../../../contexts/game-context";
+import playerImg1 from "../../../assets/users/jack.png";
+import playerImg2 from "../../../assets/users/2.png";
+import playerImg3 from "../../../assets/users/3.png";
+import extBtnImg from "../../../assets/images/buttons/exit_btn.png";
+import anotherBtnImg from "../../../assets/images/buttons/another_btn.png";
+import victoryImg from "../../../assets/images/victory-logo.png";
+import defeatImg from "../../../assets/images/defeat-logo.png";
 
 const GameEnd = styled.div`
     position: absolute;
@@ -55,11 +58,11 @@ const GameEnd = styled.div`
                 font-size: 30px;
             }
             .exit {
-                background-image: url("/assets/images/buttons/exit_btn.png");
+                background-image: url(${extBtnImg});
             }
 
             .playanother {
-                background-image: url("/assets/images/buttons/another_btn.png");
+                background-image: url(${anotherBtnImg});
             }
         }
 
@@ -93,7 +96,7 @@ export const GameEndUI = () => {
     const [players, setPlayers]: [PlayerData[], any] = useState([
         {
             name: "Jack#2643",
-            avata: "/assets/users/jack.png",
+            avata: playerImg1,
             color: "red",
             level: 80,
             kills: 5,
@@ -103,7 +106,7 @@ export const GameEndUI = () => {
         },
         {
             name: "Player2",
-            avata: "/assets/users/2.png",
+            avata: playerImg2,
             color: "blue",
             level: 90,
             kills: 5,
@@ -113,7 +116,7 @@ export const GameEndUI = () => {
         },
         {
             name: "Player3",
-            avata: "/assets/users/3.png",
+            avata: playerImg3,
             color: "pink",
             level: 60,
             kills: 5,
@@ -128,11 +131,7 @@ export const GameEndUI = () => {
             <div className="gameend h-fit flex flex-col items-center">
                 <img
                     className="vitory-logo relative w-full"
-                    src={
-                        isvictory
-                            ? "/assets/images/victory-logo.png"
-                            : "/assets/images/defeat-logo.png"
-                    }
+                    src={isvictory ? victoryImg : defeatImg}
                 />
 
                 <div className="players relative top-[-6vw] w-[72%] ff-round">

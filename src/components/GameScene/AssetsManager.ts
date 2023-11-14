@@ -2,6 +2,8 @@ import { MODEL_URLS } from "../../constants";
 import { BOT_TYPE } from "../../constants/bot";
 import { LoadModel } from "./loaders/ModelLoader";
 import * as THREE from "three";
+import particleText1 from "../../assets/textures/particle/texture1.png";
+import particleText2 from "../../assets/textures/particle/texture2.png";
 
 export interface TextureImage {
     img: string;
@@ -20,20 +22,16 @@ export class AssetsManager {
     }
 
     loadParticleTextures() {
-        const texture1 = new THREE.TextureLoader().load(
-            "/assets/textures/particle/texture1.png"
-        );
-        const texture2 = new THREE.TextureLoader().load(
-            "/assets/textures/particle/texture2.png"
-        );
+        const texture1 = new THREE.TextureLoader().load(particleText1);
+        const texture2 = new THREE.TextureLoader().load(particleText2);
 
         this._particleTextures = [
             {
-                img: "/assets/textures/particle/texture1.png",
+                img: particleText1,
                 texture: texture1,
             },
             {
-                img: "/assets/textures/particle/texture2.png",
+                img: particleText2,
                 texture: texture2,
             },
         ];

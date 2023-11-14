@@ -4,19 +4,28 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import ReactSlider from "react-slider";
 import "../../../theme/slider.scss";
+import loadingBack from "../../../assets/images/loading-back.png";
+import settingBack from "../../../assets/images/setting-back.png";
+import settingVideo from "../../../assets/images/buttons/setting-video.png";
+import settingAudio from "../../../assets/images/buttons/setting-audio-inactive.png";
+import settingPlayers from "../../../assets/images/buttons/setting-players-inactive.png";
+import settingControls from "../../../assets/images/buttons/setting-controls-inactive.png";
+import applyInactive from "../../../assets/images/buttons/apply-inactive.png";
+import defaultInactive from "../../../assets/images/buttons/default-inactive.png";
+import exitInactive from "../../../assets/images/buttons/exit-inactive.png";
 
 import { GAME_STATES } from "../../../constants";
 import { useGame } from "../../../hooks/useGame";
 
 const GameSetting = styled.div`
     z-index: 20;
-    background-image: url("/assets/images/loading-back.png");
+    background-image: url(${loadingBack});
     background-size: cover;
     background-position: center;
     user-select: none;
 
     .setting {
-        background-image: url("/assets/images/setting-back.png");
+        background-image: url(${settingBack});
         background-size: 100% 100%;
 
         width: 60vw;
@@ -35,16 +44,16 @@ const GameSetting = styled.div`
                 }
 
                 .video {
-                    background-image: url("/assets/images/buttons/setting-video.png");
+                    background-image: url(${settingVideo});
                 }
                 .audio {
-                    background-image: url("/assets/images/buttons/setting-audio-inactive.png");
+                    background-image: url(${settingAudio});
                 }
                 .players {
-                    background-image: url("/assets/images/buttons/setting-players-inactive.png");
+                    background-image: url(${settingPlayers});
                 }
                 .controls {
-                    background-image: url("/assets/images/buttons/setting-controls-inactive.png");
+                    background-image: url(${settingControls});
                 }
             }
             .value {
@@ -68,13 +77,13 @@ const GameSetting = styled.div`
                 background-size: 100% 100%;
             }
             .apply {
-                background-image: url("/assets/images/buttons/apply-inactive.png");
+                background-image: url(${applyInactive});
             }
             .default {
-                background-image: url("/assets/images/buttons/default-inactive.png");
+                background-image: url(${defaultInactive});
             }
             .exit {
-                background-image: url("/assets/images/buttons/exit-inactive.png");
+                background-image: url(${exitInactive});
             }
         }
     }

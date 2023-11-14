@@ -1,18 +1,28 @@
 import * as THREE from "three";
+import { Config } from "../utils/config";
+
+export const S3_BUCKET_URL = Config.s3BucketUrl;
 
 export const MODEL_URLS = {
-    environment: "/assets/models/environment/foliage_pack_final.gltf",
-    buildings: "/assets/models/building/scene.gltf",
-    bot_grunt: "/assets/models/skeleton_grunt/scene.gltf",
-    bot_swordsman: "/assets/models/skeleton_swordsman/scene.gltf",
-    bot_archer: "/assets/models/skeleton_archer/scene.gltf",
-    bot_king: "/assets/models/skeleton_king/scene.gltf",
-    bot_mage: "/assets/models/skeleton_mage/scene.gltf",
+    environment:
+        S3_BUCKET_URL + "/assets/models/environment/foliage_pack_final.gltf",
+    buildings: S3_BUCKET_URL + "/assets/models/building/scene.gltf",
+    bot_grunt: S3_BUCKET_URL + "/assets/models/skeleton_grunt/scene.gltf",
+    bot_swordsman:
+        S3_BUCKET_URL + "/assets/models/skeleton_swordsman/scene.gltf",
+    bot_archer: S3_BUCKET_URL + "/assets/models/skeleton_archer/scene.gltf",
+    bot_king: S3_BUCKET_URL + "/assets/models/skeleton_king/scene.gltf",
+    bot_mage: S3_BUCKET_URL + "/assets/models/skeleton_mage/scene.gltf",
 
-    throwingAxe: "/assets/models/weapons/throwingAxe/scene.gltf",
-    arrow: "/assets/models/weapons/arrow/overwatch_-_hanzos_arrow.glb",
-    missile: "/assets/models/weapons/missile/hi-tech_missile.glb",
-    stone: "/assets/models/weapons/stone/groundstone_sphere.glb",
+    throwingAxe:
+        S3_BUCKET_URL + "/assets/models/weapons/throwingAxe/scene.gltf",
+    arrow:
+        S3_BUCKET_URL +
+        "/assets/models/weapons/arrow/overwatch_-_hanzos_arrow.glb",
+    missile:
+        S3_BUCKET_URL + "/assets/models/weapons/missile/hi-tech_missile.glb",
+    stone:
+        S3_BUCKET_URL + "/assets/models/weapons/stone/groundstone_sphere.glb",
 };
 
 export const FOREST_RADIUS = 35;

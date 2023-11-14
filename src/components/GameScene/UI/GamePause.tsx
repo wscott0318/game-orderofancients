@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { GAME_STATES } from "../../../constants";
 import { useGame } from "../../../hooks/useGame";
+import endImg from "../../../assets/images/end.png";
+import btnDefault from "../../../assets/images/button-default.png";
+import btnHover from "../../../assets/images/button-hover.png";
 
 const GamePause = styled.div`
     position: absolute;
@@ -33,7 +36,7 @@ const GamePause = styled.div`
         top: -1000px;
         display: flex;
         flex-direction: column;
-        background-image: url("/assets/images/end.png");
+        background-image: url(${endImg});
         background-size: 100% 100%;
         align-items: center;
     }
@@ -46,7 +49,7 @@ const GamePause = styled.div`
         align-items: center;
     }
     .warButton {
-        background-image: url("/assets/images/button-default.png");
+        background-image: url(${btnDefault});
         background-size: contain;
         background-repeat: no-repeat;
         background-repeat: no-repeat;
@@ -57,7 +60,7 @@ const GamePause = styled.div`
         font-size: 20px;
         font-weight: 900;
         &:hover {
-            background-image: url("/assets/images/button-hover.png");
+            background-image: url(${btnHover});
         }
     }
 `;

@@ -1,11 +1,31 @@
 import { ARMOR_TYPES, DAMAGE_TYPES } from ".";
 
+import throwingAxeImg from "../assets/images/spells/normal/throwingAxes.png";
+import seekerAxeImg from "../assets/images/spells/normal/Seeker Axe.png";
+import rifleImg from "../assets/images/spells/normal/Rifle.png";
+import bowImg from "../assets/images/spells/piercing/bow.png";
+import frostBowImg from "../assets/images/spells/piercing/Frost Bow.png";
+import fireBowImg from "../assets/images/spells/piercing/Fire Bow.png";
+import magicMissilesImg from "../assets/images/spells/magic/Magic Missiles.png";
+import flamecasterImg from "../assets/images/spells/magic/Flamecaster.png";
+import boulderImg from "../assets/images/spells/siege/Boulder.png";
+import missileBarrageImg from "../assets/images/spells/siege/Missile Barrage.png";
+import chaosOrbImg from "../assets/images/spells/chaos/Chaos Orb.png";
+import chaosClawImg from "../assets/images/spells/chaos/Chaos Claw.png";
+import magicCoinImg from "../assets/images/spells/upgrades/Magic Coin.png";
+import bountyHunterImg from "../assets/images/spells/upgrades/Bounty Hunter.png";
+import transmuteImg from "../assets/images/spells/upgrades/Transmute.png";
+import philosopherImg from "../assets/images/spells/upgrades/Philosopher's Stone.png";
+import cursedTreasureImg from "../assets/images/spells/upgrades/Cursed Treasure.png";
+import goldMineImg from "../assets/images/spells/upgrades/Underground Gold Mine.png";
+import gemsOfPowerImg from "../assets/images/spells/upgrades/Gems of Power.png";
+
 export const SPELLS_INFO = {
     "Throwing Axes": {
         name: "Throwing Axes",
         propertyName: "Throwing_Axes",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/normal/throwingAxes.png",
+        thumbnail: throwingAxeImg,
         cost: 500,
         damageType: DAMAGE_TYPES.Normal,
         attackRange: 900,
@@ -19,7 +39,7 @@ export const SPELLS_INFO = {
         name: "Seeker Axe",
         propertyName: "Seeker_Axe",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/normal/Seeker Axe.png",
+        thumbnail: seekerAxeImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Normal,
         attackRange: 600,
@@ -34,7 +54,7 @@ export const SPELLS_INFO = {
         name: "Rifle",
         propertyName: "Rifle",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/normal/Rifle.png",
+        thumbnail: rifleImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Normal,
         attackRange: 900,
@@ -50,7 +70,7 @@ export const SPELLS_INFO = {
         name: "Bow",
         propertyName: "Bow",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/piercing/bow.png",
+        thumbnail: bowImg,
         cost: 500,
         damageType: DAMAGE_TYPES.Piercing,
         attackRange: 900,
@@ -64,7 +84,7 @@ export const SPELLS_INFO = {
         name: "Frost Bow",
         propertyName: "Frost_Bow",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/piercing/Frost Bow.png",
+        thumbnail: frostBowImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Piercing,
         attackRange: 900,
@@ -79,7 +99,7 @@ export const SPELLS_INFO = {
         name: "Fire Bow",
         propertyName: "Fire_Bow",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/piercing/Fire Bow.png",
+        thumbnail: fireBowImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Piercing,
         attackRange: 900,
@@ -95,7 +115,7 @@ export const SPELLS_INFO = {
         name: "Magic Missiles",
         propertyName: "Magic_Missiles",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/magic/Magic Missiles.png",
+        thumbnail: magicMissilesImg,
         cost: 500,
         damageType: DAMAGE_TYPES.Magic,
         attackRange: 900,
@@ -109,7 +129,7 @@ export const SPELLS_INFO = {
         name: "Flamecaster",
         propertyName: "Flamecaster",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/magic/Flamecaster.png",
+        thumbnail: flamecasterImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Magic,
         attackRange: 300,
@@ -124,7 +144,7 @@ export const SPELLS_INFO = {
         name: "Boulder",
         propertyName: "Boulder",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/siege/Boulder.png",
+        thumbnail: boulderImg,
         cost: 500,
         damageType: DAMAGE_TYPES.Siege,
         attackRange: 900,
@@ -138,7 +158,7 @@ export const SPELLS_INFO = {
         name: "Missile Barrage",
         propertyName: "Missile_Barrage",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/siege/Missile Barrage.png",
+        thumbnail: missileBarrageImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Siege,
         attackRange: 1200,
@@ -154,7 +174,7 @@ export const SPELLS_INFO = {
         name: "Chaos Orb",
         propertyName: "Chaos_Orb",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/chaos/Chaos Orb.png",
+        thumbnail: chaosOrbImg,
         cost: 500,
         damageType: DAMAGE_TYPES.Chaos,
         attackRange: 900,
@@ -168,7 +188,7 @@ export const SPELLS_INFO = {
         name: "Chaos Claw",
         propertyName: "Chaos_Claw",
         spellType: "Weapon",
-        thumbnail: "/assets/images/spells/chaos/Chaos Claw.png",
+        thumbnail: chaosClawImg,
         cost: 2000,
         damageType: DAMAGE_TYPES.Chaos,
         attackRange: 600,
@@ -184,7 +204,7 @@ export const SPELLS_INFO = {
     Magic_Coin: {
         name: "Magic Coin",
         propertyName: "Magic_Coin",
-        thumbnail: "/assets/images/spells/upgrades/Magic Coin.png",
+        thumbnail: magicCoinImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 500,
@@ -194,7 +214,7 @@ export const SPELLS_INFO = {
     Bounty_Hunter: {
         name: "Bounty Hunter",
         propertyName: "Bounty_Hunter",
-        thumbnail: "/assets/images/spells/upgrades/Bounty Hunter.png",
+        thumbnail: bountyHunterImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 2000,
@@ -204,7 +224,7 @@ export const SPELLS_INFO = {
     Transmute: {
         name: "Transmute",
         propertyName: "Transmute",
-        thumbnail: "/assets/images/spells/upgrades/Transmute.png",
+        thumbnail: transmuteImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 5000,
@@ -213,7 +233,7 @@ export const SPELLS_INFO = {
     "Philosopher's Stone": {
         name: "Philosopher's Stone",
         propertyName: "Philosopher_Stone",
-        thumbnail: "/assets/images/spells/upgrades/Philosopher's Stone.png",
+        thumbnail: philosopherImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 2000,
@@ -224,7 +244,7 @@ export const SPELLS_INFO = {
     Cursed_Treasure: {
         name: "Cursed Treasure",
         propertyName: "Cursed_Treasure",
-        thumbnail: "/assets/images/spells/upgrades/Cursed Treasure.png",
+        thumbnail: cursedTreasureImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 5000,
@@ -235,7 +255,7 @@ export const SPELLS_INFO = {
     Underground_Gold_Mine: {
         name: "Underground Gold Mine",
         propertyName: "Underground_Gold_Mine",
-        thumbnail: "/assets/images/spells/upgrades/Underground Gold Mine.png",
+        thumbnail: goldMineImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 2000,
@@ -245,7 +265,7 @@ export const SPELLS_INFO = {
     Gems_of_Power: {
         name: "Gems of Power",
         propertyName: "Gems_of_Power",
-        thumbnail: "/assets/images/spells/upgrades/Gems of Power.png",
+        thumbnail: gemsOfPowerImg,
         spellType: "Upgrade",
         upgradeType: "Gold",
         cost: 2000,

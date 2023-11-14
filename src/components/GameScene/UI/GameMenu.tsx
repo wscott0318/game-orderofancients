@@ -3,7 +3,13 @@ import { CustomEase } from "gsap/all";
 import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { GAME_MODES, GAME_STATES } from "../../../constants";
-import { useGame } from "../../../hooks/useGame";
+import loadingBack from "../../../assets/images/loading-back.png";
+import menuBack from "../../../assets/images/menu-back.png";
+import btnBack from "../../../assets/images/button-back-bright.png";
+import playBtn from "../../../assets/images/menuBtns/play.png";
+import multiBtn from "../../../assets/images/menuBtns/multiplayer.png";
+import settingBtn from "../../../assets/images/menuBtns/settings.png";
+import traniningBtn from "../../../assets/images/menuBtns/tranining.png";
 
 const FadeIn = keyframes`
     from {
@@ -27,7 +33,7 @@ const FadeOut = keyframes`
 
 const GameMenu = styled.div`
     z-index: 20;
-    background-image: url("/assets/images/loading-back.png");
+    background-image: url(${loadingBack});
     background-size: cover;
     background-position: center;
     animation: 2s alternate ${FadeIn};
@@ -39,7 +45,7 @@ const GameMenu = styled.div`
     .menu {
         display: flex;
         flex-direction: column;
-        background-image: url("/assets/images/menu-back.png");
+        background-image: url(${menuBack});
         background-size: 100% 100%;
         align-items: center;
 
@@ -57,7 +63,7 @@ const GameMenu = styled.div`
     }
     .warButton {
         cursor: url("../assets/imgs/gameCursor.png") !important;
-        background-image: url("/assets/images/button-back-bright.png");
+        background-image: url(${btnBack});
         background-size: contain;
         background-repeat: no-repeat;
         background-size: cover;
@@ -69,19 +75,19 @@ const GameMenu = styled.div`
         user-select: none;
 
         &.menuPlay {
-            background-image: url("/assets/images/menuBtns/play.png");
+            background-image: url(${playBtn});
         }
 
         &.menuMultiplayer {
-            background-image: url("/assets/images/menuBtns/multiplayer.png");
+            background-image: url(${multiBtn});
         }
 
         &.menuSetting {
-            background-image: url("/assets/images/menuBtns/settings.png");
+            background-image: url(${settingBtn});
         }
 
         &.menuTraining {
-            background-image: url("/assets/images/menuBtns/tranining.png");
+            background-image: url(${traniningBtn});
         }
     }
 `;

@@ -3,6 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
 import { ARMOR_TYPES_TEXT, DAMAGE_TYPES_TEXT } from "../../../../constants";
+import spellsBack from "../../../../assets/images/gameui-spells-back.png";
+import mapBack from "../../../../assets/images/map-back.png";
+import profile from "../../../../assets/images/profile.png";
+import coin from "../../../../assets/images/coin.png";
+import profileBack from "../../../../assets/images/profile-name-back.png";
+import blackImg from "../../../../assets/images/black.png";
+import spellSlider from "../../../../assets/images/spell-slider.png";
 
 const GamePlay = styled.div`
     position: fixed;
@@ -14,7 +21,7 @@ const GamePlay = styled.div`
 
     .back {
         pointer-events: all;
-        background-image: url("/assets/images/gameui-spells-back.png");
+        background-image: url(${spellsBack});
         background-size: 100% 100%;
         left: 50vw;
         transform: translateX(-50%);
@@ -76,7 +83,7 @@ const GamePlay = styled.div`
             }
 
             .name{
-                background-image: url("assets/images/profile-name-back.png");
+                background-image: url(${profileBack});
                 background-size: 100% 100%;
                 background-repeat: no-repeat;
             }
@@ -235,7 +242,7 @@ const GamePlay = styled.div`
     .map {
         pointer-events: all;
         position: absolute;
-        background-image: url("/assets/images/map-back.png");
+        background-image: url(${mapBack});
         width: 24vw;
         height: 13vw;
         background-size: 100% 100%;
@@ -380,7 +387,7 @@ const TimeBar = styled.div`
     top: 0;
     height: 100%;
     width: 100%;
-    background-image: url("assets/images/spell-slider.png");
+    background-image: url(${spellSlider});
     background-size: auto 100%;
     transition: all 1s;
 `;
@@ -395,21 +402,6 @@ export const Desktop = ({
 }: any) => {
     const playerDivRef = useRef<HTMLDivElement>(null);
     const switchPlayerShow = () => {
-        // if (playerDivRef.current) {
-        //     const playerDiv = playerDivRef.current;
-
-        //     if (playerShow) {
-        //         gsap.to(playerDiv, {
-        //             transform: "ScaleY(0)",
-        //             duration: 0.5,
-        //         });
-        //     } else {
-        //         gsap.to(playerDiv, {
-        //             transform: "ScaleY(1)",
-        //             duration: 0.5,
-        //         });
-        //     }
-        // }
         setPlayerShow(!playerShow);
     };
     const gameMenuFadeInAnim = gsap.timeline();
@@ -449,7 +441,7 @@ export const Desktop = ({
                                     {/* <YellowBoldFont>Q</YellowBoldFont> */}
                                 </span>
                                 <div className="price">
-                                    <img src="/assets/images/coin.png"></img>
+                                    <img src={coin}></img>
                                     <YellowBoldFont>
                                         {hoveredSpell.cost}
                                     </YellowBoldFont>
@@ -577,9 +569,7 @@ export const Desktop = ({
                                           >
                                               <img
                                                   width={"90%"}
-                                                  src={
-                                                      "assets/images/black.png"
-                                                  }
+                                                  src={blackImg}
                                               ></img>
                                           </div>
                                       )
@@ -588,10 +578,7 @@ export const Desktop = ({
 
                     <div className="profile-data w-[78%] flex flex-col gap-[2%]">
                         <div className="h-[70%]">
-                            <img
-                                className="rounded"
-                                src="/assets/images/profile.png"
-                            ></img>
+                            <img className="rounded" src={profile}></img>
                         </div>
                         <div className="name roundfont profileFont h-[28%] flex flex-col items-center justify-evenly">
                             <p className="text-white">Jacky555</p>
@@ -630,18 +617,7 @@ export const Desktop = ({
                             </span>
                         </div>
                     </div>
-                    <div className="relative h-[30%] w-[60%] flex flex-row statusFont_small gap-[30%] left-[50%] translate-x-[-50%]">
-                        {/* <div className="flex flex-col w-[50%] justify-center items-centers text-start ">
-                            <span className="text-white">Armor:</span>
-                            <span className="text-white">Damage:</span>
-                            <span className="text-white">Range: </span>
-                        </div>
-                        <div className="flex flex-col w-[50%] justify-center items-centers text-start ">
-                            <span className="text-[#e9e502]"> 10</span>
-                            <span className="text-[#e9e502]"> 100</span>
-                            <span className="text-[#e9e502]"> 20</span>
-                        </div> */}
-                    </div>
+                    <div className="relative h-[30%] w-[60%] flex flex-row statusFont_small gap-[30%] left-[50%] translate-x-[-50%]"></div>
                     <div className="h-[30%] flex items-center">
                         <div
                             className="gold w-[100%] h-[80%] flex justify-center items-center"
@@ -653,7 +629,7 @@ export const Desktop = ({
                             }}
                         >
                             <img
-                                src="/assets/images/coin.png"
+                                src={coin}
                                 className="h-[60%]"
                                 style={{ marginRight: "10%" }}
                             ></img>

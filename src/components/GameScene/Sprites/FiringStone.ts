@@ -1,6 +1,9 @@
 import * as THREE from "three";
 import { SceneRenderer } from "../rendering/SceneRenderer";
-import { cleanMaterial, disposeMesh } from "../../../helper/three";
+import { disposeMesh } from "../../../helper/three";
+import noiseImg from "../../../assets/textures/noise9.jpg";
+import sparkNoiseImg from "../../../assets/textures/sparklenoise.jpg";
+import waterImg from "../../../assets/textures/water-min.jpg";
 
 const vert = `
     varying vec3 vNormal;
@@ -231,11 +234,9 @@ const width = window.innerWidth,
     height = window.innerHeight;
 
 const textures = {
-    noise: new THREE.TextureLoader().load("/assets/textures/noise9.jpg"),
-    sparkleNoise: new THREE.TextureLoader().load(
-        "/assets/textures/sparklenoise.jpg"
-    ),
-    waterMin: new THREE.TextureLoader().load("/assets/textures/water-min.jpg"),
+    noise: new THREE.TextureLoader().load(noiseImg),
+    sparkleNoise: new THREE.TextureLoader().load(sparkNoiseImg),
+    waterMin: new THREE.TextureLoader().load(waterImg),
 };
 
 export class FiringStone {

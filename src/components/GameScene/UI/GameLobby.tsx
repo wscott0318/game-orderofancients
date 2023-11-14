@@ -5,10 +5,14 @@ import { SOCKET_EVENTS } from "../../../constants/socket";
 import { useGame } from "../../../hooks/useGame";
 import { GAME_STATES } from "../../../constants";
 import { LobbyInfo, useGameContext } from "../../../contexts/game-context";
+import backImg from "../../../assets/images/loading-back.png";
+import lobbyBackImg from "../../../assets/images/lobby-back.png";
+import playerAvatar from "../../../assets/users/jack.png";
+import exitBtnImg from "../../../assets/images/buttons/exit-inactive.png";
 
 const Wrapper = styled.div`
     z-index: 20;
-    background-image: url("/assets/images/loading-back.png");
+    background-image: url(${backImg});
     background-size: cover;
     background-position: center;
 `;
@@ -63,11 +67,7 @@ const GameLobby = ({ startLobbyGame }: GameLobbyProps) => {
     return (
         <Wrapper className="w-full h-full flex justify-center items-center">
             <div className="relative w-[800px]">
-                <img
-                    className="w-full"
-                    alt="pic"
-                    src="/assets/images/lobby-back.png"
-                />
+                <img className="w-full" alt="pic" src={lobbyBackImg} />
 
                 <ContentWrapper className="absolute top-0 left-0">
                     <div className="w-full h-full text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
@@ -95,7 +95,7 @@ const GameLobby = ({ startLobbyGame }: GameLobbyProps) => {
                                         <div className="w-[50%] flex items-center gap-[20%]">
                                             <img
                                                 width={40}
-                                                src={"/assets/users/jack.png"}
+                                                src={playerAvatar}
                                             />
                                             <span>{`Player#${index + 1}`}</span>
                                         </div>
@@ -116,10 +116,7 @@ const GameLobby = ({ startLobbyGame }: GameLobbyProps) => {
                             className="relative flex justify-center items-center w-[170px]"
                             onClick={onExit}
                         >
-                            <img
-                                alt="pic"
-                                src="/assets/images/buttons/exit-inactive.png"
-                            />
+                            <img alt="pic" src={exitBtnImg} />
                         </button>
                     </div>
                 </ContentWrapper>
