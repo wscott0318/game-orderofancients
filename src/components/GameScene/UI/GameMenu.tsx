@@ -2,14 +2,15 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect, useRef, useState } from "react";
 import styled, { keyframes } from "styled-components";
-import { GAME_MODES, GAME_STATES } from "../../../constants";
-import loadingBack from "../../../assets/images/loading-back.png";
-import menuBack from "../../../assets/images/menu-back.png";
-import btnBack from "../../../assets/images/button-back-bright.png";
-import playBtn from "../../../assets/images/menuBtns/play.png";
-import multiBtn from "../../../assets/images/menuBtns/multiplayer.png";
-import settingBtn from "../../../assets/images/menuBtns/settings.png";
-import traniningBtn from "../../../assets/images/menuBtns/tranining.png";
+import { GAME_MODES, GAME_STATES, S3_BUCKET_URL } from "../../../constants";
+
+const loadingBack = S3_BUCKET_URL + "/assets/images/loading-back.png";
+const menuBack = S3_BUCKET_URL + "/assets/images/menu-back.png";
+const btnBack = S3_BUCKET_URL + "/assets/images/button-back-bright.png";
+const playBtn = S3_BUCKET_URL + "/assets/images/menuBtns/play.png";
+const multiBtn = S3_BUCKET_URL + "/assets/images/menuBtns/multiplayer.png";
+const settingBtn = S3_BUCKET_URL + "/assets/images/menuBtns/settings.png";
+const traniningBtn = S3_BUCKET_URL + "/assets/images/menuBtns/tranining.png";
 
 const FadeIn = keyframes`
     from {

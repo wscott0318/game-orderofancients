@@ -3,12 +3,13 @@ import { useSocket } from "../../../hooks/useSocket";
 import { useEffect } from "react";
 import { SOCKET_EVENTS } from "../../../constants/socket";
 import { useGame } from "../../../hooks/useGame";
-import { GAME_STATES } from "../../../constants";
+import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
 import { LobbyInfo, useGameContext } from "../../../contexts/game-context";
-import backImg from "../../../assets/images/loading-back.png";
-import lobbyBackImg from "../../../assets/images/lobby-back.png";
-import playerAvatar from "../../../assets/users/jack.png";
-import exitBtnImg from "../../../assets/images/buttons/exit-inactive.png";
+
+const backImg = S3_BUCKET_URL + "/assets/images/loading-back.png";
+const lobbyBackImg = S3_BUCKET_URL + "/assets/images/lobby-back.png";
+const playerAvatar = S3_BUCKET_URL + "/assets/users/jack.png";
+const exitBtnImg = S3_BUCKET_URL + "/assets/images/buttons/exit-inactive.png";
 
 const Wrapper = styled.div`
     z-index: 20;

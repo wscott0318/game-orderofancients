@@ -1,9 +1,11 @@
 import * as THREE from "three";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import { disposeMesh } from "../../../helper/three";
-import noiseImg from "../../../assets/textures/noise9.jpg";
-import sparkNoiseImg from "../../../assets/textures/sparklenoise.jpg";
-import waterImg from "../../../assets/textures/water-min.jpg";
+import { S3_BUCKET_URL } from "../../../constants";
+
+const noiseImg = S3_BUCKET_URL + "/assets/textures/noise9.jpg";
+const sparkNoiseImg = S3_BUCKET_URL + "/assets/textures/sparklenoise.jpg";
+const waterImg = S3_BUCKET_URL + "/assets/textures/water-min.jpg";
 
 const vert = `
     varying vec3 vNormal;

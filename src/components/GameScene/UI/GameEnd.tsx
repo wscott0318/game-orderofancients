@@ -4,13 +4,15 @@ import Fireworks from "@fireworks-js/react";
 import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
 import { useGame } from "../../../hooks/useGame";
-import playerImg1 from "../../../assets/users/jack.png";
-import playerImg2 from "../../../assets/users/2.png";
-import playerImg3 from "../../../assets/users/3.png";
-import extBtnImg from "../../../assets/images/buttons/exit_btn.png";
-import anotherBtnImg from "../../../assets/images/buttons/another_btn.png";
-import victoryImg from "../../../assets/images/victory-logo.png";
-import defeatImg from "../../../assets/images/defeat-logo.png";
+import { S3_BUCKET_URL } from "../../../constants";
+
+const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
+const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
+const playerImg3 = S3_BUCKET_URL + "/assets/users/3.png";
+const extBtnImg = S3_BUCKET_URL + "/assets/images/buttons/exit_btn.png";
+const anotherBtnImg = S3_BUCKET_URL + "/assets/images/buttons/another_btn.png";
+const victoryImg = S3_BUCKET_URL + "/assets/images/victory-logo.png";
+const defeatImg = S3_BUCKET_URL + "/assets/images/defeat-logo.png";
 
 const GameEnd = styled.div`
     position: absolute;

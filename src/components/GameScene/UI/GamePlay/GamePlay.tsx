@@ -9,9 +9,11 @@ import { useGame } from "../../../../hooks/useGame";
 import { useGameContext } from "../../../../contexts/game-context";
 import { useSocket } from "../../../../hooks/useSocket";
 import { SOCKET_EVENTS } from "../../../../constants/socket";
-import playerImg1 from "../../../../assets/users/jack.png";
-import playerImg2 from "../../../../assets/users/2.png";
-import playerImg3 from "../../../../assets/users/3.png";
+import { S3_BUCKET_URL } from "../../../../constants";
+
+const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
+const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
+const playerImg3 = S3_BUCKET_URL + "/assets/users/3.png";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);

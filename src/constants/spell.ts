@@ -1,24 +1,39 @@
-import { ARMOR_TYPES, DAMAGE_TYPES } from ".";
+import { ARMOR_TYPES, DAMAGE_TYPES, S3_BUCKET_URL } from ".";
 
-import throwingAxeImg from "../assets/images/spells/normal/throwingAxes.png";
-import seekerAxeImg from "../assets/images/spells/normal/Seeker Axe.png";
-import rifleImg from "../assets/images/spells/normal/Rifle.png";
-import bowImg from "../assets/images/spells/piercing/bow.png";
-import frostBowImg from "../assets/images/spells/piercing/Frost Bow.png";
-import fireBowImg from "../assets/images/spells/piercing/Fire Bow.png";
-import magicMissilesImg from "../assets/images/spells/magic/Magic Missiles.png";
-import flamecasterImg from "../assets/images/spells/magic/Flamecaster.png";
-import boulderImg from "../assets/images/spells/siege/Boulder.png";
-import missileBarrageImg from "../assets/images/spells/siege/Missile Barrage.png";
-import chaosOrbImg from "../assets/images/spells/chaos/Chaos Orb.png";
-import chaosClawImg from "../assets/images/spells/chaos/Chaos Claw.png";
-import magicCoinImg from "../assets/images/spells/upgrades/Magic Coin.png";
-import bountyHunterImg from "../assets/images/spells/upgrades/Bounty Hunter.png";
-import transmuteImg from "../assets/images/spells/upgrades/Transmute.png";
-import philosopherImg from "../assets/images/spells/upgrades/Philosopher's Stone.png";
-import cursedTreasureImg from "../assets/images/spells/upgrades/Cursed Treasure.png";
-import goldMineImg from "../assets/images/spells/upgrades/Underground Gold Mine.png";
-import gemsOfPowerImg from "../assets/images/spells/upgrades/Gems of Power.png";
+const throwingAxeImg =
+    S3_BUCKET_URL + "/assets/images/spells/normal/throwingAxes.png";
+const seekerAxeImg =
+    S3_BUCKET_URL + "/assets/images/spells/normal/Seeker Axe.png";
+const rifleImg = S3_BUCKET_URL + "/assets/images/spells/normal/Rifle.png";
+const bowImg = S3_BUCKET_URL + "/assets/images/spells/piercing/bow.png";
+const frostBowImg =
+    S3_BUCKET_URL + "/assets/images/spells/piercing/Frost Bow.png";
+const fireBowImg =
+    S3_BUCKET_URL + "/assets/images/spells/piercing/Fire Bow.png";
+const magicMissilesImg =
+    S3_BUCKET_URL + "/assets/images/spells/magic/Magic Missiles.png";
+const flamecasterImg =
+    S3_BUCKET_URL + "/assets/images/spells/magic/Flamecaster.png";
+const boulderImg = S3_BUCKET_URL + "/assets/images/spells/siege/Boulder.png";
+const missileBarrageImg =
+    S3_BUCKET_URL + "/assets/images/spells/siege/Missile Barrage.png";
+const chaosOrbImg = S3_BUCKET_URL + "/assets/images/spells/chaos/Chaos Orb.png";
+const chaosClawImg =
+    S3_BUCKET_URL + "/assets/images/spells/chaos/Chaos Claw.png";
+const magicCoinImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Magic Coin.png";
+const bountyHunterImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Bounty Hunter.png";
+const transmuteImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Transmute.png";
+const philosopherImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Philosopher's Stone.png";
+const cursedTreasureImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Cursed Treasure.png";
+const goldMineImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Underground Gold Mine.png";
+const gemsOfPowerImg =
+    S3_BUCKET_URL + "/assets/images/spells/upgrades/Gems of Power.png";
 
 export const SPELLS_INFO = {
     "Throwing Axes": {

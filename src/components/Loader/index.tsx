@@ -4,9 +4,11 @@ import "./firefly.scss";
 import { PlayerData } from "../../constants/gameUI";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
-import avatarImg from "../../assets/users/jack.png";
-import logoImg from "../../assets/images/loading_logo.png";
-import sliderImg from "../../assets/images/loader-slider-shine.png";
+import { S3_BUCKET_URL } from "../../constants";
+
+const avatarImg = S3_BUCKET_URL + "/assets/users/jack.png";
+const logoImg = S3_BUCKET_URL + "/assets/images/loading_logo.png";
+const sliderImg = S3_BUCKET_URL + "/assets/images/loader-slider-shine.png";
 
 const playerInfo = [
     {
