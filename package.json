@@ -22,7 +22,7 @@
     "@vercel/analytics": "^1.0.2",
     "autoprefixer": "^10.4.7",
     "graphql": "^16.8.0",
-    "gsap": "^3.11.5",
+    "gsap": "^3.12.2",
     "immer": "^9.0.15",
     "postcss": "^8.4.14",
     "postcss-cli": "^9.1.0",
