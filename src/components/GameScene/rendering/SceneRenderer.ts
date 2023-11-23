@@ -152,8 +152,6 @@ export class SceneRenderer {
         gridHelper.position.y = 0.01;
 
         this._gridHelper = gridHelper;
-
-        // this.addGrid();
     }
 
     onResize() {

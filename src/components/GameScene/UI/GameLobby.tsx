@@ -25,38 +25,14 @@ const ContentWrapper = styled.div`
     height: 60%;
 `;
 
-interface GameLobbyProps {
-    startLobbyGame: () => void;
-}
-
-const GameLobby = ({ startLobbyGame }: GameLobbyProps) => {
+const GameLobby = () => {
     const { socket } = useSocket();
 
     const { setGameState } = useGame();
-    const { lobbyInfo, setLobbyInfo } = useGameContext();
-
-    const receiveLobbyData = (lobby: LobbyInfo) => {
-        setLobbyInfo(lobby);
-    };
-
-    const startGame = (lobby: LobbyInfo) => {
-        setLobbyInfo(lobby);
-
-        setTimeout(() => {
-            startLobbyGame();
-        }, 500);
-    };
+    const { lobbyInfo } = useGameContext();
 
     useEffect(() => {
         socket?.emit(SOCKET_EVENTS.JOIN);
-
-        socket?.on(SOCKET_EVENTS.LOBBY_DATA, receiveLobbyData);
-        socket?.on(SOCKET_EVENTS.START_GAME, startGame);
-
-        return () => {
-            socket?.off(SOCKET_EVENTS.LOBBY_DATA, receiveLobbyData);
-            socket?.off(SOCKET_EVENTS.START_GAME, startGame);
-        };
     }, []);
 
     const onExit = () => {

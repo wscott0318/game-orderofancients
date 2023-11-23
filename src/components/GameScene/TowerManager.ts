@@ -86,12 +86,8 @@ export class TowerManager {
     }
 
     levelUp() {
-        this.level++;
-
         const element = document.getElementById("gameLevel");
-        if (element) {
-            element.textContent = `Level ${this.level}`;
-        }
+        if (element) element.textContent = `Level ${this.level}`;
 
         // visual effect
         const newVector = new THREE.Vector3(
@@ -176,18 +172,6 @@ export class TowerManager {
     }
 
     tick() {
-        const sacrificeAmount = 15;
-
-        if (this.sacrificeHP > 0) {
-            if (this.sacrificeHP < sacrificeAmount) {
-                this.hp -= this.sacrificeHP;
-                this.sacrificeHP = 0;
-            } else {
-                this.hp -= sacrificeAmount;
-                this.sacrificeHP -= sacrificeAmount;
-            }
-        }
-
         if (this.hp <= 0) {
             this.isDead = true;
 

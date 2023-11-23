@@ -1,6 +1,4 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { FOREST_RADIUS } from "../../../constants";
-import { ANG2RAD } from "../../../helper/math";
 import { BotAnimationController } from "../BotAnimationController";
 import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
@@ -17,7 +15,6 @@ import AssetsManager from "../AssetsManager";
 import { createToonProjectile } from "../Particles/ToonProjectile";
 
 export class Bot {
-    clock: THREE.Clock;
     uuid: string;
     hp: number;
     maxHp: number;
@@ -31,7 +28,6 @@ export class Bot {
     assetsManager: AssetsManager;
     scene: THREE.Scene;
     attackRange: number;
-    direction: THREE.Vector3;
     targetPos: THREE.Vector3;
     status: number;
     oldStatus: number;
@@ -53,7 +49,6 @@ export class Bot {
 
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
-        this.clock = new THREE.Clock();
         this.uuid = generateUUID();
         this.hp = BOT_PROPS.healthPoint[botType];
         this.maxHp = BOT_PROPS.healthPoint[botType];
@@ -75,7 +70,6 @@ export class Bot {
         });
         this.scene = sceneRenderer.getScene();
         this.camera = sceneRenderer.getCamera();
-        this.direction = new THREE.Vector3();
         this.targetPos = new THREE.Vector3(
             TOWER_POSITIONS[towerIndex].x,
             TOWER_POSITIONS[towerIndex].y,
@@ -107,50 +101,14 @@ export class Bot {
     }
 
     initialize() {
-        const angle = THREE.MathUtils.randInt(0, 360);
-        const distance = FOREST_RADIUS;
-
-        this.position.x =
-            TOWER_POSITIONS[this.towerIndex].x -
-            Math.cos(ANG2RAD(angle)) * distance;
-        this.position.z =
-            TOWER_POSITIONS[this.towerIndex].z -
-            Math.sin(ANG2RAD(angle)) * distance;
+        this.position.y = -1000;
 
         this.mesh.scale.x = 0.01;
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        this.mesh.position.x = this.position.x;
-        this.mesh.position.y = this.position.y;
-        this.mesh.position.z = this.position.z;
-
         this.scene.add(this.healthBarUI);
         this.scene.add(this.mesh);
-
-        /**
-         * Direction Vector
-         */
-
-        const curPos = new THREE.Vector3(
-            this.position.x,
-            this.position.y,
-            this.position.z
-        );
-
-        this.direction.subVectors(this.targetPos, curPos).normalize();
-
-        /**
-         * Rotate object to target position
-         */
-
-        const rotationMatrix = new THREE.Matrix4();
-        rotationMatrix.lookAt(this.targetPos, curPos, this.mesh.up);
-
-        const targetQuaternion = new THREE.Quaternion();
-        targetQuaternion.setFromRotationMatrix(rotationMatrix);
-
-        this.mesh.quaternion.rotateTowards(targetQuaternion, 10);
     }
 
     disposeHealthBar() {
@@ -188,9 +146,7 @@ export class Bot {
         this.status = BOT_STATUS["dead"];
 
         this.disposeHealthBar();
-
         this.disposeStunMesh();
-
         this.disposeFireMesh();
 
         const tweenAnimation = new TWEEN.Tween(this.mesh.position)
@@ -212,7 +168,7 @@ export class Bot {
         });
     }
 
-    stun(duration: number) {
+    stun() {
         if (!this.stunMesh) {
             const particle = createStun(
                 this.sceneRenderer._particleRenderer,
@@ -236,18 +192,10 @@ export class Bot {
             });
         }
 
-        if (this.status !== BOT_STATUS.stun) this.oldStatus = this.status;
-
-        this.status = BOT_STATUS.stun;
-
-        this.stunTime = duration;
-
         this.animController.stopAnimation();
     }
 
-    slow(duration: number) {
-        this.slowTime = duration;
-
+    slow() {
         this.mesh.traverse((obj: any) => {
             if (obj.isMesh || obj.isSkinnedMesh) {
                 const material = obj.material.clone();
@@ -258,8 +206,7 @@ export class Bot {
         });
     }
 
-    fire(duration: number) {
-        this.fireTime = duration;
+    fire() {
         if (!this.fireMesh) {
             const particle = createToonProjectile(
                 this.sceneRenderer._particleRenderer,
@@ -277,11 +224,11 @@ export class Bot {
     }
 
     tick() {
-        const delta = this.clock.getDelta();
+        this.mesh.position.x = this.position.x;
+        this.mesh.position.y = this.position.y;
+        this.mesh.position.z = this.position.z;
 
         if (this.status === BOT_STATUS["stun"]) {
-            this.stunTime -= delta;
-
             if (this.stunTime < 0) {
                 this.disposeStunMesh();
                 this.stunMesh = null;
@@ -301,8 +248,6 @@ export class Bot {
         }
 
         if (this.slowTime > 0) {
-            this.slowTime -= delta;
-
             if (this.slowTime <= 0) {
                 this.slowTime = 0;
 
@@ -317,8 +262,6 @@ export class Bot {
         }
 
         if (this.fireTime > 0) {
-            this.fireTime -= delta;
-
             if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
                 this.fireMesh.position.y =
@@ -329,13 +272,10 @@ export class Bot {
 
             if (this.fireTime <= 0) {
                 this.fireTime = 0;
-
                 this.disposeFireMesh();
                 this.fireMesh = null;
             }
         }
-
-        if (this.claimTime > 0) this.claimTime--;
 
         const distance = this.mesh.position.distanceTo(this.targetPos);
 
@@ -344,16 +284,23 @@ export class Bot {
                 this.animController.playAnimation(ANIMATION_TYPE["attack"]);
                 this.status = BOT_STATUS["attack"];
             }
-
-            const target = new THREE.Vector3(
-                this.mesh.position.x + this.direction.x * this.speed,
-                0,
-                this.mesh.position.z + this.direction.z * this.speed
-            );
-
-            const speedValue = this.slowTime > 0 ? 0.3 : 0.7;
-            this.mesh.position.lerp(target, speedValue);
         }
+
+        /**
+         * Rotate object to target position
+         */
+        const curPos = new THREE.Vector3(
+            this.position.x,
+            this.position.y,
+            this.position.z
+        );
+
+        const rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.lookAt(this.targetPos, curPos, this.mesh.up);
+
+        const targetQuaternion = new THREE.Quaternion();
+        targetQuaternion.setFromRotationMatrix(rotationMatrix);
+        this.mesh.quaternion.rotateTowards(targetQuaternion, 10);
 
         /**
          * Configure HealthBar UI

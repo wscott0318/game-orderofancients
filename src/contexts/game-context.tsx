@@ -1,12 +1,13 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { GAME_MODES, GAME_STATES } from "../constants";
-import { generateUpgrades } from "../helper/game";
 import AssetsManager from "../components/GameScene/AssetsManager";
 import { Game } from "../components/GameScene/game";
 import { Socket } from "socket.io-client";
+import { spell } from "../constants/spell";
 
 export interface PlayerInfo {
     socketId: string;
+    upgrades: spell[];
 }
 
 export interface LobbyInfo {
@@ -45,7 +46,7 @@ export const initialContext: GameContextProps = {
     setLoading: () => {},
     currentGameState: GAME_STATES.NONE,
     setCurrentGameSate: () => {},
-    upgrades: generateUpgrades(),
+    upgrades: [],
     setUpgrades: () => {},
     gameMode: GAME_MODES.Single,
     setGameMode: () => {},

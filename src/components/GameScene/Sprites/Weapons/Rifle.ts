@@ -67,7 +67,7 @@ export class Rifle {
 
         this.sceneRenderer.getScene().add(particle);
 
-        this.targetBot.stun(SPELLS_INFO["Rifle"].stunDuration);
+        // this.targetBot.stun(SPELLS_INFO["Rifle"].stunDuration);
     }
 
     dispose() {

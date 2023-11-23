@@ -44,7 +44,6 @@ export class Game {
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
         this._lobbyInfo = options.lobbyInfo;
-
         this._stateManager = new StateManager({
             setCurrentGameSate: options.setCurrentGameSate,
         });
@@ -72,30 +71,17 @@ export class Game {
         this._collisionManagerArray = [];
         this._timeManagerArray = [];
 
-        if (this._gameMode === GAME_MODES.Single) {
-            this._towerManagerArray = [
+        for (let i = 0; i < this._lobbyInfo?.players.length; i++) {
+            this._towerManagerArray.push(
                 new TowerManager({
                     sceneRenderer: this._sceneRenderer,
                     assetsManager: this._assetsManager,
                     stateManager: this._stateManager,
                     particleEffect: this._particleEffect,
                     playerIndex: this._playerIndex,
-                    index: 0,
-                }),
-            ];
-        } else {
-            for (let i = 0; i < this._lobbyInfo?.players.length; i++) {
-                this._towerManagerArray.push(
-                    new TowerManager({
-                        sceneRenderer: this._sceneRenderer,
-                        assetsManager: this._assetsManager,
-                        stateManager: this._stateManager,
-                        particleEffect: this._particleEffect,
-                        playerIndex: this._playerIndex,
-                        index: i,
-                    })
-                );
-            }
+                    index: i,
+                })
+            );
         }
 
         for (let i = 0; i < this._towerManagerArray.length; i++) {
@@ -132,7 +118,6 @@ export class Game {
                     towerManager: this._towerManagerArray[i],
                     sceneRenderer: this._sceneRenderer,
                     spriteManager: this._spriteManager,
-                    setUpgrades: options.setUpgrades,
                 })
             );
         }

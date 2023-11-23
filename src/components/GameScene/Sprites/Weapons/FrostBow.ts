@@ -68,7 +68,7 @@ export class FrostBow {
     }
 
     addCollisionEffect() {
-        this.targetBot.slow(SPELLS_INFO["Frost_Bow"].slowTime);
+        // this.targetBot.slow(SPELLS_INFO["Frost_Bow"].slowTime);
     }
 
     dispose() {

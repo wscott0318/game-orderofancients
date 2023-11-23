@@ -73,16 +73,12 @@ export class FireBow {
         //     this.sceneRenderer._particleRenderer,
         //     this.assetsManager._particleTextures
         // );
-
         // particle.position.x = this.mesh.position.x;
         // particle.position.y = this.mesh.position.y;
         // particle.position.z = this.mesh.position.z;
-
         // particle.scale.set(1.5, 1.5, 1.5);
-
         // this.sceneRenderer.getScene().add(particle);
-
-        this.targetBot.fire(SPELLS_INFO['Fire_Bow'].duration);
+        // this.targetBot.fire(SPELLS_INFO['Fire_Bow'].duration);
     }
 
     dispose() {
