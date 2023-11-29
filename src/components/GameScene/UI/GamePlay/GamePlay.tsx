@@ -68,7 +68,7 @@ const GamePlayUI = () => {
         const playerIndex = lobbyInfo?.players.findIndex(
             (player) => player.socketId === socket?.id
         );
-        if (!playerIndex || playerIndex === -1) return;
+        if (playerIndex === undefined || playerIndex === -1) return;
 
         const playerState = gameRef.current!._playerStateArray[playerIndex];
         const gold_balance = playerState.gold;

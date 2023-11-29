@@ -49,7 +49,6 @@ export class Game {
         this._assetsManager = options.assetsManager;
         this._sceneRenderer = new SceneRenderer({
             playerIndex: this._playerIndex,
-            gameMode: this._gameMode,
             lobbyInfo: this._lobbyInfo,
         });
         this._envRenderer = new Environment({
