@@ -1,6 +1,5 @@
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
-import { CollisionManager } from "./CollisionManager";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { TowerManager } from "./TowerManager";
@@ -30,7 +29,6 @@ export class Game {
     _towerManagerArray: TowerManager[];
     _botManagerArray: BotManager[];
     _spriteManager: SpriteManager;
-    _collisionManagerArray: CollisionManager[];
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
     _stateManager: StateManager;
@@ -63,12 +61,14 @@ export class Game {
             assetsManager: this._assetsManager,
         });
 
-        this._spriteManager = new SpriteManager();
+        this._spriteManager = new SpriteManager({
+            sceneRenderer: this._sceneRenderer,
+            assetsManager: this._assetsManager,
+        });
 
         this._towerManagerArray = [];
         this._botManagerArray = [];
         this._playerStateArray = [];
-        this._collisionManagerArray = [];
         this._timeManagerArray = [];
 
         for (let i = 0; i < this._lobbyInfo?.players.length; i++) {
@@ -97,18 +97,6 @@ export class Game {
                 new PlayerState({
                     index: i,
                     playerIndex: this._playerIndex,
-                })
-            );
-
-            this._collisionManagerArray.push(
-                new CollisionManager({
-                    sceneRenderer: this._sceneRenderer,
-                    towerManager: this._towerManagerArray[i],
-                    botManager: this._botManagerArray[i],
-                    spriteManager: this._spriteManager,
-                    particleEffect: this._particleEffect,
-                    playerState: this._playerStateArray[i],
-                    assetsManager: this._assetsManager,
                 })
             );
 
@@ -145,7 +133,6 @@ export class Game {
                 if (!this._towerManagerArray[i].isDead) {
                     this._towerManagerArray[i].tick();
                     this._botManagerArray[i].tick();
-                    this._collisionManagerArray[i].tick();
                     this._timeManagerArray[i].tick();
                 } else {
                     if (this._botManagerArray[i].botArray.length > 0) {

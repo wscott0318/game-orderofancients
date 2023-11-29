@@ -1,6 +1,13 @@
 import { useEffect } from "react";
 import { useSocket } from "../../hooks/useSocket";
-import { BotStatus, TimerStatus, TowerStatus } from "../../constants/type";
+import {
+    BotStatus,
+    NewSpriteInfo,
+    NewTextSpriteInfo,
+    SpriteStatus,
+    TimerStatus,
+    TowerStatus,
+} from "../../constants/type";
 import { useGame } from "../../hooks/useGame";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import {
@@ -65,6 +72,12 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
     };
 
     const onReceiveBotStatus = (botStatusData: BotStatus[][]) => {
+        if (
+            gameRef.current?._botManagerArray[0].botArray.length !==
+            botStatusData[0].length
+        )
+            console.error("unsynce bot data");
+
         for (let i = 0; i < botStatusData.length; i++) {
             for (let j = 0; j < botStatusData[i].length; j++) {
                 const bot = gameRef.current?._botManagerArray[i].botArray[
@@ -96,6 +109,81 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
         gameRef.current?._timeManagerArray[playerIndex].tickRound();
     };
 
+    const onAddSprite = (newSpriteInfo: NewSpriteInfo) => {
+        gameRef.current?._spriteManager.addSpriteFrom(newSpriteInfo);
+    };
+
+    const onAddTextSprite = (newTextSpriteInfo: NewTextSpriteInfo) => {
+        gameRef.current?._spriteManager.addTextSpriteFrom(newTextSpriteInfo);
+    };
+
+    const onAddSpriteCollisionEffect = (spriteIndex: number) => {
+        gameRef.current?._spriteManager.spriteArray[
+            spriteIndex
+        ].addCollisionEffect();
+    };
+
+    const onDisposeSprite = (removeSpriteArray: number[]) => {
+        const spriteArray = gameRef.current?._spriteManager.spriteArray;
+        const newArray = [];
+
+        for (let i = 0; i < spriteArray.length; i++) {
+            const index = removeSpriteArray.findIndex(
+                (removeIndex: number) => removeIndex === i
+            );
+
+            if (index === -1) newArray.push(spriteArray[i]);
+            else spriteArray[i].dispose();
+        }
+
+        (gameRef.current?._spriteManager as any).spriteArray = newArray;
+    };
+
+    const onReceiveSpriteStatus = (spriteStatusData: SpriteStatus[]) => {
+        const spriteArray = gameRef.current?._spriteManager.spriteArray;
+
+        if (spriteArray.length !== spriteStatusData.length)
+            console.error("sprite sync error");
+
+        for (let i = 0; i < spriteStatusData.length; i++) {
+            spriteArray[i].targetPos.x = spriteStatusData[i].targetPos.x;
+            spriteArray[i].targetPos.y = spriteStatusData[i].targetPos.y;
+            spriteArray[i].targetPos.z = spriteStatusData[i].targetPos.z;
+
+            if (spriteArray[i].bounceCount)
+                spriteArray[i].bounceCount = spriteStatusData[i].bounceCount;
+
+            spriteArray[i].mesh.position.set(
+                spriteStatusData[i].position.x,
+                spriteStatusData[i].position.y,
+                spriteStatusData[i].position.z
+            );
+        }
+    };
+
+    const onKillBot = (playerIndex: number, botIndex: number) => {
+        gameRef.current?._botManagerArray[playerIndex].botArray[
+            botIndex
+        ].kill();
+    };
+
+    const onRemoveDeadBots = (playerIndex: number, deadBotArray: number[]) => {
+        if (!gameRef.current?._botManagerArray[playerIndex].botArray) return;
+
+        const newArray = [];
+        const botArray =
+            gameRef.current?._botManagerArray[playerIndex].botArray;
+        for (let i = 0; i < botArray.length; i++) {
+            const index = deadBotArray.findIndex(
+                (deadIndex: number) => deadIndex === i
+            );
+            if (index === -1) newArray.push(botArray[i]);
+        }
+
+        (gameRef.current?._botManagerArray[playerIndex] as any).botArray =
+            newArray;
+    };
+
     useEffect(() => {
         if (socket) {
             /** Start Game events */
@@ -108,6 +196,17 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
             socket?.on(SOCKET_EVENTS.RECEIVE_UPGRADES, onReceiveUpgrades);
             socket?.on(SOCKET_EVENTS.TICK_SECOND, onTickSecond);
             socket?.on(SOCKET_EVENTS.TICK_ROUND, onTickRound);
+            socket?.on(SOCKET_EVENTS.ADD_SPRITE, onAddSprite);
+            socket?.on(SOCKET_EVENTS.ADD_TEXT_SPRITE, onAddTextSprite);
+            socket?.on(
+                SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT,
+                onAddSpriteCollisionEffect
+            );
+            socket?.on(SOCKET_EVENTS.ADD_TEXT_SPRITE, onAddTextSprite);
+            socket?.on(SOCKET_EVENTS.DISPOSE_SPRITE, onDisposeSprite);
+            socket?.on(SOCKET_EVENTS.SPRITE_STATUS, onReceiveSpriteStatus);
+            socket?.on(SOCKET_EVENTS.KILL_BOT, onKillBot);
+            socket?.on(SOCKET_EVENTS.REMOVE_DEAD_BOTS, onRemoveDeadBots);
 
             /** Looby events */
             socket?.on(SOCKET_EVENTS.LOBBY_DATA, onReceiveLobbyData);
@@ -122,6 +221,14 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
             socket?.off(SOCKET_EVENTS.LOBBY_DATA, onReceiveLobbyData);
             socket?.off(SOCKET_EVENTS.TICK_SECOND, onTickSecond);
             socket?.off(SOCKET_EVENTS.TICK_ROUND, onTickRound);
+            socket?.off(
+                SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT,
+                onAddSpriteCollisionEffect
+            );
+            socket?.off(SOCKET_EVENTS.ADD_TEXT_SPRITE, onAddTextSprite);
+            socket?.off(SOCKET_EVENTS.DISPOSE_SPRITE, onDisposeSprite);
+            socket?.off(SOCKET_EVENTS.SPRITE_STATUS, onReceiveSpriteStatus);
+            socket?.off(SOCKET_EVENTS.KILL_BOT, onKillBot);
         };
     }, [socket]);
 

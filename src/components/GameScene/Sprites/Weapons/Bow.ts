@@ -1,17 +1,15 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
-import { cleanMaterial, disposeMesh } from "../../../../helper/three";
+import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 
 interface BowProps {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class Bow {
@@ -21,7 +19,7 @@ export class Bow {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
@@ -30,7 +28,7 @@ export class Bow {
         sceneRenderer,
         assetsManager,
         launchPos,
-        targetBot,
+        targetPos,
     }: BowProps) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
@@ -38,21 +36,13 @@ export class Bow {
         this.weaponType = "Bow";
         this.attackDamage = SPELLS_INFO["Bow"].attackDamage;
         this.damageType = SPELLS_INFO["Bow"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
-
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
     }
 
     initMesh() {
@@ -83,9 +73,9 @@ export class Bow {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

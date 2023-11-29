@@ -1,11 +1,8 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
-import { createChaosBeam } from "../../Particles/weapons/ChaosBeam";
 import { createChaosExplosion } from "../../Particles/weapons/ChaosExplosion";
 import { createChaosClaw } from "../../Particles/weapons/ChaosClaw";
 
@@ -13,7 +10,7 @@ interface Props {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class ChaosClaw {
@@ -23,21 +20,21 @@ export class ChaosClaw {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     bounceCount: number;
 
     lastTime: number;
 
-    constructor({ sceneRenderer, assetsManager, launchPos, targetBot }: Props) {
+    constructor({ sceneRenderer, assetsManager, launchPos, targetPos }: Props) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
         this.weaponType = "Chaos_Claw";
         this.attackDamage = SPELLS_INFO["Chaos_Claw"].attackDamage;
         this.damageType = SPELLS_INFO["Chaos_Claw"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.bounceCount = SPELLS_INFO["Chaos_Claw"].BounceCount;
 
@@ -46,14 +43,6 @@ export class ChaosClaw {
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
-
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
     }
 
     initMesh() {
@@ -104,9 +93,9 @@ export class ChaosClaw {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

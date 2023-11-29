@@ -1,10 +1,8 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
-import { cleanMaterial, disposeMesh } from "../../../../helper/three";
+import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { createAxeDamage } from "../../Particles/weapons/AxeDamage";
 
@@ -12,7 +10,7 @@ interface ThrowingAxeProps {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     bounceCount: number;
 }
 
@@ -23,7 +21,7 @@ export class ThrowingAxe {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
@@ -34,7 +32,7 @@ export class ThrowingAxe {
         sceneRenderer,
         assetsManager,
         launchPos,
-        targetBot,
+        targetPos,
         bounceCount = 0,
     }: ThrowingAxeProps) {
         this.sceneRenderer = sceneRenderer;
@@ -43,7 +41,7 @@ export class ThrowingAxe {
         this.weaponType = "Throwing Axes";
         this.attackDamage = SPELLS_INFO["Throwing Axes"].attackDamage;
         this.damageType = SPELLS_INFO["Throwing Axes"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
         this.bounceCount = bounceCount;
 
         this.mesh = new THREE.Group();
@@ -53,13 +51,7 @@ export class ThrowingAxe {
         this.lastTime = Date.now() * 0.001;
     }
 
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
-    }
+    checkIfHit() {}
 
     initMesh() {
         const axeMesh = this.assetsManager._models.throwingAxe.scene.clone();
@@ -106,9 +98,9 @@ export class ThrowingAxe {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

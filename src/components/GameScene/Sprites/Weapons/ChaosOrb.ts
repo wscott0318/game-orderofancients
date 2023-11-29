@@ -1,20 +1,16 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
-import { createBulletMuzzle } from "../../Particles/BulletMuzzle";
 import { createChaosBeam } from "../../Particles/weapons/ChaosBeam";
-import { createExplosion } from "../../Particles/Explosion2";
 import { createChaosExplosion } from "../../Particles/weapons/ChaosExplosion";
 
 interface Props {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class ChaosOrb {
@@ -24,33 +20,25 @@ export class ChaosOrb {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
 
-    constructor({ sceneRenderer, assetsManager, launchPos, targetBot }: Props) {
+    constructor({ sceneRenderer, assetsManager, launchPos, targetPos }: Props) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
         this.weaponType = "Chaos_Orb";
         this.attackDamage = SPELLS_INFO["Chaos_Orb"].attackDamage;
         this.damageType = SPELLS_INFO["Chaos_Orb"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
-
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
     }
 
     initMesh() {
@@ -99,9 +87,9 @@ export class ChaosOrb {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

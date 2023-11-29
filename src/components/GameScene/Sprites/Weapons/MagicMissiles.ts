@@ -1,9 +1,7 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
 import { createShipTrail } from "../../Particles/ShipTrail";
 
@@ -11,7 +9,7 @@ interface MagicMissilesProps {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class MagicMissiles {
@@ -21,7 +19,7 @@ export class MagicMissiles {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
@@ -30,7 +28,7 @@ export class MagicMissiles {
         sceneRenderer,
         assetsManager,
         launchPos,
-        targetBot,
+        targetPos,
     }: MagicMissilesProps) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
@@ -38,7 +36,7 @@ export class MagicMissiles {
         this.weaponType = "Magic_Missiles";
         this.attackDamage = SPELLS_INFO["Magic_Missiles"].attackDamage;
         this.damageType = SPELLS_INFO["Magic_Missiles"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
@@ -64,14 +62,6 @@ export class MagicMissiles {
         this.sceneRenderer.getScene().add(this.mesh);
     }
 
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
-    }
-
     addCollisionEffect() {}
 
     dispose() {
@@ -90,9 +80,9 @@ export class MagicMissiles {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

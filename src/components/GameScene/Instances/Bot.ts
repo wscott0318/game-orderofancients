@@ -163,64 +163,7 @@ export class Bot {
 
         tweenAnimation.onComplete(() => {
             this.dispose();
-
-            this.canRemove = true;
         });
-    }
-
-    stun() {
-        if (!this.stunMesh) {
-            const particle = createStun(
-                this.sceneRenderer._particleRenderer,
-                this.assetsManager._particleTextures
-            );
-
-            particle.then((group) => {
-                const particleMesh = group;
-
-                particleMesh.position.set(
-                    this.mesh.position.x,
-                    this.mesh.position.y +
-                        BOT_PROPS["modelHeight"][this.botType],
-                    this.mesh.position.z
-                );
-
-                particleMesh.scale.set(0.7, 0.7, 0.7);
-
-                this.stunMesh = particleMesh;
-                this.scene.add(this.stunMesh);
-            });
-        }
-
-        this.animController.stopAnimation();
-    }
-
-    slow() {
-        this.mesh.traverse((obj: any) => {
-            if (obj.isMesh || obj.isSkinnedMesh) {
-                const material = obj.material.clone();
-
-                material.color = new THREE.Color(2, 10, 30);
-                obj.material = material;
-            }
-        });
-    }
-
-    fire() {
-        if (!this.fireMesh) {
-            const particle = createToonProjectile(
-                this.sceneRenderer._particleRenderer,
-                this.assetsManager._particleTextures
-            );
-
-            const scaleOffset =
-                (BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
-            particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
-
-            this.fireMesh = particle;
-
-            this.scene.add(this.fireMesh);
-        }
     }
 
     tick() {
@@ -228,19 +171,40 @@ export class Bot {
         this.mesh.position.y = this.position.y;
         this.mesh.position.z = this.position.z;
 
-        if (this.status === BOT_STATUS["stun"]) {
-            if (this.stunTime < 0) {
-                this.disposeStunMesh();
-                this.stunMesh = null;
+        if (this.stunTime > 0) {
+            if (!this.stunMesh) {
+                this.stunMesh = new THREE.Group();
+                const particle = createStun(
+                    this.sceneRenderer._particleRenderer,
+                    this.assetsManager._particleTextures
+                );
 
-                this.stunTime = 0;
-                this.status = this.oldStatus;
+                particle.then((group) => {
+                    const particleMesh = group;
 
-                if (this.status === BOT_STATUS["walk"])
-                    this.animController.playAnimation(ANIMATION_TYPE["walk"]);
-                else if (this.status === BOT_STATUS["attack"])
-                    this.animController.playAnimation(ANIMATION_TYPE["attack"]);
+                    particleMesh.position.set(
+                        this.mesh.position.x,
+                        this.mesh.position.y +
+                            BOT_PROPS["modelHeight"][this.botType],
+                        this.mesh.position.z
+                    );
+
+                    particleMesh.scale.set(0.7, 0.7, 0.7);
+
+                    this.stunMesh = particleMesh;
+                    this.scene.add(this.stunMesh);
+                });
             }
+
+            this.animController.stopAnimation();
+        } else if (this.stunMesh) {
+            this.disposeStunMesh();
+            this.stunMesh = null;
+
+            if (this.status === BOT_STATUS["walk"])
+                this.animController.playAnimation(ANIMATION_TYPE["walk"]);
+            else if (this.status === BOT_STATUS["attack"])
+                this.animController.playAnimation(ANIMATION_TYPE["attack"]);
         }
 
         if (this.status === BOT_STATUS["dead"]) {
@@ -248,20 +212,42 @@ export class Bot {
         }
 
         if (this.slowTime > 0) {
-            if (this.slowTime <= 0) {
-                this.slowTime = 0;
+            this.mesh.traverse((obj: any) => {
+                if (obj.isMesh || obj.isSkinnedMesh) {
+                    const material = obj.material.clone();
 
-                this.mesh.traverse((obj: any) => {
-                    if (obj.isMesh || obj.isSkinnedMesh) {
-                        const material = obj.material.clone();
-                        material.color = new THREE.Color(1, 1, 1);
-                        obj.material = material;
-                    }
-                });
-            }
+                    material.color = new THREE.Color(2, 10, 30);
+                    obj.material = material;
+                }
+            });
+        } else {
+            this.slowTime = 0;
+
+            this.mesh.traverse((obj: any) => {
+                if (obj.isMesh || obj.isSkinnedMesh) {
+                    const material = obj.material.clone();
+                    material.color = new THREE.Color(1, 1, 1);
+                    obj.material = material;
+                }
+            });
         }
 
         if (this.fireTime > 0) {
+            if (!this.fireMesh) {
+                const particle = createToonProjectile(
+                    this.sceneRenderer._particleRenderer,
+                    this.assetsManager._particleTextures
+                );
+
+                const scaleOffset =
+                    (BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
+                particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
+
+                this.fireMesh = particle;
+
+                this.scene.add(this.fireMesh);
+            }
+
             if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
                 this.fireMesh.position.y =
@@ -269,12 +255,10 @@ export class Bot {
                     BOT_PROPS["modelHeight"][this.botType] / 2;
                 this.fireMesh.position.z = this.mesh.position.z;
             }
-
-            if (this.fireTime <= 0) {
-                this.fireTime = 0;
-                this.disposeFireMesh();
-                this.fireMesh = null;
-            }
+        } else {
+            this.fireTime = 0;
+            this.disposeFireMesh();
+            this.fireMesh = null;
         }
 
         const distance = this.mesh.position.distanceTo(this.targetPos);
