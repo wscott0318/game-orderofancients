@@ -1,13 +1,15 @@
 import * as THREE from "three";
 import { ANG2RAD } from "../../../helper/math";
 import { SceneRenderer } from "./SceneRenderer";
-import groundTex from "../../../assets/textures/ground/small2.png";
-import tourPX from "../../../assets/textures/sky/tour_px.jpg";
-import tourNX from "../../../assets/textures/sky/tour_nx.jpg";
-import tourPY from "../../../assets/textures/sky/tour_py.jpg";
-import tourNY from "../../../assets/textures/sky/tour_ny.jpg";
-import tourPZ from "../../../assets/textures/sky/tour_pz.jpg";
-import tourNZ from "../../../assets/textures/sky/tour_nz.jpg";
+import { S3_BUCKET_URL } from "../../../constants";
+
+const groundTex = S3_BUCKET_URL + "/assets/textures/ground/small2.png";
+const tourPX = S3_BUCKET_URL + "/assets/textures/sky/tour_px.jpg";
+const tourNX = S3_BUCKET_URL + "/assets/textures/sky/tour_nx.jpg";
+const tourPY = S3_BUCKET_URL + "/assets/textures/sky/tour_py.jpg";
+const tourNY = S3_BUCKET_URL + "/assets/textures/sky/tour_ny.jpg";
+const tourPZ = S3_BUCKET_URL + "/assets/textures/sky/tour_pz.jpg";
+const tourNZ = S3_BUCKET_URL + "/assets/textures/sky/tour_nz.jpg";
 
 export class Environment {
     _sceneRenderer: SceneRenderer;

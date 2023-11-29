@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
-import { SPELLS_INFO } from "../../../../constants/spell";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { PlayerData } from "../../../../constants/gameUI";
@@ -9,9 +8,11 @@ import { useGame } from "../../../../hooks/useGame";
 import { useGameContext } from "../../../../contexts/game-context";
 import { useSocket } from "../../../../hooks/useSocket";
 import { SOCKET_EVENTS } from "../../../../constants/socket";
-import playerImg1 from "../../../../assets/users/jack.png";
-import playerImg2 from "../../../../assets/users/2.png";
-import playerImg3 from "../../../../assets/users/3.png";
+import { S3_BUCKET_URL } from "../../../../constants";
+
+const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
+const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
+const playerImg3 = S3_BUCKET_URL + "/assets/users/3.png";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -20,10 +21,8 @@ export const GradientText = styled.span`
 `;
 
 const GamePlayUI = () => {
-    const { upgrades, setUpgrades } = useGameContext();
-
+    const { upgrades, lobbyInfo } = useGameContext();
     const { gameRef } = useGame();
-
     const { socket } = useSocket();
 
     const [profileSpells, setProfilSpells] = useState([]) as any;
@@ -63,68 +62,35 @@ const GamePlayUI = () => {
         },
     ]);
 
-    const onClickUpgrade = (item: any, index: number) => {
-        socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, index);
-    };
+    const onClickUpgrade = (item: any, itemIndex: number) => {
+        socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, itemIndex);
 
-    const upgradeSpell = (...args: any[]) => {
-        const item = args[0];
-        const uiIndex = args[1];
-        const playerIndex = args[2];
+        const playerIndex = lobbyInfo?.players.findIndex(
+            (player) => player.socketId === socket?.id
+        );
+        if (playerIndex === undefined || playerIndex === -1) return;
 
         const playerState = gameRef.current!._playerStateArray[playerIndex];
-
         const gold_balance = playerState.gold;
         const price = item.cost;
         if (gold_balance < price) return;
 
-        playerState.upgradeSpell(item);
-
-        /** Do action if it's me */
-        if (playerIndex === gameRef.current!._playerIndex) {
-            if (item.spellType === "Weapon") {
-                const userSpells = [...profileSpells];
-                const index = userSpells.findIndex(
-                    (spell: any) => spell.name === item.name
-                );
-                if (index !== -1) {
-                    userSpells[index].count++;
-                } else {
-                    userSpells.push({
-                        ...item,
-                        count: 1,
-                    });
-                }
-                setProfilSpells(userSpells);
-            }
-        }
-
-        // Instant upgrades actions
-        if (
-            item.name === `Philosopher's Stone` ||
-            item.name === "Cursed Treasure"
-        ) {
-            gameRef.current!._towerManagerArray[playerIndex].sacrificeHealth(
-                ((SPELLS_INFO as any)[item.propertyName] as any).sacrifiHealth
+        if (item.spellType === "Weapon") {
+            const userSpells = [...profileSpells];
+            const index = userSpells.findIndex(
+                (spell: any) => spell.name === item.name
             );
-            playerState.increaseUpgradeGold(item);
-        }
-
-        /** Do action if it's me */
-        if (playerIndex === gameRef.current!._playerIndex) {
-            const newUpgrades = [...upgrades];
-            (newUpgrades[uiIndex] as any).purchased = true;
-            setUpgrades(newUpgrades);
+            if (index !== -1) {
+                userSpells[index].count++;
+            } else {
+                userSpells.push({
+                    ...item,
+                    count: 1,
+                });
+            }
+            setProfilSpells(userSpells);
         }
     };
-
-    useEffect(() => {
-        socket?.on(SOCKET_EVENTS.UPGRADE_SPELL, upgradeSpell);
-
-        return () => {
-            socket?.off(SOCKET_EVENTS.UPGRADE_SPELL, upgradeSpell);
-        };
-    }, []);
 
     return (
         <>

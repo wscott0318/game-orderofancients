@@ -6,13 +6,12 @@ import GameMenuUI from "./UI/GameMenu";
 import GamePlayUI from "./UI/GamePlay/GamePlay";
 import GameEndUI from "./UI/GameEnd";
 import GamePauseUI from "./UI/GamePause";
-
 import GameSettingUI from "./UI/GameSetting";
 import { useGame } from "../../hooks/useGame";
 import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
-import { useSocket } from "../../hooks/useSocket";
 import GameLobby from "./UI/GameLobby";
+import { SocketHandler } from "./SocketHandler";
 
 const Wrapper = styled.div`
     position: relative;
@@ -22,8 +21,6 @@ const Wrapper = styled.div`
 
 export const GameScene = () => {
     const firstRef = useRef(false);
-
-    const { socket } = useSocket();
 
     const {
         canEnterGame,
@@ -37,12 +34,10 @@ export const GameScene = () => {
     const {
         createGame,
         startGame,
-        startLobbyGame,
         enterLooby,
         canvasDivRef,
         setGameState,
         onToggleGrid,
-        gameRef,
     } = useGame();
 
     const canEnterGameRef = useRef(false);
@@ -58,7 +53,6 @@ export const GameScene = () => {
         window.addEventListener("keydown", onKeyDown.bind(this));
         return () => {
             window.removeEventListener("keydown", onKeyDown);
-            // destroy Game
         };
     }, []);
 
@@ -75,18 +69,12 @@ export const GameScene = () => {
                 setGameState(GAME_STATES.GAME_MENU);
             }, 3000);
         }
-
-        if (e.key === "Pause") {
-            if (currentGameState === GAME_STATES.PAUSE) {
-                gameRef.current!._stateManager.setState(GAME_STATES.PLAYING);
-            } else if (currentGameState === GAME_STATES.PLAYING) {
-                gameRef.current!._stateManager.setState(GAME_STATES.PAUSE);
-            }
-        }
     };
 
     return (
         <Wrapper>
+            <SocketHandler startGameAction={startGame} />
+
             <div ref={canvasDivRef}></div>
 
             {loading && <Loader canEnterGame={canEnterGame} />}
@@ -94,7 +82,6 @@ export const GameScene = () => {
             {currentGameState === GAME_STATES.GAME_MENU && (
                 <GameMenuUI
                     setGameState={setGameState}
-                    startGameAction={startGame}
                     startMultiAction={enterLooby}
                 />
             )}
@@ -119,9 +106,7 @@ export const GameScene = () => {
 
             {currentGameState === GAME_STATES.END && <GameEndUI />}
 
-            {currentGameState === GAME_STATES.GAME_LOBBY && (
-                <GameLobby startLobbyGame={startLobbyGame} />
-            )}
+            {currentGameState === GAME_STATES.GAME_LOBBY && <GameLobby />}
         </Wrapper>
     );
 };

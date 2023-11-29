@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CustomProgressBar } from "../../../../theme/components";
 import { PlayerData } from "../../../../constants/gameUI";
-import backImg from "../../../../assets/images/mobile/back.png";
-import plantImg from "../../../../assets/images/mobile/plant.png";
-import profileImg from "../../../../assets/images/profile.png";
-import heartImg from "../../../../assets/images/heart.png";
-import coinImg from "../../../../assets/images/coin-left.png";
-import clockImg from "../../../../assets/images/clock.png";
+import { S3_BUCKET_URL } from "../../../../constants";
+
+const backImg = S3_BUCKET_URL + "/assets/images/mobile/back.png";
+const plantImg = S3_BUCKET_URL + "/assets/images/mobile/plant.png";
+const profileImg = S3_BUCKET_URL + "/assets/images/profile.png";
+const heartImg = S3_BUCKET_URL + "/assets/images/heart.png";
+const coinImg = S3_BUCKET_URL + "/assets/images/coin-left.png";
+const clockImg = S3_BUCKET_URL + "/assets/images/clock.png";
 
 const MobileGamePlay = styled.div`
     position: fixed;

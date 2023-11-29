@@ -2,14 +2,19 @@ import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { PlayerData } from "../../../../constants/gameUI";
-import { ARMOR_TYPES_TEXT, DAMAGE_TYPES_TEXT } from "../../../../constants";
-import spellsBack from "../../../../assets/images/gameui-spells-back.png";
-import mapBack from "../../../../assets/images/map-back.png";
-import profile from "../../../../assets/images/profile.png";
-import coin from "../../../../assets/images/coin.png";
-import profileBack from "../../../../assets/images/profile-name-back.png";
-import blackImg from "../../../../assets/images/black.png";
-import spellSlider from "../../../../assets/images/spell-slider.png";
+import {
+    ARMOR_TYPES_TEXT,
+    DAMAGE_TYPES_TEXT,
+    S3_BUCKET_URL,
+} from "../../../../constants";
+
+const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
+const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
+const profile = S3_BUCKET_URL + "/assets/images/profile.png";
+const coin = S3_BUCKET_URL + "/assets/images/coin.png";
+const profileBack = S3_BUCKET_URL + "/assets/images/profile-name-back.png";
+const blackImg = S3_BUCKET_URL + "/assets/images/black.png";
+const spellSlider = S3_BUCKET_URL + "/assets/images/spell-slider.png";
 
 const GamePlay = styled.div`
     position: fixed;

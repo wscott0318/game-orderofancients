@@ -1,20 +1,17 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { createRocketSmoke } from "../../Particles/weapons/RocketSmoke";
-import { createExplosion } from "../../Particles/Explosion2";
 import { createSmokeExplosion } from "../../Particles/weapons/SmokeExplosion";
 
 interface BoulderProps {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class Boulder {
@@ -24,7 +21,7 @@ export class Boulder {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
@@ -33,7 +30,7 @@ export class Boulder {
         sceneRenderer,
         assetsManager,
         launchPos,
-        targetBot,
+        targetPos,
     }: BoulderProps) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
@@ -41,21 +38,13 @@ export class Boulder {
         this.weaponType = "Boulder";
         this.attackDamage = SPELLS_INFO["Boulder"].attackDamage;
         this.damageType = SPELLS_INFO["Boulder"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
-
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
     }
 
     initMesh() {
@@ -70,8 +59,6 @@ export class Boulder {
         );
 
         particle.scale.set(0.3, 0.3, 0.3);
-
-        // this.mesh.add(particle);
 
         this.sceneRenderer.getScene().add(this.mesh);
     }
@@ -107,9 +94,9 @@ export class Boulder {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

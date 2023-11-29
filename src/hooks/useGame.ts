@@ -22,6 +22,10 @@ export const useGame = () => {
 
     const lobbyInfoRef = useRef<LobbyInfo>();
     lobbyInfoRef.current = lobbyInfo;
+
+    const assetsManagerRef = useRef<AssetsManager>();
+    assetsManagerRef.current = assetsManager;
+
     /**
      * Canvas Game Ref
      */
@@ -44,16 +48,13 @@ export const useGame = () => {
         if (gameRef.current) return;
 
         let playerIndex: any = 0;
-
-        if (gameMode === GAME_MODES.Lobby) {
-            playerIndex = lobbyInfoRef.current?.players.findIndex(
-                (player) => player.socketId === socket?.id
-            );
-        }
+        playerIndex = lobbyInfoRef.current?.players.findIndex(
+            (player) => player.socketId === socket?.id
+        );
 
         const game = new Game({
             canvas: canvasDivRef.current!,
-            assetsManager: assetsManager!,
+            assetsManager: assetsManagerRef.current!,
             setCurrentGameSate: setCurrentGameSate,
             setUpgrades: setUpgrades,
             gameMode: gameMode,
@@ -66,13 +67,6 @@ export const useGame = () => {
     };
 
     const startGame = () => {
-        createGameInstance();
-
-        setGameMode(GAME_MODES.Single);
-        setGameState(GAME_STATES.PLAYING);
-    };
-
-    const startLobbyGame = () => {
         createGameInstance();
 
         setGameState(GAME_STATES.PLAYING);
@@ -126,7 +120,6 @@ export const useGame = () => {
         exitGameAction,
         restartGameAction,
         startGame,
-        startLobbyGame,
         enterLooby,
         setGameState,
         onToggleGrid,

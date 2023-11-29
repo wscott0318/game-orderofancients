@@ -2,11 +2,12 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect } from "react";
 import styled from "styled-components";
-import { GAME_STATES } from "../../../constants";
+import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
 import { useGame } from "../../../hooks/useGame";
-import endImg from "../../../assets/images/end.png";
-import btnDefault from "../../../assets/images/button-default.png";
-import btnHover from "../../../assets/images/button-hover.png";
+
+const endImg = S3_BUCKET_URL + "/assets/images/end.png";
+const btnDefault = S3_BUCKET_URL + "/assets/images/button-default.png";
+const btnHover = S3_BUCKET_URL + "/assets/images/button-hover.png";
 
 const GamePause = styled.div`
     position: absolute;

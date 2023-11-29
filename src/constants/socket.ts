@@ -1,8 +1,22 @@
 export const SOCKET_EVENTS = {
     JOIN: "join",
+    PLAY_SINGLE: "play single mode",
     EXIT_ROOM: "exit",
     UPGRADE_SPELL: "upgrade spell",
 
     LOBBY_DATA: "lobby data",
     START_GAME: "start game",
+    TOWER_STATUS: "tower status",
+    PRODUCE_BOT: "produce bot",
+    BOT_STATUS: "bot status",
+    RECEIVE_UPGRADES: "receive upgrades",
+    TICK_SECOND: "tick second",
+    TICK_ROUND: "tick round",
+    ADD_SPRITE: "add sprite",
+    ADD_TEXT_SPRITE: "add text sprite",
+    ADD_SPRITE_COLLISION_EFFECT: "add sprite collision effect",
+    DISPOSE_SPRITE: "dispose sprite",
+    SPRITE_STATUS: "sprite state",
+    KILL_BOT: "kill bot",
+    REMOVE_DEAD_BOTS: "remove dead bots",
 };

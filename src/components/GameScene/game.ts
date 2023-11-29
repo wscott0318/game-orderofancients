@@ -1,6 +1,5 @@
 import AssetsManager from "./AssetsManager";
 import { BotManager } from "./BotManager";
-import { CollisionManager } from "./CollisionManager";
 import { ParticleEffect } from "./ParticleEffect";
 import SpriteManager from "./SpriteManager";
 import { TowerManager } from "./TowerManager";
@@ -8,7 +7,7 @@ import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import TWEEN from "@tweenjs/tween.js";
 import { StateManager } from "./States/StateManager";
-import { GAME_MODES, GAME_STATES } from "../../constants";
+import { GAME_STATES } from "../../constants";
 import { PlayerState } from "./States/PlayerState";
 import { TimeManager } from "./TimeManager";
 import { LobbyInfo } from "../../contexts/game-context";
@@ -30,7 +29,6 @@ export class Game {
     _towerManagerArray: TowerManager[];
     _botManagerArray: BotManager[];
     _spriteManager: SpriteManager;
-    _collisionManagerArray: CollisionManager[];
     _particleEffect: ParticleEffect;
     _canvasDiv: HTMLDivElement;
     _stateManager: StateManager;
@@ -44,7 +42,6 @@ export class Game {
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
         this._lobbyInfo = options.lobbyInfo;
-
         this._stateManager = new StateManager({
             setCurrentGameSate: options.setCurrentGameSate,
         });
@@ -52,7 +49,6 @@ export class Game {
         this._assetsManager = options.assetsManager;
         this._sceneRenderer = new SceneRenderer({
             playerIndex: this._playerIndex,
-            gameMode: this._gameMode,
             lobbyInfo: this._lobbyInfo,
         });
         this._envRenderer = new Environment({
@@ -64,38 +60,27 @@ export class Game {
             assetsManager: this._assetsManager,
         });
 
-        this._spriteManager = new SpriteManager();
+        this._spriteManager = new SpriteManager({
+            sceneRenderer: this._sceneRenderer,
+            assetsManager: this._assetsManager,
+        });
 
         this._towerManagerArray = [];
         this._botManagerArray = [];
         this._playerStateArray = [];
-        this._collisionManagerArray = [];
         this._timeManagerArray = [];
 
-        if (this._gameMode === GAME_MODES.Single) {
-            this._towerManagerArray = [
+        for (let i = 0; i < this._lobbyInfo?.players.length; i++) {
+            this._towerManagerArray.push(
                 new TowerManager({
                     sceneRenderer: this._sceneRenderer,
                     assetsManager: this._assetsManager,
                     stateManager: this._stateManager,
                     particleEffect: this._particleEffect,
                     playerIndex: this._playerIndex,
-                    index: 0,
-                }),
-            ];
-        } else {
-            for (let i = 0; i < this._lobbyInfo?.players.length; i++) {
-                this._towerManagerArray.push(
-                    new TowerManager({
-                        sceneRenderer: this._sceneRenderer,
-                        assetsManager: this._assetsManager,
-                        stateManager: this._stateManager,
-                        particleEffect: this._particleEffect,
-                        playerIndex: this._playerIndex,
-                        index: i,
-                    })
-                );
-            }
+                    index: i,
+                })
+            );
         }
 
         for (let i = 0; i < this._towerManagerArray.length; i++) {
@@ -114,25 +99,12 @@ export class Game {
                 })
             );
 
-            this._collisionManagerArray.push(
-                new CollisionManager({
-                    sceneRenderer: this._sceneRenderer,
-                    towerManager: this._towerManagerArray[i],
-                    botManager: this._botManagerArray[i],
-                    spriteManager: this._spriteManager,
-                    particleEffect: this._particleEffect,
-                    playerState: this._playerStateArray[i],
-                    assetsManager: this._assetsManager,
-                })
-            );
-
             this._timeManagerArray.push(
                 new TimeManager({
                     playerState: this._playerStateArray[i],
                     towerManager: this._towerManagerArray[i],
                     sceneRenderer: this._sceneRenderer,
                     spriteManager: this._spriteManager,
-                    setUpgrades: options.setUpgrades,
                 })
             );
         }
@@ -160,7 +132,6 @@ export class Game {
                 if (!this._towerManagerArray[i].isDead) {
                     this._towerManagerArray[i].tick();
                     this._botManagerArray[i].tick();
-                    this._collisionManagerArray[i].tick();
                     this._timeManagerArray[i].tick();
                 } else {
                     if (this._botManagerArray[i].botArray.length > 0) {

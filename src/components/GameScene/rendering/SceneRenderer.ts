@@ -12,11 +12,9 @@ import {
 } from "../../../constants/rendering";
 import { LobbyInfo } from "../../../contexts/game-context";
 import { TOWER_POSITIONS } from "../../../constants/tower";
-import { GAME_MODES } from "../../../constants";
 
 interface SceneRendererProps {
     playerIndex: number;
-    gameMode: number;
     lobbyInfo: LobbyInfo;
 }
 
@@ -31,17 +29,15 @@ export class SceneRenderer {
     _clock: THREE.Clock;
     _gridHelper: THREE.GridHelper;
     _playerIndex: number;
-    _gameMode: number;
     _lobbyInfo: LobbyInfo;
 
-    constructor({ playerIndex, gameMode, lobbyInfo }: SceneRendererProps) {
+    constructor({ playerIndex, lobbyInfo }: SceneRendererProps) {
         this._uiRenderer = new CSS2DRenderer();
         this._particleRenderer = new BatchedRenderer();
         this._clock = new THREE.Clock();
         this._gridHelper = new THREE.GridHelper();
 
         this._playerIndex = playerIndex;
-        this._gameMode = gameMode;
         this._lobbyInfo = lobbyInfo;
 
         this.initialize();
@@ -82,26 +78,22 @@ export class SceneRenderer {
     initLights() {
         this._scene.add(SceneSetup.HemiLight());
 
-        if (this._gameMode === GAME_MODES.Single) {
-            this._scene.add(SceneSetup.SpotLight());
-        } else {
-            for (let i = 0; i < this._lobbyInfo.players.length; i++) {
-                const light = SceneSetup.SpotLight();
-                light.position.set(
-                    TOWER_POSITIONS[i].x + SPOT_LIGHT_PROPS.position.x,
-                    TOWER_POSITIONS[i].y + SPOT_LIGHT_PROPS.position.y,
-                    TOWER_POSITIONS[i].z + SPOT_LIGHT_PROPS.position.z
-                );
+        for (let i = 0; i < this._lobbyInfo.players.length; i++) {
+            const light = SceneSetup.SpotLight();
+            light.position.set(
+                TOWER_POSITIONS[i].x + SPOT_LIGHT_PROPS.position.x,
+                TOWER_POSITIONS[i].y + SPOT_LIGHT_PROPS.position.y,
+                TOWER_POSITIONS[i].z + SPOT_LIGHT_PROPS.position.z
+            );
 
-                light.target.position.set(
-                    TOWER_POSITIONS[i].x,
-                    TOWER_POSITIONS[i].y,
-                    TOWER_POSITIONS[i].z
-                );
+            light.target.position.set(
+                TOWER_POSITIONS[i].x,
+                TOWER_POSITIONS[i].y,
+                TOWER_POSITIONS[i].z
+            );
 
-                this._scene.add(light.target);
-                this._scene.add(light);
-            }
+            this._scene.add(light.target);
+            this._scene.add(light);
         }
     }
 
@@ -152,8 +144,6 @@ export class SceneRenderer {
         gridHelper.position.y = 0.01;
 
         this._gridHelper = gridHelper;
-
-        // this.addGrid();
     }
 
     onResize() {

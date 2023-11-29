@@ -1,18 +1,15 @@
 import * as THREE from "three";
-import { Bot } from "../../Instances/Bot";
 import { SPELLS_INFO } from "../../../../constants/spell";
 import AssetsManager from "../../AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
-import { BOT_PROPS } from "../../../../constants/bot";
 import { disposeMesh } from "../../../../helper/three";
 import { createFireBow } from "../../Particles/weapons/FireBow";
-import { createBulletMuzzle } from "../../Particles/BulletMuzzle";
 
 interface Props {
     sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
 }
 
 export class FireBow {
@@ -22,19 +19,19 @@ export class FireBow {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetBot: Bot;
+    targetPos: THREE.Vector3;
     mesh: THREE.Object3D;
 
     lastTime: number;
 
-    constructor({ sceneRenderer, assetsManager, launchPos, targetBot }: Props) {
+    constructor({ sceneRenderer, assetsManager, launchPos, targetPos }: Props) {
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
         this.weaponType = "Fire_Bow";
         this.attackDamage = SPELLS_INFO["Fire_Bow"].attackDamage;
         this.damageType = SPELLS_INFO["Fire_Bow"].damageType;
-        this.targetBot = targetBot;
+        this.targetPos = targetPos;
 
         this.mesh = new THREE.Group();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
@@ -60,30 +57,7 @@ export class FireBow {
         this.sceneRenderer.getScene().add(this.mesh);
     }
 
-    checkIfHit() {
-        const distance = this.mesh.position.distanceTo(
-            this.targetBot.mesh.position
-        );
-
-        return distance <= BOT_PROPS.modelHeight[this.targetBot.botType];
-    }
-
-    addCollisionEffect() {
-        // const particle = createBulletMuzzle(
-        //     this.sceneRenderer._particleRenderer,
-        //     this.assetsManager._particleTextures
-        // );
-
-        // particle.position.x = this.mesh.position.x;
-        // particle.position.y = this.mesh.position.y;
-        // particle.position.z = this.mesh.position.z;
-
-        // particle.scale.set(1.5, 1.5, 1.5);
-
-        // this.sceneRenderer.getScene().add(particle);
-
-        this.targetBot.fire(SPELLS_INFO['Fire_Bow'].duration);
-    }
+    addCollisionEffect() {}
 
     dispose() {
         disposeMesh(this.mesh);
@@ -101,9 +75,9 @@ export class FireBow {
          */
 
         const targetPosition = new THREE.Vector3(
-            this.targetBot.mesh.position.x,
-            BOT_PROPS.modelHeight[this.targetBot.botType] - 1,
-            this.targetBot.mesh.position.z
+            this.targetPos.x,
+            this.targetPos.y,
+            this.targetPos.z
         );
 
         const rotationMatrix = new THREE.Matrix4();

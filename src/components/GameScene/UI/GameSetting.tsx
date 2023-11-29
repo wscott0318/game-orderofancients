@@ -4,18 +4,24 @@ import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import ReactSlider from "react-slider";
 import "../../../theme/slider.scss";
-import loadingBack from "../../../assets/images/loading-back.png";
-import settingBack from "../../../assets/images/setting-back.png";
-import settingVideo from "../../../assets/images/buttons/setting-video.png";
-import settingAudio from "../../../assets/images/buttons/setting-audio-inactive.png";
-import settingPlayers from "../../../assets/images/buttons/setting-players-inactive.png";
-import settingControls from "../../../assets/images/buttons/setting-controls-inactive.png";
-import applyInactive from "../../../assets/images/buttons/apply-inactive.png";
-import defaultInactive from "../../../assets/images/buttons/default-inactive.png";
-import exitInactive from "../../../assets/images/buttons/exit-inactive.png";
 
-import { GAME_STATES } from "../../../constants";
+import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
 import { useGame } from "../../../hooks/useGame";
+
+const loadingBack = S3_BUCKET_URL + "/assets/images/loading-back.png";
+const settingBack = S3_BUCKET_URL + "/assets/images/setting-back.png";
+const settingVideo = S3_BUCKET_URL + "/assets/images/buttons/setting-video.png";
+const settingAudio =
+    S3_BUCKET_URL + "/assets/images/buttons/setting-audio-inactive.png";
+const settingPlayers =
+    S3_BUCKET_URL + "/assets/images/buttons/setting-players-inactive.png";
+const settingControls =
+    S3_BUCKET_URL + "/assets/images/buttons/setting-controls-inactive.png";
+const applyInactive =
+    S3_BUCKET_URL + "/assets/images/buttons/apply-inactive.png";
+const defaultInactive =
+    S3_BUCKET_URL + "/assets/images/buttons/default-inactive.png";
+const exitInactive = S3_BUCKET_URL + "/assets/images/buttons/exit-inactive.png";
 
 const GameSetting = styled.div`
     z-index: 20;

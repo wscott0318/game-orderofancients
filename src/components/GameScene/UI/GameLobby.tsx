@@ -3,12 +3,13 @@ import { useSocket } from "../../../hooks/useSocket";
 import { useEffect } from "react";
 import { SOCKET_EVENTS } from "../../../constants/socket";
 import { useGame } from "../../../hooks/useGame";
-import { GAME_STATES } from "../../../constants";
+import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
 import { LobbyInfo, useGameContext } from "../../../contexts/game-context";
-import backImg from "../../../assets/images/loading-back.png";
-import lobbyBackImg from "../../../assets/images/lobby-back.png";
-import playerAvatar from "../../../assets/users/jack.png";
-import exitBtnImg from "../../../assets/images/buttons/exit-inactive.png";
+
+const backImg = S3_BUCKET_URL + "/assets/images/loading-back.png";
+const lobbyBackImg = S3_BUCKET_URL + "/assets/images/lobby-back.png";
+const playerAvatar = S3_BUCKET_URL + "/assets/users/jack.png";
+const exitBtnImg = S3_BUCKET_URL + "/assets/images/buttons/exit-inactive.png";
 
 const Wrapper = styled.div`
     z-index: 20;
@@ -24,38 +25,14 @@ const ContentWrapper = styled.div`
     height: 60%;
 `;
 
-interface GameLobbyProps {
-    startLobbyGame: () => void;
-}
-
-const GameLobby = ({ startLobbyGame }: GameLobbyProps) => {
+const GameLobby = () => {
     const { socket } = useSocket();
 
     const { setGameState } = useGame();
-    const { lobbyInfo, setLobbyInfo } = useGameContext();
-
-    const receiveLobbyData = (lobby: LobbyInfo) => {
-        setLobbyInfo(lobby);
-    };
-
-    const startGame = (lobby: LobbyInfo) => {
-        setLobbyInfo(lobby);
-
-        setTimeout(() => {
-            startLobbyGame();
-        }, 500);
-    };
+    const { lobbyInfo } = useGameContext();
 
     useEffect(() => {
         socket?.emit(SOCKET_EVENTS.JOIN);
-
-        socket?.on(SOCKET_EVENTS.LOBBY_DATA, receiveLobbyData);
-        socket?.on(SOCKET_EVENTS.START_GAME, startGame);
-
-        return () => {
-            socket?.off(SOCKET_EVENTS.LOBBY_DATA, receiveLobbyData);
-            socket?.off(SOCKET_EVENTS.START_GAME, startGame);
-        };
     }, []);
 
     const onExit = () => {
