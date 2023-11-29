@@ -167,10 +167,6 @@ export class TowerManager {
         }
     }
 
-    sacrificeHealth(value: number) {
-        this.sacrificeHP += value;
-    }
-
     tick() {
         if (this.hp <= 0) {
             this.isDead = true;

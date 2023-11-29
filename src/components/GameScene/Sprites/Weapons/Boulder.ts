@@ -60,8 +60,6 @@ export class Boulder {
 
         particle.scale.set(0.3, 0.3, 0.3);
 
-        // this.mesh.add(particle);
-
         this.sceneRenderer.getScene().add(this.mesh);
     }
 

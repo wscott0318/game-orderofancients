@@ -1,6 +1,3 @@
-import { GET_RANDOM_VAL } from "../../../helper/math";
-import { PERCENT2VALUE } from "../../../utils/helper";
-
 export class PlayerState {
     index: number;
     playerIndex: number;
@@ -151,25 +148,5 @@ export class PlayerState {
     updateGoldUI() {
         if (this.index === this.playerIndex && document.getElementById("gold"))
             (document.getElementById("gold") as any).textContent = this.gold;
-    }
-
-    increaseBotKilledGold(amount: number) {
-        let value = amount;
-
-        // Handling for "Bounty Hunter" Upgrade
-        for (let i = 0; i < this.Bounty_Hunter; i++) {
-            value = value + value * PERCENT2VALUE(50); // Grant 50% additional gold
-        }
-
-        // Handling for "Transmute" Upgrade
-        for (let i = 0; i < this.Transmute; i++) {
-            value = value + value * PERCENT2VALUE(50);
-
-            if (GET_RANDOM_VAL(20) === 0)
-                // Grant +200% gold by 5% chance
-                value = value + value * PERCENT2VALUE(200);
-        }
-
-        return value;
     }
 }

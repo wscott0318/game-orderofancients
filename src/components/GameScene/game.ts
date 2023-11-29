@@ -7,7 +7,7 @@ import { Environment } from "./rendering/Environment";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import TWEEN from "@tweenjs/tween.js";
 import { StateManager } from "./States/StateManager";
-import { GAME_MODES, GAME_STATES } from "../../constants";
+import { GAME_STATES } from "../../constants";
 import { PlayerState } from "./States/PlayerState";
 import { TimeManager } from "./TimeManager";
 import { LobbyInfo } from "../../contexts/game-context";
