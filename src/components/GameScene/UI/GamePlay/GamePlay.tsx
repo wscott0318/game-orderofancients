@@ -3,7 +3,6 @@ import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
-import { PlayerData } from "../../../../constants/gameUI";
 import { useGame } from "../../../../hooks/useGame";
 import { useGameContext } from "../../../../contexts/game-context";
 import { useSocket } from "../../../../hooks/useSocket";
@@ -28,39 +27,6 @@ const GamePlayUI = () => {
     const [profileSpells, setProfilSpells] = useState([]) as any;
 
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
-
-    const [players, setPlayers]: [PlayerData[], any] = useState([
-        {
-            name: "Jack#2643",
-            avata: playerImg1,
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player2",
-            avata: playerImg2,
-            color: "blue",
-            level: 90,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player3",
-            avata: playerImg3,
-            color: "pink",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-    ]);
 
     const onClickUpgrade = (item: any, itemIndex: number) => {
         socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, itemIndex);
@@ -98,7 +64,6 @@ const GamePlayUI = () => {
                 <Desktop
                     upgrades={upgrades}
                     profileSpells={profileSpells}
-                    players={players}
                     onClickUpgrade={onClickUpgrade}
                     playerShow={playerShow}
                     setPlayerShow={setPlayerShow}
@@ -109,7 +74,6 @@ const GamePlayUI = () => {
                 <Mobile
                     upgrades={upgrades}
                     profileSpells={profileSpells}
-                    players={players}
                     onClickUpgrade={onClickUpgrade}
                     playerShow={playerShow}
                     setPlayerShow={setPlayerShow}

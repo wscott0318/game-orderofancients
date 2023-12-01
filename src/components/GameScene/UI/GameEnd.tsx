@@ -1,10 +1,10 @@
 import { useState } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
-import { PlayerData } from "../../../constants/gameUI";
 import { Game } from "../game";
 import { useGame } from "../../../hooks/useGame";
-import { S3_BUCKET_URL } from "../../../constants";
+import { GAME_MODES, S3_BUCKET_URL } from "../../../constants";
+import { useGameContext } from "../../../contexts/game-context";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
@@ -86,6 +86,8 @@ const GameEnd = styled.div`
 export const GameEndUI = () => {
     const { exitGameAction, restartGameAction, gameRef } = useGame();
 
+    const { gameMode, lobbyInfo } = useGameContext();
+
     const game = gameRef.current!;
 
     /**
@@ -95,39 +97,6 @@ export const GameEndUI = () => {
         (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker >
         30;
 
-    const [players, setPlayers]: [PlayerData[], any] = useState([
-        {
-            name: "Jack#2643",
-            avata: playerImg1,
-            color: "red",
-            level: 80,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player2",
-            avata: playerImg2,
-            color: "blue",
-            level: 90,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-        {
-            name: "Player3",
-            avata: playerImg3,
-            color: "pink",
-            level: 60,
-            kills: 5,
-            income: 2,
-            wins: 0,
-            lastStands: 0,
-        },
-    ]);
-
     return (
         <GameEnd className="GameEnd flex justify-center items-center">
             <div className="gameend h-fit flex flex-col items-center">
@@ -136,41 +105,39 @@ export const GameEndUI = () => {
                     src={isvictory ? victoryImg : defeatImg}
                 />
 
-                <div className="players relative top-[-6vw] w-[72%] ff-round">
-                    <table className="w-[100%] text-center">
-                        <tbody>
-                            <tr className="head text-[#ecea8c] text-[17.4px]">
-                                <td className="w-[50%]">Player</td>
-                                <td className="w-[25%]">Kills</td>
-                                <td className="w-[25%]">Income</td>
-                            </tr>
+                {gameMode === GAME_MODES.Lobby && (
+                    <div className="players relative top-[-6vw] w-[72%] ff-round">
+                        <table className="w-[100%] text-center">
+                            <tbody>
+                                <tr className="head text-[#ecea8c] text-[17.4px]">
+                                    <td className="w-[50%]">Player</td>
+                                    <td className="w-[25%]">Kills</td>
+                                    <td className="w-[25%]">Income</td>
+                                </tr>
 
-                            {players.map(
-                                (player: PlayerData, index: number) => (
-                                    <tr
-                                        style={{ color: player.color }}
-                                        key={`player${index}`}
-                                        className="text-[17.4px] bg-[#0007] h-[50px]"
-                                    >
-                                        <td className="player-name w-[50%] h-[50px] flex items-center pl-[5%] gap-[20%]">
-                                            <img
-                                                className="w-[30px]"
-                                                src={player.avata}
-                                            />
-                                            {player.name}
-                                        </td>
-                                        <td className="w-[25%]">
-                                            {player.kills}
-                                        </td>
-                                        <td className="w-[25%]">
-                                            {player.income}
-                                        </td>
-                                    </tr>
-                                )
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                                {lobbyInfo?.players.map(
+                                    (player, index: number) => (
+                                        <tr
+                                            style={{ color: "blue" }}
+                                            key={`player${index}`}
+                                            className="text-[17.4px] bg-[#0007] h-[50px]"
+                                        >
+                                            <td className="player-name w-[50%] h-[50px] flex items-center pl-[5%] gap-[20%]">
+                                                <img
+                                                    className="w-[30px]"
+                                                    src={playerImg1}
+                                                />
+                                                Player {index}
+                                            </td>
+                                            <td className="w-[25%]">2</td>
+                                            <td className="w-[25%]">5</td>
+                                        </tr>
+                                    )
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
 
                 <div
                     className="buttons relative top-[-5vw] flex font-bold"
