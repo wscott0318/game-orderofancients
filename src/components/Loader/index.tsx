@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import "./index.scss";
 import "./firefly.scss";
-import { PlayerData } from "../../constants/gameUI";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import { S3_BUCKET_URL } from "../../constants";
@@ -10,93 +9,16 @@ const avatarImg = S3_BUCKET_URL + "/assets/users/jack.png";
 const logoImg = S3_BUCKET_URL + "/assets/images/loading_logo.png";
 const sliderImg = S3_BUCKET_URL + "/assets/images/loader-slider-shine.png";
 
-const playerInfo = [
-    {
-        name: "Jack#2643",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player2",
-        avata: avatarImg,
-        color: "blue",
-        level: 90,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player3",
-        avata: avatarImg,
-        color: "pink",
-        level: 60,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player4",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player5",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player6",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player7",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-    {
-        name: "Player8",
-        avata: avatarImg,
-        color: "red",
-        level: 80,
-        kills: 5,
-        income: 2,
-        wins: 0,
-        lastStands: 0,
-    },
-];
-
 const TopLogo = styled.div`
     top: 0;
-    width: 660px;
+    height: 550px;
+    max-height: calc(100vh - 200px);
     max-width: 100%;
+
+    img {
+        object-fit: contain;
+        object-position: top;
+    }
 `;
 
 const LoadingProgress = styled.div`
@@ -124,7 +46,7 @@ const PlayerScrollDiv = styled.div`
 export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
     const [progressValue, setProgressValue] = useState(0);
 
-    const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);
+    // const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);
 
     // Firefly particle effects
     const renderFirefly = (count: number) => {
@@ -164,10 +86,10 @@ export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
                 <div className="stars absolute">{renderFirefly(30)}</div>
 
                 <TopLogo>
-                    <img src={logoImg} alt="logo" />
+                    <img src={logoImg} alt="logo" className="w-full h-full" />
                 </TopLogo>
 
-                <PlayerScrollDiv className="players relative ff-round">
+                {/* <PlayerScrollDiv className="players relative ff-round">
                     <div className="w-full h-full text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
                         <div className="head text-[#ecea8c] text-[17.4px] flex">
                             <div className="w-[50%]">Player</div>
@@ -205,7 +127,7 @@ export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
                             )}
                         </div>
                     </div>
-                </PlayerScrollDiv>
+                </PlayerScrollDiv> */}
 
                 <LoadingProgress className="relative">
                     <CustomLoaderSlider

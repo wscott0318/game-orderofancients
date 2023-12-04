@@ -1,12 +1,13 @@
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { PlayerData } from "../../../../constants/gameUI";
 import {
     ARMOR_TYPES_TEXT,
     DAMAGE_TYPES_TEXT,
+    GAME_MODES,
     S3_BUCKET_URL,
 } from "../../../../constants";
+import { useGameContext } from "../../../../contexts/game-context";
 
 const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
 const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
@@ -412,6 +413,8 @@ export const Desktop = ({
     const gameMenuFadeInAnim = gsap.timeline();
     const [hoveredSpell, setHoveredSpell]: [any, any] = useState(null);
 
+    const { gameMode, lobbyInfo } = useGameContext();
+
     useEffect(() => {
         gameMenuFadeInAnim
             .add("start")
@@ -441,10 +444,7 @@ export const Desktop = ({
                     {hoveredSpell && (
                         <div className="detail">
                             <div className="detail_title flex flex-row py-2">
-                                <span>
-                                    {hoveredSpell.name}
-                                    {/* <YellowBoldFont>Q</YellowBoldFont> */}
-                                </span>
+                                <span>{hoveredSpell.name}</span>
                                 <div className="price">
                                     <img src={coin}></img>
                                     <YellowBoldFont>
@@ -737,87 +737,108 @@ export const Desktop = ({
                     <YellowBoldFont>Time</YellowBoldFont>
                     <YellowBoldFont id="elapsedTime">00:00:55</YellowBoldFont>
                 </div>
-                <div className="stats">
-                    <YellowBoldFont>Stats</YellowBoldFont>
-                    {playerShow ? (
-                        <YellowBoldFont
-                            className="switch"
-                            onClick={switchPlayerShow}
-                        >
-                            ▲
-                        </YellowBoldFont>
-                    ) : (
-                        <YellowBoldFont
-                            className="switch"
-                            onClick={switchPlayerShow}
-                        >
-                            ▼
-                        </YellowBoldFont>
-                    )}
-                </div>
-                {playerShow && (
-                    <div className="players" ref={playerDivRef}>
-                        <table className="player_tabel">
-                            <tbody>
-                                <tr>
-                                    <th
-                                        style={{
-                                            width: "20%",
-                                            textAlign: "start",
-                                        }}
-                                    >
-                                        Player
-                                    </th>
-                                    <th style={{ width: "10%" }}></th>
-                                    <th style={{ width: "10%" }}>Kills</th>
-                                    <th style={{ width: "10%" }}>Income</th>
-                                    <th style={{ width: "10%" }}>Wins</th>
-                                    <th style={{ width: "30%" }}>
-                                        last Stands
-                                    </th>
-                                </tr>
 
-                                {players.map(
-                                    (player: PlayerData, index: number) => (
-                                        <tr
-                                            style={{ color: player.color }}
-                                            key={`player${index}`}
-                                        >
-                                            <td
+                {gameMode === GAME_MODES.Lobby && (
+                    <>
+                        <div className="stats">
+                            <YellowBoldFont>Stats</YellowBoldFont>
+                            {playerShow ? (
+                                <YellowBoldFont
+                                    className="switch"
+                                    onClick={switchPlayerShow}
+                                >
+                                    ▲
+                                </YellowBoldFont>
+                            ) : (
+                                <YellowBoldFont
+                                    className="switch"
+                                    onClick={switchPlayerShow}
+                                >
+                                    ▼
+                                </YellowBoldFont>
+                            )}
+                        </div>
+                        {playerShow && (
+                            <div className="players" ref={playerDivRef}>
+                                <table className="player_tabel">
+                                    <tbody>
+                                        <tr>
+                                            <th
                                                 style={{
                                                     width: "20%",
                                                     textAlign: "start",
                                                 }}
                                             >
-                                                {player.name}
-                                            </td>
-                                            <td style={{ width: "30%" }}>
-                                                <div className="level">
-                                                    <div
-                                                        style={{
-                                                            width: `${player.level}%`,
-                                                        }}
-                                                    ></div>
-                                                </div>
-                                            </td>
-                                            <td style={{ width: "10%" }}>
-                                                {player.kills}
-                                            </td>
-                                            <td style={{ width: "10%" }}>
-                                                {player.income}
-                                            </td>
-                                            <td style={{ width: "10%" }}>
-                                                {player.wins}
-                                            </td>
-                                            <td style={{ width: "20%" }}>
-                                                {player.lastStands}
-                                            </td>
+                                                Player
+                                            </th>
+                                            <th style={{ width: "10%" }}></th>
+                                            <th style={{ width: "10%" }}>
+                                                Kills
+                                            </th>
+                                            <th style={{ width: "10%" }}>
+                                                Income
+                                            </th>
+                                            <th style={{ width: "10%" }}>
+                                                Wins
+                                            </th>
+                                            <th style={{ width: "30%" }}>
+                                                last Stands
+                                            </th>
                                         </tr>
-                                    )
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+
+                                        {lobbyInfo?.players.map(
+                                            (player, index: number) => (
+                                                <tr
+                                                    style={{ color: "blue" }}
+                                                    key={`player${index}`}
+                                                >
+                                                    <td
+                                                        style={{
+                                                            width: "20%",
+                                                            textAlign: "start",
+                                                        }}
+                                                    >
+                                                        Player {index}
+                                                    </td>
+                                                    <td
+                                                        style={{ width: "30%" }}
+                                                    >
+                                                        <div className="level">
+                                                            <div
+                                                                style={{
+                                                                    width: `80%`,
+                                                                }}
+                                                            ></div>
+                                                        </div>
+                                                    </td>
+                                                    <td
+                                                        style={{ width: "10%" }}
+                                                    >
+                                                        5
+                                                    </td>
+                                                    <td
+                                                        style={{ width: "10%" }}
+                                                    >
+                                                        2
+                                                    </td>
+                                                    <td
+                                                        style={{ width: "10%" }}
+                                                    >
+                                                        0
+                                                    </td>
+                                                    <td
+                                                        style={{ width: "20%" }}
+                                                    >
+                                                        0
+                                                    </td>
+                                                </tr>
+                                            )
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </>
                 )}
             </div>
             {/* -------  player_stats end --------- */}

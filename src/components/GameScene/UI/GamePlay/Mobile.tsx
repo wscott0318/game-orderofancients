@@ -2,8 +2,8 @@ import { gsap } from "gsap";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { CustomProgressBar } from "../../../../theme/components";
-import { PlayerData } from "../../../../constants/gameUI";
-import { S3_BUCKET_URL } from "../../../../constants";
+import { GAME_MODES, S3_BUCKET_URL } from "../../../../constants";
+import { useGameContext } from "../../../../contexts/game-context";
 
 const backImg = S3_BUCKET_URL + "/assets/images/mobile/back.png";
 const plantImg = S3_BUCKET_URL + "/assets/images/mobile/plant.png";
@@ -42,13 +42,10 @@ const MobileGamePlay = styled.div`
     }
 `;
 
-export const Mobile = ({
-    upgrades,
-    profileSpells,
-    players,
-    onClickUpgrade,
-}: any) => {
+export const Mobile = ({ upgrades, players, onClickUpgrade }: any) => {
     const [upgradeSpells, setUpgradeSpells]: [any[], any] = useState([]);
+
+    const { gameMode, lobbyInfo } = useGameContext();
 
     useEffect(() => {
         const array = [];
@@ -246,26 +243,26 @@ export const Mobile = ({
             {/* -------  clock end --------- */}
 
             {/* -------  player start --------- */}
-            <div className="player absolute right-[3vw] top-[1vw] w-[16vw]  flex flex-col gap-[0.3vw]">
-                {players.map((player: PlayerData, index: number) => (
-                    <div className="relative" key={`player${index}`}>
-                        <CustomProgressBar
-                            height={"2.3vw"}
-                            trackColor={player.color}
-                            borderRadius="2px"
-                            value={player.level}
-                        />
+            {gameMode === GAME_MODES.Lobby && (
+                <div className="player absolute right-[3vw] top-[1vw] w-[16vw]  flex flex-col gap-[0.3vw]">
+                    {lobbyInfo?.players.map((player, index: number) => (
+                        <div className="relative" key={`player${index}`}>
+                            <CustomProgressBar
+                                height={"2.3vw"}
+                                trackColor={"blue"}
+                                borderRadius="2px"
+                                value={80}
+                            />
 
-                        <div className="absolute top-0 fs-sm w-[90%] flex left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] ">
-                            <span className="w-[50%]">{player.name}</span>
-                            <span className="ff-round">100/</span>
-                            <span className="ff-round fc-orange">
-                                +{player.level}
-                            </span>
+                            <div className="absolute top-0 fs-sm w-[90%] flex left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] ">
+                                <span className="w-[50%]">Player {index} </span>
+                                <span className="ff-round">100/</span>
+                                <span className="ff-round fc-orange">+ 80</span>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
             {/* -------  player end --------- */}
         </MobileGamePlay>
     );
