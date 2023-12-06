@@ -5,19 +5,24 @@ import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import { S3_BUCKET_URL } from "../../constants";
 
-const avatarImg = S3_BUCKET_URL + "/assets/users/jack.png";
-const logoImg = S3_BUCKET_URL + "/assets/images/loading_logo.png";
+const logoImg = S3_BUCKET_URL + "/assets/images/logo2.png";
 const sliderImg = S3_BUCKET_URL + "/assets/images/loader-slider-shine.png";
 
 const TopLogo = styled.div`
-    top: 0;
-    height: 550px;
-    max-height: calc(100vh - 200px);
+    height: 450px;
     max-width: 100%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: calc(50% - 50px);
+    left: 50%;
+
+    @media (max-width: 500px) {
+        width: 90%;
+    }
 
     img {
         object-fit: contain;
-        object-position: top;
+        object-position: center;
     }
 `;
 
@@ -26,27 +31,9 @@ const LoadingProgress = styled.div`
     width: 800px;
     bottom: 20px;
 `;
-const PlayerScrollDiv = styled.div`
-    height: calc(100vh - 387px);
-    .scroll {
-        overflow-y: scroll;
 
-        ::-webkit-scrollbar {
-            width: 7px;
-            background-color: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background-color: #000;
-            border: 1px solid #ddaf41;
-            border-radius: 10px;
-        }
-    }
-`;
 export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
     const [progressValue, setProgressValue] = useState(0);
-
-    // const [players, setPlayers]: [PlayerData[], any] = useState(playerInfo);
 
     // Firefly particle effects
     const renderFirefly = (count: number) => {
@@ -82,52 +69,12 @@ export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
 
     return (
         <div className="loader">
-            <div className="content z-20 relative select-none flex flex-col justify-between items-center">
+            <div className="content z-20 relative select-none flex flex-col justify-end items-center">
                 <div className="stars absolute">{renderFirefly(30)}</div>
 
                 <TopLogo>
                     <img src={logoImg} alt="logo" className="w-full h-full" />
                 </TopLogo>
-
-                {/* <PlayerScrollDiv className="players relative ff-round">
-                    <div className="w-full h-full text-center border-separate border-spacing-y-[15px] flex flex-col gap-[5px]">
-                        <div className="head text-[#ecea8c] text-[17.4px] flex">
-                            <div className="w-[50%]">Player</div>
-                            <div className="w-[25%]">Played</div>
-                            <div className="w-[25%]">Win </div>
-                        </div>
-                        <div className="scroll">
-                            {players.map(
-                                (player: PlayerData, index: number) => (
-                                    <div
-                                        style={{
-                                            color: "white",
-                                            borderRadius: "5px",
-                                            borderWidth: "2px",
-                                            borderColor: "#2c322f",
-                                        }}
-                                        key={`player${index}`}
-                                        className="text-[17.4px] bg-[#0007] flex p-1 my-2"
-                                    >
-                                        <div className="w-[50%] flex items-center gap-[20%]">
-                                            <img
-                                                width={40}
-                                                src={player.avata}
-                                            />
-                                            <span>{player.name}</span>
-                                        </div>
-                                        <div className="w-[25%] flex justify-center items-center">
-                                            <span>10</span>
-                                        </div>
-                                        <div className="w-[25%] flex justify-center items-center">
-                                            <span>10</span>
-                                        </div>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    </div>
-                </PlayerScrollDiv> */}
 
                 <LoadingProgress className="relative">
                     <CustomLoaderSlider
