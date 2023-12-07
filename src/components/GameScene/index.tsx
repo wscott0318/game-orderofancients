@@ -51,8 +51,11 @@ export const GameScene = () => {
 
         /** KeyDown Eventhandler for `Press Any Key` */
         window.addEventListener("keydown", onKeyDown.bind(this));
+        window.addEventListener("click", onKeyDown.bind(this));
+
         return () => {
-            window.removeEventListener("keydown", onKeyDown);
+            window.removeEventListener("keydown", onKeyDown.bind(this));
+            window.removeEventListener("click", onKeyDown.bind(this));
         };
     }, []);
 
