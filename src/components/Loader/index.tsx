@@ -15,7 +15,6 @@ const TopLogo = styled.div`
     transform: translate(-50%, -50%);
     top: calc(50% - 50px);
     left: 50%;
-
     @media (max-width: 500px) {
         width: 90%;
     }
