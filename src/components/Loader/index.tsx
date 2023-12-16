@@ -31,7 +31,11 @@ const LoadingProgress = styled.div`
     bottom: 20px;
 `;
 
-export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
+interface LoaderProps {
+    canEnterGame: boolean;
+}
+
+export const Loader = ({ canEnterGame }: LoaderProps) => {
     const [progressValue, setProgressValue] = useState(0);
 
     // Firefly particle effects
@@ -68,7 +72,7 @@ export const Loader = ({ canEnterGame }: { canEnterGame: boolean }) => {
 
     return (
         <div className="loader">
-            <div className="content z-20 relative select-none flex flex-col justify-end items-center">
+            <div className="w-screen h-screen overflow-hidden z-20 relative select-none flex flex-col justify-end items-center">
                 <div className="stars absolute">{renderFirefly(30)}</div>
 
                 <TopLogo>

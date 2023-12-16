@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSocket } from "../../hooks/useSocket";
 import {
     BotStatus,
@@ -15,6 +15,7 @@ import {
     PlayerInfo,
     useGameContext,
 } from "../../contexts/game-context";
+import { GAME_STATES } from "../../constants";
 
 interface SocketHandlerProps {
     startGameAction: () => void;
@@ -22,7 +23,11 @@ interface SocketHandlerProps {
 
 export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
     const { socket } = useSocket();
-    const { setLobbyInfo, setUpgrades } = useGameContext();
+    const { setGameState } = useGame();
+    const { lobbyInfo, setLobbyInfo, setUpgrades } = useGameContext();
+
+    const lobbyInfoRef = useRef<LobbyInfo>();
+    lobbyInfoRef.current = lobbyInfo;
 
     const { gameRef } = useGame();
 
@@ -47,6 +52,10 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
         towerStatusdata: TowerStatus[],
         timerStatus: TimerStatus
     ) => {
+        const playerIndex = lobbyInfoRef.current?.players.findIndex(
+            (player) => player.socketId === socket?.id
+        );
+
         towerStatusdata.forEach((towerStatus, index) => {
             const towerManager = gameRef.current?._towerManagerArray[
                 index
@@ -55,6 +64,10 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
             towerManager.maxHp = towerStatus.maxHp;
             towerManager.hp = towerStatus.hp;
             towerManager.isDead = towerStatus.isDead;
+
+            if (towerStatus.isDead && index === playerIndex) {
+                setGameState(GAME_STATES.END);
+            }
 
             (gameRef.current?._playerStateArray[index] as any).gold =
                 towerStatus.gold;

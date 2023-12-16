@@ -2,7 +2,12 @@ import { gsap, Circ } from "gsap";
 import { SceneRenderer } from "./rendering/SceneRenderer";
 import * as THREE from "three";
 import { CAMERA_POS } from "../../constants";
-import { TOWER_POSITION } from "../../constants/tower";
+import { TOWER_POSITIONS } from "../../constants/tower";
+
+interface AnimationManagerProps {
+    sceneRenderer: SceneRenderer;
+    playerIndex: number;
+}
 
 export class AnimationManager {
     _sceneRenderer: SceneRenderer;
@@ -10,19 +15,21 @@ export class AnimationManager {
     _camera: THREE.Camera;
     _spotLight: THREE.SpotLight;
     _hemiLight: THREE.HemisphereLight;
+    _playerIndex: number;
 
-    constructor({ sceneRenderer }: any) {
+    constructor({ sceneRenderer, playerIndex }: AnimationManagerProps) {
         this._sceneRenderer = sceneRenderer;
         this._camera = sceneRenderer._camera;
+        this._playerIndex = playerIndex;
 
         this._towerPosition = new THREE.Vector3(
-            TOWER_POSITION.x,
-            TOWER_POSITION.y,
-            TOWER_POSITION.z
+            TOWER_POSITIONS[this._playerIndex].x,
+            TOWER_POSITIONS[this._playerIndex].y,
+            TOWER_POSITIONS[this._playerIndex].z
         );
 
-        this._spotLight = this._sceneRenderer._scene.children[1];
-        this._hemiLight = this._sceneRenderer._scene.children[2];
+        this._spotLight = this._sceneRenderer._spotLightArray[playerIndex];
+        this._hemiLight = this._sceneRenderer._hemiLight;
     }
 
     camera_Down() {
@@ -80,15 +87,14 @@ export class AnimationManager {
     }
 
     light_attention() {
-        gsap.from(this._spotLight, {
-            angle: Math.PI / 50,
-            duration: 3,
-            ease: Circ.easeIn,
-        });
-        gsap.from(this._hemiLight, {
-            intensity: 0,
-            duration: 3,
-            ease: Circ.easeIn,
-        });
+        this._sceneRenderer._spotLightArray.forEach(
+            (spotLight: THREE.SpotLight) => {
+                gsap.from(spotLight, {
+                    angle: 0,
+                    duration: 2,
+                    ease: Circ.easeIn,
+                });
+            }
+        );
     }
 }

@@ -20,3 +20,16 @@ body {
     cursor: url("../assets/imgs/gameCursor.png"), auto;
     user-select: none;
 }
+
+::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+    @media only screen and (max-width: 1024px) {
+        width: 0.5vw;
+    }
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: black;
+    border: 1px solid #ff0;
+}

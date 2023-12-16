@@ -40,6 +40,7 @@ export const GAME_STATES = {
     END: 0x04,
     SETTING: 0x05,
     GAME_LOBBY: 0x06,
+    TUTORIAL: 0x07,
 };
 
 export const CAMERA_POS = {
@@ -91,3 +92,14 @@ export const DAMAGE_TEXT_COLORS = {
     [DAMAGE_TYPES.Siege]: "#c7a166",
     [DAMAGE_TYPES.Chaos]: "#66c76a",
 };
+
+export const PLAYER_COLOR = [
+    "#ee2d2d",
+    "#2d63ee",
+    "#2deecc",
+    "#eed52d",
+    "#ea7711",
+    "#68ee2d",
+    "#ac2dee",
+    "#ee632d",
+];

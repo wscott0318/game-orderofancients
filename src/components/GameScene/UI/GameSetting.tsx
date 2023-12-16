@@ -8,7 +8,6 @@ import "../../../theme/slider.scss";
 import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
 import { useGame } from "../../../hooks/useGame";
 
-const loadingBack = S3_BUCKET_URL + "/assets/images/loading-back.png";
 const settingBack = S3_BUCKET_URL + "/assets/images/setting-back.png";
 const settingVideo = S3_BUCKET_URL + "/assets/images/buttons/setting-video.png";
 const settingAudio =
@@ -25,9 +24,6 @@ const exitInactive = S3_BUCKET_URL + "/assets/images/buttons/exit-inactive.png";
 
 const GameSetting = styled.div`
     z-index: 20;
-    background-image: url(${loadingBack});
-    background-size: cover;
-    background-position: center;
     user-select: none;
 
     .setting {

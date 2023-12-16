@@ -39,7 +39,7 @@ export const renderer = (options: any) => {
 };
 
 export const HemiLight = () => {
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x437e49, 0.3);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x437e49, 0);
     hemiLight.color.setHSL(0.6, 1, 0.6);
     hemiLight.groundColor.setHSL(0.095, 1, 0.75);
     return hemiLight;
