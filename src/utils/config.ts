@@ -11,4 +11,6 @@ export const Config = {
         process.env.REACT_APP_ENVIRONMENT === "development"
             ? ""
             : "https://pub-1ba5d42028314e148e3c88dc068c7618.r2.dev",
+    showSinglePlay:
+        Boolean(process.env.REACT_APP_SHOW_SINGLE_PLAY_OPTION) ?? false,
 };

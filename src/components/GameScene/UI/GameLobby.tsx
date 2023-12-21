@@ -1,21 +1,21 @@
 import styled from "styled-components";
+import { gsap } from "gsap";
+import { CustomEase } from "gsap/all";
 import { useSocket } from "../../../hooks/useSocket";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { SOCKET_EVENTS } from "../../../constants/socket";
 import { useGame } from "../../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../../constants";
-import { LobbyInfo, useGameContext } from "../../../contexts/game-context";
+import { useGameContext } from "../../../contexts/game-context";
 
-const backImg = S3_BUCKET_URL + "/assets/images/loading-back.png";
+gsap.registerPlugin(CustomEase);
+
 const lobbyBackImg = S3_BUCKET_URL + "/assets/images/lobby-back.png";
 const playerAvatar = S3_BUCKET_URL + "/assets/users/jack.png";
 const exitBtnImg = S3_BUCKET_URL + "/assets/images/buttons/exit-inactive.png";
 
 const Wrapper = styled.div`
     z-index: 20;
-    background-image: url(${backImg});
-    background-size: cover;
-    background-position: center;
 `;
 
 const ContentWrapper = styled.div`
@@ -31,18 +31,53 @@ const GameLobby = () => {
     const { setGameState } = useGame();
     const { lobbyInfo } = useGameContext();
 
+    const divRef = useRef<HTMLDivElement>(null);
+    const menuDownAnim = gsap.timeline();
+
     useEffect(() => {
         socket?.emit(SOCKET_EVENTS.JOIN);
+
+        if (divRef.current) {
+            const divElement = divRef.current.childNodes[0];
+
+            menuDownAnim.add("start").from(divElement, {
+                top: "-50vw",
+                duration: 1,
+                ease: CustomEase.create(
+                    "custom",
+                    "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
+                ),
+            });
+        }
+        return () => {
+            menuDownAnim.kill();
+        };
     }, []);
 
     const onExit = () => {
-        setGameState(GAME_STATES.GAME_MENU);
+        if (divRef.current) {
+            const divElement = divRef.current.childNodes[0];
+            menuDownAnim.add("end").to(divElement, {
+                top: "-50vw",
+                duration: 1,
+                ease: CustomEase.create(
+                    "custom",
+                    "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
+                ),
+            });
+        }
 
-        socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+        setTimeout(() => {
+            setGameState(GAME_STATES.GAME_MENU);
+            socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+        }, 1000);
     };
 
     return (
-        <Wrapper className="w-full h-full flex justify-center items-center">
+        <Wrapper
+            className="w-full h-full flex justify-center items-center"
+            ref={divRef}
+        >
             <div className="relative w-[800px]">
                 <img className="w-full" alt="pic" src={lobbyBackImg} />
 
@@ -53,7 +88,7 @@ const GameLobby = () => {
                             <div className="w-[25%]">Played</div>
                             <div className="w-[25%]">Win </div>
                         </div>
-                        <div className="scroll">
+                        <div className="scroll h-[80%] overflow-auto">
                             {lobbyInfo?.players.map(
                                 (player: any, index: number) => (
                                     <div
@@ -74,7 +109,7 @@ const GameLobby = () => {
                                                 width={40}
                                                 src={playerAvatar}
                                             />
-                                            <span>{`Player#${index + 1}`}</span>
+                                            <span>{player.name}</span>
                                         </div>
                                         <div className="w-[25%] flex justify-center items-center">
                                             <span>10</span>

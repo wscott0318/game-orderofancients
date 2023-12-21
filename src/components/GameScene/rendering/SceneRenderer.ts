@@ -30,6 +30,8 @@ export class SceneRenderer {
     _gridHelper: THREE.GridHelper;
     _playerIndex: number;
     _lobbyInfo: LobbyInfo;
+    _hemiLight: THREE.HemisphereLight;
+    _spotLightArray: THREE.SpotLight[];
 
     constructor({ playerIndex, lobbyInfo }: SceneRendererProps) {
         this._uiRenderer = new CSS2DRenderer();
@@ -39,6 +41,9 @@ export class SceneRenderer {
 
         this._playerIndex = playerIndex;
         this._lobbyInfo = lobbyInfo;
+
+        this._hemiLight = new THREE.HemisphereLight();
+        this._spotLightArray = [];
 
         this.initialize();
     }
@@ -76,7 +81,8 @@ export class SceneRenderer {
     }
 
     initLights() {
-        this._scene.add(SceneSetup.HemiLight());
+        this._hemiLight = SceneSetup.HemiLight();
+        // this._scene.add(this._hemiLight);
 
         for (let i = 0; i < this._lobbyInfo.players.length; i++) {
             const light = SceneSetup.SpotLight();
@@ -92,6 +98,7 @@ export class SceneRenderer {
                 TOWER_POSITIONS[i].z
             );
 
+            this._spotLightArray.push(light);
             this._scene.add(light.target);
             this._scene.add(light);
         }

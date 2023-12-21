@@ -12,11 +12,20 @@ import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
 import GameLobby from "./UI/GameLobby";
 import { SocketHandler } from "./SocketHandler";
+import Tutorial from "../Tutorial";
 
 const Wrapper = styled.div`
     position: relative;
     width: 100vw;
     height: 100vh;
+`;
+
+const BackVideo = styled.video`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    z-index: 0;
 `;
 
 export const GameScene = () => {
@@ -43,6 +52,21 @@ export const GameScene = () => {
     const canEnterGameRef = useRef(false);
     canEnterGameRef.current = canEnterGame;
 
+    const canPlayVideo =
+        loading ||
+        currentGameState === GAME_STATES.TUTORIAL ||
+        currentGameState === GAME_STATES.GAME_MENU ||
+        currentGameState === GAME_STATES.GAME_LOBBY;
+
+    const videoRef = useRef() as any;
+
+    useEffect(() => {
+        if (currentGameState === GAME_STATES.GAME_MENU) {
+            const videoInstance = videoRef.current as HTMLVideoElement;
+            if (videoInstance.paused) videoInstance.play();
+        }
+    }, [currentGameState]);
+
     useEffect(() => {
         if (firstRef.current) return;
         firstRef.current = true;
@@ -60,7 +84,7 @@ export const GameScene = () => {
     }, []);
 
     const onKeyDown = (e: any) => {
-        if (canEnterGameRef.current) {
+        if (canEnterGameRef.current && currentGameState === GAME_STATES.NONE) {
             document
                 .getElementsByClassName("loader")[0]
                 .classList.add("enterGame");
@@ -69,7 +93,7 @@ export const GameScene = () => {
                 setCanEnterGame(false);
                 setLoading(false);
 
-                setGameState(GAME_STATES.GAME_MENU);
+                setGameState(GAME_STATES.TUTORIAL);
             }, 3000);
         }
     };
@@ -80,18 +104,27 @@ export const GameScene = () => {
 
             <div ref={canvasDivRef}></div>
 
+            {canPlayVideo && (
+                <BackVideo ref={videoRef} loop className="opacity-[0.8]">
+                    <source
+                        src="/assets/videos/backVideo.mp4"
+                        type="video/mp4"
+                    />
+                </BackVideo>
+            )}
+
             {loading && <Loader canEnterGame={canEnterGame} />}
 
-            {currentGameState === GAME_STATES.GAME_MENU && (
+            {currentGameState === GAME_STATES.TUTORIAL ? (
+                <Tutorial />
+            ) : currentGameState === GAME_STATES.GAME_MENU ? (
                 <GameMenuUI
                     setGameState={setGameState}
                     startMultiAction={enterLooby}
                 />
-            )}
-
-            {currentGameState === GAME_STATES.SETTING && <GameSettingUI />}
-
-            {currentGameState === GAME_STATES.PLAYING && (
+            ) : currentGameState === GAME_STATES.SETTING ? (
+                <GameSettingUI />
+            ) : currentGameState === GAME_STATES.PLAYING ? (
                 <>
                     <GamePlayUI />
 
@@ -103,13 +136,13 @@ export const GameScene = () => {
                         />
                     </div>
                 </>
-            )}
-
-            {currentGameState === GAME_STATES.PAUSE && <GamePauseUI />}
-
-            {currentGameState === GAME_STATES.END && <GameEndUI />}
-
-            {currentGameState === GAME_STATES.GAME_LOBBY && <GameLobby />}
+            ) : currentGameState === GAME_STATES.PAUSE ? (
+                <GamePauseUI />
+            ) : currentGameState === GAME_STATES.END ? (
+                <GameEndUI />
+            ) : currentGameState === GAME_STATES.GAME_LOBBY ? (
+                <GameLobby />
+            ) : null}
         </Wrapper>
     );
 };

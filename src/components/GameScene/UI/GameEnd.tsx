@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
 import { Game } from "../game";
 import { useGame } from "../../../hooks/useGame";
-import { GAME_MODES, S3_BUCKET_URL } from "../../../constants";
+import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../../constants";
 import { useGameContext } from "../../../contexts/game-context";
+import { useSocket } from "../../../hooks/useSocket";
+import { SOCKET_EVENTS } from "../../../constants/socket";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
@@ -84,18 +86,24 @@ const GameEnd = styled.div`
 `;
 
 export const GameEndUI = () => {
+    const { socket } = useSocket();
+
     const { exitGameAction, restartGameAction, gameRef } = useGame();
 
     const { gameMode, lobbyInfo } = useGameContext();
 
     const game = gameRef.current!;
 
+    useEffect(() => {
+        socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+    }, []);
+
     /**
-     * Win if player stands up for 30 seconds...
+     * Win if player stands up for 1.5 mins...
      */
     const isvictory =
         (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker >
-        30;
+        90;
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">
@@ -106,7 +114,7 @@ export const GameEndUI = () => {
                 />
 
                 {gameMode === GAME_MODES.Lobby && (
-                    <div className="players relative top-[-6vw] w-[72%] ff-round">
+                    <div className="players relative top-[-6vw] w-[72%] ff-round overflow-auto">
                         <table className="w-[100%] text-center">
                             <tbody>
                                 <tr className="head text-[#ecea8c] text-[17.4px]">
@@ -116,18 +124,20 @@ export const GameEndUI = () => {
                                 </tr>
 
                                 {lobbyInfo?.players.map(
-                                    (player, index: number) => (
+                                    (player: any, index: number) => (
                                         <tr
-                                            style={{ color: "blue" }}
+                                            style={{
+                                                color: PLAYER_COLOR[index],
+                                            }}
                                             key={`player${index}`}
                                             className="text-[17.4px] bg-[#0007] h-[50px]"
                                         >
-                                            <td className="player-name w-[50%] h-[50px] flex items-center pl-[5%] gap-[20%]">
+                                            <td className="player-name w-[100%] h-[50px] flex items-center pl-[5%] gap-2 text-left">
                                                 <img
                                                     className="w-[30px]"
                                                     src={playerImg1}
                                                 />
-                                                Player {index}
+                                                {player.name}
                                             </td>
                                             <td className="w-[25%]">2</td>
                                             <td className="w-[25%]">5</td>

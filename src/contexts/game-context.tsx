@@ -22,7 +22,7 @@ interface GameContextProps {
     loading: boolean;
     setLoading: (value: boolean) => void;
     currentGameState: number;
-    setCurrentGameSate: (value: number) => void;
+    setCurrentGameState: (value: number) => void;
     upgrades: any[];
     setUpgrades: (value: any) => void;
     gameMode: number;
@@ -45,7 +45,7 @@ export const initialContext: GameContextProps = {
     loading: true,
     setLoading: () => {},
     currentGameState: GAME_STATES.NONE,
-    setCurrentGameSate: () => {},
+    setCurrentGameState: () => {},
     upgrades: [],
     setUpgrades: () => {},
     gameMode: GAME_MODES.Single,
@@ -74,7 +74,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     );
     const [loading, setLoading] = useState(initialContext.loading);
 
-    const [currentGameState, setCurrentGameSate] = useState(
+    const [currentGameState, setCurrentGameState] = useState(
         initialContext.currentGameState
     );
     const [upgrades, setUpgrades] = useState(initialContext.upgrades);
@@ -97,7 +97,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
                 loading,
                 setLoading,
                 currentGameState,
-                setCurrentGameSate,
+                setCurrentGameState,
                 upgrades,
                 setUpgrades,
                 gameMode,

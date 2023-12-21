@@ -11,11 +11,12 @@ import { GAME_STATES } from "../../constants";
 import { PlayerState } from "./States/PlayerState";
 import { TimeManager } from "./TimeManager";
 import { LobbyInfo } from "../../contexts/game-context";
+import { AnimationManager } from "./AnimationManager";
 
 interface GameOptions {
     canvas: HTMLDivElement;
     assetsManager: AssetsManager;
-    setCurrentGameSate: Function;
+    setCurrentGameState: Function;
     setUpgrades: Function;
     gameMode: number;
     lobbyInfo: LobbyInfo;
@@ -37,13 +38,14 @@ export class Game {
     _lobbyInfo: LobbyInfo;
     _playerIndex: number;
     _gameMode: number;
+    _animationManager: AnimationManager;
 
     constructor(options: GameOptions) {
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
         this._lobbyInfo = options.lobbyInfo;
         this._stateManager = new StateManager({
-            setCurrentGameSate: options.setCurrentGameSate,
+            setCurrentGameState: options.setCurrentGameState,
         });
 
         this._assetsManager = options.assetsManager;
@@ -63,6 +65,11 @@ export class Game {
         this._spriteManager = new SpriteManager({
             sceneRenderer: this._sceneRenderer,
             assetsManager: this._assetsManager,
+        });
+
+        this._animationManager = new AnimationManager({
+            sceneRenderer: this._sceneRenderer,
+            playerIndex: this._playerIndex,
         });
 
         this._towerManagerArray = [];
@@ -114,6 +121,8 @@ export class Game {
     }
 
     initialize() {
+        this._animationManager.light_attention();
+
         this._canvasDiv.appendChild(this._sceneRenderer._renderer.domElement);
         this.animate();
     }

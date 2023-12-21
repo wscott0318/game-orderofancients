@@ -31,3 +31,7 @@ All the game logic is implemented on server-side for both single and multiplayer
 -   Player State( gold, weapons, weapons claim time, etc )
 -   Collision logic( launch the weapons, attack the bots, etc )
 -   Sprite logic( position, status, target, etc )
+
+### Configuration
+
+-   You can set `REACT_APP_SHOW_SINGLE_PLAY_OPTION=true` to show SINGLE-PLAY option to menu.

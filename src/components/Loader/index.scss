@@ -3,15 +3,6 @@
         width: 660px;
     }
 
-    .content {
-        width: 100vw;
-        height: 100vh;
-        overflow: hidden;
-        background-image: url("../../assets/imgs/loading-back.png");
-        background-size: cover;
-        background-position: center;
-    }
-
     .image-wrapper {
         position: relative;
         transform: translate3d(-50%, -50%, 0);

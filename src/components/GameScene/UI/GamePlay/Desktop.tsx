@@ -5,6 +5,7 @@ import {
     ARMOR_TYPES_TEXT,
     DAMAGE_TYPES_TEXT,
     GAME_MODES,
+    PLAYER_COLOR,
     S3_BUCKET_URL,
 } from "../../../../constants";
 import { useGameContext } from "../../../../contexts/game-context";
@@ -401,7 +402,6 @@ const TimeBar = styled.div`
 export const Desktop = ({
     upgrades,
     profileSpells,
-    players,
     onClickUpgrade,
     playerShow,
     setPlayerShow,
@@ -688,16 +688,16 @@ export const Desktop = ({
                             {Array(12)
                                 .fill(1)
                                 .map((value: any, index: number) =>
-                                    upgrades[index] &&
-                                    !upgrades[index].purchased ? (
+                                    upgrades[index] ? (
                                         <div
                                             key={`upgradeItem${index}`}
-                                            className={`${
-                                                (upgrades[index] as any)
+                                            className={`item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
+                                            style={{
+                                                filter: upgrades[index]
                                                     .purchased
-                                                    ? "opacity-0 pointer-events-none"
-                                                    : ""
-                                            } item border-[1px] border-[transparent] hover:border-[1px] hover:border-[yellow]`}
+                                                    ? `brightness(0.1)`
+                                                    : `brightness(1)`,
+                                            }}
                                             onClick={() => {
                                                 setHoveredSpell(null);
 
@@ -787,9 +787,13 @@ export const Desktop = ({
                                         </tr>
 
                                         {lobbyInfo?.players.map(
-                                            (player, index: number) => (
+                                            (player: any, index: number) => (
                                                 <tr
-                                                    style={{ color: "blue" }}
+                                                    style={{
+                                                        color: PLAYER_COLOR[
+                                                            index
+                                                        ],
+                                                    }}
                                                     key={`player${index}`}
                                                 >
                                                     <td
@@ -798,15 +802,16 @@ export const Desktop = ({
                                                             textAlign: "start",
                                                         }}
                                                     >
-                                                        Player {index}
+                                                        {player.name}
                                                     </td>
                                                     <td
                                                         style={{ width: "30%" }}
                                                     >
                                                         <div className="level">
                                                             <div
+                                                                className="status_player_health"
                                                                 style={{
-                                                                    width: `80%`,
+                                                                    width: `100%`,
                                                                 }}
                                                             ></div>
                                                         </div>

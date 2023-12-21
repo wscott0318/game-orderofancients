@@ -11,7 +11,7 @@ export const useGame = () => {
         setCanEnterGame,
         gameInstance,
         setGameInstance,
-        setCurrentGameSate,
+        setCurrentGameState,
         setUpgrades,
         setGameMode,
         setShowGrid,
@@ -55,7 +55,7 @@ export const useGame = () => {
         const game = new Game({
             canvas: canvasDivRef.current!,
             assetsManager: assetsManagerRef.current!,
-            setCurrentGameSate: setCurrentGameSate,
+            setCurrentGameState: setCurrentGameState,
             setUpgrades: setUpgrades,
             gameMode: gameMode,
             lobbyInfo: lobbyInfoRef.current as any,
@@ -82,7 +82,7 @@ export const useGame = () => {
             gameRef.current._stateManager.setState(state);
         }
 
-        setCurrentGameSate(state);
+        setCurrentGameState(state);
     };
 
     const exitGameAction = () => {
@@ -98,7 +98,8 @@ export const useGame = () => {
 
         setGameInstance(undefined);
 
-        startGame();
+        setGameState(GAME_STATES.GAME_LOBBY);
+        // startGame();
     };
 
     const onToggleGrid = (e: any) => {
