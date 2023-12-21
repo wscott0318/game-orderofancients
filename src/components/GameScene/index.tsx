@@ -84,7 +84,7 @@ export const GameScene = () => {
     }, []);
 
     const onKeyDown = (e: any) => {
-        if (canEnterGameRef.current) {
+        if (canEnterGameRef.current && currentGameState === GAME_STATES.NONE) {
             document
                 .getElementsByClassName("loader")[0]
                 .classList.add("enterGame");

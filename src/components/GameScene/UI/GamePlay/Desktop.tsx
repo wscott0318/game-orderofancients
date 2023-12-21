@@ -809,8 +809,9 @@ export const Desktop = ({
                                                     >
                                                         <div className="level">
                                                             <div
+                                                                className="status_player_health"
                                                                 style={{
-                                                                    width: `80%`,
+                                                                    width: `100%`,
                                                                 }}
                                                             ></div>
                                                         </div>

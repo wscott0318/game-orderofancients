@@ -164,11 +164,13 @@ const GameMenuUI = ({ setGameState, startMultiAction }: GameMenuUIProps) => {
                         onClick={() => gamePlay(GAME_MODES.Lobby)}
                     />
 
-                    <button
-                        className="warButton imageButton menuSinglePlay"
-                        onClick={() => gamePlay(GAME_MODES.Single)}
-                        disabled={!Config.showSinglePlay}
-                    />
+                    {Config.showSinglePlay && (
+                        <button
+                            className="warButton imageButton menuSinglePlay"
+                            onClick={() => gamePlay(GAME_MODES.Single)}
+                            disabled={!Config.showSinglePlay}
+                        />
+                    )}
 
                     <button
                         className="warButton imageButton menuSetting"

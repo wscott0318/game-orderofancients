@@ -16,6 +16,7 @@ import {
     useGameContext,
 } from "../../contexts/game-context";
 import { GAME_STATES } from "../../constants";
+import { getColorForPercentage } from "../../helper/color";
 
 interface SocketHandlerProps {
     startGameAction: () => void;
@@ -64,6 +65,19 @@ export const SocketHandler = ({ startGameAction }: SocketHandlerProps) => {
             towerManager.maxHp = towerStatus.maxHp;
             towerManager.hp = towerStatus.hp;
             towerManager.isDead = towerStatus.isDead;
+
+            const healthBarDiv = document.getElementsByClassName(
+                "status_player_health"
+            )[index] as HTMLDivElement;
+            if (healthBarDiv) {
+                healthBarDiv.style.width = `${
+                    (towerManager.hp / towerManager.maxHp) * 100
+                }%`;
+
+                healthBarDiv.style.backgroundColor = `${getColorForPercentage(
+                    towerManager.hp / towerManager.maxHp
+                )}`;
+            }
 
             if (towerStatus.isDead && index === playerIndex) {
                 setGameState(GAME_STATES.END);
