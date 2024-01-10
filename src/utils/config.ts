@@ -1,5 +1,5 @@
 export const Config = {
-    demo: process.env.REACT_APP_ENVIRONMENT === "demo",
+    demo: true,
     apiUrl: process.env.REACT_APP_API_URL ?? "http://localhost:3001/graphql",
     app: {
         name: process.env.REACT_APP_NAME ?? "Order Of Ancients",

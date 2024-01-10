@@ -1,10 +1,15 @@
 import { useCallback, useRef } from "react";
+
 import { GAME_MODES, GAME_STATES } from "../constants";
-import AssetsManager from "../components/GameScene/AssetsManager";
-import { Game } from "../components/GameScene/game";
+import AssetsManager from "../game/managers/AssetsManager";
+import { Game } from "../game/game";
 import { LobbyInfo, useGameContext } from "../contexts/game-context";
+import { UIBridge, uiBridge } from "../libs/UIBridge";
 
 export const useGame = () => {
+
+    const uiBridgeRef = useRef<UIBridge>( uiBridge );
+
     const {
         assetsManager,
         setAssetsManager,
@@ -35,16 +40,17 @@ export const useGame = () => {
     gameRef.current = gameInstance;
 
     const createGame = useCallback(async () => {
-        const assetsManagerRef = new AssetsManager();
 
+        const assetsManagerRef = new AssetsManager();
         await assetsManagerRef.loadModels();
 
         setAssetsManager(assetsManagerRef);
-
         setCanEnterGame(true);
+
     }, []);
 
     const createGameInstance = () => {
+
         if (gameRef.current) return;
 
         let playerIndex: any = 0;
@@ -53,6 +59,7 @@ export const useGame = () => {
         );
 
         const game = new Game({
+            uiBridge: uiBridgeRef.current,
             canvas: canvasDivRef.current!,
             assetsManager: assetsManagerRef.current!,
             setCurrentGameState: setCurrentGameState,
@@ -64,45 +71,54 @@ export const useGame = () => {
 
         setGameInstance(game);
         gameRef.current = game;
+
     };
 
     const startGame = () => {
-        createGameInstance();
 
+        createGameInstance();
         setGameState(GAME_STATES.PLAYING);
+
     };
 
     const enterLooby = () => {
+
         setGameMode(GAME_MODES.Lobby);
         setGameState(GAME_STATES.GAME_LOBBY);
+
     };
 
     const setGameState = (state: number) => {
+
         if (gameRef.current) {
             gameRef.current._stateManager.setState(state);
         }
 
         setCurrentGameState(state);
+
     };
 
     const exitGameAction = () => {
+
         if (gameRef.current) gameRef.current.dispose();
 
         setGameInstance(undefined);
-
         setGameState(GAME_STATES.GAME_MENU);
+
     };
 
     const restartGameAction = () => {
+
         if (gameRef.current) gameRef.current.dispose();
 
         setGameInstance(undefined);
-
         setGameState(GAME_STATES.GAME_LOBBY);
         // startGame();
+
     };
 
     const onToggleGrid = (e: any) => {
+
         const isChecked = e.target.checked;
         setShowGrid(isChecked);
 
@@ -112,6 +128,7 @@ export const useGame = () => {
         } else {
             game._sceneRenderer.removeGrid();
         }
+
     };
 
     return {
@@ -123,6 +140,7 @@ export const useGame = () => {
         startGame,
         enterLooby,
         setGameState,
-        onToggleGrid,
+        onToggleGrid
     };
+
 };

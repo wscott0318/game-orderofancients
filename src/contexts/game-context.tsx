@@ -1,7 +1,7 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { GAME_MODES, GAME_STATES } from "../constants";
-import AssetsManager from "../components/GameScene/AssetsManager";
-import { Game } from "../components/GameScene/game";
+import AssetsManager from "../game/managers/AssetsManager";
+import { Game } from "../game/game";
 import { Socket } from "socket.io-client";
 import { spell } from "../constants/spell";
 

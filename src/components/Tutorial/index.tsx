@@ -63,6 +63,9 @@ export const Tutorial = () => {
         }
     };
 
+    // tmp
+    setGameState(GAME_STATES.GAME_MENU);
+
     return (
         <div
             className="z-[20] w-full h-full flex justify-center items-center"

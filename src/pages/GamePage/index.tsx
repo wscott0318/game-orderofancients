@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import GameScene from "../../components/GameScene";
+import GameScene from "../../components/GameUI";
 import { GameProvider } from "../../contexts/game-context";
 import "../../theme/global.scss";
 
