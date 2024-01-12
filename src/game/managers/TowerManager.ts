@@ -1,9 +1,10 @@
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
+import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+
 import { GAME_STATES } from "../../constants";
-import AssetsManager from "./AssetsManager";
+import { AssetsManager } from "./AssetsManager";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import * as THREE from "three";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import {
     TOWER_HEALTH_HEIGHT,
     TOWER_HEALTH_WIDTH,
@@ -13,36 +14,35 @@ import { StateManager } from "../States/StateManager";
 import { ParticleEffect } from "../ParticleEffect";
 import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../constants/tower";
 
+//
+
 export class TowerManager {
-    level: number;
-    maxHp: number;
-    hp: number;
-    isDead: boolean;
-    _towerMesh: any;
-    _sceneRenderer: SceneRenderer;
-    _assetsManager: AssetsManager;
-    _healthBarUI: CSS2DObject;
-    _stateManager: StateManager;
-    _particleEffect: ParticleEffect;
-    _playerIndex: number;
-    _index: number;
 
-    sacrificeHP: number;
+    public level: number;
+    public maxHp: number;
+    public hp: number;
+    public isDead: boolean;
+    public _towerMesh: any;
+    public _sceneRenderer: SceneRenderer;
+    public _assetsManager: AssetsManager;
+    public _healthBarUI: CSS2DObject;
+    public _stateManager: StateManager;
+    public _particleEffect: ParticleEffect;
+    public _playerIndex: number;
+    public _index: number;
 
-    constructor({
-        sceneRenderer,
-        assetsManager,
-        stateManager,
-        particleEffect,
-        index,
-        playerIndex,
-    }: any) {
-        this._sceneRenderer = sceneRenderer;
-        this._assetsManager = assetsManager;
-        this._stateManager = stateManager;
-        this._particleEffect = particleEffect;
-        this._playerIndex = playerIndex;
-        this._index = index;
+    public sacrificeHP: number;
+
+    //
+
+    constructor ( params: any ) {
+
+        this._sceneRenderer = params.sceneRenderer;
+        this._assetsManager = params.assetsManager;
+        this._stateManager = params.stateManager;
+        this._particleEffect = params.particleEffect;
+        this._playerIndex = params.playerIndex;
+        this._index = params.index;
 
         this.level = 1;
         this.hp = 1700;
@@ -76,16 +76,20 @@ export class TowerManager {
         this._sceneRenderer.getScene().add(this._healthBarUI);
 
         this.initialize();
+
     }
 
-    initialize() {
+    public initialize () : void {
+
         this._towerMesh.position.x = TOWER_POSITIONS[this._index].x;
         this._towerMesh.position.y = TOWER_POSITIONS[this._index].y;
         this._towerMesh.position.z = TOWER_POSITIONS[this._index].z;
         this._sceneRenderer.getScene().add(this._towerMesh);
+
     }
 
-    levelUp() {
+    public levelUp () : void {
+
         const element = document.getElementById("gameLevel");
         if (element) element.textContent = `Level ${this.level}`;
 
@@ -97,9 +101,11 @@ export class TowerManager {
         );
 
         this._particleEffect.addLevelUp(newVector);
+
     }
 
-    renderHealthBar() {
+    public renderHealthBar () : void {
+
         this._healthBarUI.position.set(
             this._towerMesh.position.x,
             this._towerMesh.position.y + TOWER_HEIGHT,
@@ -165,16 +171,25 @@ export class TowerManager {
         if (healthBarDiv) {
             healthBarDiv.style.width = `${(this.hp / this.maxHp) * 100}%`;
         }
+
     }
 
-    tick() {
-        if (this.hp <= 0) {
+    public tick () : void {
+
+        if ( this.hp <= 0 ) {
+
             this.isDead = true;
 
-            if (this._index === this._playerIndex)
+            if ( this._index === this._playerIndex ) {
+
                 this._stateManager.setState(GAME_STATES.END);
+
+            }
+
         }
 
         this.renderHealthBar();
+
     }
+
 }

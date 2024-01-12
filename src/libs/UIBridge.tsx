@@ -13,6 +13,12 @@ export class UIBridge {
 
     //
 
+    constructor () {
+
+        console.log('UIBridge initialized.');
+
+    };
+
     public clear () : void {
 
         this.reactEventsQueue.clear();
@@ -23,7 +29,7 @@ export class UIBridge {
 
     };
 
-    public onReactEvent ( eventName: string, callback: Callback ) : void {
+    public onUIEvent ( eventName: string, callback: Callback ) : void {
 
         let listeners = this.reactEventListeners.get( eventName );
 
@@ -38,7 +44,7 @@ export class UIBridge {
 
     };
 
-    public removeReactEventListener ( eventName: string, callback: Callback ) : void {
+    public removeUIEventListener ( eventName: string, callback: Callback ) : void {
 
         const listeners = this.reactEventListeners.get( eventName );
 
@@ -56,7 +62,7 @@ export class UIBridge {
 
     };
 
-    public dispatchToGfx ( eventName: string, params: any ) : void {
+    public dispatchToGame ( eventName: string, params: any ) : void {
 
         let reactEvents = this.reactEventsQueue.get( eventName );
 
@@ -73,7 +79,7 @@ export class UIBridge {
 
     //
 
-    public onGfxEvent ( eventName: string, callback: Callback ) : void {
+    public onGameEvent ( eventName: string, callback: Callback ) : void {
 
         let listeners = this.gfxEventListeners.get( eventName );
 
@@ -88,7 +94,7 @@ export class UIBridge {
 
     };
 
-    public removeGfxEventListener ( eventName: string, callback: Callback ) : void {
+    public removeGameEventListener ( eventName: string, callback: Callback ) : void {
 
         const listeners = this.gfxEventListeners.get( eventName );
 
@@ -106,7 +112,7 @@ export class UIBridge {
 
     };
 
-    public dispatchToUI ( eventName: string, params: any ) : void {
+    public dispatchToUI ( eventName: string, params: any = null ) : void {
 
         let gfxEvents = this.gfxEventsQueue.get( eventName );
 
@@ -118,6 +124,9 @@ export class UIBridge {
         }
 
         gfxEvents.add( params );
+
+        // tmp
+        this.processEvents();
 
     };
 

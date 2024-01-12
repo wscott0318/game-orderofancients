@@ -1,5 +1,7 @@
+import * as THREE from "three";
+
 import { NewSpriteInfo, NewTextSpriteInfo } from "../../constants/type";
-import AssetsManager from "./AssetsManager";
+import { AssetsManager } from "./AssetsManager";
 import { TextSprite } from "../Sprites/Text";
 import Boulder from "../Sprites/Weapons/Boulder";
 import Bow from "../Sprites/Weapons/Bow";
@@ -13,7 +15,8 @@ import MissileBarrage from "../Sprites/Weapons/MissileBarrage";
 import Rifle from "../Sprites/Weapons/Rifle";
 import ThrowingAxe from "../Sprites/Weapons/ThrowingAxe";
 import { SceneRenderer } from "../rendering/SceneRenderer";
-import * as THREE from "three";
+
+//
 
 type SpriteManagerProps = {
     sceneRenderer: SceneRenderer;
@@ -21,23 +24,29 @@ type SpriteManagerProps = {
 };
 
 export class SpriteManager {
-    spriteArray: any;
-    textSpriteArray: any;
-    sceneRenderer: SceneRenderer;
-    assetsManager: AssetsManager;
 
-    constructor({ sceneRenderer, assetsManager }: SpriteManagerProps) {
+    public spriteArray: any;
+    public textSpriteArray: any;
+    public sceneRenderer: SceneRenderer;
+    public assetsManager: AssetsManager;
+
+    //
+
+    constructor( { sceneRenderer, assetsManager }: SpriteManagerProps ) {
+
         this.spriteArray = [];
         this.textSpriteArray = [];
         this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
+
     }
 
-    addSpriteFrom(newSpriteInfo: NewSpriteInfo) {
+    public addSpriteFrom ( newSpriteInfo: NewSpriteInfo ) : void {
+
         let sprite = null;
         const weaponName = newSpriteInfo.name;
 
-        switch (weaponName) {
+        switch ( weaponName ) {
             case "Throwing Axes":
                 sprite = new ThrowingAxe({
                     sceneRenderer: this.sceneRenderer,
@@ -194,16 +203,22 @@ export class SpriteManager {
                 break;
         }
 
-        if (sprite) {
-            this.addSprite(sprite);
+        if ( sprite ) {
+
+            this.addSprite( sprite );
+
         }
+
     }
 
-    addSprite(sprite: any) {
-        this.spriteArray.push(sprite);
+    public addSprite ( sprite: any ) : void {
+
+        this.spriteArray.push( sprite );
+
     }
 
-    addTextSpriteFrom(newTextSpriteInfo: NewTextSpriteInfo) {
+    public addTextSpriteFrom ( newTextSpriteInfo: NewTextSpriteInfo ) : void {
+
         this.addTextSprite(
             new TextSprite({
                 text: newTextSpriteInfo.text,
@@ -213,28 +228,41 @@ export class SpriteManager {
                 fastMode: newTextSpriteInfo.fastMode === true,
             })
         );
+
     }
 
-    addTextSprite(sprite: TextSprite) {
-        this.textSpriteArray.push(sprite);
+    public addTextSprite ( sprite: TextSprite ) : void {
+
+        this.textSpriteArray.push( sprite );
+
     }
 
-    validateTextSprites() {
+    public validateTextSprites () : void {
+
         const newArray = this.textSpriteArray.filter(
             (sprite: TextSprite) => !sprite.shouldRemove
         );
 
-        this.textSpriteArray = [...newArray];
+        this.textSpriteArray = [ ...newArray ];
+
     }
 
-    tick() {
-        for (let i = 0; i < this.spriteArray.length; i++) {
-            this.spriteArray[i].tick();
+    public tick () : void {
+
+        for ( let i = 0; i < this.spriteArray.length; i ++ ) {
+
+            this.spriteArray[ i ].tick();
+
         }
 
         this.validateTextSprites();
 
-        for (let i = 0; i < this.textSpriteArray.length; i++)
-            this.textSpriteArray[i].tick();
+        for ( let i = 0; i < this.textSpriteArray.length; i ++ ) {
+
+            this.textSpriteArray[ i ].tick();
+
+        }
+
     }
+
 }

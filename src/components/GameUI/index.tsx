@@ -11,7 +11,6 @@ import { useGame } from "../../hooks/useGame";
 import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
 import GameLobby from "./GameLobby";
-import { SocketHandler } from "../../game/SocketHandler";
 import Tutorial from "../Tutorial";
 import { uiBridge } from "../../libs/UIBridge";
 import { UI_EVENTS } from "../../constants/GameUIEvents";
@@ -126,11 +125,13 @@ export const GameScene = () => {
 
     useEffect( () => {
 
-        uiBridge.onGfxEvent( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
+        uiBridge.onGameEvent( UI_EVENTS.GAME_START, startGame );
+        uiBridge.onGameEvent( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
 
         return () => {
 
-            uiBridge.removeGfxEventListener( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
+            uiBridge.removeGameEventListener( UI_EVENTS.GAME_START, startGame );
+            uiBridge.removeGameEventListener( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
 
         };
 
@@ -140,8 +141,6 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            <SocketHandler startGameAction={startGame} />
-
             <div ref={canvasDivRef}></div>
 
             {canPlayVideo && (

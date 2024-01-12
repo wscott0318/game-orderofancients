@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
-import { useSocket } from "../../hooks/useSocket";
 import { useEffect, useRef } from "react";
+
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { useGame } from "../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
+import { Network } from "../../game/networking/NetworkHandler";
+import { uiBridge } from "../../libs/UIBridge";
+import { UI_EVENTS } from "../../constants/GameUIEvents";
 
 gsap.registerPlugin(CustomEase);
 
@@ -26,16 +29,36 @@ const ContentWrapper = styled.div`
 `;
 
 const GameLobby = () => {
-    const { socket } = useSocket();
 
     const { setGameState } = useGame();
-    const { lobbyInfo } = useGameContext();
+    const { lobbyInfo, setLobbyInfo, setUpgrades } = useGameContext();
 
     const divRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
 
+    /**
+     * Process events
+     */
+
+    useEffect( () => {
+
+        uiBridge.onGameEvent( UI_EVENTS.SET_LOBBY_DATA, setLobbyInfo );
+        uiBridge.onGameEvent( UI_EVENTS.SET_PLAYER_UPGRADES, setUpgrades );
+
+        return () => {
+
+            uiBridge.removeGameEventListener( UI_EVENTS.UPDATE_TIME, setLobbyInfo );
+            uiBridge.removeGameEventListener( UI_EVENTS.SET_PLAYER_UPGRADES, setUpgrades );
+
+        };
+
+    }, []);
+
+    //
+
     useEffect(() => {
-        socket?.emit(SOCKET_EVENTS.JOIN);
+
+        Network.socket?.emit(SOCKET_EVENTS.JOIN);
 
         if (divRef.current) {
             const divElement = divRef.current.childNodes[0];
@@ -69,7 +92,7 @@ const GameLobby = () => {
 
         setTimeout(() => {
             setGameState(GAME_STATES.GAME_MENU);
-            socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+            Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
         }, 1000);
     };
 
@@ -97,9 +120,10 @@ const GameLobby = () => {
                                             borderRadius: "5px",
                                             borderWidth: "2px",
                                             borderColor:
-                                                player.socketId === socket?.id
-                                                    ? "#ffff00"
-                                                    : "#2c322f",
+                                                // player.socketId === socket?.id
+                                                //     ? "#ffff00"
+                                                    // : 
+                                                    "#2c322f",
                                         }}
                                         key={`player${index}`}
                                         className="text-[17.4px] bg-[#0007] flex p-1 my-2"

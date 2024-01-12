@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
-import { Game } from "../../game/game";
+import { Game } from "../../game/Game";
 import { useGame } from "../../hooks/useGame";
 import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
-import { useSocket } from "../../hooks/useSocket";
 import { SOCKET_EVENTS } from "../../constants/socket";
+import { Network } from "../../game/networking/NetworkHandler";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
@@ -86,7 +86,6 @@ const GameEnd = styled.div`
 `;
 
 export const GameEndUI = () => {
-    const { socket } = useSocket();
 
     const { exitGameAction, restartGameAction, gameRef } = useGame();
 
@@ -95,15 +94,13 @@ export const GameEndUI = () => {
     const game = gameRef.current!;
 
     useEffect(() => {
-        socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+        Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
     }, []);
 
     /**
      * Win if player stands up for 1.5 mins...
      */
-    const isvictory =
-        (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker >
-        90;
+    const isvictory = (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker > 90;
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">

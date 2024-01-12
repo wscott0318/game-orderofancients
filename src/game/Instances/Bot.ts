@@ -11,7 +11,7 @@ import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../constants/bot";
 import { TOWER_POSITIONS, TOWER_RADIUS } from "../../constants/tower";
 import { createStun } from "../Particles/weapons/Stun";
 import { SceneRenderer } from "../rendering/SceneRenderer";
-import AssetsManager from "../managers/AssetsManager";
+import { AssetsManager } from "../managers/AssetsManager";
 import { createToonProjectile } from "../Particles/ToonProjectile";
 
 export class Bot {

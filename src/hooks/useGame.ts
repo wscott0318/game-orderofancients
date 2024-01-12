@@ -1,14 +1,14 @@
 import { useCallback, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
-import AssetsManager from "../game/managers/AssetsManager";
-import { Game } from "../game/game";
+import { AssetsManager } from "../game/managers/AssetsManager";
+import { Game } from "../game/Game";
 import { LobbyInfo, useGameContext } from "../contexts/game-context";
-import { UIBridge, uiBridge } from "../libs/UIBridge";
+import { Network } from "../game/networking/NetworkHandler";
+
+//
 
 export const useGame = () => {
-
-    const uiBridgeRef = useRef<UIBridge>( uiBridge );
 
     const {
         assetsManager,
@@ -22,7 +22,6 @@ export const useGame = () => {
         setShowGrid,
         gameMode,
         lobbyInfo,
-        socket,
     } = useGameContext();
 
     const lobbyInfoRef = useRef<LobbyInfo>();
@@ -41,6 +40,8 @@ export const useGame = () => {
 
     const createGame = useCallback(async () => {
 
+        Network.initialize();
+
         const assetsManagerRef = new AssetsManager();
         await assetsManagerRef.loadModels();
 
@@ -55,11 +56,10 @@ export const useGame = () => {
 
         let playerIndex: any = 0;
         playerIndex = lobbyInfoRef.current?.players.findIndex(
-            (player) => player.socketId === socket?.id
+            (player) => player.socketId === Network.socket?.id
         );
 
         const game = new Game({
-            uiBridge: uiBridgeRef.current,
             canvas: canvasDivRef.current!,
             assetsManager: assetsManagerRef.current!,
             setCurrentGameState: setCurrentGameState,
@@ -68,6 +68,13 @@ export const useGame = () => {
             lobbyInfo: lobbyInfoRef.current as any,
             playerIndex: playerIndex,
         });
+
+        // tmp hack
+        setTimeout(() => {
+
+            game.animate();
+
+        }, 1000 );
 
         setGameInstance(game);
         gameRef.current = game;

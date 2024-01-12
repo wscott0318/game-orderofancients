@@ -6,6 +6,7 @@ import { GAME_MODES, GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { Config } from "../../utils/config";
+import { Network } from "../../game/networking/NetworkHandler";
 
 const menuBack = S3_BUCKET_URL + "/assets/images/menu-back.png";
 const btnBack = S3_BUCKET_URL + "/assets/images/button-back-bright.png";
@@ -103,7 +104,7 @@ interface GameMenuUIProps {
 }
 
 const GameMenuUI = ({ setGameState, startMultiAction }: GameMenuUIProps) => {
-    const { socket, setGameMode } = useGameContext();
+    const { setGameMode } = useGameContext();
 
     const gameMenuRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
@@ -146,7 +147,7 @@ const GameMenuUI = ({ setGameState, startMultiAction }: GameMenuUIProps) => {
     const onClickSinglePlay = () => {
         setGameMode(GAME_MODES.Single);
 
-        socket?.emit(SOCKET_EVENTS.PLAY_SINGLE);
+        Network.socket?.emit(SOCKET_EVENTS.PLAY_SINGLE);
     };
 
     return (

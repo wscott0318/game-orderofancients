@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { SPELLS_INFO } from "../../../constants/spell";
-import AssetsManager from "../../managers/AssetsManager";
+import { AssetsManager } from "../../managers/AssetsManager";
 import { SceneRenderer } from "../../rendering/SceneRenderer";
 import { disposeMesh } from "../../../helper/three";
 import { createBulletMuzzle } from "../../Particles/BulletMuzzle";

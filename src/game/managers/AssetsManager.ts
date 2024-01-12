@@ -9,21 +9,25 @@ export interface TextureImage {
 }
 
 export class AssetsManager {
-    _models: any;
-    _particleTextures: any;
 
-    constructor() {
+    public _models: any;
+    public _particleTextures: any;
+
+    //
+
+    constructor () {
+
         this._models = {};
         this._particleTextures = [];
 
         this.loadParticleTextures();
+
     }
 
-    loadParticleTextures() {
-        const particleText1 =
-            S3_BUCKET_URL + "/assets/textures/particle/texture1.png";
-        const particleText2 =
-            S3_BUCKET_URL + "/assets/textures/particle/texture2.png";
+    public loadParticleTextures () {
+
+        const particleText1 = S3_BUCKET_URL + "/assets/textures/particle/texture1.png";
+        const particleText2 = S3_BUCKET_URL + "/assets/textures/particle/texture2.png";
 
         const texture1 = new THREE.TextureLoader().load(particleText1);
         const texture2 = new THREE.TextureLoader().load(particleText2);
@@ -38,10 +42,13 @@ export class AssetsManager {
                 texture: texture2,
             },
         ];
+
     }
 
-    loadModels() {
+    public loadModels () : Promise<boolean> {
+
         return new Promise(async (resolve, reject) => {
+
             this._models.environment = await LoadModel(
                 MODEL_URLS["environment"]
             );
@@ -75,18 +82,25 @@ export class AssetsManager {
             this._models.stone = await LoadModel(MODEL_URLS["stone"]);
 
             resolve(true);
+
         });
+
     }
 
-    getEnvironmentModel() {
+    public getEnvironmentModel () {
+
         return this._models.environment.scene;
+
     }
 
-    getTowerModel() {
+    public getTowerModel () {
+
         return this._models.tower;
+
     }
 
-    getBotModel(type: number) {
+    public getBotModel ( type: number ) {
+
         if (type === BOT_TYPE["grunt"]) return this._models.bot_grunt;
 
         if (type === BOT_TYPE["swordsman"]) return this._models.bot_swordsman;
@@ -96,7 +110,7 @@ export class AssetsManager {
         if (type === BOT_TYPE["king"]) return this._models.bot_king;
 
         if (type === BOT_TYPE["mage"]) return this._models.bot_mage;
-    }
-}
 
-export default AssetsManager;
+    }
+
+}
