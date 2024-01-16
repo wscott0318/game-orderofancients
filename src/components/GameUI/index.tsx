@@ -12,8 +12,8 @@ import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
 import GameLobby from "./GameLobby";
 import Tutorial from "../Tutorial";
-import { uiBridge } from "../../libs/UIBridge";
-import { UI_EVENTS } from "../../constants/GameUIEvents";
+import { EventBridge } from "../../libs/EventBridge";
+import { Events } from "../../constants/GameEvents";
 import { CONVERT_TIME } from "../../utils/helper";
 
 const Wrapper = styled.div`
@@ -125,13 +125,13 @@ export const GameScene = () => {
 
     useEffect( () => {
 
-        uiBridge.onGameEvent( UI_EVENTS.GAME_START, startGame );
-        uiBridge.onGameEvent( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
+        EventBridge.onGameEvent( Events.Game.GAME_START, startGame );
+        EventBridge.onGameEvent( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
 
         return () => {
 
-            uiBridge.removeGameEventListener( UI_EVENTS.GAME_START, startGame );
-            uiBridge.removeGameEventListener( UI_EVENTS.UPDATE_TIME, onTimeUpdateHandler );
+            EventBridge.removeGameEventListener( Events.Game.GAME_START, startGame );
+            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
 
         };
 

@@ -13,7 +13,8 @@ import { PlayerState } from "./States/PlayerState";
 import { TimeManager } from "./managers/TimeManager";
 import { LobbyInfo } from "../contexts/game-context";
 import { AnimationManager } from "./managers/AnimationManager";
-import { uiBridge } from "../libs/UIBridge";
+import { EventBridge } from "../libs/EventBridge";
+import { GameScene, Gfx } from "./gfx";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -52,11 +53,18 @@ export class Game {
     public _gameMode: number;
     public _animationManager: AnimationManager;
 
+    private gameScene: GameScene;
+
     //
 
     constructor ( options: GameOptions ) {
 
         Game._instance = this;
+
+        this.gameScene = new GameScene();
+        this.gameScene.init();
+
+        Gfx.setActiveScene( this.gameScene );
 
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
@@ -164,7 +172,7 @@ export class Game {
 
         // process in/out events queue
 
-        uiBridge.processEvents();
+        EventBridge.processEvents();
 
         requestAnimationFrame( this.animate );
 

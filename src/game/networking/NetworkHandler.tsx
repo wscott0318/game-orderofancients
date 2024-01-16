@@ -13,8 +13,8 @@ import { SOCKET_EVENTS } from "../../constants/socket";
 import { LobbyInfo, PlayerInfo } from "../../contexts/game-context";
 import { getColorForPercentage } from "../../helper/color";
 import { Config } from "../../utils/config";
-import { uiBridge } from "../../libs/UIBridge";
-import { UI_EVENTS } from "../../constants/GameUIEvents";
+import { EventBridge } from "../../libs/EventBridge";
+import { Events } from "../../constants/GameEvents";
 import { Game } from "../Game";
 
 //
@@ -92,17 +92,17 @@ export class NetworkHandler {
 
         console.log( 'game started' );
 
-        uiBridge.dispatchToUI( UI_EVENTS.SET_LOBBY_DATA, lobby );
+        EventBridge.dispatchToUI( Events.Game.SET_LOBBY_DATA, lobby );
 
         const player = lobby.players.find(
             ( item ) => item.socketId === this.socket?.id
         );
 
-        uiBridge.dispatchToUI( UI_EVENTS.SET_PLAYER_UPGRADES, player?.upgrades );
+        EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
 
         setTimeout( () => {
 
-            uiBridge.dispatchToUI( UI_EVENTS.GAME_START );
+            EventBridge.dispatchToUI( Events.Game.GAME_START );
 
         }, 300 );
 
@@ -110,7 +110,7 @@ export class NetworkHandler {
 
     public onReceiveLobbyData = ( lobby: LobbyInfo ) : void => {
 
-        uiBridge.dispatchToUI( UI_EVENTS.SET_LOBBY_DATA, lobby );
+        EventBridge.dispatchToUI( Events.Game.SET_LOBBY_DATA, lobby );
 
     }
 
@@ -151,7 +151,7 @@ export class NetworkHandler {
 
             }
 
-            (game._playerStateArray[index] as any).gold = towerStatus.gold;
+            ( game._playerStateArray[ index ] as any ).gold = towerStatus.gold;
 
         });
 
@@ -206,7 +206,7 @@ export class NetworkHandler {
     public onReceiveUpgrades = ( playersInfo: PlayerInfo[] ) : void => {
 
         const player = playersInfo.find( ( el ) => el.socketId === this.socket?.id );
-        uiBridge.dispatchToUI( UI_EVENTS.SET_PLAYER_UPGRADES, player?.upgrades );
+        EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
 
     }
 

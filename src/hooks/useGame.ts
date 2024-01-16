@@ -5,6 +5,7 @@ import { AssetsManager } from "../game/managers/AssetsManager";
 import { Game } from "../game/Game";
 import { LobbyInfo, useGameContext } from "../contexts/game-context";
 import { Network } from "../game/networking/NetworkHandler";
+import { Gfx } from "../game/gfx";
 
 //
 
@@ -58,6 +59,9 @@ export const useGame = () => {
         playerIndex = lobbyInfoRef.current?.players.findIndex(
             (player) => player.socketId === Network.socket?.id
         );
+
+        Gfx.init({ canvasDiv: canvasDivRef.current! });
+        Gfx.update();
 
         const game = new Game({
             canvas: canvasDivRef.current!,

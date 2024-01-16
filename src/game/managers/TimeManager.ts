@@ -6,8 +6,8 @@ import { TowerManager } from "./TowerManager";
 import { TextSprite } from "../Sprites/Text";
 import { SceneRenderer } from "../rendering/SceneRenderer";
 import { SpriteManager } from "./SpriteManager";
-import { uiBridge } from "../../libs/UIBridge";
-import { UI_EVENTS } from "../../constants/GameUIEvents";
+import { EventBridge } from "../../libs/EventBridge";
+import { Events } from "../../constants/GameEvents";
 
 //
 
@@ -94,7 +94,7 @@ export class TimeManager {
 
         this.playerState.updateGoldUI();
 
-        uiBridge.dispatchToUI( UI_EVENTS.UPDATE_TIME, {
+        EventBridge.dispatchToUI( Events.Game.UPDATE_TIME, {
             totalTimeTracker:   this.totalTimeTracker,
             roundTracker:       this.roundTracker
         });

@@ -3,7 +3,7 @@ type Callback = ( params: any ) => void;
 
 //
 
-export class UIBridge {
+export class EventBridgeCore {
 
     private reactEventsQueue: Map<string, Set<Callback> > = new Map();
     private reactEventListeners: Map<string, Set<Callback> > = new Map();
@@ -186,4 +186,4 @@ export class UIBridge {
 
 };
 
-export const uiBridge = new UIBridge();
+export const EventBridge = new EventBridgeCore();

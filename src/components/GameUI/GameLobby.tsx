@@ -8,8 +8,8 @@ import { useGame } from "../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { Network } from "../../game/networking/NetworkHandler";
-import { uiBridge } from "../../libs/UIBridge";
-import { UI_EVENTS } from "../../constants/GameUIEvents";
+import { EventBridge } from "../../libs/EventBridge";
+import { Events } from "../../constants/GameEvents";
 
 gsap.registerPlugin(CustomEase);
 
@@ -42,13 +42,13 @@ const GameLobby = () => {
 
     useEffect( () => {
 
-        uiBridge.onGameEvent( UI_EVENTS.SET_LOBBY_DATA, setLobbyInfo );
-        uiBridge.onGameEvent( UI_EVENTS.SET_PLAYER_UPGRADES, setUpgrades );
+        EventBridge.onGameEvent( Events.Game.SET_LOBBY_DATA, setLobbyInfo );
+        EventBridge.onGameEvent( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
 
         return () => {
 
-            uiBridge.removeGameEventListener( UI_EVENTS.UPDATE_TIME, setLobbyInfo );
-            uiBridge.removeGameEventListener( UI_EVENTS.SET_PLAYER_UPGRADES, setUpgrades );
+            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, setLobbyInfo );
+            EventBridge.removeGameEventListener( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
 
         };
 
