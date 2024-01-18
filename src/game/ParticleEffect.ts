@@ -1,23 +1,24 @@
+
 import { Vector3 } from "three";
 
 import { AssetsManager } from "./managers/AssetsManager";
-import { createExplosion } from "./Particles/Explosion2";
-import { createLevelUp } from "./Particles/LevelUp";
-import { createToonProjectile } from "./Particles/ToonProjectile";
-import { SceneRenderer } from "./rendering/SceneRenderer";
+import { createExplosion } from "./gfx/particles/Explosion2";
+import { createLevelUp } from "./gfx/particles/LevelUp";
+import { createToonProjectile } from "./gfx/particles/ToonProjectile";
+import { GameScene } from "./gfx";
 
 //
 
 export class ParticleEffect {
 
-    public sceneRenderer: SceneRenderer;
+    public gameScene: GameScene;
     public assetsManager: AssetsManager;
 
     //
 
     constructor( params: any ) {
 
-        this.sceneRenderer = params.sceneRenderer;
+        this.gameScene = params.game;
         this.assetsManager = params.assetsManager;
 
     }
@@ -25,7 +26,7 @@ export class ParticleEffect {
     public addExplosion ( position: THREE.Vector3 ) {
 
         const explosion = createExplosion(
-            this.sceneRenderer._particleRenderer,
+            this.gameScene.particleRenderer,
             this.assetsManager._particleTextures
         );
 
@@ -35,14 +36,14 @@ export class ParticleEffect {
 
         explosion.scale.set(0.1, 0.1, 0.1);
 
-        this.sceneRenderer.getScene().add( explosion );
+        this.gameScene.add( explosion );
 
     }
 
     public addLevelUp ( position: Vector3 ) {
 
         const particle = createLevelUp(
-            this.sceneRenderer._particleRenderer,
+            this.gameScene.particleRenderer,
             this.assetsManager._particleTextures
         );
 
@@ -52,14 +53,14 @@ export class ParticleEffect {
 
         particle.scale.set(0.4, 0.4, 0.4);
 
-        this.sceneRenderer.getScene().add( particle );
+        this.gameScene.add( particle );
 
     }
 
     public ToonProjectTile ( position: Vector3 ) {
 
         const particle = createToonProjectile(
-            this.sceneRenderer._particleRenderer,
+            this.gameScene.particleRenderer,
             this.assetsManager._particleTextures
         );
 
@@ -69,7 +70,7 @@ export class ParticleEffect {
 
         particle.scale.set(1, 1, 1);
 
-        this.sceneRenderer.getScene().add(particle);
+        this.gameScene.add(particle);
 
         return particle;
 
@@ -78,7 +79,7 @@ export class ParticleEffect {
     public addParticle ( position: Vector3 ) : void {
 
         const particle = createToonProjectile(
-            this.sceneRenderer._particleRenderer,
+            this.gameScene.particleRenderer,
             this.assetsManager._particleTextures
         );
 
@@ -88,7 +89,7 @@ export class ParticleEffect {
 
         particle.scale.set(0.1, 0.1, 0.1);
 
-        this.sceneRenderer.getScene().add( particle );
+        this.gameScene.add( particle );
 
     }
 

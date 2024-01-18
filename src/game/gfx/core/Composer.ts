@@ -73,6 +73,7 @@ export class ComposerPass {
         }
 
         renderer.setRenderTarget( null );
+        renderer.clear();
         this.fsQuad.render( renderer );
 
     }

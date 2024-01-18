@@ -1,5 +1,7 @@
 
 import { WebGLRenderer } from 'three';
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
+import Stats from 'stats-gl';
 
 import { GameScene } from './GameScene';
 import { ComposerPass } from './Composer';
@@ -14,12 +16,14 @@ class GfxCore {
     public height: number = window.innerHeight;
 
     public renderer: WebGLRenderer;
+    public uiRenderer: CSS2DRenderer;
 
     public activeGameScene: GameScene;
     private gameScenes: GameScene[] = [];
 
     private prevRenderTime: number = 0;
 
+    private stats: Stats;
     private resolution: number = 1;
     private composer: ComposerPass;
     private loopEnabled: boolean = true;
@@ -28,6 +32,9 @@ class GfxCore {
     //
 
     public init ( params: { canvasDiv: HTMLElement } ) : void {
+
+        this.stats = new Stats();
+        document.body.appendChild( this.stats.domElement );
 
         this.composer = new ComposerPass();
 
@@ -48,9 +55,23 @@ class GfxCore {
     private createRenderer ( canvasDiv: HTMLElement ) : void {
 
         this.renderer = new WebGLRenderer({ antialias: false });
+        this.renderer.domElement.style.position = 'absolute';
+        this.renderer.domElement.style.top = '0px';
+        this.renderer.domElement.style.left = '0px';
+        this.renderer.domElement.style.zIndex = '1';
         canvasDiv.appendChild( this.renderer.domElement );
 
+        this.renderer.setPixelRatio( window.devicePixelRatio );
         this.renderer.setSize( this.width * this.resolution, this.height * this.resolution );
+
+        //
+
+        this.uiRenderer = new CSS2DRenderer();
+        this.uiRenderer.setSize( this.width, this.height );
+        this.uiRenderer.domElement.id = 'uiRenderer';
+        this.uiRenderer.domElement.style.position = 'absolute';
+        this.uiRenderer.domElement.style.top = '0px';
+        document.body.appendChild( this.uiRenderer.domElement );
 
     }
 
@@ -66,6 +87,8 @@ class GfxCore {
         const time = performance.now();
         const delta = this.prevRenderTime ? time - this.prevRenderTime : 0;
 
+        this.stats.begin();
+
         if ( this.activeGameScene ) {
 
             this.activeGameScene.update( delta, time );
@@ -74,6 +97,9 @@ class GfxCore {
         }
 
         this.composer.render( this.renderer );
+
+        this.stats.end();
+        this.stats.update();
 
         this.prevRenderTime = time;
 

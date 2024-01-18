@@ -1,18 +1,22 @@
+
+import { Color, Matrix4, Object3D, Quaternion, Vector3 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { BotAnimationController } from "../BotAnimationController";
-import * as THREE from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import TWEEN from "@tweenjs/tween.js";
+
+import { BotAnimationController } from "../BotAnimationController";
 import { HEALTH_PIXEL } from "../../constants/gameUI";
 import { getColorForPercentage } from "../../helper/color";
 import { disposeMesh } from "../../helper/three";
-import TWEEN from "@tweenjs/tween.js";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../constants/bot";
 import { TOWER_POSITIONS, TOWER_RADIUS } from "../../constants/tower";
-import { createStun } from "../Particles/weapons/Stun";
-import { SceneRenderer } from "../rendering/SceneRenderer";
+import { createStun } from "../gfx/particles/weapons/Stun";
 import { AssetsManager } from "../managers/AssetsManager";
-import { createToonProjectile } from "../Particles/ToonProjectile";
+import { createToonProjectile } from "../gfx/particles/ToonProjectile";
+import { Game } from "../Game";
+
+//
 
 export class Bot {
     uuid: string;
@@ -24,15 +28,12 @@ export class Bot {
     model: any;
     animController: BotAnimationController;
     botType: number;
-    sceneRenderer: SceneRenderer;
     assetsManager: AssetsManager;
-    scene: THREE.Scene;
     attackRange: number;
     targetPos: THREE.Vector3;
     status: number;
     oldStatus: number;
     healthBarUI: CSS2DObject;
-    camera: THREE.PerspectiveCamera;
     attackSpeed: number;
     attackDamage: number;
     claimTime: number;
@@ -44,10 +45,9 @@ export class Bot {
     fireTime: number;
     towerIndex: number;
 
-    constructor({ sceneRenderer, assetsManager, botType, towerIndex }: any) {
+    constructor({ assetsManager, botType, towerIndex }: any) {
         this.towerIndex = towerIndex;
 
-        this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
         this.uuid = generateUUID();
         this.hp = BOT_PROPS.healthPoint[botType];
@@ -68,9 +68,7 @@ export class Bot {
             mesh: this.mesh,
             botType: this.botType,
         });
-        this.scene = sceneRenderer.getScene();
-        this.camera = sceneRenderer.getCamera();
-        this.targetPos = new THREE.Vector3(
+        this.targetPos = new Vector3(
             TOWER_POSITIONS[towerIndex].x,
             TOWER_POSITIONS[towerIndex].y,
             TOWER_POSITIONS[towerIndex].z
@@ -107,13 +105,13 @@ export class Bot {
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        this.scene.add(this.healthBarUI);
-        this.scene.add(this.mesh);
+        Game.instance.gameScene.scene.add(this.healthBarUI);
+        Game.instance.gameScene.scene.add(this.mesh);
     }
 
     disposeHealthBar() {
         this.healthBarUI.remove();
-        this.scene.remove(this.healthBarUI);
+        Game.instance.gameScene.scene.remove(this.healthBarUI);
         this.healthBarUI.element.remove();
     }
 
@@ -121,7 +119,7 @@ export class Bot {
         this.animController.dispose();
 
         disposeMesh(this.mesh);
-        this.scene.remove(this.mesh);
+        Game.instance.gameScene.scene.remove(this.mesh);
 
         this.disposeStunMesh();
     }
@@ -129,14 +127,14 @@ export class Bot {
     disposeStunMesh() {
         if (this.stunMesh) {
             disposeMesh(this.stunMesh);
-            this.scene.remove(this.stunMesh);
+            Game.instance.gameScene.scene.remove(this.stunMesh);
         }
     }
 
     disposeFireMesh() {
         if (this.fireMesh) {
             disposeMesh(this.fireMesh);
-            this.scene.remove(this.fireMesh);
+            Game.instance.gameScene.scene.remove(this.fireMesh);
         }
     }
 
@@ -173,9 +171,9 @@ export class Bot {
 
         if (this.stunTime > 0) {
             if (!this.stunMesh) {
-                this.stunMesh = new THREE.Group();
+                this.stunMesh = new Object3D();
                 const particle = createStun(
-                    this.sceneRenderer._particleRenderer,
+                    Game.instance.gameScene.particleRenderer,
                     this.assetsManager._particleTextures
                 );
 
@@ -192,7 +190,7 @@ export class Bot {
                     particleMesh.scale.set(0.7, 0.7, 0.7);
 
                     this.stunMesh = particleMesh;
-                    this.scene.add(this.stunMesh);
+                    Game.instance.gameScene.scene.add(this.stunMesh);
                 });
             }
 
@@ -216,7 +214,7 @@ export class Bot {
                 if (obj.isMesh || obj.isSkinnedMesh) {
                     const material = obj.material.clone();
 
-                    material.color = new THREE.Color(2, 10, 30);
+                    material.color = new Color(2, 10, 30);
                     obj.material = material;
                 }
             });
@@ -226,7 +224,7 @@ export class Bot {
             this.mesh.traverse((obj: any) => {
                 if (obj.isMesh || obj.isSkinnedMesh) {
                     const material = obj.material.clone();
-                    material.color = new THREE.Color(1, 1, 1);
+                    material.color = new Color(1, 1, 1);
                     obj.material = material;
                 }
             });
@@ -235,7 +233,7 @@ export class Bot {
         if (this.fireTime > 0) {
             if (!this.fireMesh) {
                 const particle = createToonProjectile(
-                    this.sceneRenderer._particleRenderer,
+                    Game.instance.gameScene.particleRenderer,
                     this.assetsManager._particleTextures
                 );
 
@@ -245,7 +243,7 @@ export class Bot {
 
                 this.fireMesh = particle;
 
-                this.scene.add(this.fireMesh);
+                Game.instance.gameScene.scene.add(this.fireMesh);
             }
 
             if (this.fireMesh) {
@@ -273,16 +271,16 @@ export class Bot {
         /**
          * Rotate object to target position
          */
-        const curPos = new THREE.Vector3(
+        const curPos = new Vector3(
             this.position.x,
             this.position.y,
             this.position.z
         );
 
-        const rotationMatrix = new THREE.Matrix4();
+        const rotationMatrix = new Matrix4();
         rotationMatrix.lookAt(this.targetPos, curPos, this.mesh.up);
 
-        const targetQuaternion = new THREE.Quaternion();
+        const targetQuaternion = new Quaternion();
         targetQuaternion.setFromRotationMatrix(rotationMatrix);
         this.mesh.quaternion.rotateTowards(targetQuaternion, 10);
 
@@ -297,10 +295,10 @@ export class Bot {
         );
 
         const scaleFactor = 85;
-        const scaleVector = new THREE.Vector3();
+        const scaleVector = new Vector3();
         const scale = Math.sqrt(
             scaleVector
-                .subVectors(this.healthBarUI.position, this.camera.position)
+                .subVectors(this.healthBarUI.position, Game.instance.gameScene.camera.position)
                 .length() / scaleFactor
         );
 

@@ -1,53 +1,34 @@
 
-import { PerspectiveCamera, Scene, WebGLRenderTarget } from 'three';
-
-import { Gfx } from './Gfx';
+import { Object3D, PerspectiveCamera, Scene, WebGLRenderTarget } from 'three';
+import { BatchedRenderer } from 'three.quarks';
 
 //
 
-export class GameScene {
+export abstract class GameScene {
 
     public scene: Scene = new Scene();
     public camera: PerspectiveCamera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    public particleRenderer: BatchedRenderer;
 
-    private _renderTarget: WebGLRenderTarget;
+    protected _renderTarget: WebGLRenderTarget;
 
     //
 
-    public init () : void {
+    public abstract init () : void;
+    public abstract update ( delta: number, time: number ) : void;
+    public abstract resize () : void;
+    public abstract getRenderTarget () : WebGLRenderTarget;
+    public abstract dispose () : void;
 
-        this._renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height );
+    public add ( object: Object3D ) : void {
 
-    }
-
-    public update ( delta: number, time: number ) : void {
-
-        Gfx.renderer.setRenderTarget( this._renderTarget );
-
-    }
-
-    public resize () : void {
-
-        const width = Gfx.width;
-        const height = Gfx.height;
-
-        this.camera.aspect = width / height;
-        this.camera.updateProjectionMatrix();
-
-        this._renderTarget.setSize( width, height );
+        this.scene.add( object );
 
     }
 
-    public getRenderTarget () : WebGLRenderTarget {
+    public remove ( object: Object3D ) : void {
 
-        return this._renderTarget;
-
-    }
-
-    public dispose () : void {
-
-        this.scene.children = [];
-        this._renderTarget.dispose();
+        this.scene.remove( object );
 
     }
 

@@ -1,10 +1,10 @@
+
+import { Vector3 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { GAME_STATES } from "../../constants";
 import { AssetsManager } from "./AssetsManager";
-import { SceneRenderer } from "../rendering/SceneRenderer";
-import * as THREE from "three";
 import {
     TOWER_HEALTH_HEIGHT,
     TOWER_HEALTH_WIDTH,
@@ -13,6 +13,7 @@ import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "../States/StateManager";
 import { ParticleEffect } from "../ParticleEffect";
 import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../constants/tower";
+import { Game } from "../Game";
 
 //
 
@@ -23,7 +24,6 @@ export class TowerManager {
     public hp: number;
     public isDead: boolean;
     public _towerMesh: any;
-    public _sceneRenderer: SceneRenderer;
     public _assetsManager: AssetsManager;
     public _healthBarUI: CSS2DObject;
     public _stateManager: StateManager;
@@ -37,7 +37,6 @@ export class TowerManager {
 
     constructor ( params: any ) {
 
-        this._sceneRenderer = params.sceneRenderer;
         this._assetsManager = params.assetsManager;
         this._stateManager = params.stateManager;
         this._particleEffect = params.particleEffect;
@@ -73,7 +72,7 @@ export class TowerManager {
         wrapper.appendChild(healthBarDiv);
 
         this._healthBarUI = new CSS2DObject(wrapper);
-        this._sceneRenderer.getScene().add(this._healthBarUI);
+        Game.instance.gameScene.add(this._healthBarUI);
 
         this.initialize();
 
@@ -84,7 +83,7 @@ export class TowerManager {
         this._towerMesh.position.x = TOWER_POSITIONS[this._index].x;
         this._towerMesh.position.y = TOWER_POSITIONS[this._index].y;
         this._towerMesh.position.z = TOWER_POSITIONS[this._index].z;
-        this._sceneRenderer.getScene().add(this._towerMesh);
+        Game.instance.gameScene.add(this._towerMesh);
 
     }
 
@@ -94,7 +93,7 @@ export class TowerManager {
         if (element) element.textContent = `Level ${this.level}`;
 
         // visual effect
-        const newVector = new THREE.Vector3(
+        const newVector = new Vector3(
             this._towerMesh.position.x,
             this._towerMesh.position.y + 5,
             this._towerMesh.position.z
@@ -113,12 +112,12 @@ export class TowerManager {
         );
 
         const scaleFactor = 85;
-        const scaleVector = new THREE.Vector3();
+        const scaleVector = new Vector3();
         const scale = Math.sqrt(
             scaleVector
                 .subVectors(
                     this._healthBarUI.position,
-                    this._sceneRenderer.getCamera().position
+                    Game.instance.gameScene.camera.position
                 )
                 .length() / scaleFactor
         );

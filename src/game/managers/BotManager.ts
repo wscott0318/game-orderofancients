@@ -1,6 +1,6 @@
+
 import { AssetsManager } from "./AssetsManager";
 import { Bot } from "../Instances/Bot";
-import { SceneRenderer } from "../rendering/SceneRenderer";
 
 //
 
@@ -8,16 +8,14 @@ export class BotManager {
 
     public botArray: Bot[];
     public index: number;
-    public sceneRenderer: SceneRenderer;
     public assetsManager: AssetsManager;
 
     //
 
-    constructor ( { sceneRenderer, assetsManager, index }: any ) {
+    constructor ( { assetsManager, index }: any ) {
 
         this.botArray = [];
         this.index = index;
-        this.sceneRenderer = sceneRenderer;
         this.assetsManager = assetsManager;
 
     }
@@ -26,7 +24,6 @@ export class BotManager {
 
         this.botArray.push(
             new Bot({
-                sceneRenderer: this.sceneRenderer,
                 assetsManager: this.assetsManager,
                 botType: botType,
                 towerIndex: this.index,

@@ -1,22 +1,22 @@
-import * as THREE from "three";
+
+import { Vector3 } from "three";
 
 import { ROUND_TIME } from "../../constants";
 import { PlayerState } from "../States/PlayerState";
 import { TowerManager } from "./TowerManager";
-import { TextSprite } from "../Sprites/Text";
-import { SceneRenderer } from "../rendering/SceneRenderer";
+import { TextSprite } from "../gfx/sprites/Text";
 import { SpriteManager } from "./SpriteManager";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
+import { Game } from "../Game";
 
 //
 
 interface TimeManagerProps {
     playerState: PlayerState;
     towerManager: TowerManager;
-    sceneRenderer: SceneRenderer;
     spriteManager: SpriteManager;
-}
+};
 
 export class TimeManager {
 
@@ -25,8 +25,9 @@ export class TimeManager {
     public totalTimeTracker: number;
     public playerState: PlayerState;
     public towerManager: TowerManager;
-    public sceneRenderer: SceneRenderer;
     public spriteManager: SpriteManager;
+
+    //
 
     constructor( params: TimeManagerProps ) {
 
@@ -36,7 +37,6 @@ export class TimeManager {
 
         this.playerState = params.playerState;
         this.towerManager = params.towerManager;
-        this.sceneRenderer = params.sceneRenderer;
         this.spriteManager = params.spriteManager;
 
     }
@@ -46,14 +46,14 @@ export class TimeManager {
         this.secondTracker = 1;
 
         const sprite = new TextSprite({
+            gameScene: Game.instance.gameScene,
             text: `+${value}`,
             color: `#EED734`,
-            position: new THREE.Vector3(
+            position: new Vector3(
                 this.towerManager._towerMesh.position.x,
                 this.towerManager._towerMesh.position.y + 5,
                 this.towerManager._towerMesh.position.z
             ),
-            sceneRenderer: this.sceneRenderer,
             fastMode: false,
         });
 

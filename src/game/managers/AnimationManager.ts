@@ -1,12 +1,13 @@
-import { gsap, Circ } from "gsap";
-import * as THREE from "three";
 
-import { SceneRenderer } from "../rendering/SceneRenderer";
+import { gsap, Circ } from "gsap";
+import { Vector2, Vector3 } from "three";
+
 import { CAMERA_POS } from "../../constants";
 import { TOWER_POSITIONS } from "../../constants/tower";
+import { GameScene } from "../gfx";
 
 interface AnimationManagerProps {
-    sceneRenderer: SceneRenderer;
+    gameScene: GameScene;
     playerIndex: number;
 }
 
@@ -14,7 +15,7 @@ interface AnimationManagerProps {
 
 export class AnimationManager {
 
-    public _sceneRenderer: SceneRenderer;
+    public gameScene: GameScene;
     public _towerPosition: THREE.Vector3;
     public _camera: THREE.Camera;
     public _spotLight: THREE.SpotLight;
@@ -25,18 +26,17 @@ export class AnimationManager {
 
     constructor ( params: AnimationManagerProps ) {
 
-        this._sceneRenderer = params.sceneRenderer;
-        this._camera = params.sceneRenderer._camera;
+        this.gameScene = params.gameScene;
         this._playerIndex = params.playerIndex;
 
-        this._towerPosition = new THREE.Vector3(
+        this._towerPosition = new Vector3(
             TOWER_POSITIONS[this._playerIndex].x,
             TOWER_POSITIONS[this._playerIndex].y,
             TOWER_POSITIONS[this._playerIndex].z
         );
 
-        this._spotLight = this._sceneRenderer._spotLightArray[ params.playerIndex ];
-        this._hemiLight = this._sceneRenderer._hemiLight;
+        // this._spotLight = this._sceneRenderer._spotLightArray[ params.playerIndex ];
+        // this._hemiLight = this._sceneRenderer._hemiLight;
 
     }
 
@@ -55,12 +55,12 @@ export class AnimationManager {
 
     public camera_Rotate () : void {
 
-        const camera2DPos = new THREE.Vector2(
+        const camera2DPos = new Vector2(
             this._camera.position.x,
             this._camera.position.y
         );
 
-        const tower2DPos = new THREE.Vector2(
+        const tower2DPos = new Vector2(
             this._towerPosition.x,
             this._towerPosition.y
         );
@@ -105,15 +105,15 @@ export class AnimationManager {
 
     public light_attention () : void {
 
-        this._sceneRenderer._spotLightArray.forEach( ( spotLight: THREE.SpotLight ) => {
+        // this._sceneRenderer._spotLightArray.forEach( ( spotLight: THREE.SpotLight ) => {
 
-            gsap.from(spotLight, {
-                angle: 0,
-                duration: 2,
-                ease: Circ.easeIn,
-            });
+        //     gsap.from(spotLight, {
+        //         angle: 0,
+        //         duration: 2,
+        //         ease: Circ.easeIn,
+        //     });
 
-        });
+        // });
 
     }
 

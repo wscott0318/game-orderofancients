@@ -5,8 +5,6 @@ import { BotManager } from "./managers/BotManager";
 import { ParticleEffect } from "./ParticleEffect";
 import { SpriteManager } from "./managers/SpriteManager";
 import { TowerManager } from "./managers/TowerManager";
-import { Environment } from "./rendering/Environment";
-import { SceneRenderer } from "./rendering/SceneRenderer";
 import { StateManager } from "./States/StateManager";
 import { GAME_STATES } from "../constants";
 import { PlayerState } from "./States/PlayerState";
@@ -15,6 +13,7 @@ import { LobbyInfo } from "../contexts/game-context";
 import { AnimationManager } from "./managers/AnimationManager";
 import { EventBridge } from "../libs/EventBridge";
 import { GameScene, Gfx } from "./gfx";
+import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -25,6 +24,8 @@ interface GameOptions {
     lobbyInfo: LobbyInfo;
     playerIndex: number;
 };
+
+//
 
 export class Game {
 
@@ -37,8 +38,6 @@ export class Game {
 
     //
 
-    public _sceneRenderer: SceneRenderer;
-    public _envRenderer: Environment;
     public _assetsManager: AssetsManager;
     public _towerManagerArray: TowerManager[];
     public _botManagerArray: BotManager[];
@@ -53,7 +52,7 @@ export class Game {
     public _gameMode: number;
     public _animationManager: AnimationManager;
 
-    private gameScene: GameScene;
+    public gameScene: GameScene;
 
     //
 
@@ -61,42 +60,33 @@ export class Game {
 
         Game._instance = this;
 
-        this.gameScene = new GameScene();
-        this.gameScene.init();
-
-        Gfx.setActiveScene( this.gameScene );
-
         this._playerIndex = options.playerIndex;
         this._gameMode = options.gameMode;
         this._lobbyInfo = options.lobbyInfo;
+
+        this.gameScene = new ArenaScene();
+        this.gameScene.init();
+
+        Gfx.setActiveScene( this.gameScene );
 
         this._stateManager = new StateManager({
             setCurrentGameState: options.setCurrentGameState,
         });
 
         this._assetsManager = options.assetsManager;
-        this._sceneRenderer = new SceneRenderer({
-            playerIndex: this._playerIndex,
-            lobbyInfo: this._lobbyInfo,
-        });
-
-        this._envRenderer = new Environment({
-            sceneRenderer: this._sceneRenderer,
-            models: this._assetsManager._models,
-        });
 
         this._particleEffect = new ParticleEffect({
-            sceneRenderer: this._sceneRenderer,
+            gameScene: this.gameScene,
             assetsManager: this._assetsManager,
         });
 
         this._spriteManager = new SpriteManager({
-            sceneRenderer: this._sceneRenderer,
+            gameScene: this.gameScene,
             assetsManager: this._assetsManager,
         });
 
         this._animationManager = new AnimationManager({
-            sceneRenderer: this._sceneRenderer,
+            gameScene: this.gameScene,
             playerIndex: this._playerIndex,
         });
 
@@ -110,7 +100,6 @@ export class Game {
 
             this._towerManagerArray.push(
                 new TowerManager({
-                    sceneRenderer: this._sceneRenderer,
                     assetsManager: this._assetsManager,
                     stateManager: this._stateManager,
                     particleEffect: this._particleEffect,
@@ -125,7 +114,6 @@ export class Game {
 
             this._botManagerArray.push(
                 new BotManager({
-                    sceneRenderer: this._sceneRenderer,
                     assetsManager: this._assetsManager,
                     index: i,
                 })
@@ -142,7 +130,6 @@ export class Game {
                 new TimeManager({
                     playerState: this._playerStateArray[i],
                     towerManager: this._towerManagerArray[i],
-                    sceneRenderer: this._sceneRenderer,
                     spriteManager: this._spriteManager,
                 })
             );
@@ -155,14 +142,13 @@ export class Game {
 
     public initialize () : void {
 
-        this._animationManager.light_attention();
-        this._canvasDiv.appendChild( this._sceneRenderer._renderer.domElement );
+        // this._animationManager.light_attention();
 
     }
 
     public dispose () : void {
 
-        this._sceneRenderer.dispose();
+        //
 
     }
 
@@ -209,7 +195,6 @@ export class Game {
 
         }
 
-        this._sceneRenderer.render();
         TWEEN.update();
 
     }

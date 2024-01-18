@@ -1,3 +1,4 @@
+
 import { useCallback, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
@@ -133,11 +134,12 @@ export const useGame = () => {
         const isChecked = e.target.checked;
         setShowGrid(isChecked);
 
+        // todo!
         const game = gameRef.current!;
         if (isChecked) {
-            game._sceneRenderer.addGrid();
+            // game._sceneRenderer.addGrid();
         } else {
-            game._sceneRenderer.removeGrid();
+            // game._sceneRenderer.removeGrid();
         }
 
     };

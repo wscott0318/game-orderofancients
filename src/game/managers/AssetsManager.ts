@@ -1,7 +1,11 @@
+
+import { TextureLoader } from "three";
+
 import { MODEL_URLS, S3_BUCKET_URL } from "../../constants";
 import { BOT_TYPE } from "../../constants/bot";
 import { LoadModel } from "../loaders/ModelLoader";
-import * as THREE from "three";
+
+//
 
 export interface TextureImage {
     img: string;
@@ -29,8 +33,8 @@ export class AssetsManager {
         const particleText1 = S3_BUCKET_URL + "/assets/textures/particle/texture1.png";
         const particleText2 = S3_BUCKET_URL + "/assets/textures/particle/texture2.png";
 
-        const texture1 = new THREE.TextureLoader().load(particleText1);
-        const texture2 = new THREE.TextureLoader().load(particleText2);
+        const texture1 = new TextureLoader().load(particleText1);
+        const texture2 = new TextureLoader().load(particleText2);
 
         this._particleTextures = [
             {
