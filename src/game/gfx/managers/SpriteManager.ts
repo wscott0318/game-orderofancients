@@ -1,21 +1,21 @@
 
 import { Vector3 } from "three";
 
-import { NewSpriteInfo, NewTextSpriteInfo } from "../../constants/type";
-import { AssetsManager } from "./AssetsManager";
-import { TextSprite } from "../gfx/sprites/Text";
-import Boulder from "../gfx/sprites/weapons/Boulder";
-import Bow from "../gfx/sprites/weapons/Bow";
-import ChaosClaw from "../gfx/sprites/weapons/ChaosClaw";
-import ChaosOrb from "../gfx/sprites/weapons/ChaosOrb";
-import FireBow from "../gfx/sprites/weapons/FireBow";
-import Flamecaster from "../gfx/sprites/weapons/FlameCaster";
-import FrostBow from "../gfx/sprites/weapons/FrostBow";
-import MagicMissiles from "../gfx/sprites/weapons/MagicMissiles";
-import MissileBarrage from "../gfx/sprites/weapons/MissileBarrage";
-import Rifle from "../gfx/sprites/weapons/Rifle";
-import ThrowingAxe from "../gfx/sprites/weapons/ThrowingAxe";
-import { GameScene } from "../gfx";
+import { NewSpriteInfo, NewTextSpriteInfo } from "../../../constants/type";
+import { AssetsManager } from "../../managers/ResourcesManager";
+import { TextSprite } from "../sprites/Text";
+import Boulder from "../sprites/weapons/Boulder";
+import Bow from "../sprites/weapons/Bow";
+import ChaosClaw from "../sprites/weapons/ChaosClaw";
+import ChaosOrb from "../sprites/weapons/ChaosOrb";
+import FireBow from "../sprites/weapons/FireBow";
+import Flamecaster from "../sprites/weapons/FlameCaster";
+import FrostBow from "../sprites/weapons/FrostBow";
+import MagicMissiles from "../sprites/weapons/MagicMissiles";
+import MissileBarrage from "../sprites/weapons/MissileBarrage";
+import Rifle from "../sprites/weapons/Rifle";
+import ThrowingAxe from "../sprites/weapons/ThrowingAxe";
+import { GameScene } from "..";
 
 //
 

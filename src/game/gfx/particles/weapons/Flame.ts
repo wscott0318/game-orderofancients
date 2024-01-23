@@ -23,7 +23,7 @@ import { RotationOverLife } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../../managers/AssetsManager";
+import { TextureImage } from "../../../managers/ResourcesManager";
 
 export function createFlame(
     renderer: BatchedRenderer,

@@ -2,9 +2,9 @@
 import { gsap, Circ } from "gsap";
 import { Vector2, Vector3 } from "three";
 
-import { CAMERA_POS } from "../../constants";
-import { TOWER_POSITIONS } from "../../constants/tower";
-import { GameScene } from "../gfx";
+import { CAMERA_POS } from "../../../constants";
+import { TOWER_POSITIONS } from "../../../constants/tower";
+import { GameScene } from "..";
 
 interface AnimationManagerProps {
     gameScene: GameScene;

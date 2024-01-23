@@ -1,13 +1,18 @@
 
 import { Vector3 } from "three";
 
-import { AssetsManager } from "./managers/AssetsManager";
-import { createExplosion } from "./gfx/particles/Explosion2";
-import { createLevelUp } from "./gfx/particles/LevelUp";
-import { createToonProjectile } from "./gfx/particles/ToonProjectile";
-import { GameScene } from "./gfx";
+import { AssetsManager } from "../../managers/ResourcesManager";
+import { createExplosion } from "../particles/Explosion2";
+import { createLevelUp } from "../particles/LevelUp";
+import { createToonProjectile } from "../particles/ToonProjectile";
+import { GameScene } from "..";
 
 //
+
+interface ParticleEffectProps {
+    gameScene: GameScene;
+    assetsManager: AssetsManager;
+}
 
 export class ParticleEffect {
 
@@ -16,9 +21,9 @@ export class ParticleEffect {
 
     //
 
-    constructor( params: any ) {
+    constructor ( params: ParticleEffectProps ) {
 
-        this.gameScene = params.game;
+        this.gameScene = params.gameScene;
         this.assetsManager = params.assetsManager;
 
     }

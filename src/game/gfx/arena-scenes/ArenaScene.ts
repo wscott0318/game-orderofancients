@@ -14,8 +14,8 @@ import { EnvironmentManager } from './EnvironmentManager';
 
 export class ArenaScene extends GameScene {
 
-    public scene: Scene = new Scene();
-    public camera: PerspectiveCamera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    public scene: Scene;
+    public camera: PerspectiveCamera;
 
     private _environment: EnvironmentManager;
 
@@ -25,6 +25,9 @@ export class ArenaScene extends GameScene {
     //
 
     public init () : void {
+
+        this.scene = new Scene();
+        this.camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
         this.particleRenderer = new BatchedRenderer();
         this.scene.add( this.particleRenderer );
@@ -45,7 +48,7 @@ export class ArenaScene extends GameScene {
 
         this._camControls.update();
 
-        this.particleRenderer.update( delta );
+        this.particleRenderer.update( delta / 1000 );
 
         Gfx.renderer.setRenderTarget( this._renderTarget );
         Gfx.renderer.render( this.scene, this.camera );

@@ -1,6 +1,6 @@
 import { Group } from "three";
 import { BatchedRenderer, QuarksLoader } from "three.quarks";
-import { TextureImage } from "../../../managers/AssetsManager";
+import { TextureImage } from "../../../managers/ResourcesManager";
 import { S3_BUCKET_URL } from "../../../../constants";
 
 export async function createStun(

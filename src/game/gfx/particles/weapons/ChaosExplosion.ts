@@ -25,7 +25,7 @@ import {
     SpeedOverLife,
     SphereEmitter,
 } from "three.quarks";
-import { TextureImage } from "../../../managers/AssetsManager";
+import { TextureImage } from "../../../managers/ResourcesManager";
 
 export function createChaosExplosion(
     renderer: BatchedRenderer,

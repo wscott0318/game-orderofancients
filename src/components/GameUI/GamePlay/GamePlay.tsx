@@ -6,6 +6,7 @@ import { Mobile } from "./Mobile";
 import { useGame } from "../../../hooks/useGame";
 import { useGameContext } from "../../../contexts/game-context";
 import { SOCKET_EVENTS } from "../../../constants/socket";
+import { Network } from "../../../game/networking/NetworkHandler";
 
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
@@ -22,34 +23,34 @@ const GamePlayUI = () => {
     const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
 
     const onClickUpgrade = (item: any, itemIndex: number) => {
-        // todo
-        // socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, itemIndex);
 
-        // const playerIndex = lobbyInfo?.players.findIndex(
-        //     (player) => player.socketId === socket?.id
-        // );
-        // if (playerIndex === undefined || playerIndex === -1) return;
+        Network.socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, itemIndex);
 
-        // const playerState = gameRef.current!._playerStateArray[playerIndex];
-        // const gold_balance = playerState.gold;
-        // const price = item.cost;
-        // if (gold_balance < price) return;
+        const playerIndex = lobbyInfo?.players.findIndex(
+            (player) => player.socketId === Network.socket?.id
+        );
+        if (playerIndex === undefined || playerIndex === -1) return;
 
-        // if (item.spellType === "Weapon") {
-        //     const userSpells = [...profileSpells];
-        //     const index = userSpells.findIndex(
-        //         (spell: any) => spell.name === item.name
-        //     );
-        //     if (index !== -1) {
-        //         userSpells[index].count++;
-        //     } else {
-        //         userSpells.push({
-        //             ...item,
-        //             count: 1,
-        //         });
-        //     }
-        //     setProfilSpells(userSpells);
-        // }
+        const playerState = gameRef.current!._playerStateArray[playerIndex];
+        const gold_balance = playerState.gold;
+        const price = item.cost;
+        if (gold_balance < price) return;
+
+        if (item.spellType === "Weapon") {
+            const userSpells = [...profileSpells];
+            const index = userSpells.findIndex(
+                (spell: any) => spell.name === item.name
+            );
+            if (index !== -1) {
+                userSpells[index].count++;
+            } else {
+                userSpells.push({
+                    ...item,
+                    count: 1,
+                });
+            }
+            setProfilSpells(userSpells);
+        }
     };
 
     return (

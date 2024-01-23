@@ -1,5 +1,5 @@
 
-import { AssetsManager } from "./AssetsManager";
+import { AssetsManager } from "./ResourcesManager";
 import { Bot } from "../Instances/Bot";
 
 //

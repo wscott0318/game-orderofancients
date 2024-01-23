@@ -25,7 +25,7 @@ import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { ColorOverLife } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../managers/AssetsManager";
+import { TextureImage } from "../../managers/ResourcesManager";
 
 // TODO
 export function createToonExplosion(

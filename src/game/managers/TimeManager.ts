@@ -5,7 +5,7 @@ import { ROUND_TIME } from "../../constants";
 import { PlayerState } from "../States/PlayerState";
 import { TowerManager } from "./TowerManager";
 import { TextSprite } from "../gfx/sprites/Text";
-import { SpriteManager } from "./SpriteManager";
+import { SpriteManager } from "../gfx/managers/SpriteManager";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
 import { Game } from "../Game";

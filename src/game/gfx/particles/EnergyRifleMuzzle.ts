@@ -22,7 +22,7 @@ import { ConstantColor } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { Gradient } from "three.quarks";
-import { TextureImage } from "../../managers/AssetsManager";
+import { TextureImage } from "../../managers/ResourcesManager";
 
 export function createEnergyRifleMuzzle(
     renderer: BatchedRenderer,

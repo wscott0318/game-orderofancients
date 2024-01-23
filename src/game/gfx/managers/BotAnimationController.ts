@@ -1,15 +1,21 @@
+
 import * as THREE from "three";
-import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../constants/bot";
+
+import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../../../constants/bot";
+
+//
 
 export class BotAnimationController {
-    mixer: THREE.AnimationMixer;
-    clips: any;
-    animations: any;
-    mesh: any;
-    botType: any;
-    clock: THREE.Clock;
 
-    constructor({ animations, mesh, botType }: any) {
+    public mixer: THREE.AnimationMixer;
+    public clips: any;
+    public animations: any;
+    public mesh: any;
+    public botType: any;
+    public clock: THREE.Clock;
+
+    constructor ( { animations, mesh, botType }: any ) {
+
         this.clips = {};
         this.mixer = new THREE.AnimationMixer(mesh);
         this.animations = animations;
@@ -18,9 +24,11 @@ export class BotAnimationController {
         this.clock = new THREE.Clock();
 
         this.initialize();
+
     }
 
-    initAnimationClips() {
+    public initAnimationClips () {
+
         this.clips[ANIMATION_TYPE["walk"]] = THREE.AnimationUtils.subclip(
             this.animations[0],
             "walk",
@@ -44,42 +52,55 @@ export class BotAnimationController {
             BOT_ANIMATION_CLIPS[this.botType]["dead"].endFrame,
             24
         );
+
     }
 
-    playAnimation(animType: any) {
+    public playAnimation ( animType: any ) {
+
         this.mixer.stopAllAction();
 
         const action = this.mixer.clipAction(this.clips[animType]);
 
         if (animType === ANIMATION_TYPE["dead"]) {
+
             action.clampWhenFinished = true;
             action.setLoop(THREE.LoopOnce, 2);
+
         }
 
         action.play();
+
     }
 
-    stopAnimation() {
+    public stopAnimation () {
+
         this.mixer.stopAllAction();
+
     }
 
-    initialize() {
+    public initialize () {
+
         this.initAnimationClips();
-
         this.playAnimation(ANIMATION_TYPE["walk"]);
+
     }
 
-    dispose() {
+    public dispose () {
+
         this.mixer.stopAllAction();
 
         this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["walk"]]);
         this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["attack"]]);
         this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["dead"]]);
         this.mixer.uncacheRoot(this.mesh);
+
     }
 
-    tick() {
+    public tick () {
+
         const delta = this.clock.getDelta();
         this.mixer.update(delta);
+
     }
+
 }

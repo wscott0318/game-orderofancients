@@ -18,7 +18,7 @@ import {
     NormalBlending,
     Vector4,
 } from "three";
-import { TextureImage } from "../../managers/AssetsManager";
+import { TextureImage } from "../../managers/ResourcesManager";
 
 export function createBlackHole(
     renderer: BatchedRenderer,

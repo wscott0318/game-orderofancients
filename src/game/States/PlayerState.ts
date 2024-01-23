@@ -1,4 +1,6 @@
+
 export class PlayerState {
+
     index: number;
     playerIndex: number;
 
@@ -71,7 +73,10 @@ export class PlayerState {
     Underground_Gold_Mine: number;
     Gems_of_Power: number;
 
-    constructor({ index, playerIndex }: any) {
+    //
+
+    constructor ( { index, playerIndex }: any ) {
+
         this.index = index;
         this.playerIndex = playerIndex;
 
@@ -143,10 +148,17 @@ export class PlayerState {
         this.Philosopher_Stone = 0;
         this.Underground_Gold_Mine = 0;
         this.Gems_of_Power = 0;
+
     }
 
-    updateGoldUI() {
-        if (this.index === this.playerIndex && document.getElementById("gold"))
+    public updateGoldUI () {
+
+        if ( this.index === this.playerIndex && document.getElementById("gold" ) ) {
+
             (document.getElementById("gold") as any).textContent = this.gold;
+
+        }
+
     }
+
 }

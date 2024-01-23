@@ -1,16 +1,17 @@
+
 import TWEEN from "@tweenjs/tween.js";
 
-import { AssetsManager } from "./managers/AssetsManager";
+import { AssetsManager } from "./managers/ResourcesManager";
 import { BotManager } from "./managers/BotManager";
-import { ParticleEffect } from "./ParticleEffect";
-import { SpriteManager } from "./managers/SpriteManager";
+import { ParticleEffect } from "./gfx/managers/ParticleEffect";
+import { SpriteManager } from "./gfx/managers/SpriteManager";
 import { TowerManager } from "./managers/TowerManager";
 import { StateManager } from "./States/StateManager";
 import { GAME_STATES } from "../constants";
 import { PlayerState } from "./States/PlayerState";
 import { TimeManager } from "./managers/TimeManager";
 import { LobbyInfo } from "../contexts/game-context";
-import { AnimationManager } from "./managers/AnimationManager";
+import { AnimationManager } from "./gfx/managers/AnimationManager";
 import { EventBridge } from "../libs/EventBridge";
 import { GameScene, Gfx } from "./gfx";
 import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";

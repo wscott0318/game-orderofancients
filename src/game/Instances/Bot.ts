@@ -4,7 +4,7 @@ import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import TWEEN from "@tweenjs/tween.js";
 
-import { BotAnimationController } from "../BotAnimationController";
+import { BotAnimationController } from "../gfx/managers/BotAnimationController";
 import { HEALTH_PIXEL } from "../../constants/gameUI";
 import { getColorForPercentage } from "../../helper/color";
 import { disposeMesh } from "../../helper/three";
@@ -12,7 +12,7 @@ import { generateUUID } from "three/src/math/MathUtils";
 import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../constants/bot";
 import { TOWER_POSITIONS, TOWER_RADIUS } from "../../constants/tower";
 import { createStun } from "../gfx/particles/weapons/Stun";
-import { AssetsManager } from "../managers/AssetsManager";
+import { AssetsManager } from "../managers/ResourcesManager";
 import { createToonProjectile } from "../gfx/particles/ToonProjectile";
 import { Game } from "../Game";
 

@@ -4,14 +4,14 @@ import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { GAME_STATES } from "../../constants";
-import { AssetsManager } from "./AssetsManager";
+import { AssetsManager } from "./ResourcesManager";
 import {
     TOWER_HEALTH_HEIGHT,
     TOWER_HEALTH_WIDTH,
 } from "../../constants/gameUI";
 import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "../States/StateManager";
-import { ParticleEffect } from "../ParticleEffect";
+import { ParticleEffect } from "../gfx/managers/ParticleEffect";
 import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../constants/tower";
 import { Game } from "../Game";
 

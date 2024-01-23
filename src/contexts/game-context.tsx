@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from "react";
 import { GAME_MODES, GAME_STATES } from "../constants";
-import { AssetsManager } from "../game/managers/AssetsManager";
+import { AssetsManager } from "../game/managers/ResourcesManager";
 import { Game } from "../game/Game";
 import { spell } from "../constants/spell";
 
