@@ -2,16 +2,15 @@
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { createToonProjectile } from "../../particles/ToonProjectile";
 import { createExplosion } from "../../particles/Explosion2";
 import { GameScene } from "../..";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 interface Props {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetPos: THREE.Vector3;
 }
@@ -21,7 +20,6 @@ interface Props {
 export class MissileBarrage {
 
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
@@ -33,10 +31,9 @@ export class MissileBarrage {
 
     //
 
-    constructor({ gameScene, assetsManager, launchPos, targetPos }: Props) {
+    constructor({ gameScene, launchPos, targetPos }: Props) {
 
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Missile Barrage";
         this.attackDamage = SPELLS_INFO["Missile_Barrage"].attackDamage;
@@ -51,13 +48,13 @@ export class MissileBarrage {
     }
 
     initMesh() {
-        const mesh = this.assetsManager._models.missile.scene.clone();
+        const mesh = ResourcesManager.getModel('Missile')?.scene.clone() as Object3D;
         mesh.rotateX(ANG2RAD(90));
         mesh.scale.set(0.007, 0.007, 0.007);
 
         const particleMesh = createToonProjectile(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particleMesh.position.x = 0;
@@ -73,7 +70,7 @@ export class MissileBarrage {
     addCollisionEffect() {
         const particle = createExplosion(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particle.position.x = this.mesh.position.x;

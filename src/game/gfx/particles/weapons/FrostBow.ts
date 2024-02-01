@@ -4,6 +4,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -23,14 +24,13 @@ import { SphereEmitter } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
 
-export function createFrostBow(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createFrostBow( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
-    const texture = textures[0].texture;
+    const texture = textures[0];
     group.name = "FrostBow";
 
     const beam = new ParticleSystem({

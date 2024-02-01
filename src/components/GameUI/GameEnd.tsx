@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
-import { Game } from "../../game/Game";
 import { useGame } from "../../hooks/useGame";
 import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { Network } from "../../game/networking/NetworkHandler";
+import { Game } from "../../game";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";

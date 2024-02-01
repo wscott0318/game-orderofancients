@@ -1,5 +1,4 @@
 
-import { AssetsManager } from "./ResourcesManager";
 import { Bot } from "../Instances/Bot";
 
 //
@@ -8,15 +7,13 @@ export class BotManager {
 
     public botArray: Bot[];
     public index: number;
-    public assetsManager: AssetsManager;
 
     //
 
-    constructor ( { assetsManager, index }: any ) {
+    constructor ( { index }: any ) {
 
         this.botArray = [];
         this.index = index;
-        this.assetsManager = assetsManager;
 
     }
 
@@ -24,7 +21,6 @@ export class BotManager {
 
         this.botArray.push(
             new Bot({
-                assetsManager: this.assetsManager,
                 botType: botType,
                 towerIndex: this.index,
             })

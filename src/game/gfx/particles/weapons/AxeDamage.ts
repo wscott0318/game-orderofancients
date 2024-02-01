@@ -3,6 +3,7 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -17,18 +18,17 @@ import {
     RenderMode,
     SizeOverLife,
 } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
 
-export function createAxeDamage(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createAxeDamage( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "AxeDamage";
 
     const greyColor = new Vector4(0.76, 0.76, 0.76, 1);
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
     const secColor = greyColor;
 
     const circle = new ParticleSystem({
@@ -64,16 +64,19 @@ export function createAxeDamage(
         renderMode: RenderMode.BillBoard,
         renderOrder: 2,
     });
+
     circle.addBehavior(
         new SizeOverLife(
             new PiecewiseBezier([[new Bezier(0.3, 0.6, 0.9, 1), 0]])
         )
     );
+
     circle.addBehavior(
         new FrameOverLife(
             new PiecewiseBezier([[new Bezier(10, 13, 16, 19), 0]])
         )
     );
+
     circle.emitter.name = "circle";
     group.add(circle.emitter);
     renderer.addSystem(circle);
@@ -125,5 +128,7 @@ export function createAxeDamage(
     circle2.emitter.rotation.x = Math.PI / 2;
     group.add(circle2.emitter);
     renderer.addSystem(circle2);
+
     return group;
+
 }

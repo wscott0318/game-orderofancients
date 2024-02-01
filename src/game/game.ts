@@ -1,7 +1,6 @@
 
 import TWEEN from "@tweenjs/tween.js";
 
-import { AssetsManager } from "./managers/ResourcesManager";
 import { BotManager } from "./managers/BotManager";
 import { ParticleEffect } from "./gfx/managers/ParticleEffect";
 import { SpriteManager } from "./gfx/managers/SpriteManager";
@@ -18,7 +17,6 @@ import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
 
 interface GameOptions {
     canvas: HTMLDivElement;
-    assetsManager: AssetsManager;
     setCurrentGameState: Function;
     setUpgrades: Function;
     gameMode: number;
@@ -39,7 +37,6 @@ export class Game {
 
     //
 
-    public _assetsManager: AssetsManager;
     public _towerManagerArray: TowerManager[];
     public _botManagerArray: BotManager[];
     public _spriteManager: SpriteManager;
@@ -74,16 +71,12 @@ export class Game {
             setCurrentGameState: options.setCurrentGameState,
         });
 
-        this._assetsManager = options.assetsManager;
-
         this._particleEffect = new ParticleEffect({
-            gameScene: this.gameScene,
-            assetsManager: this._assetsManager,
+            gameScene: this.gameScene
         });
 
         this._spriteManager = new SpriteManager({
-            gameScene: this.gameScene,
-            assetsManager: this._assetsManager,
+            gameScene: this.gameScene
         });
 
         this._animationManager = new AnimationManager({
@@ -101,7 +94,6 @@ export class Game {
 
             this._towerManagerArray.push(
                 new TowerManager({
-                    assetsManager: this._assetsManager,
                     stateManager: this._stateManager,
                     particleEffect: this._particleEffect,
                     playerIndex: this._playerIndex,
@@ -114,10 +106,7 @@ export class Game {
         for ( let i = 0; i < this._towerManagerArray.length; i ++ ) {
 
             this._botManagerArray.push(
-                new BotManager({
-                    assetsManager: this._assetsManager,
-                    index: i,
-                })
+                new BotManager({ index: i })
             );
 
             this._playerStateArray.push(

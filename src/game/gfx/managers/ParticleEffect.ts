@@ -1,30 +1,27 @@
 
 import { Vector3 } from "three";
 
-import { AssetsManager } from "../../managers/ResourcesManager";
 import { createExplosion } from "../particles/Explosion2";
 import { createLevelUp } from "../particles/LevelUp";
 import { createToonProjectile } from "../particles/ToonProjectile";
 import { GameScene } from "..";
+import { ResourcesManager } from "../../managers/ResourcesManager";
 
 //
 
 interface ParticleEffectProps {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 }
 
 export class ParticleEffect {
 
     public gameScene: GameScene;
-    public assetsManager: AssetsManager;
 
     //
 
     constructor ( params: ParticleEffectProps ) {
 
         this.gameScene = params.gameScene;
-        this.assetsManager = params.assetsManager;
 
     }
 
@@ -32,7 +29,7 @@ export class ParticleEffect {
 
         const explosion = createExplosion(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         explosion.position.x = position.x;
@@ -49,7 +46,7 @@ export class ParticleEffect {
 
         const particle = createLevelUp(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particle.position.x = position.x;
@@ -66,7 +63,7 @@ export class ParticleEffect {
 
         const particle = createToonProjectile(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particle.position.x = position.x;
@@ -85,7 +82,7 @@ export class ParticleEffect {
 
         const particle = createToonProjectile(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particle.position.x = position.x;

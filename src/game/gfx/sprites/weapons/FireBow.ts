@@ -2,39 +2,36 @@
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { createFireBow } from "../../particles/weapons/FireBow";
 import { GameScene } from "../..";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 //
 
 interface Props {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
-    launchPos: THREE.Vector3;
-    targetPos: THREE.Vector3;
+    launchPos: Vector3;
+    targetPos: Vector3;
 }
 
 export class FireBow {
 
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetPos: THREE.Vector3;
-    mesh: THREE.Object3D;
+    targetPos: Vector3;
+    mesh: Object3D;
 
     lastTime: number;
 
     //
 
-    constructor({ gameScene, assetsManager, launchPos, targetPos }: Props) {
+    constructor({ gameScene, launchPos, targetPos }: Props) {
 
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Fire_Bow";
         this.attackDamage = SPELLS_INFO["Fire_Bow"].attackDamage;
@@ -51,7 +48,7 @@ export class FireBow {
     initMesh() {
         const mesh = createFireBow(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         mesh.position.x = 0;

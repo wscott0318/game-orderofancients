@@ -12,9 +12,9 @@ import { generateUUID } from "three/src/math/MathUtils";
 import { ANIMATION_TYPE, BOT_PROPS, BOT_STATUS } from "../../constants/bot";
 import { TOWER_POSITIONS, TOWER_RADIUS } from "../../constants/tower";
 import { createStun } from "../gfx/particles/weapons/Stun";
-import { AssetsManager } from "../managers/ResourcesManager";
 import { createToonProjectile } from "../gfx/particles/ToonProjectile";
-import { Game } from "../Game";
+import { ResourcesManager } from "../managers/ResourcesManager";
+import { Game } from "..";
 
 //
 
@@ -28,7 +28,6 @@ export class Bot {
     model: any;
     animController: BotAnimationController;
     botType: number;
-    assetsManager: AssetsManager;
     attackRange: number;
     targetPos: THREE.Vector3;
     status: number;
@@ -45,10 +44,9 @@ export class Bot {
     fireTime: number;
     towerIndex: number;
 
-    constructor({ assetsManager, botType, towerIndex }: any) {
+    constructor({ botType, towerIndex }: any) {
         this.towerIndex = towerIndex;
 
-        this.assetsManager = assetsManager;
         this.uuid = generateUUID();
         this.hp = BOT_PROPS.healthPoint[botType];
         this.maxHp = BOT_PROPS.healthPoint[botType];
@@ -61,7 +59,8 @@ export class Bot {
             z: 0,
         };
         this.botType = botType;
-        this.model = assetsManager.getBotModel(botType);
+        // todo
+        this.model = ResourcesManager.getModel( [ 'BotGrunt', 'BotSwordsman', 'BotArcher', 'BotKing', 'BotMage' ][ botType - 1 ] );
         this.mesh = SkeletonUtils.clone(this.model.scene);
         this.animController = new BotAnimationController({
             animations: this.model.animations,
@@ -174,7 +173,7 @@ export class Bot {
                 this.stunMesh = new Object3D();
                 const particle = createStun(
                     Game.instance.gameScene.particleRenderer,
-                    this.assetsManager._particleTextures
+                    [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
                 );
 
                 particle.then((group) => {
@@ -234,7 +233,7 @@ export class Bot {
             if (!this.fireMesh) {
                 const particle = createToonProjectile(
                     Game.instance.gameScene.particleRenderer,
-                    this.assetsManager._particleTextures
+                    [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
                 );
 
                 const scaleOffset =

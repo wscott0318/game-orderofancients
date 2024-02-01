@@ -4,6 +4,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -13,11 +14,9 @@ import {
     ColorRange,
     ConstantColor,
     ConstantValue,
-    FrameOverLife,
     IntervalValue,
     ParticleSystem,
     PiecewiseBezier,
-    PointEmitter,
     RandomColor,
     RenderMode,
     RotationOverLife,
@@ -25,19 +24,18 @@ import {
     SpeedOverLife,
     SphereEmitter,
 } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
 
-export function createSmokeExplosion(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createSmokeExplosion( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "SmokeExplosion";
 
     const yellowColor = new Vector4(0.9, 0.6, 0.25, 1);
     const yellowColor2 = new Vector4(1, 0.95, 0.4, 1);
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
     const mainColor = yellowColor;
     const secColor = yellowColor2;
 

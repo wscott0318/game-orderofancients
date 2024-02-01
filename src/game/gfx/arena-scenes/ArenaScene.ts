@@ -7,7 +7,7 @@ import { Gfx } from './../core/Gfx';
 import { GameScene } from '../core/GameScene';
 import { TOWER_POSITIONS } from '../../../constants/tower';
 import { ANG2RAD } from '../../../helper/math';
-import { Game } from '../../Game';
+import { Game } from '../..';
 import { EnvironmentManager } from './EnvironmentManager';
 
 //

@@ -1,12 +1,12 @@
-import { Group } from "three";
+import { Group, Texture } from "three";
 import { BatchedRenderer, QuarksLoader } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
+
 import { S3_BUCKET_URL } from "../../../../constants";
 
-export async function createStun(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export async function createStun( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "Stun";
 
@@ -34,4 +34,5 @@ export async function createStun(
     group.add(particleObj);
 
     return group;
+
 }

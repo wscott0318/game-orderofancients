@@ -3,6 +3,7 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -21,16 +22,14 @@ import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { ColorOverLife } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
 // TODO
-export function createElectricBall(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+
+export function createElectricBall( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "ElectricBall";
-    const texture2 = textures[1].texture;
+    const texture2 = textures[1];
     const beam = new ParticleSystem({
         duration: 1,
         looping: true,

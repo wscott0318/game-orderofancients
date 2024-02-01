@@ -4,17 +4,14 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
     BatchedRenderer,
     ColorOverLife,
     ParticleSystem,
-    PointEmitter,
-    RenderMode,
 } from "three.quarks";
-import { ConeEmitter } from "three.quarks";
-import { IntervalValue } from "three.quarks";
 import { SizeOverLife } from "three.quarks";
 import { PiecewiseBezier } from "three.quarks";
 import { ColorRange } from "three.quarks";
@@ -22,16 +19,15 @@ import { ConstantColor } from "three.quarks";
 import { SphereEmitter } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
-import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
+
 import { COLOR_NUMBER } from "../../../../utils/helper";
 
-export function createFireBow(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createFireBow( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
-    const texture = textures[0].texture;
+    const texture = textures[0];
     group.name = "FireBow";
 
     const glowBeam = new ParticleSystem({

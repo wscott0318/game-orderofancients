@@ -3,6 +3,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -19,16 +20,15 @@ import {
     RenderMode,
     SizeOverLife,
 } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createShipSmoke(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createShipSmoke( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "ShipSmoke";
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
 
     const grey = new Vector4(0.5, 0.5, 0.5, 1);
 

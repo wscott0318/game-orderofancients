@@ -4,6 +4,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -25,16 +26,14 @@ import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { ColorOverLife } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
 // TODO
-export function createToonExplosion(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+
+export function createToonExplosion( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "Explosion";
-    const texture = textures[0].texture;
+    const texture = textures[0];
     const mainBeam = new ParticleSystem({
         duration: 2,
         looping: false,

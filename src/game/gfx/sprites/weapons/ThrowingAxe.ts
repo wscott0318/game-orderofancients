@@ -1,18 +1,17 @@
 
-import * as THREE from "three";
+import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { createAxeDamage } from "../../particles/weapons/AxeDamage";
 import { GameScene } from "../..";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 //
 
 interface ThrowingAxeProps {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetPos: THREE.Vector3;
     bounceCount: number;
@@ -21,7 +20,6 @@ interface ThrowingAxeProps {
 export class ThrowingAxe {
 
     public gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
@@ -37,14 +35,12 @@ export class ThrowingAxe {
 
     constructor({
         gameScene,
-        assetsManager,
         launchPos,
         targetPos,
         bounceCount = 0,
     }: ThrowingAxeProps) {
 
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Throwing Axes";
         this.attackDamage = SPELLS_INFO["Throwing Axes"].attackDamage;
@@ -52,7 +48,7 @@ export class ThrowingAxe {
         this.targetPos = targetPos;
         this.bounceCount = bounceCount;
 
-        this.mesh = new THREE.Group();
+        this.mesh = new Object3D();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
 
@@ -62,10 +58,10 @@ export class ThrowingAxe {
     checkIfHit() {}
 
     initMesh() {
-        const axeMesh = this.assetsManager._models.throwingAxe.scene.clone();
+        const axeMesh = ResourcesManager.getModel('ThrowingAxe')?.scene.clone() as Object3D;
         axeMesh.position.y = -0.75;
 
-        const group = new THREE.Group();
+        const group = new Object3D();
         group.rotateY(ANG2RAD(-90));
         group.add(axeMesh);
 
@@ -78,7 +74,7 @@ export class ThrowingAxe {
     addCollisionEffect() {
         const explosion = createAxeDamage(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture('Particles1')!, ResourcesManager.getTexture('Particles2')! ]
         );
 
         explosion.position.x = this.mesh.position.x;
@@ -105,16 +101,16 @@ export class ThrowingAxe {
          * Rotate object to target position
          */
 
-        const targetPosition = new THREE.Vector3(
+        const targetPosition = new Vector3(
             this.targetPos.x,
             this.targetPos.y,
             this.targetPos.z
         );
 
-        const rotationMatrix = new THREE.Matrix4();
+        const rotationMatrix = new Matrix4();
         rotationMatrix.lookAt(targetPosition, this.mesh.position, this.mesh.up);
 
-        const targetQuaternion = new THREE.Quaternion();
+        const targetQuaternion = new Quaternion();
         targetQuaternion.setFromRotationMatrix(rotationMatrix);
 
         this.mesh.quaternion.rotateTowards(targetQuaternion, 10);

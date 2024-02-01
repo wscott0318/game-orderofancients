@@ -2,7 +2,6 @@
 import { Vector3 } from "three";
 
 import { NewSpriteInfo, NewTextSpriteInfo } from "../../../constants/type";
-import { AssetsManager } from "../../managers/ResourcesManager";
 import { TextSprite } from "../sprites/Text";
 import Boulder from "../sprites/weapons/Boulder";
 import Bow from "../sprites/weapons/Bow";
@@ -21,7 +20,6 @@ import { GameScene } from "..";
 
 type SpriteManagerProps = {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 };
 
 export class SpriteManager {
@@ -29,16 +27,14 @@ export class SpriteManager {
     public spriteArray: any;
     public textSpriteArray: any;
     public gameScene: GameScene;
-    public assetsManager: AssetsManager;
 
     //
 
-    constructor( { gameScene, assetsManager }: SpriteManagerProps ) {
+    constructor( { gameScene }: SpriteManagerProps ) {
 
         this.spriteArray = [];
         this.textSpriteArray = [];
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
     }
 
@@ -51,7 +47,6 @@ export class SpriteManager {
             case "Throwing Axes":
                 sprite = new ThrowingAxe({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -65,7 +60,6 @@ export class SpriteManager {
             case "Seeker Axe":
                 sprite = new ThrowingAxe({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -78,7 +72,6 @@ export class SpriteManager {
             case "Rifle":
                 sprite = new Rifle({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -91,7 +84,6 @@ export class SpriteManager {
             case "Bow":
                 sprite = new Bow({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -103,7 +95,6 @@ export class SpriteManager {
             case "Frost Bow":
                 sprite = new FrostBow({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -115,7 +106,6 @@ export class SpriteManager {
             case "Fire Bow":
                 sprite = new FireBow({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -128,7 +118,6 @@ export class SpriteManager {
             case "Magic Missiles":
                 sprite = new MagicMissiles({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -141,7 +130,6 @@ export class SpriteManager {
             case "Flamecaster":
                 sprite = new Flamecaster({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -154,7 +142,6 @@ export class SpriteManager {
             case "Boulder":
                 sprite = new Boulder({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -167,7 +154,6 @@ export class SpriteManager {
             case "Missile Barrage":
                 sprite = new MissileBarrage({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -180,7 +166,6 @@ export class SpriteManager {
             case "Chaos Orb":
                 sprite = new ChaosOrb({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,
@@ -193,7 +178,6 @@ export class SpriteManager {
             case "Chaos Claw":
                 sprite = new ChaosClaw({
                     gameScene: this.gameScene,
-                    assetsManager: this.assetsManager,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new Vector3(
                         newSpriteInfo.targetPosition.x,

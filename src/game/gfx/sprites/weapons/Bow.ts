@@ -1,7 +1,7 @@
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { GameScene } from "../..";
@@ -10,7 +10,6 @@ import { GameScene } from "../..";
 
 interface BowProps {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetPos: THREE.Vector3;
 }
@@ -18,7 +17,6 @@ interface BowProps {
 export class Bow {
 
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
@@ -28,15 +26,9 @@ export class Bow {
 
     lastTime: number;
 
-    constructor({
-        gameScene,
-        assetsManager,
-        launchPos,
-        targetPos,
-    }: BowProps) {
+    constructor({ gameScene, launchPos, targetPos }: BowProps) {
 
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Bow";
         this.attackDamage = SPELLS_INFO["Bow"].attackDamage;
@@ -51,7 +43,7 @@ export class Bow {
     }
 
     initMesh() {
-        const bowMesh = this.assetsManager._models.arrow.scene.clone();
+        const bowMesh = ResourcesManager.getModel('Arrow')?.scene.clone() as Object3D;
         bowMesh.rotateY(ANG2RAD(90));
 
         this.mesh.add(bowMesh);

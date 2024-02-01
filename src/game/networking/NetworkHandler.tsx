@@ -16,7 +16,7 @@ import { getColorForPercentage } from "../../helper/color";
 import { Config } from "../../utils/config";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
-import { Game } from "../Game";
+import { Game } from "..";
 
 //
 

@@ -1,16 +1,16 @@
+
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { ANG2RAD } from "../../../../helper/math";
 import { createRocketSmoke } from "../../particles/weapons/RocketSmoke";
 import { createSmokeExplosion } from "../../particles/weapons/SmokeExplosion";
 import { GameScene } from "../..";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 interface BoulderProps {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetPos: THREE.Vector3;
 }
@@ -20,7 +20,6 @@ interface BoulderProps {
 export class Boulder {
 
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
@@ -32,14 +31,8 @@ export class Boulder {
 
     //
 
-    constructor({
-        gameScene,
-        assetsManager,
-        launchPos,
-        targetPos,
-    }: BoulderProps) {
+    constructor({ gameScene, launchPos, targetPos }: BoulderProps) {
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Boulder";
         this.attackDamage = SPELLS_INFO["Boulder"].attackDamage;
@@ -54,14 +47,14 @@ export class Boulder {
     }
 
     initMesh() {
-        const model = this.assetsManager._models.stone.scene.clone();
+        const model = ResourcesManager.getModel('Stone')?.scene.clone() as Object3D;
         model.scale.set(0.006, 0.006, 0.006);
 
         this.mesh.add(model);
 
         const particle = createRocketSmoke(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         particle.scale.set(0.3, 0.3, 0.3);
@@ -72,7 +65,7 @@ export class Boulder {
     addCollisionEffect() {
         const explosion = createSmokeExplosion(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         explosion.position.x = this.mesh.position.x;

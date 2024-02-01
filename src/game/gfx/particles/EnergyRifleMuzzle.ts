@@ -4,6 +4,7 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -22,13 +23,12 @@ import { ConstantColor } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { Gradient } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createEnergyRifleMuzzle(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
-    const texture = textures[1].texture;
+//
+
+export function createEnergyRifleMuzzle( renderer: BatchedRenderer, textures: Texture[] ) {
+
+    const texture = textures[1];
     const group = new Group();
     group.name = "EnergyRifleMuzzle";
 

@@ -1,9 +1,9 @@
 
 import * as THREE from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import TWEEN, { Tween } from "@tweenjs/tween.js";
+import TWEEN from "@tweenjs/tween.js";
 
-import { Game } from "../../Game";
+import { Game } from "../..";
 import { GameScene } from "..";
 
 //

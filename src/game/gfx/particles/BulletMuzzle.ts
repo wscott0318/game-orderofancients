@@ -4,8 +4,10 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
+
 import {
     BatchedRenderer,
     ColorOverLife,
@@ -24,13 +26,12 @@ import { FrameOverLife } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createBulletMuzzle(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
-    const texture = textures[0].texture;
+//
+
+export function createBulletMuzzle( renderer: BatchedRenderer, textures: Texture[] ) {
+
+    const texture = textures[0];
     const group = new Group();
     group.name = "BulletMuzzle";
 
@@ -324,5 +325,7 @@ export function createBulletMuzzle(
     particles.emitter.rotation.y = Math.PI / 2;
     group.add(particles.emitter);
     renderer.addSystem(particles);
+
     return group;
+
 }

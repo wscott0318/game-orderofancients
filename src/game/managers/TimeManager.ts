@@ -8,7 +8,7 @@ import { TextSprite } from "../gfx/sprites/Text";
 import { SpriteManager } from "../gfx/managers/SpriteManager";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
-import { Game } from "../Game";
+import { Game } from "..";
 
 //
 

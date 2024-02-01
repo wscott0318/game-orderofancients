@@ -3,6 +3,7 @@ import {
     DoubleSide,
     Group,
     MeshBasicMaterial,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -22,16 +23,14 @@ import {
     SizeOverLife,
     SphereEmitter,
 } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createLevelUp(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createLevelUp( renderer: BatchedRenderer, textures: Texture[] ) {
     const group = new Group();
     group.name = "LevelUp";
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
 
     const yellow = new Vector4(0.8, 0.8, 0.2, 1);
 

@@ -4,6 +4,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -15,7 +16,6 @@ import {
     ConstantColor,
     ConstantValue,
     FrameOverLife,
-    Gradient,
     IntervalValue,
     OrbitOverLife,
     ParticleSystem,
@@ -26,18 +26,17 @@ import {
     SizeOverLife,
     SphereEmitter,
 } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createPickUp(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createPickUp( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "PickUp";
     const yellowColor = new Vector4(1, 1, 0.3, 1);
     const darkOrangeColor = new Vector4(1, 0.7, 0.1, 1);
     const redColor = new Vector4(1, 0, 0, 1);
-    const texture = textures[0].texture;
+    const texture = textures[0];
 
     const circle = new ParticleSystem({
         duration: 1,

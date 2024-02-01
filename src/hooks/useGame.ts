@@ -2,19 +2,17 @@
 import { useCallback, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
-import { AssetsManager } from "../game/managers/ResourcesManager";
-import { Game } from "../game/Game";
+import { Game } from "../game";
 import { LobbyInfo, useGameContext } from "../contexts/game-context";
 import { Network } from "../game/networking/NetworkHandler";
 import { Gfx } from "../game/gfx";
+import { ResourcesManager } from "../game/managers/ResourcesManager";
 
 //
 
 export const useGame = () => {
 
     const {
-        assetsManager,
-        setAssetsManager,
         setCanEnterGame,
         gameInstance,
         setGameInstance,
@@ -29,9 +27,6 @@ export const useGame = () => {
     const lobbyInfoRef = useRef<LobbyInfo>();
     lobbyInfoRef.current = lobbyInfo;
 
-    const assetsManagerRef = useRef<AssetsManager>();
-    assetsManagerRef.current = assetsManager;
-
     /**
      * Canvas Game Ref
      */
@@ -44,11 +39,16 @@ export const useGame = () => {
 
         Network.initialize();
 
-        const assetsManagerRef = new AssetsManager();
-        await assetsManagerRef.loadModels();
+        ResourcesManager.load( ( progress ) => {
 
-        setAssetsManager(assetsManagerRef);
-        setCanEnterGame(true);
+            console.log( 'Loading progress:', progress );
+
+        }, () => {
+
+            console.log( 'Loading finished!' );
+            setCanEnterGame( true );
+
+        });
 
     }, []);
 
@@ -66,7 +66,6 @@ export const useGame = () => {
 
         const game = new Game({
             canvas: canvasDivRef.current!,
-            assetsManager: assetsManagerRef.current!,
             setCurrentGameState: setCurrentGameState,
             setUpgrades: setUpgrades,
             gameMode: gameMode,

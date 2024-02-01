@@ -16,18 +16,18 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createBlackHole(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createBlackHole( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "BlackHole";
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
 
     const beam = new ParticleSystem({
         duration: 1,

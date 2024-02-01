@@ -1,16 +1,16 @@
+
 import { Matrix4, Object3D, Quaternion, Vector3 } from "three";
 
 import { SPELLS_INFO } from "../../../../constants/spell";
-import { AssetsManager } from "../../../managers/ResourcesManager";
 import { disposeMesh } from "../../../../helper/three";
 import { createShipTrail } from "../../particles/ShipTrail";
 import { GameScene } from "../..";
+import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 //
 
 interface MagicMissilesProps {
     gameScene: GameScene;
-    assetsManager: AssetsManager;
     launchPos: THREE.Vector3;
     targetPos: THREE.Vector3;
 }
@@ -18,7 +18,6 @@ interface MagicMissilesProps {
 export class MagicMissiles {
 
     gameScene: GameScene;
-    assetsManager: AssetsManager;
 
     weaponType: string;
     attackDamage: number;
@@ -30,15 +29,9 @@ export class MagicMissiles {
 
     //
 
-    constructor({
-        gameScene,
-        assetsManager,
-        launchPos,
-        targetPos,
-    }: MagicMissilesProps) {
+    constructor({ gameScene, launchPos, targetPos }: MagicMissilesProps) {
 
         this.gameScene = gameScene;
-        this.assetsManager = assetsManager;
 
         this.weaponType = "Magic_Missiles";
         this.attackDamage = SPELLS_INFO["Magic_Missiles"].attackDamage;
@@ -55,7 +48,7 @@ export class MagicMissiles {
     initMesh() {
         const mesh = createShipTrail(
             this.gameScene.particleRenderer,
-            this.assetsManager._particleTextures
+            [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
         );
 
         mesh.position.x = 0;

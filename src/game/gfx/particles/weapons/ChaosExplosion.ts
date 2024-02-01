@@ -4,13 +4,12 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
     BatchedRenderer,
     Bezier,
-    ColorOverLife,
-    ColorRange,
     ConstantColor,
     ConstantValue,
     FrameOverLife,
@@ -20,17 +19,14 @@ import {
     PointEmitter,
     RandomColor,
     RenderMode,
-    RotationOverLife,
     SizeOverLife,
-    SpeedOverLife,
     SphereEmitter,
 } from "three.quarks";
-import { TextureImage } from "../../../managers/ResourcesManager";
 
-export function createChaosExplosion(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createChaosExplosion( renderer: BatchedRenderer, textures: Texture[] ) {
+
     const group = new Group();
     group.name = "ChaosExplosion";
 
@@ -40,7 +36,7 @@ export function createChaosExplosion(
     const greenColor = new Vector4(0.5, 0.9, 0.4, 1);
     const greenColor2 = new Vector4(0.09411764, 0.819607843, 0.2745098, 1);
 
-    const texture = textures[0].texture;
+    const texture = textures[0];
     const mainColor = greenColor;
     const secColor = greenColor2;
 

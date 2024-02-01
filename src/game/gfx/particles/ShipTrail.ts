@@ -4,6 +4,7 @@ import {
     Group,
     MeshBasicMaterial,
     NormalBlending,
+    Texture,
     Vector4,
 } from "three";
 import {
@@ -23,14 +24,12 @@ import { SphereEmitter } from "three.quarks";
 import { ConstantValue } from "three.quarks";
 import { Bezier } from "three.quarks";
 import { RandomColor } from "three.quarks";
-import { TextureImage } from "../../managers/ResourcesManager";
 
-export function createShipTrail(
-    renderer: BatchedRenderer,
-    textures: TextureImage[]
-) {
+//
+
+export function createShipTrail( renderer: BatchedRenderer, textures: Texture[] ) {
     const group = new Group();
-    const texture = textures[0].texture;
+    const texture = textures[0];
     group.name = "ShipTrail";
 
     const beam = new ParticleSystem({

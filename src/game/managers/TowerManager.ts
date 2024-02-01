@@ -1,10 +1,9 @@
 
-import { Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { GAME_STATES } from "../../constants";
-import { AssetsManager } from "./ResourcesManager";
 import {
     TOWER_HEALTH_HEIGHT,
     TOWER_HEALTH_WIDTH,
@@ -13,7 +12,8 @@ import { getColorForPercentage } from "../../helper/color";
 import { StateManager } from "../States/StateManager";
 import { ParticleEffect } from "../gfx/managers/ParticleEffect";
 import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../constants/tower";
-import { Game } from "../Game";
+import { Game } from "..";
+import { ResourcesManager } from "./ResourcesManager";
 
 //
 
@@ -24,7 +24,6 @@ export class TowerManager {
     public hp: number;
     public isDead: boolean;
     public _towerMesh: any;
-    public _assetsManager: AssetsManager;
     public _healthBarUI: CSS2DObject;
     public _stateManager: StateManager;
     public _particleEffect: ParticleEffect;
@@ -37,7 +36,6 @@ export class TowerManager {
 
     constructor ( params: any ) {
 
-        this._assetsManager = params.assetsManager;
         this._stateManager = params.stateManager;
         this._particleEffect = params.particleEffect;
         this._playerIndex = params.playerIndex;
@@ -50,9 +48,8 @@ export class TowerManager {
 
         this.sacrificeHP = 0;
 
-        this._towerMesh = SkeletonUtils.clone(
-            this._assetsManager.getTowerModel()
-        );
+        const towerModel = ResourcesManager.getModel("Buildings")?.scene.getObjectByName( 'orc_tower_Lv3_proto_orc_rts_0' ) as Object3D;
+        this._towerMesh = SkeletonUtils.clone( towerModel );
 
         const wrapper = document.createElement("div");
         wrapper.className = "towerStatusBar";
