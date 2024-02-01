@@ -23,8 +23,18 @@ export const Tutorial = () => {
     const divRef = useRef<HTMLDivElement>(null);
     const menuAnim = gsap.timeline();
 
-    useEffect(() => {
-        if (divRef.current) {
+    useEffect( () => {
+
+        const isTutorialFinished = ( localStorage.getItem('TutorialFinished') === 'true' );
+
+        if ( isTutorialFinished ) {
+
+            setGameState(GAME_STATES.GAME_MENU);
+
+        }
+
+        if ( divRef.current ) {
+
             const divElement = divRef.current.childNodes[0];
 
             menuAnim.add("start").from(divElement, {
@@ -36,15 +46,21 @@ export const Tutorial = () => {
                 ),
             });
         }
+
         return () => {
             menuAnim.kill();
         };
+
     }, []);
 
     const onClickNext = () => {
+
         if (step === 3) {
+
             if (divRef.current) {
+
                 const divElement = divRef.current.childNodes[0];
+
                 menuAnim.add("end").to(divElement, {
                     top: "-50vw",
                     duration: 1,
@@ -53,18 +69,26 @@ export const Tutorial = () => {
                         "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
                     ),
                 });
+
             }
 
+            localStorage.setItem( 'TutorialFinished', 'true' );
+
             setTimeout(() => {
+
                 setGameState(GAME_STATES.GAME_MENU);
+
             }, 1000);
+
         } else {
+
             setStep((prev) => prev + 1);
+
         }
+
     };
 
-    // tmp
-    setGameState(GAME_STATES.GAME_MENU);
+    //
 
     return (
         <div
@@ -74,7 +98,7 @@ export const Tutorial = () => {
             <div className="relative w-[1200px]">
                 <img className="w-full" alt="pic" src={tutorialBackImg} />
 
-                <Wrapper className="w-full h-full absolute top-0 flex flex-col justify-start items-center gap-[2%]">
+                <Wrapper className="w-full h-full top-0 flex flex-col justify-start items-center gap-[2%]">
                     <div className="flex justify-center items-start gap-[2%]">
                         <div className="flex flex-col justify-start items-center w-[18%] gap-4">
                             <img
@@ -158,7 +182,7 @@ export const Tutorial = () => {
 
                     <div className="w-full text-center h-[10%]">
                         <button
-                            className="h-full imageButton"
+                            className="h-full imageButton mt-10"
                             onClick={onClickNext}
                         >
                             <img
