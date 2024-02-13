@@ -14,6 +14,8 @@ import { AnimationManager } from "./gfx/managers/AnimationManager";
 import { EventBridge } from "../libs/EventBridge";
 import { GameScene, Gfx } from "./gfx";
 import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
+import { Network } from "./networking/NetworkHandler";
+import { SOCKET_EVENTS } from "../constants/socket";
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -126,6 +128,9 @@ export class Game {
 
         }
 
+        EventBridge.onUIEvent( "upgradeSpell", this.towerSpellUpgrade );
+        EventBridge.onUIEvent( "Dispose", this.dispose );
+
         this.initialize();
 
     }
@@ -136,11 +141,27 @@ export class Game {
 
     }
 
-    public dispose () : void {
+    public dispose = () : void => {
 
-        //
+        Gfx.dispose();
+
+        this._towerManagerArray = [];
+        this._botManagerArray = [];
+        this._playerStateArray = [];
+        this._timeManagerArray = [];
+
+        // this._stateManager.dispose();
+        // this._stateManager.dispose();
+        // this._particleEffect.dispose();
+        // this._spriteManager.dispose();
 
     }
+
+    private towerSpellUpgrade = ( data: any ) : void => {
+
+        Network.socket?.emit( SOCKET_EVENTS.UPGRADE_SPELL, data.item, data.itemIndex );
+
+    };
 
     public animate = () : void => {
 

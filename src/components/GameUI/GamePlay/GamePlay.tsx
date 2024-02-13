@@ -1,11 +1,13 @@
+
 import { useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
+
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
-import { useGame } from "../../../hooks/useGame";
 import { useGameContext } from "../../../contexts/game-context";
-import { SOCKET_EVENTS } from "../../../constants/socket";
+import { EventBridge } from "../../../libs/EventBridge";
+import { Game } from "../../../game";
 import { Network } from "../../../game/networking/NetworkHandler";
 
 export const GradientText = styled.span`
@@ -15,8 +17,8 @@ export const GradientText = styled.span`
 `;
 
 const GamePlayUI = () => {
+
     const { upgrades, lobbyInfo } = useGameContext();
-    const { gameRef } = useGame();
 
     const [profileSpells, setProfilSpells] = useState([]) as any;
 
@@ -24,33 +26,37 @@ const GamePlayUI = () => {
 
     const onClickUpgrade = (item: any, itemIndex: number) => {
 
-        Network.socket?.emit(SOCKET_EVENTS.UPGRADE_SPELL, item, itemIndex);
+        EventBridge.dispatchToGame( "upgradeSpell", { item, itemIndex } );
 
-        const playerIndex = lobbyInfo?.players.findIndex(
-            (player) => player.socketId === Network.socket?.id
-        );
-        if (playerIndex === undefined || playerIndex === -1) return;
+        const playerIndex = Game.instance._lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
+        if ( playerIndex === undefined || playerIndex === -1 ) return;
 
-        const playerState = gameRef.current!._playerStateArray[playerIndex];
+        const playerState = Game.instance._playerStateArray[ playerIndex ];
         const gold_balance = playerState.gold;
         const price = item.cost;
-        if (gold_balance < price) return;
 
-        if (item.spellType === "Weapon") {
-            const userSpells = [...profileSpells];
-            const index = userSpells.findIndex(
-                (spell: any) => spell.name === item.name
-            );
-            if (index !== -1) {
-                userSpells[index].count++;
+        if ( gold_balance < price ) return;
+
+        if ( item.spellType === "Weapon" ) {
+
+            const userSpells = [ ...profileSpells ];
+
+            const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
+
+            if ( index !== -1 ) {
+
+                userSpells[ index ].count ++;
+
             } else {
-                userSpells.push({
-                    ...item,
-                    count: 1,
-                });
+
+                userSpells.push({ ...item, count: 1, });
+
             }
-            setProfilSpells(userSpells);
+
+            setProfilSpells( userSpells );
+
         }
+
     };
 
     return (
@@ -77,4 +83,5 @@ const GamePlayUI = () => {
         </>
     );
 };
+
 export default GamePlayUI;

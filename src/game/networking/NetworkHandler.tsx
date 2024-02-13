@@ -135,20 +135,14 @@ export class NetworkHandler {
 
             if ( healthBarDiv ) {
 
-                healthBarDiv.style.width = `${
-                    (towerManager.hp / towerManager.maxHp) * 100
-                }%`;
-
-                healthBarDiv.style.backgroundColor = `${getColorForPercentage(
-                    towerManager.hp / towerManager.maxHp
-                )}`;
+                healthBarDiv.style.width = `${ ( towerManager.hp / towerManager.maxHp ) * 100 }%`;
+                healthBarDiv.style.backgroundColor = `${ getColorForPercentage( towerManager.hp / towerManager.maxHp ) }`;
 
             }
 
             if ( towerStatus.isDead && index === playerIndex ) {
 
                 // todo
-                // setGameState(GAME_STATES.END);
 
             }
 
@@ -186,17 +180,19 @@ export class NetworkHandler {
 
             for ( let j = 0; j < botStatusData[ i ].length; j ++ ) {
 
-                const bot = game._botManagerArray[i].botArray[ j ] as any;
+                const bot = game._botManagerArray[ i ].botArray[ j ] as any;
+                const botStatus = botStatusData[ i ][ j ];
+                if ( ! botStatus ) continue;
 
-                bot.hp = botStatusData[i][j].hp;
-                bot.position = botStatusData[i][j].position;
-                bot.status = botStatusData[i][j].status;
-                bot.oldStatus = botStatusData[i][j].oldStatus;
-                bot.claimTime = botStatusData[i][j].claimTime;
-                bot.canRemove = botStatusData[i][j].canRemove;
-                bot.stunTime = botStatusData[i][j].stunTime;
-                bot.slowTime = botStatusData[i][j].slowTime;
-                bot.fireTime = botStatusData[i][j].fireTime;
+                bot.hp = botStatus.hp;
+                bot.position = botStatus.position;
+                bot.status = botStatus.status;
+                bot.oldStatus = botStatus.oldStatus;
+                bot.claimTime = botStatus.claimTime;
+                bot.canRemove = botStatus.canRemove;
+                bot.stunTime = botStatus.stunTime;
+                bot.slowTime = botStatus.slowTime;
+                bot.fireTime = botStatus.fireTime;
 
             }
 

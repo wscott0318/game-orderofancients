@@ -9,6 +9,7 @@ import { TOWER_POSITIONS } from '../../../constants/tower';
 import { ANG2RAD } from '../../../helper/math';
 import { Game } from '../..';
 import { EnvironmentManager } from './EnvironmentManager';
+import { EventBridge } from '../../../libs/EventBridge';
 
 //
 
@@ -18,6 +19,8 @@ export class ArenaScene extends GameScene {
     public camera: PerspectiveCamera;
 
     private _environment: EnvironmentManager;
+
+    private gridHelper: GridHelper;
 
     private _camControls: OrbitControls;
     protected _renderTarget: WebGLRenderTarget;
@@ -38,6 +41,8 @@ export class ArenaScene extends GameScene {
 
         this._environment = new EnvironmentManager();
         this._environment.init( this.scene );
+
+        EventBridge.onUIEvent( 'toggleGrid', this.toggleGrid );
 
         this.addGrid();
         this.initCameraControls();
@@ -127,10 +132,17 @@ export class ArenaScene extends GameScene {
 
         const color = new Color(0x333333);
 
-        const gridHelper = new GridHelper(size, divisions, color, color);
-        gridHelper.position.y = 0.01;
+        this.gridHelper = new GridHelper(size, divisions, color, color);
+        this.gridHelper.position.y = 0.01;
+        this.gridHelper.visible = false;
 
-        this.scene.add( gridHelper );
+        this.scene.add( this.gridHelper );
+
+    }
+
+    private toggleGrid = ( visible: boolean ) : void => {
+
+        this.gridHelper.visible = visible;
 
     }
 

@@ -18,7 +18,7 @@ class GfxCore {
     public renderer: WebGLRenderer;
     public uiRenderer: CSS2DRenderer;
 
-    public activeGameScene: GameScene;
+    public activeGameScene: GameScene | null = null;
     private gameScenes: GameScene[] = [];
 
     private prevRenderTime: number = 0;
@@ -52,35 +52,18 @@ class GfxCore {
 
     }
 
-    private createRenderer ( canvasDiv: HTMLElement ) : void {
-
-        this.renderer = new WebGLRenderer({ antialias: false });
-        this.renderer.domElement.style.position = 'absolute';
-        this.renderer.domElement.style.top = '0px';
-        this.renderer.domElement.style.left = '0px';
-        this.renderer.domElement.style.zIndex = '1';
-        canvasDiv.appendChild( this.renderer.domElement );
-
-        this.renderer.setPixelRatio( window.devicePixelRatio );
-        this.renderer.setSize( this.width * this.resolution, this.height * this.resolution );
-
-        //
-
-        this.uiRenderer = new CSS2DRenderer();
-        this.uiRenderer.setSize( this.width, this.height );
-        this.uiRenderer.domElement.id = 'uiRenderer';
-        this.uiRenderer.domElement.style.position = 'absolute';
-        this.uiRenderer.domElement.style.top = '0px';
-        document.body.appendChild( this.uiRenderer.domElement );
-
-    }
-
     public update = () : void => {
 
         if ( ! this.inited ) return;
         if ( ! this.loopEnabled ) return;
 
         requestAnimationFrame( this.update );
+
+        if ( window.innerWidth !== this.width || window.innerHeight !== this.height ) {
+
+            this.resize();
+
+        }
 
         if ( ! this.renderingEnabled ) return;
 
@@ -102,6 +85,61 @@ class GfxCore {
         this.stats.update();
 
         this.prevRenderTime = time;
+
+    }
+
+    public dispose () : void {
+
+        if ( this.activeGameScene ) {
+
+            this.activeGameScene.dispose();
+
+        }
+
+        this.uiRenderer.domElement.remove();
+        this.renderer.domElement.remove();
+        this.renderer.dispose();
+        this.gameScenes = [];
+        this.stats.domElement.remove();
+
+        this.activeGameScene = null;
+
+    }
+
+    //
+
+    private resize () : void {
+
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+
+        this.renderer.setSize( this.width * this.resolution, this.height * this.resolution );
+        this.uiRenderer.setSize( this.width, this.height );
+
+        if ( this.activeGameScene ) this.activeGameScene.resize();
+
+    };
+
+    private createRenderer ( canvasDiv: HTMLElement ) : void {
+
+        this.renderer = new WebGLRenderer({ antialias: false });
+        this.renderer.domElement.style.position = 'absolute';
+        this.renderer.domElement.style.top = '0px';
+        this.renderer.domElement.style.left = '0px';
+        this.renderer.domElement.style.zIndex = '1';
+        canvasDiv.appendChild( this.renderer.domElement );
+
+        this.renderer.setPixelRatio( window.devicePixelRatio );
+        this.renderer.setSize( this.width * this.resolution, this.height * this.resolution );
+
+        //
+
+        this.uiRenderer = new CSS2DRenderer();
+        this.uiRenderer.setSize( this.width, this.height );
+        this.uiRenderer.domElement.id = 'uiRenderer';
+        this.uiRenderer.domElement.style.position = 'absolute';
+        this.uiRenderer.domElement.style.top = '0px';
+        document.body.appendChild( this.uiRenderer.domElement );
 
     }
 

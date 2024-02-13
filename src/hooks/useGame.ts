@@ -1,5 +1,5 @@
 
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
 import { Game } from "../game";
@@ -7,6 +7,7 @@ import { LobbyInfo, useGameContext } from "../contexts/game-context";
 import { Network } from "../game/networking/NetworkHandler";
 import { Gfx } from "../game/gfx";
 import { ResourcesManager } from "../game/managers/ResourcesManager";
+import { EventBridge } from "../libs/EventBridge";
 
 //
 
@@ -41,7 +42,7 @@ export const useGame = () => {
 
         ResourcesManager.load( ( progress ) => {
 
-            console.log( 'Loading progress:', progress );
+            EventBridge.dispatchToUI( 'LoadingProgressUpdate', progress );
 
         }, () => {
 
@@ -113,6 +114,8 @@ export const useGame = () => {
 
         if (gameRef.current) gameRef.current.dispose();
 
+        EventBridge.dispatchToGame( 'Dispose' );
+
         setGameInstance(undefined);
         setGameState(GAME_STATES.GAME_MENU);
 
@@ -133,13 +136,7 @@ export const useGame = () => {
         const isChecked = e.target.checked;
         setShowGrid(isChecked);
 
-        // todo!
-        const game = gameRef.current!;
-        if (isChecked) {
-            // game._sceneRenderer.addGrid();
-        } else {
-            // game._sceneRenderer.removeGrid();
-        }
+        EventBridge.dispatchToGame( 'toggleGrid', isChecked );
 
     };
 

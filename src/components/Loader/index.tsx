@@ -4,6 +4,7 @@ import "./firefly.scss";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import { S3_BUCKET_URL } from "../../constants";
+import { EventBridge } from "../../libs/EventBridge";
 
 const logoImg = S3_BUCKET_URL + "/assets/images/logo2.png";
 const sliderImg = S3_BUCKET_URL + "/assets/images/loader-slider-shine.png";
@@ -48,20 +49,25 @@ export const Loader = ({ canEnterGame }: LoaderProps) => {
         ));
     };
 
-    const handleProgress = () => {
-        setTimeout(() => {
-            handleProgress();
-
-            setProgressValue((prev: number) =>
-                prev + GET_RANDOM_VAL(10) + 10 > 95
-                    ? 95
-                    : prev + GET_RANDOM_VAL(10) + 10
-            );
-        }, (0.5 + GET_RANDOM_VAL(5) / 10) * 1000);
-    };
-
     useEffect(() => {
-        handleProgress();
+
+        console.log('zz');
+
+        const onLoadProgress = ( value: number ) => {
+
+            console.log( value );
+            setProgressValue( 100 * value );
+
+        };
+
+        EventBridge.onGameEvent( "LoadingProgressUpdate", onLoadProgress );
+
+        return () => {
+
+            EventBridge.removeGameEventListener( "LoadingProgressUpdate", onLoadProgress );
+
+        };
+
     }, []);
 
     useEffect(() => {

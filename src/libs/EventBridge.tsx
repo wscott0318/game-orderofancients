@@ -29,7 +29,7 @@ export class EventBridgeCore {
 
     };
 
-    public onUIEvent ( eventName: string, callback: Callback ) : void {
+    public onUIEvent = ( eventName: string, callback: Callback ) : void => {
 
         let listeners = this.reactEventListeners.get( eventName );
 
@@ -62,7 +62,7 @@ export class EventBridgeCore {
 
     };
 
-    public dispatchToGame ( eventName: string, params: any ) : void {
+    public dispatchToGame ( eventName: string, params?: any ) : void {
 
         let reactEvents = this.reactEventsQueue.get( eventName );
 
