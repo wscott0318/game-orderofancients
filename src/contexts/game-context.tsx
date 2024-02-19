@@ -1,8 +1,7 @@
 import { ReactNode, createContext, useContext, useState } from "react";
+
 import { GAME_MODES, GAME_STATES } from "../constants";
-import AssetsManager from "../components/GameScene/AssetsManager";
-import { Game } from "../components/GameScene/game";
-import { Socket } from "socket.io-client";
+import { Game } from "../game/Game";
 import { spell } from "../constants/spell";
 
 export interface PlayerInfo {
@@ -31,10 +30,6 @@ interface GameContextProps {
     setShowGrid: (value: boolean) => void;
     gameInstance: Game | undefined;
     setGameInstance: (value: Game | undefined) => void;
-    assetsManager: AssetsManager | undefined;
-    setAssetsManager: (value: AssetsManager) => void;
-    socket: Socket | undefined;
-    setSocket: (value: Socket) => void;
     lobbyInfo: LobbyInfo | undefined;
     setLobbyInfo: (value: LobbyInfo) => void;
 }
@@ -54,10 +49,6 @@ export const initialContext: GameContextProps = {
     setShowGrid: () => {},
     gameInstance: undefined,
     setGameInstance: () => {},
-    assetsManager: undefined,
-    setAssetsManager: () => {},
-    socket: undefined,
-    setSocket: () => {},
     lobbyInfo: undefined,
     setLobbyInfo: () => {},
 };
@@ -79,14 +70,8 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     );
     const [upgrades, setUpgrades] = useState(initialContext.upgrades);
     const [gameMode, setGameMode] = useState(initialContext.gameMode);
-
     const [showGrid, setShowGrid] = useState(initialContext.showGrid);
-
     const [gameInstance, setGameInstance] = useState<Game>();
-    const [assetsManager, setAssetsManager] = useState<AssetsManager>();
-
-    const [socket, setSocket] = useState<Socket>();
-
     const [lobbyInfo, setLobbyInfo] = useState<LobbyInfo>();
 
     return (
@@ -106,10 +91,6 @@ export const GameProvider = ({ children }: GameProviderProps) => {
                 setShowGrid,
                 gameInstance,
                 setGameInstance,
-                assetsManager,
-                setAssetsManager,
-                socket,
-                setSocket,
                 lobbyInfo,
                 setLobbyInfo,
             }}
