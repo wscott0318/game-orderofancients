@@ -1,41 +1,49 @@
 
-import { Bot } from "../Instances/Bot";
+import { BotEntity } from "../entities/Bot.Entity";
 
 //
 
 export class BotManager {
 
-    public botArray: Bot[];
-    public index: number;
+    public bots: BotEntity[] = [];
+
+    private towerIndex: number;
 
     //
 
-    constructor ( { index }: any ) {
+    constructor ( towerIndex: number ) {
 
-        this.botArray = [];
-        this.index = index;
+        this.towerIndex = towerIndex;
 
-    }
+    };
 
-    public addNewBot ( { botType }: any ) {
+    public add ( botType: number ) : void {
 
-        this.botArray.push(
-            new Bot({
-                botType: botType,
-                towerIndex: this.index,
-            })
-        );
+        const bot = new BotEntity( botType, this.towerIndex );
+        this.bots.push( bot );
 
-    }
+    };
 
-    public tick () : void {
+    public killAll () : void {
 
-        for ( let i = 0; i < this.botArray.length; i ++ ) {
+        for ( let i = 0; i < this.bots.length; i ++ ) {
 
-            this.botArray[i].tick();
+            this.bots[ i ].kill();
 
         }
 
-    }
+        this.bots = [];
 
-}
+    };
+
+    public update () : void {
+
+        for ( let i = 0; i < this.bots.length; i ++ ) {
+
+            this.bots[ i ].tick();
+
+        }
+
+    };
+
+};

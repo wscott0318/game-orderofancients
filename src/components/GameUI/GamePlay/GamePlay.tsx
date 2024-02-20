@@ -10,11 +10,15 @@ import { EventBridge } from "../../../libs/EventBridge";
 import { Game } from "../../../game";
 import { Network } from "../../../game/networking/NetworkHandler";
 
+//
+
 export const GradientText = styled.span`
     background: linear-gradient(to top #e56e16, #e9e502);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 `;
+
+//
 
 const GamePlayUI = () => {
 
@@ -31,7 +35,7 @@ const GamePlayUI = () => {
         const playerIndex = Game.instance._lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
         if ( playerIndex === undefined || playerIndex === -1 ) return;
 
-        const playerState = Game.instance._playerStateArray[ playerIndex ];
+        const playerState = Game.instance.towerManager.get( playerIndex ).playerState;
         const gold_balance = playerState.gold;
         const price = item.cost;
 

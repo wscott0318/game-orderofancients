@@ -1,14 +1,11 @@
 
 import TWEEN from "@tweenjs/tween.js";
 
-import { BotManager } from "./managers/BotManager";
 import { ParticleEffect } from "./gfx/managers/ParticleEffect";
 import { SpriteManager } from "./gfx/managers/SpriteManager";
 import { TowerManager } from "./managers/TowerManager";
 import { StateManager } from "./States/StateManager";
 import { GAME_STATES } from "../constants";
-import { PlayerState } from "./States/PlayerState";
-import { TimeManager } from "./managers/TimeManager";
 import { LobbyInfo } from "../contexts/game-context";
 import { AnimationManager } from "./gfx/managers/AnimationManager";
 import { EventBridge } from "../libs/EventBridge";
@@ -16,6 +13,9 @@ import { GameScene, Gfx } from "./gfx";
 import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
 import { Network } from "./networking/NetworkHandler";
 import { SOCKET_EVENTS } from "../constants/socket";
+import { TowerEntity } from "./entities/Tower.Entity";
+
+//
 
 interface GameOptions {
     canvas: HTMLDivElement;
@@ -39,14 +39,11 @@ export class Game {
 
     //
 
-    public _towerManagerArray: TowerManager[];
-    public _botManagerArray: BotManager[];
+    public towerManager: TowerManager;
     public _spriteManager: SpriteManager;
     public _particleEffect: ParticleEffect;
     public _canvasDiv: HTMLDivElement;
     public _stateManager: StateManager;
-    public _playerStateArray: PlayerState[];
-    public _timeManagerArray: TimeManager[];
     public _lobbyInfo: LobbyInfo;
     public _playerIndex: number;
     public _gameMode: number;
@@ -86,76 +83,50 @@ export class Game {
             playerIndex: this._playerIndex,
         });
 
-        this._towerManagerArray = [];
-        this._botManagerArray = [];
-        this._playerStateArray = [];
-        this._timeManagerArray = [];
+        this.towerManager = new TowerManager();
+
         this._canvasDiv = options.canvas;
 
         for ( let i = 0; i < this._lobbyInfo?.players.length; i ++ ) {
 
-            this._towerManagerArray.push(
-                new TowerManager({
-                    stateManager: this._stateManager,
-                    particleEffect: this._particleEffect,
-                    playerIndex: this._playerIndex,
-                    index: i,
-                })
-            );
+            const tower = new TowerEntity({
+                stateManager:       this._stateManager,
+                particleEffect:     this._particleEffect,
+                playerIndex:        this._playerIndex,
+                index:              i
+            });
+
+            this.towerManager.add( tower );
 
         }
 
-        for ( let i = 0; i < this._towerManagerArray.length; i ++ ) {
-
-            this._botManagerArray.push(
-                new BotManager({ index: i })
-            );
-
-            this._playerStateArray.push(
-                new PlayerState({
-                    index: i,
-                    playerIndex: this._playerIndex,
-                })
-            );
-
-            this._timeManagerArray.push(
-                new TimeManager({
-                    playerState: this._playerStateArray[i],
-                    towerManager: this._towerManagerArray[i],
-                    spriteManager: this._spriteManager,
-                })
-            );
-
-        }
+        //
 
         EventBridge.onUIEvent( "upgradeSpell", this.towerSpellUpgrade );
         EventBridge.onUIEvent( "Dispose", this.dispose );
 
         this.initialize();
 
-    }
+    };
 
     public initialize () : void {
 
         // this._animationManager.light_attention();
 
-    }
+    };
 
     public dispose = () : void => {
 
-        Gfx.dispose();
+        this.towerManager.dispose();
 
-        this._towerManagerArray = [];
-        this._botManagerArray = [];
-        this._playerStateArray = [];
-        this._timeManagerArray = [];
+        Gfx.dispose();
 
         // this._stateManager.dispose();
         // this._stateManager.dispose();
         // this._particleEffect.dispose();
         // this._spriteManager.dispose();
 
-    }
+    };
 
     private towerSpellUpgrade = ( data: any ) : void => {
 
@@ -175,32 +146,7 @@ export class Game {
 
         if ( this._stateManager.getCurrentState() === GAME_STATES["PLAYING"] ) {
 
-            for ( let i = 0; i < this._towerManagerArray.length; i ++ ) {
-
-                if ( ! this._towerManagerArray[ i ].isDead ) {
-
-                    this._towerManagerArray[ i ].tick();
-                    this._botManagerArray[ i ].tick();
-                    this._timeManagerArray[ i ].tick();
-
-                } else {
-
-                    if ( this._botManagerArray[ i ].botArray.length > 0 )  {
-
-                        for ( let j = 0; j < this._botManagerArray[ i ].botArray.length; j ++ ) {
-
-                            this._botManagerArray[ i ].botArray[ j ].kill();
-
-                        }
-
-                        this._botManagerArray[ i ].botArray = [];
-
-                    }
-
-                }
-
-            }
-
+            this.towerManager.update();
             this._spriteManager.tick();
             this._particleEffect.tick();
 
@@ -208,6 +154,6 @@ export class Game {
 
         TWEEN.update();
 
-    }
+    };
 
-}
+};

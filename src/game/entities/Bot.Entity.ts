@@ -18,7 +18,8 @@ import { Game } from "..";
 
 //
 
-export class Bot {
+export class BotEntity {
+
     uuid: string;
     hp: number;
     maxHp: number;
@@ -44,8 +45,9 @@ export class Bot {
     fireTime: number;
     towerIndex: number;
 
-    constructor({ botType, towerIndex }: any) {
-        this.towerIndex = towerIndex;
+    //
+
+    constructor ( botType: number, towerIndex: number ) {
 
         this.uuid = generateUUID();
         this.hp = BOT_PROPS.healthPoint[botType];
