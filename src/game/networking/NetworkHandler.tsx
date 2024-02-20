@@ -65,7 +65,7 @@ export class NetworkHandler {
 
         });
 
-    }
+    };
 
     public dispose () : void {
 
@@ -107,13 +107,13 @@ export class NetworkHandler {
 
         }, 300 );
 
-    }
+    };
 
     public onReceiveLobbyData = ( lobby: LobbyInfo ) : void => {
 
         EventBridge.dispatchToUI( Events.Game.SET_LOBBY_DATA, lobby );
 
-    }
+    };
 
     public onReceiveTowerStatus = ( towerStatusData: TowerStatus[], timerStatus: TimerStatus ) : void => {
 
@@ -125,18 +125,18 @@ export class NetworkHandler {
 
         towerStatusData.forEach( ( towerStatus, index ) => {
 
-            const towerManager = game._towerManagerArray[ index ] as any;
-            towerManager.level = towerStatus.level;
-            towerManager.maxHp = towerStatus.maxHp;
-            towerManager.hp = towerStatus.hp;
-            towerManager.isDead = towerStatus.isDead;
+            const tower = game.towerManager.get( index );
+            tower.level = towerStatus.level;
+            tower.maxHp = towerStatus.maxHp;
+            tower.hp = towerStatus.hp;
+            tower.isDead = towerStatus.isDead;
 
             const healthBarDiv = document.getElementsByClassName( "status_player_health" )[index] as HTMLDivElement;
 
             if ( healthBarDiv ) {
 
-                healthBarDiv.style.width = `${ ( towerManager.hp / towerManager.maxHp ) * 100 }%`;
-                healthBarDiv.style.backgroundColor = `${ getColorForPercentage( towerManager.hp / towerManager.maxHp ) }`;
+                healthBarDiv.style.width = `${ ( tower.hp / tower.maxHp ) * 100 }%`;
+                healthBarDiv.style.backgroundColor = `${ getColorForPercentage( tower.hp / tower.maxHp ) }`;
 
             }
 
@@ -146,31 +146,31 @@ export class NetworkHandler {
 
             }
 
-            ( game._playerStateArray[ index ] as any ).gold = towerStatus.gold;
+            tower.playerState.gold = towerStatus.gold;
 
         });
 
-        game._timeManagerArray.forEach( ( timeManager ) => {
+        game.towerManager.towersArray.forEach( ( tower ) => {
 
-            timeManager.secondTracker = timerStatus.secondTracker;
-            timeManager.roundTracker = timerStatus.roundTracker;
-            timeManager.totalTimeTracker = timerStatus.totalTimeTracker;
+            tower.time.secondTracker = timerStatus.secondTracker;
+            tower.time.roundTracker = timerStatus.roundTracker;
+            tower.time.totalTimeTracker = timerStatus.totalTimeTracker;
 
         });
-
-    }
-
-    public onReceiveProduceBot = (playerIndex: number, newBot: any) : void => {
-
-        Game.instance._botManagerArray[ playerIndex ].addNewBot( newBot );
 
     };
 
-    public onReceiveBotStatus = ( botStatusData: BotStatus[][])  : void => {
+    public onReceiveProduceBot = ( playerIndex: number, newBot: { botType: number } ) : void => {
+
+        Game.instance.towerManager.get( playerIndex ).botManager.add( newBot.botType );
+
+    };
+
+    public onReceiveBotStatus = ( botStatusData: BotStatus[][] ) : void => {
 
         const game = Game.instance;
 
-        if ( game._botManagerArray[0].botArray.length !== botStatusData[0].length ) {
+        if ( game.towerManager.get( 0 ).botManager.bots.length !== botStatusData[0].length ) {
 
             console.error("unsynce bot data");
 
@@ -180,7 +180,7 @@ export class NetworkHandler {
 
             for ( let j = 0; j < botStatusData[ i ].length; j ++ ) {
 
-                const bot = game._botManagerArray[ i ].botArray[ j ] as any;
+                const bot = game.towerManager.get( i ).botManager.bots[ j ] as any;
                 const botStatus = botStatusData[ i ][ j ];
                 if ( ! botStatus ) continue;
 
@@ -198,32 +198,32 @@ export class NetworkHandler {
 
         }
 
-    }
+    };
 
     public onReceiveUpgrades = ( playersInfo: PlayerInfo[] ) : void => {
 
         const player = playersInfo.find( ( el ) => el.socketId === this.socket?.id );
         EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
 
-    }
+    };
 
     public onTickSecond = ( playerIndex: number, value: number ) : void => {
 
-        Game.instance._timeManagerArray[ playerIndex ].tickSecond( value );
+        Game.instance.towerManager.get( playerIndex ).time.tickSecond( value );
 
-    }
+    };
 
     public onTickRound = ( playerIndex: number ) : void => {
 
-        Game.instance._timeManagerArray[ playerIndex ].tickRound();
+        Game.instance.towerManager.get( playerIndex ).time.tickRound();
 
-    }
+    };
 
     public onAddSprite = ( newSpriteInfo: NewSpriteInfo ) : void => {
 
         Game.instance._spriteManager.addSpriteFrom( newSpriteInfo );
 
-    }
+    };
 
     public onAddTextSprite = ( newTextSpriteInfo: NewTextSpriteInfo ) : void => {
 
@@ -235,9 +235,9 @@ export class NetworkHandler {
 
         Game.instance._spriteManager.spriteArray[ spriteIndex ].addCollisionEffect();
 
-    }
+    };
 
-    public onDisposeSprite = (removeSpriteArray: number[]) : void => {
+    public onDisposeSprite = ( removeSpriteArray: number[] ) : void => {
 
         const game = Game.instance;
         const spriteArray = game._spriteManager.spriteArray;
@@ -263,7 +263,7 @@ export class NetworkHandler {
 
         ( game._spriteManager as any ).spriteArray = newArray;
 
-    }
+    };
 
     public onReceiveSpriteStatus = ( spriteStatusData: SpriteStatus[] ) : void => {
 
@@ -296,21 +296,22 @@ export class NetworkHandler {
 
         }
 
-    }
+    };
 
     public onKillBot = ( playerIndex: number, botIndex: number ) : void => {
 
-        Game.instance._botManagerArray[ playerIndex ].botArray[ botIndex ].kill();
+        Game.instance.towerManager.get( playerIndex ).botManager.bots[ botIndex ].kill();
 
-    }
+    };
 
     public onRemoveDeadBots = ( playerIndex: number, deadBotArray: number[] ) : void => {
 
         const game = Game.instance;
-        if ( ! game._botManagerArray[ playerIndex ].botArray ) return;
+        const botArray = game.towerManager.get( playerIndex ).botManager.bots;
+
+        if ( ! botArray.length ) return;
 
         const newArray = [];
-        const botArray = game._botManagerArray[playerIndex].botArray;
 
         for ( let i = 0; i < botArray.length; i ++ ) {
 
@@ -326,10 +327,10 @@ export class NetworkHandler {
 
         }
 
-        ( game._botManagerArray[ playerIndex ] as any ).botArray = newArray;
+        game.towerManager.get( playerIndex ).botManager.bots = newArray;
 
-    }
+    };
 
-}
+};
 
 export const Network = new NetworkHandler();

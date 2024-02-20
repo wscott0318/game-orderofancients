@@ -2,44 +2,37 @@
 import { Vector3 } from "three";
 
 import { ROUND_TIME } from "../../constants";
-import { PlayerState } from "../States/PlayerState";
-import { TowerManager } from "./TowerManager";
 import { TextSprite } from "../gfx/sprites/Text";
-import { SpriteManager } from "../gfx/managers/SpriteManager";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
 import { Game } from "..";
+import { TowerEntity } from "../entities/Tower.Entity";
 
 //
 
-interface TimeManagerProps {
-    playerState: PlayerState;
-    towerManager: TowerManager;
-    spriteManager: SpriteManager;
+interface TimeComponentProps {
+    tower: TowerEntity;
 };
 
-export class TimeManager {
+export class TimeComponent {
+
+    private tower: TowerEntity;
 
     public secondTracker: number;
     public roundTracker: number;
     public totalTimeTracker: number;
-    public playerState: PlayerState;
-    public towerManager: TowerManager;
-    public spriteManager: SpriteManager;
 
     //
 
-    constructor( params: TimeManagerProps ) {
+    constructor ( params: TimeComponentProps ) {
+
+        this.tower = params.tower;
 
         this.secondTracker = 1;
         this.roundTracker = ROUND_TIME;
         this.totalTimeTracker = 0;
 
-        this.playerState = params.playerState;
-        this.towerManager = params.towerManager;
-        this.spriteManager = params.spriteManager;
-
-    }
+    };
 
     public tickSecond ( value: number ) : void {
 
@@ -50,14 +43,14 @@ export class TimeManager {
             text: `+${value}`,
             color: `#EED734`,
             position: new Vector3(
-                this.towerManager._towerMesh.position.x,
-                this.towerManager._towerMesh.position.y + 5,
-                this.towerManager._towerMesh.position.z
+                this.tower.towerMesh.position.x,
+                this.tower.towerMesh.position.y + 5,
+                this.tower.towerMesh.position.z
             ),
             fastMode: false,
         });
 
-        this.spriteManager.addTextSprite(sprite);
+        Game.instance._spriteManager.addTextSprite(sprite);
 
         const divEl = document.getElementById("income");
 
@@ -67,11 +60,11 @@ export class TimeManager {
 
         }
 
-    }
+    };
 
     public tickRound () : void {
 
-        this.towerManager.levelUp();
+        this.tower.levelUp();
 
         this.roundTracker = ROUND_TIME;
 
@@ -92,13 +85,13 @@ export class TimeManager {
 
     public tick () : void {
 
-        this.playerState.updateGoldUI();
+        this.tower.playerState.updateGoldUI();
 
         EventBridge.dispatchToUI( Events.Game.UPDATE_TIME, {
             totalTimeTracker:   this.totalTimeTracker,
             roundTracker:       this.roundTracker
         });
 
-    }
+    };
 
-}
+};

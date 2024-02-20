@@ -1,5 +1,5 @@
 
-export class PlayerState {
+export class PlayerStateComponent {
 
     index: number;
     playerIndex: number;
@@ -75,10 +75,7 @@ export class PlayerState {
 
     //
 
-    constructor ( { index, playerIndex }: any ) {
-
-        this.index = index;
-        this.playerIndex = playerIndex;
+    constructor () {
 
         this.gold = 5000;
 
@@ -149,16 +146,16 @@ export class PlayerState {
         this.Underground_Gold_Mine = 0;
         this.Gems_of_Power = 0;
 
-    }
+    };
 
     public updateGoldUI () {
 
         if ( this.index === this.playerIndex && document.getElementById("gold" ) ) {
 
-            (document.getElementById("gold") as any).textContent = this.gold;
+            ( document.getElementById("gold") as any ).textContent = this.gold;
 
         }
 
-    }
+    };
 
-}
+};

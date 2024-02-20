@@ -51,11 +51,8 @@ export const Loader = ({ canEnterGame }: LoaderProps) => {
 
     useEffect(() => {
 
-        console.log('zz');
-
         const onLoadProgress = ( value: number ) => {
 
-            console.log( value );
             setProgressValue( 100 * value );
 
         };

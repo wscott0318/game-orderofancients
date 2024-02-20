@@ -1,6 +1,8 @@
+
 import { useEffect } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
+
 import { useGame } from "../../hooks/useGame";
 import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
@@ -100,7 +102,7 @@ export const GameEndUI = () => {
     /**
      * Win if player stands up for 1.5 mins...
      */
-    const isvictory = (game as Game)._timeManagerArray[game._playerIndex].totalTimeTracker > 90;
+    const isvictory = (game as Game).towerManager.get( game._playerIndex ).time.totalTimeTracker > 90;
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">
