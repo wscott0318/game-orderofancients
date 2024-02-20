@@ -18,7 +18,7 @@ import { Game } from "..";
 
 //
 
-export class Bot {
+export class BotEntity {
 
     uuid: string;
     hp: number;

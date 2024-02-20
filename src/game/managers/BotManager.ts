@@ -1,11 +1,11 @@
 
-import { Bot } from "../Instances/Bot";
+import { BotEntity } from "../entities/Bot.Entity";
 
 //
 
 export class BotManager {
 
-    public bots: Bot[] = [];
+    public bots: BotEntity[] = [];
 
     private towerIndex: number;
 
@@ -19,7 +19,7 @@ export class BotManager {
 
     public add ( botType: number ) : void {
 
-        const bot = new Bot( botType, this.towerIndex );
+        const bot = new BotEntity( botType, this.towerIndex );
         this.bots.push( bot );
 
     };
