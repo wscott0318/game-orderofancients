@@ -66,12 +66,11 @@ export const useGame = () => {
         Gfx.update();
 
         const game = new Game({
-            canvas: canvasDivRef.current!,
-            setCurrentGameState: setCurrentGameState,
-            setUpgrades: setUpgrades,
-            gameMode: gameMode,
-            lobbyInfo: lobbyInfoRef.current as any,
-            playerIndex: playerIndex,
+            canvas:                 canvasDivRef.current!,
+            setCurrentGameState:    setCurrentGameState,
+            gameMode:               gameMode,
+            lobbyInfo:              lobbyInfoRef.current as any,
+            playerIndex:            playerIndex,
         });
 
         // tmp hack

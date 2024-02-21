@@ -18,12 +18,11 @@ import { TowerEntity } from "./entities/Tower.Entity";
 //
 
 interface GameOptions {
-    canvas: HTMLDivElement;
-    setCurrentGameState: Function;
-    setUpgrades: Function;
-    gameMode: number;
-    lobbyInfo: LobbyInfo;
-    playerIndex: number;
+    canvas:                 HTMLDivElement;
+    setCurrentGameState:    Function;
+    gameMode:               number;
+    lobbyInfo:              LobbyInfo;
+    playerIndex:            number;
 };
 
 //

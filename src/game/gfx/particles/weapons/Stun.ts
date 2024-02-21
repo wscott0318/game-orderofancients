@@ -1,4 +1,4 @@
-import { Group, Texture } from "three";
+import { Group, Object3D, Texture } from "three";
 import { BatchedRenderer, QuarksLoader } from "three.quarks";
 
 import { S3_BUCKET_URL } from "../../../../constants";
@@ -12,7 +12,7 @@ export async function createStun( renderer: BatchedRenderer, textures: Texture[]
 
     const loader = new QuarksLoader();
 
-    const obj: THREE.Object3D = await new Promise((resolve, reject) => {
+    const obj: Object3D = await new Promise((resolve, reject) => {
         loader.load(
             S3_BUCKET_URL + "/assets/particle_json/stun.json",
             (res: any) => {

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 
@@ -22,15 +22,14 @@ export const GradientText = styled.span`
 
 const GamePlayUI = () => {
 
-    const { upgrades, lobbyInfo } = useGameContext();
+    const { upgrades, setUpgrades } = useGameContext();
 
-    const [profileSpells, setProfilSpells] = useState([]) as any;
+    const [ profileSpells, setProfileSpells ] = useState( [] );
+    const [ playerShow, setPlayerShow ] = useState( true );
 
-    const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
+    const onClickUpgrade = ( item: any, itemIndex: number ) => {
 
-    const onClickUpgrade = (item: any, itemIndex: number) => {
-
-        EventBridge.dispatchToGame( "upgradeSpell", { item, itemIndex } );
+        EventBridge.dispatchToGame( 'upgradeSpell', { item, itemIndex } );
 
         const playerIndex = Game.instance._lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
         if ( playerIndex === undefined || playerIndex === -1 ) return;
@@ -41,9 +40,9 @@ const GamePlayUI = () => {
 
         if ( gold_balance < price ) return;
 
-        if ( item.spellType === "Weapon" ) {
+        if ( item.spellType === 'Weapon' ) {
 
-            const userSpells = [ ...profileSpells ];
+            const userSpells: any = [ ...profileSpells ];
 
             const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
 
@@ -57,11 +56,31 @@ const GamePlayUI = () => {
 
             }
 
-            setProfilSpells( userSpells );
+            setProfileSpells( userSpells );
 
         }
 
     };
+
+    useEffect(() => {
+
+        const updateUpgrades = ( upgrades: any[] ) => {
+
+            setUpgrades( upgrades );
+
+        };
+
+        EventBridge.onGameEvent( 'updateUpgrades', updateUpgrades );
+
+        return () => {
+
+            EventBridge.removeGameEventListener( 'updateUpgrades', updateUpgrades );
+
+        };
+
+    }, []);
+
+    //
 
     return (
         <>

@@ -10,8 +10,8 @@ import { GameScene } from "../..";
 
 interface BowProps {
     gameScene: GameScene;
-    launchPos: THREE.Vector3;
-    targetPos: THREE.Vector3;
+    launchPos: Vector3;
+    targetPos: Vector3;
 }
 
 export class Bow {
@@ -21,8 +21,8 @@ export class Bow {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetPos: THREE.Vector3;
-    mesh: THREE.Object3D;
+    targetPos: Vector3;
+    mesh: Object3D;
 
     lastTime: number;
 

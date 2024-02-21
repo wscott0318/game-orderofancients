@@ -1,8 +1,11 @@
+
 import { ReactNode, createContext, useContext, useState } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
 import { Game } from "../game/Game";
 import { spell } from "../constants/spell";
+
+//
 
 export interface PlayerInfo {
     socketId: string;
@@ -57,9 +60,12 @@ export const GameContext = createContext<GameContextProps>(initialContext);
 
 interface GameProviderProps {
     children: ReactNode;
-}
+};
+
+//
 
 export const GameProvider = ({ children }: GameProviderProps) => {
+
     const [canEnterGame, setCanEnterGame] = useState(
         initialContext.canEnterGame
     );
@@ -73,6 +79,8 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     const [showGrid, setShowGrid] = useState(initialContext.showGrid);
     const [gameInstance, setGameInstance] = useState<Game>();
     const [lobbyInfo, setLobbyInfo] = useState<LobbyInfo>();
+
+    //
 
     return (
         <GameContext.Provider
@@ -100,4 +108,4 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     );
 };
 
-export const useGameContext = () => useContext(GameContext);
+export const useGameContext = () => useContext( GameContext );

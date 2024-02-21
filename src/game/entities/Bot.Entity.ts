@@ -15,35 +15,41 @@ import { createStun } from "../gfx/particles/weapons/Stun";
 import { createToonProjectile } from "../gfx/particles/ToonProjectile";
 import { ResourcesManager } from "../managers/ResourcesManager";
 import { Game } from "..";
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 
 //
 
 export class BotEntity {
 
-    uuid: string;
-    hp: number;
-    maxHp: number;
-    speed: number;
-    position: any;
-    mesh: any;
-    model: any;
-    animController: BotAnimationController;
-    botType: number;
-    attackRange: number;
-    targetPos: THREE.Vector3;
-    status: number;
-    oldStatus: number;
-    healthBarUI: CSS2DObject;
-    attackSpeed: number;
-    attackDamage: number;
-    claimTime: number;
-    canRemove: boolean;
-    stunTime: number;
-    stunMesh: THREE.Object3D | null;
-    slowTime: number;
-    fireMesh: THREE.Object3D | null;
-    fireTime: number;
-    towerIndex: number;
+    public uuid: string;
+    public towerIndex: number;
+
+    public hp: number;
+    public maxHp: number;
+    public speed: number;
+    public position: any;
+    public attackRange: number;
+    public attackSpeed: number;
+    public attackDamage: number;
+
+    public botType: number;
+    public targetPos: Vector3;
+
+    public canRemove: boolean;
+    public status: number;
+    public oldStatus: number;
+
+    public claimTime: number;
+    public stunTime: number;
+    public slowTime: number;
+    public fireTime: number;
+
+    public mesh: Object3D;
+    public model: GLTF;
+    public healthBarUI: CSS2DObject;
+    public stunMesh: Object3D | null;
+    public fireMesh: Object3D | null;
+    public animController: BotAnimationController;
 
     //
 
@@ -55,15 +61,18 @@ export class BotEntity {
         this.attackSpeed = BOT_PROPS.attackSpeed[botType];
         this.attackDamage = BOT_PROPS.attackDamage[botType];
         this.speed = 0.1;
+
         this.position = {
             x: 0,
             y: 0,
             z: 0,
         };
         this.botType = botType;
-        // todo
-        this.model = ResourcesManager.getModel( [ 'BotGrunt', 'BotSwordsman', 'BotArcher', 'BotKing', 'BotMage' ][ botType - 1 ] );
-        this.mesh = SkeletonUtils.clone(this.model.scene);
+
+        //
+
+        this.model = ResourcesManager.getModel( [ 'BotGrunt', 'BotSwordsman', 'BotArcher', 'BotKing', 'BotMage' ][ botType - 1 ] )!;
+        this.mesh = SkeletonUtils.clone( this.model.scene );
         this.animController = new BotAnimationController({
             animations: this.model.animations,
             mesh: this.mesh,
@@ -74,9 +83,11 @@ export class BotEntity {
             TOWER_POSITIONS[towerIndex].y,
             TOWER_POSITIONS[towerIndex].z
         );
+
         this.status = BOT_STATUS.walk;
         this.oldStatus = BOT_STATUS.walk;
         this.attackRange = BOT_PROPS.attackRange[botType];
+
         this.claimTime = 0;
         this.canRemove = false;
         this.stunTime = 0;
@@ -97,49 +108,63 @@ export class BotEntity {
         this.healthBarUI = new CSS2DObject(healthBarDiv);
 
         this.initialize();
-    }
 
-    initialize() {
+    };
+
+    private initialize () : void {
+
         this.position.y = -1000;
 
         this.mesh.scale.x = 0.01;
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        Game.instance.gameScene.scene.add(this.healthBarUI);
-        Game.instance.gameScene.scene.add(this.mesh);
-    }
+        Game.instance.gameScene.scene.add( this.healthBarUI );
+        Game.instance.gameScene.scene.add( this.mesh );
 
-    disposeHealthBar() {
+    };
+
+    private disposeHealthBar () : void {
+
         this.healthBarUI.remove();
         Game.instance.gameScene.scene.remove(this.healthBarUI);
         this.healthBarUI.element.remove();
-    }
 
-    dispose() {
+    };
+
+    private disposeStunMesh () : void {
+
+        if ( ! this.stunMesh ) return;
+
+        disposeMesh( this.stunMesh );
+        Game.instance.gameScene.scene.remove( this.stunMesh );
+
+    };
+
+    private disposeFireMesh () : void {
+
+        if ( ! this.fireMesh ) return;
+
+        disposeMesh( this.fireMesh );
+        Game.instance.gameScene.scene.remove( this.fireMesh );
+
+    };
+
+    //
+
+    public dispose () : void {
+
         this.animController.dispose();
 
         disposeMesh(this.mesh);
         Game.instance.gameScene.scene.remove(this.mesh);
 
         this.disposeStunMesh();
-    }
 
-    disposeStunMesh() {
-        if (this.stunMesh) {
-            disposeMesh(this.stunMesh);
-            Game.instance.gameScene.scene.remove(this.stunMesh);
-        }
-    }
+    };
 
-    disposeFireMesh() {
-        if (this.fireMesh) {
-            disposeMesh(this.fireMesh);
-            Game.instance.gameScene.scene.remove(this.fireMesh);
-        }
-    }
+    public kill () : void {
 
-    kill() {
         this.animController.playAnimation(ANIMATION_TYPE["dead"]);
 
         this.status = BOT_STATUS["dead"];
@@ -163,22 +188,28 @@ export class BotEntity {
         tweenAnimation.onComplete(() => {
             this.dispose();
         });
-    }
 
-    tick() {
+    };
+
+    public tick () : void {
+
         this.mesh.position.x = this.position.x;
         this.mesh.position.y = this.position.y;
         this.mesh.position.z = this.position.z;
 
-        if (this.stunTime > 0) {
-            if (!this.stunMesh) {
+        if ( this.stunTime > 0 ) {
+
+            if ( ! this.stunMesh ) {
+
                 this.stunMesh = new Object3D();
+
                 const particle = createStun(
                     Game.instance.gameScene.particleRenderer,
                     [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
                 );
 
                 particle.then((group) => {
+
                     const particleMesh = group;
 
                     particleMesh.position.set(
@@ -192,47 +223,73 @@ export class BotEntity {
 
                     this.stunMesh = particleMesh;
                     Game.instance.gameScene.scene.add(this.stunMesh);
+
                 });
+
             }
 
             this.animController.stopAnimation();
-        } else if (this.stunMesh) {
+
+        } else if ( this.stunMesh ) {
+
             this.disposeStunMesh();
             this.stunMesh = null;
 
-            if (this.status === BOT_STATUS["walk"])
+            if ( this.status === BOT_STATUS["walk"] ) {
+
                 this.animController.playAnimation(ANIMATION_TYPE["walk"]);
-            else if (this.status === BOT_STATUS["attack"])
+
+            } else if ( this.status === BOT_STATUS["attack"] ) {
+
                 this.animController.playAnimation(ANIMATION_TYPE["attack"]);
+
+            }
+
         }
 
-        if (this.status === BOT_STATUS["dead"]) {
-            if (this.stunMesh) this.disposeStunMesh();
+        if ( this.status === BOT_STATUS["dead"] ) {
+
+            this.disposeStunMesh();
+
         }
 
-        if (this.slowTime > 0) {
+        if ( this.slowTime > 0 ) {
+
             this.mesh.traverse((obj: any) => {
-                if (obj.isMesh || obj.isSkinnedMesh) {
+
+                if ( obj.isMesh || obj.isSkinnedMesh ) {
+
                     const material = obj.material.clone();
 
                     material.color = new Color(2, 10, 30);
                     obj.material = material;
+
                 }
+
             });
+
         } else {
+
             this.slowTime = 0;
 
             this.mesh.traverse((obj: any) => {
-                if (obj.isMesh || obj.isSkinnedMesh) {
+
+                if ( obj.isMesh || obj.isSkinnedMesh ) {
+
                     const material = obj.material.clone();
                     material.color = new Color(1, 1, 1);
                     obj.material = material;
+
                 }
+
             });
+
         }
 
-        if (this.fireTime > 0) {
-            if (!this.fireMesh) {
+        if ( this.fireTime > 0 ) {
+
+            if ( ! this.fireMesh ) {
+
                 const particle = createToonProjectile(
                     Game.instance.gameScene.particleRenderer,
                     [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
@@ -245,33 +302,42 @@ export class BotEntity {
                 this.fireMesh = particle;
 
                 Game.instance.gameScene.scene.add(this.fireMesh);
+
             }
 
-            if (this.fireMesh) {
+            if ( this.fireMesh ) {
+
                 this.fireMesh.position.x = this.mesh.position.x;
-                this.fireMesh.position.y =
-                    this.mesh.position.y +
-                    BOT_PROPS["modelHeight"][this.botType] / 2;
+                this.fireMesh.position.y = this.mesh.position.y + BOT_PROPS["modelHeight"][this.botType] / 2;
                 this.fireMesh.position.z = this.mesh.position.z;
+
             }
+
         } else {
+
             this.fireTime = 0;
             this.disposeFireMesh();
             this.fireMesh = null;
+
         }
 
         const distance = this.mesh.position.distanceTo(this.targetPos);
 
-        if (this.status === BOT_STATUS["walk"]) {
-            if (distance - this.attackRange <= TOWER_RADIUS) {
+        if ( this.status === BOT_STATUS["walk"] ) {
+
+            if ( distance - this.attackRange <= TOWER_RADIUS ) {
+
                 this.animController.playAnimation(ANIMATION_TYPE["attack"]);
                 this.status = BOT_STATUS["attack"];
+
             }
+
         }
 
         /**
          * Rotate object to target position
          */
+
         const curPos = new Vector3(
             this.position.x,
             this.position.y,
@@ -297,27 +363,20 @@ export class BotEntity {
 
         const scaleFactor = 85;
         const scaleVector = new Vector3();
-        const scale = Math.sqrt(
-            scaleVector
-                .subVectors(this.healthBarUI.position, Game.instance.gameScene.camera.position)
-                .length() / scaleFactor
-        );
+        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarUI.position, Game.instance.gameScene.camera.position ).length() / scaleFactor );
 
-        this.healthBarUI.element.style.width = `${
-            (HEALTH_PIXEL * this.maxHp + 2) / scale
-        }px`;
-        this.healthBarUI.element.style.height = `${(5 + 2) / scale}px`;
+        this.healthBarUI.element.style.width = `${ ( HEALTH_PIXEL * this.maxHp + 2 ) / scale }px`;
+        this.healthBarUI.element.style.height = `${ ( 5 + 2 ) / scale }px`;
 
-        const progressBar = this.healthBarUI.element
-            .children[0] as HTMLDivElement;
+        const progressBar = this.healthBarUI.element.children[0] as HTMLDivElement;
         progressBar.style.width = `${(HEALTH_PIXEL * this.hp) / scale}px`;
         progressBar.style.height = `${5 / scale}px`;
         progressBar.style.left = `${1 / scale}px`;
         progressBar.style.top = `${1 / scale}px`;
-        progressBar.style.background = `${getColorForPercentage(
-            this.hp / this.maxHp
-        )}`;
+        progressBar.style.background = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
 
         this.animController.tick();
-    }
-}
+
+    };
+
+};

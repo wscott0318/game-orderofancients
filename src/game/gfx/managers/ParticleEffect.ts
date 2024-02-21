@@ -23,9 +23,9 @@ export class ParticleEffect {
 
         this.gameScene = params.gameScene;
 
-    }
+    };
 
-    public addExplosion ( position: THREE.Vector3 ) {
+    public addExplosion ( position: Vector3 ) {
 
         const explosion = createExplosion(
             this.gameScene.particleRenderer,
@@ -40,7 +40,7 @@ export class ParticleEffect {
 
         this.gameScene.add( explosion );
 
-    }
+    };
 
     public addLevelUp ( position: Vector3 ) {
 
@@ -57,7 +57,7 @@ export class ParticleEffect {
 
         this.gameScene.add( particle );
 
-    }
+    };
 
     public ToonProjectTile ( position: Vector3 ) {
 
@@ -76,7 +76,7 @@ export class ParticleEffect {
 
         return particle;
 
-    }
+    };
 
     public addParticle ( position: Vector3 ) : void {
 
@@ -93,8 +93,8 @@ export class ParticleEffect {
 
         this.gameScene.add( particle );
 
-    }
+    };
 
     public tick () : void {}
 
-}
+};

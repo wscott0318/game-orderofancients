@@ -1,3 +1,4 @@
+import { EventBridge } from "../../libs/EventBridge";
 
 export class PlayerStateComponent {
 
@@ -150,9 +151,9 @@ export class PlayerStateComponent {
 
     public updateGoldUI () {
 
-        if ( this.index === this.playerIndex && document.getElementById("gold" ) ) {
+        if ( this.index === this.playerIndex ) {
 
-            ( document.getElementById("gold") as any ).textContent = this.gold;
+            EventBridge.dispatchToUI( "updateGold", this.gold );
 
         }
 

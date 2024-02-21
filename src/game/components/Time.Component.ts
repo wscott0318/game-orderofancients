@@ -50,15 +50,9 @@ export class TimeComponent {
             fastMode: false,
         });
 
-        Game.instance._spriteManager.addTextSprite(sprite);
+        Game.instance._spriteManager.addTextSprite( sprite );
 
-        const divEl = document.getElementById("income");
-
-        if ( divEl ) {
-
-            divEl.textContent = `+ ${value}`;
-
-        }
+        EventBridge.dispatchToUI( 'updateIncome', value );
 
     };
 
@@ -68,18 +62,7 @@ export class TimeComponent {
 
         this.roundTracker = ROUND_TIME;
 
-        const barDiv = document.getElementById("timeBar");
-
-        if ( barDiv ) {
-
-            const temp = barDiv.style.transition;
-            barDiv.style.transition = "none";
-
-            setTimeout(() => {
-                barDiv.style.transition = temp;
-            }, 50);
-
-        }
+        EventBridge.dispatchToUI( 'tickRound' );
 
     };
 

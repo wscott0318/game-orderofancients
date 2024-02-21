@@ -1,5 +1,5 @@
 
-import * as THREE from "three";
+import { AnimationMixer, AnimationUtils, Clock, LoopOnce } from "three";
 
 import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../../../constants/bot";
 
@@ -7,29 +7,29 @@ import { ANIMATION_TYPE, BOT_ANIMATION_CLIPS } from "../../../constants/bot";
 
 export class BotAnimationController {
 
-    public mixer: THREE.AnimationMixer;
+    public mixer: AnimationMixer;
     public clips: any;
     public animations: any;
     public mesh: any;
     public botType: any;
-    public clock: THREE.Clock;
+    public clock: Clock;
 
     constructor ( { animations, mesh, botType }: any ) {
 
         this.clips = {};
-        this.mixer = new THREE.AnimationMixer(mesh);
+        this.mixer = new AnimationMixer(mesh);
         this.animations = animations;
         this.mesh = mesh;
         this.botType = botType;
-        this.clock = new THREE.Clock();
+        this.clock = new Clock();
 
         this.initialize();
 
-    }
+    };
 
     public initAnimationClips () {
 
-        this.clips[ANIMATION_TYPE["walk"]] = THREE.AnimationUtils.subclip(
+        this.clips[ANIMATION_TYPE["walk"]] = AnimationUtils.subclip(
             this.animations[0],
             "walk",
             BOT_ANIMATION_CLIPS[this.botType]["walk"].startFrame,
@@ -37,7 +37,7 @@ export class BotAnimationController {
             24
         );
 
-        this.clips[ANIMATION_TYPE["attack"]] = THREE.AnimationUtils.subclip(
+        this.clips[ANIMATION_TYPE["attack"]] = AnimationUtils.subclip(
             this.animations[0],
             "attack",
             BOT_ANIMATION_CLIPS[this.botType]["attack"].startFrame,
@@ -45,7 +45,7 @@ export class BotAnimationController {
             24
         );
 
-        this.clips[ANIMATION_TYPE["dead"]] = THREE.AnimationUtils.subclip(
+        this.clips[ANIMATION_TYPE["dead"]] = AnimationUtils.subclip(
             this.animations[0],
             "dead",
             BOT_ANIMATION_CLIPS[this.botType]["dead"].startFrame,
@@ -53,7 +53,7 @@ export class BotAnimationController {
             24
         );
 
-    }
+    };
 
     public playAnimation ( animType: any ) {
 
@@ -64,26 +64,26 @@ export class BotAnimationController {
         if (animType === ANIMATION_TYPE["dead"]) {
 
             action.clampWhenFinished = true;
-            action.setLoop(THREE.LoopOnce, 2);
+            action.setLoop(LoopOnce, 2);
 
         }
 
         action.play();
 
-    }
+    };
 
     public stopAnimation () {
 
         this.mixer.stopAllAction();
 
-    }
+    };
 
     public initialize () {
 
         this.initAnimationClips();
         this.playAnimation(ANIMATION_TYPE["walk"]);
 
-    }
+    };
 
     public dispose () {
 
@@ -94,13 +94,13 @@ export class BotAnimationController {
         this.mixer.uncacheClip(this.clips[ANIMATION_TYPE["dead"]]);
         this.mixer.uncacheRoot(this.mesh);
 
-    }
+    };
 
     public tick () {
 
         const delta = this.clock.getDelta();
         this.mixer.update(delta);
 
-    }
+    };
 
-}
+};

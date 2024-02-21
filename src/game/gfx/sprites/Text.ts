@@ -1,5 +1,5 @@
 
-import * as THREE from "three";
+import { Vector3 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import TWEEN from "@tweenjs/tween.js";
 
@@ -12,7 +12,7 @@ interface TextSpriteProps {
     gameScene: GameScene;
     text: string;
     color: string;
-    position: THREE.Vector3;
+    position: Vector3;
     fastMode: null | boolean;
 }
 
@@ -71,7 +71,7 @@ export class TextSprite {
 
     tick() {
         const scaleFactor = 85;
-        const scaleVector = new THREE.Vector3();
+        const scaleVector = new Vector3();
         const scale = Math.sqrt(
             scaleVector
                 .subVectors(

@@ -9,6 +9,7 @@ import {
     S3_BUCKET_URL,
 } from "../../../constants";
 import { useGameContext } from "../../../contexts/game-context";
+import { EventBridge } from "../../../libs/EventBridge";
 
 const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
 const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
@@ -406,16 +407,50 @@ export const Desktop = ({
     playerShow,
     setPlayerShow,
 }: any) => {
+
     const playerDivRef = useRef<HTMLDivElement>(null);
     const switchPlayerShow = () => {
         setPlayerShow(!playerShow);
     };
+
     const gameMenuFadeInAnim = gsap.timeline();
-    const [hoveredSpell, setHoveredSpell]: [any, any] = useState(null);
+    const [ hoveredSpell, setHoveredSpell ]: [any, any] = useState(null);
+    const [ goldValue, setGoldValue ] = useState(0);
+    const [ incomeValue, setIncomeValue ] = useState(0);
 
     const { gameMode, lobbyInfo } = useGameContext();
 
     useEffect(() => {
+
+        const updateGold = ( gold: number ) => {
+
+            setGoldValue( gold );
+
+        };
+
+        const updateIncome = ( income: number ) => {
+
+            setIncomeValue( income );
+
+        };
+
+        const tickRound = () => {
+
+            const barDiv = document.getElementById("timeBar")!;
+
+            const temp = barDiv.style.transition;
+            barDiv.style.transition = "none";
+
+            setTimeout(() => {
+                barDiv.style.transition = temp;
+            }, 50);
+
+        };
+
+        EventBridge.onGameEvent( 'updateGold', updateGold );
+        EventBridge.onGameEvent( 'updateIncome', updateIncome );
+        EventBridge.onGameEvent( 'tickRound', tickRound );
+
         gameMenuFadeInAnim
             .add("start")
             .from(".back", { bottom: "-16.5vw", duration: 0 }, "start")
@@ -425,16 +460,27 @@ export const Desktop = ({
             .from(".player_stats", { right: "-22vw", duration: 0 }, "start");
 
         return () => {
+
             gameMenuFadeInAnim.kill();
+
+            EventBridge.removeGameEventListener( 'updateGold', updateGold );
+            EventBridge.removeGameEventListener( 'updateIncome', updateIncome );
+            EventBridge.removeGameEventListener( 'tickRound', tickRound );
+
         };
+
     }, []);
 
     const spellEnter = (spell: any) => {
         setHoveredSpell(spell);
     };
+
     const spellLeave = () => {
         setHoveredSpell(null);
     };
+
+    //
+
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
@@ -640,11 +686,11 @@ export const Desktop = ({
                             ></img>
                             <div className="statusFont_big">
                                 <span className="text-white" id="gold">
-                                    200
+                                    { goldValue }
                                 </span>
                                 <span className="text-white"> / </span>
                                 <span className="text-[#e9e502]" id="income">
-                                    +80
+                                    { incomeValue }
                                 </span>
                             </div>
                         </div>

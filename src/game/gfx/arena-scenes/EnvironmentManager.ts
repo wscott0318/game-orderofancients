@@ -30,7 +30,7 @@ export class EnvironmentManager {
 
         // this._scene.add(this._models.environment.scene);
 
-    }
+    };
 
     //
 
@@ -39,7 +39,7 @@ export class EnvironmentManager {
         this.ambientLight = new AmbientLight( 0xffffff, 0.5 );
         this._scene.add( this.ambientLight );
 
-    }
+    };
 
     private initSkyBox () : void {
 
@@ -61,7 +61,7 @@ export class EnvironmentManager {
         const skyMesh = new Mesh( geometry, materialArray );
         this._scene.add( skyMesh );
 
-    }
+    };
 
     private initGround () : void {
 
@@ -87,12 +87,12 @@ export class EnvironmentManager {
 
         this._scene.add( plane );
 
-    }
+    };
 
     public update () : void {
 
         // nothing here
 
-    }
+    };
 
-}
+};

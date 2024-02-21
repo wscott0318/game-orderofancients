@@ -17,11 +17,19 @@ import { TimeComponent } from "../components/Time.Component";
 
 //
 
-interface ITowerProperties {
+export interface ITowerProperties {
     stateManager:       StateManager;
     particleEffect:     ParticleEffect;
     playerIndex:        number;
     index:              number;
+};
+
+export interface ITowerStatus {
+    level:      number;
+    maxHp:      number;
+    hp:         number;
+    isDead:     boolean;
+    gold:       number;
 };
 
 //
@@ -122,6 +130,19 @@ export class TowerEntity {
 
     };
 
+    public setStatus ( status: ITowerStatus ) : void {
+
+        this.level = status.level;
+        this.maxHp = status.maxHp;
+        this.hp = status.hp;
+        this.isDead = status.isDead;
+
+        this.playerState.gold = status.gold;
+
+        this.updateHealth();
+
+    };
+
     public renderHealthBar () : void {
 
         this.healthBarUI.position.set(
@@ -209,6 +230,21 @@ export class TowerEntity {
         }
 
         this.renderHealthBar();
+
+    };
+
+    //
+
+    private updateHealth () : void {
+
+        const healthBarDiv = document.getElementsByClassName( "status_player_health" )[ this.index ] as HTMLDivElement;
+
+        if ( healthBarDiv ) {
+
+            healthBarDiv.style.width = `${ ( this.hp / this.maxHp ) * 100 }%`;
+            healthBarDiv.style.backgroundColor = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
+
+        }
 
     };
 

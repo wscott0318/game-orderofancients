@@ -1,6 +1,6 @@
 
 import { gsap, Circ } from "gsap";
-import { Vector2, Vector3 } from "three";
+import { Camera, HemisphereLight, SpotLight, Vector2, Vector3 } from "three";
 
 import { CAMERA_POS } from "../../../constants";
 import { TOWER_POSITIONS } from "../../../constants/tower";
@@ -16,10 +16,10 @@ interface AnimationManagerProps {
 export class AnimationManager {
 
     public gameScene: GameScene;
-    public _towerPosition: THREE.Vector3;
-    public _camera: THREE.Camera;
-    public _spotLight: THREE.SpotLight;
-    public _hemiLight: THREE.HemisphereLight;
+    public _towerPosition: Vector3;
+    public _camera: Camera;
+    public _spotLight: SpotLight;
+    public _hemiLight: HemisphereLight;
     public _playerIndex: number;
 
     //
@@ -38,7 +38,7 @@ export class AnimationManager {
         // this._spotLight = this._sceneRenderer._spotLightArray[ params.playerIndex ];
         // this._hemiLight = this._sceneRenderer._hemiLight;
 
-    }
+    };
 
     public camera_Down () : void {
 
@@ -51,7 +51,7 @@ export class AnimationManager {
             },
         });
 
-    }
+    };
 
     public camera_Rotate () : void {
 
@@ -84,7 +84,7 @@ export class AnimationManager {
             },
         });
 
-    }
+    };
 
     public camera_diorama () : void {
 
@@ -101,11 +101,11 @@ export class AnimationManager {
             },
         });
 
-    }
+    };
 
     public light_attention () : void {
 
-        // this._sceneRenderer._spotLightArray.forEach( ( spotLight: THREE.SpotLight ) => {
+        // this._sceneRenderer._spotLightArray.forEach( ( spotLight: SpotLight ) => {
 
         //     gsap.from(spotLight, {
         //         angle: 0,
@@ -115,6 +115,6 @@ export class AnimationManager {
 
         // });
 
-    }
+    };
 
-}
+};

@@ -47,7 +47,7 @@ export class ArenaScene extends GameScene {
         this.addGrid();
         this.initCameraControls();
 
-    }
+    };
 
     public update ( delta: number, time: number ) : void {
 
@@ -60,7 +60,7 @@ export class ArenaScene extends GameScene {
 
         Gfx.uiRenderer.render( this.scene, this.camera );
 
-    }
+    };
 
     public resize () : void {
 
@@ -72,20 +72,20 @@ export class ArenaScene extends GameScene {
 
         this._renderTarget.setSize( width, height );
 
-    }
+    };
 
     public getRenderTarget () : WebGLRenderTarget {
 
         return this._renderTarget;
 
-    }
+    };
 
     public dispose () : void {
 
         this.scene.children = [];
         this._renderTarget.dispose();
 
-    }
+    };
 
     //
 
@@ -123,7 +123,7 @@ export class ArenaScene extends GameScene {
             TOWER_POSITIONS[ Game.instance._playerIndex ].z
         );
 
-    }
+    };
 
     private addGrid () : void {
 
@@ -138,12 +138,12 @@ export class ArenaScene extends GameScene {
 
         this.scene.add( this.gridHelper );
 
-    }
+    };
 
     private toggleGrid = ( visible: boolean ) : void => {
 
         this.gridHelper.visible = visible;
 
-    }
+    };
 
-}
+};

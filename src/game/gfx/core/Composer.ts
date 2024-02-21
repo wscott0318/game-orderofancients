@@ -76,6 +76,6 @@ export class ComposerPass {
         renderer.clear();
         this.fsQuad.render( renderer );
 
-    }
+    };
 
-}
+};

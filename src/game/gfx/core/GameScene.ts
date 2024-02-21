@@ -24,12 +24,12 @@ export abstract class GameScene {
 
         this.scene.add( object );
 
-    }
+    };
 
     public remove ( object: Object3D ) : void {
 
         this.scene.remove( object );
 
-    }
+    };
 
-}
+};

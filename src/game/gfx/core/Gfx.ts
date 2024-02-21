@@ -44,13 +44,13 @@ class GfxCore {
 
         this.inited = true;
 
-    }
+    };
 
     public setActiveScene ( gameScene: GameScene ) : void {
 
         this.activeGameScene = gameScene;
 
-    }
+    };
 
     public update = () : void => {
 
@@ -86,7 +86,7 @@ class GfxCore {
 
         this.prevRenderTime = time;
 
-    }
+    };
 
     public dispose () : void {
 
@@ -104,7 +104,7 @@ class GfxCore {
 
         this.activeGameScene = null;
 
-    }
+    };
 
     //
 
@@ -141,9 +141,9 @@ class GfxCore {
         this.uiRenderer.domElement.style.top = '0px';
         document.body.appendChild( this.uiRenderer.domElement );
 
-    }
+    };
 
-}
+};
 
 //
 

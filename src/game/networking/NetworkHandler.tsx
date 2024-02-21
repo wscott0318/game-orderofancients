@@ -7,8 +7,7 @@ import {
     NewSpriteInfo,
     NewTextSpriteInfo,
     SpriteStatus,
-    TimerStatus,
-    TowerStatus,
+    TimerStatus
 } from "../../constants/type";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { LobbyInfo, PlayerInfo } from "../../contexts/game-context";
@@ -17,6 +16,7 @@ import { Config } from "../../utils/config";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
 import { Game } from "../";
+import { ITowerStatus } from "../entities/Tower.Entity";
 
 //
 
@@ -115,38 +115,14 @@ export class NetworkHandler {
 
     };
 
-    public onReceiveTowerStatus = ( towerStatusData: TowerStatus[], timerStatus: TimerStatus ) : void => {
+    public onReceiveTowerStatus = ( towerStatusData: ITowerStatus[], timerStatus: TimerStatus ) : void => {
 
         const game = Game.instance;
-
-        const playerIndex = game._lobbyInfo.players.findIndex(
-            ( player ) => player.socketId === this.socket?.id
-        );
 
         towerStatusData.forEach( ( towerStatus, index ) => {
 
             const tower = game.towerManager.get( index );
-            tower.level = towerStatus.level;
-            tower.maxHp = towerStatus.maxHp;
-            tower.hp = towerStatus.hp;
-            tower.isDead = towerStatus.isDead;
-
-            const healthBarDiv = document.getElementsByClassName( "status_player_health" )[index] as HTMLDivElement;
-
-            if ( healthBarDiv ) {
-
-                healthBarDiv.style.width = `${ ( tower.hp / tower.maxHp ) * 100 }%`;
-                healthBarDiv.style.backgroundColor = `${ getColorForPercentage( tower.hp / tower.maxHp ) }`;
-
-            }
-
-            if ( towerStatus.isDead && index === playerIndex ) {
-
-                // todo
-
-            }
-
-            tower.playerState.gold = towerStatus.gold;
+            tower.setStatus( towerStatus );
 
         });
 

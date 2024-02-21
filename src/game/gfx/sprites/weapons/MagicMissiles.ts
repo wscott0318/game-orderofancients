@@ -11,8 +11,8 @@ import { ResourcesManager } from "../../../managers/ResourcesManager";
 
 interface MagicMissilesProps {
     gameScene: GameScene;
-    launchPos: THREE.Vector3;
-    targetPos: THREE.Vector3;
+    launchPos: Vector3;
+    targetPos: Vector3;
 }
 
 export class MagicMissiles {
@@ -22,8 +22,8 @@ export class MagicMissiles {
     weaponType: string;
     attackDamage: number;
     damageType: any;
-    targetPos: THREE.Vector3;
-    mesh: THREE.Object3D;
+    targetPos: Vector3;
+    mesh: Object3D;
 
     lastTime: number;
 
