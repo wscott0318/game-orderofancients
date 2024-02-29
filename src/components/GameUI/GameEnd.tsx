@@ -7,8 +7,6 @@ import { useGame } from "../../hooks/useGame";
 import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { SOCKET_EVENTS } from "../../constants/socket";
-import { Network } from "../../game/networking/NetworkHandler";
-import { Game } from "../../game";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
@@ -89,20 +87,21 @@ const GameEnd = styled.div`
 
 export const GameEndUI = () => {
 
-    const { exitGameAction, restartGameAction, gameRef } = useGame();
+    const { exitGameAction, restartGameAction } = useGame();
 
     const { gameMode, lobbyInfo } = useGameContext();
 
-    const game = gameRef.current!;
-
     useEffect(() => {
-        Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+        // todo
+        // Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
     }, []);
 
     /**
      * Win if player stands up for 1.5 mins...
      */
-    const isvictory = (game as Game).towerManager.get( game._playerIndex ).time.totalTimeTracker > 90;
+
+    // todo: 
+    const isvictory = false; // (game as Game).towerManager.get( game._playerIndex ).time.totalTimeTracker > 90;
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">

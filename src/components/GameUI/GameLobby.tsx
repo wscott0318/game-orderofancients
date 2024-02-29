@@ -1,3 +1,4 @@
+
 import styled from "styled-components";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
@@ -7,7 +8,6 @@ import { SOCKET_EVENTS } from "../../constants/socket";
 import { useGame } from "../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
-import { Network } from "../../game/networking/NetworkHandler";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
 
@@ -58,7 +58,8 @@ const GameLobby = () => {
 
     useEffect(() => {
 
-        Network.socket?.emit(SOCKET_EVENTS.JOIN);
+        // todo
+        // Network.socket?.emit(SOCKET_EVENTS.JOIN);
 
         if (divRef.current) {
             const divElement = divRef.current.childNodes[0];
@@ -92,7 +93,8 @@ const GameLobby = () => {
 
         setTimeout(() => {
             setGameState(GAME_STATES.GAME_MENU);
-            Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+            // todo
+            // Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
         }, 1000);
     };
 

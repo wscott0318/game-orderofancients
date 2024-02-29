@@ -2,12 +2,10 @@
 import { useCallback, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
-import { Game } from "../game";
-import { LobbyInfo, useGameContext } from "../contexts/game-context";
-import { Network } from "../game/networking/NetworkHandler";
-import { Gfx } from "../game/gfx";
-import { ResourcesManager } from "../game/managers/ResourcesManager";
+import { useGameContext } from "../contexts/game-context";
 import { EventBridge } from "../libs/EventBridge";
+import { GameMain } from "../game/main/GameMain";
+import { GameEvents } from "../game/Events";
 
 //
 
@@ -15,8 +13,6 @@ export const useGame = () => {
 
     const {
         setCanEnterGame,
-        gameInstance,
-        setGameInstance,
         setCurrentGameState,
         setUpgrades,
         setGameMode,
@@ -25,63 +21,57 @@ export const useGame = () => {
         lobbyInfo,
     } = useGameContext();
 
-    const lobbyInfoRef = useRef<LobbyInfo>();
-    lobbyInfoRef.current = lobbyInfo;
-
     /**
      * Canvas Game Ref
      */
     const canvasDivRef = useRef(null);
 
-    const gameRef = useRef<Game | undefined>();
-    gameRef.current = gameInstance;
-
     const createGame = useCallback(async () => {
 
-        Network.initialize();
+        GameMain.dispatchEvent( GameEvents.INIT_NETWORK );
+        GameMain.dispatchEvent( GameEvents.LOAD_ASSETS );
 
-        ResourcesManager.load( ( progress ) => {
+        GameMain.addListener( GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, (progress: number) => {
 
             EventBridge.dispatchToUI( 'LoadingProgressUpdate', progress );
 
-        }, () => {
+        });
 
-            console.log( 'Loading finished!' );
+        GameMain.addListener( GameEvents.ASSETS_LOADING_FINISHED, (progress: number) => {
+
             setCanEnterGame( true );
 
         });
+
+        // ResourcesManager.load( ( progress ) => {
+
+        //     EventBridge.dispatchToUI( 'LoadingProgressUpdate', progress );
+
+        // }, () => {
+
+        //     console.log( 'Loading finished!' );
+        //     setCanEnterGame( true );
+
+        // });
 
     }, []);
 
     const createGameInstance = () => {
 
-        if (gameRef.current) return;
+        // let playerIndex: any = 0;
+        // playerIndex = lobbyInfo!.players.findIndex(
+        //     (player) => player.socketId === Network.socket?.id
+        // );
 
-        let playerIndex: any = 0;
-        playerIndex = lobbyInfoRef.current?.players.findIndex(
-            (player) => player.socketId === Network.socket?.id
-        );
+        // Gfx.init({ canvasDiv: canvasDivRef.current! });
+        // Gfx.update();
 
-        Gfx.init({ canvasDiv: canvasDivRef.current! });
-        Gfx.update();
-
-        const game = new Game({
-            canvas:                 canvasDivRef.current!,
-            setCurrentGameState:    setCurrentGameState,
-            gameMode:               gameMode,
-            lobbyInfo:              lobbyInfoRef.current as any,
-            playerIndex:            playerIndex,
-        });
-
-        // tmp hack
-        setTimeout(() => {
-
-            game.animate();
-
-        }, 1000 );
-
-        setGameInstance(game);
-        gameRef.current = game;
+        // GameMain.init({
+        //     canvas:                 canvasDivRef.current!,
+        //     gameMode:               gameMode,
+        //     lobbyInfo:              lobbyInfo!,
+        //     playerIndex:            playerIndex
+        // });
 
     };
 
@@ -101,9 +91,9 @@ export const useGame = () => {
 
     const setGameState = (state: number) => {
 
-        if (gameRef.current) {
-            gameRef.current._stateManager.setState(state);
-        }
+        GameMain.dispatchEvent( GameEvents.SET_STATE, state );
+
+        //
 
         setCurrentGameState(state);
 
@@ -111,21 +101,17 @@ export const useGame = () => {
 
     const exitGameAction = () => {
 
-        if (gameRef.current) gameRef.current.dispose();
-
-        EventBridge.dispatchToGame( 'Dispose' );
-
-        setGameInstance(undefined);
-        setGameState(GAME_STATES.GAME_MENU);
+        GameMain.dispose();
+        setGameState( GAME_STATES.GAME_MENU );
 
     };
 
     const restartGameAction = () => {
 
-        if (gameRef.current) gameRef.current.dispose();
+        GameMain.dispose();
+        setGameState( GAME_STATES.GAME_LOBBY );
 
-        setGameInstance(undefined);
-        setGameState(GAME_STATES.GAME_LOBBY);
+        // todo
         // startGame();
 
     };
@@ -141,7 +127,6 @@ export const useGame = () => {
 
     return {
         canvasDivRef,
-        gameRef,
         createGame,
         exitGameAction,
         restartGameAction,

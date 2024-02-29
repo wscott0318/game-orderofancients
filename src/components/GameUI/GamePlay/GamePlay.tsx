@@ -7,8 +7,7 @@ import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { useGameContext } from "../../../contexts/game-context";
 import { EventBridge } from "../../../libs/EventBridge";
-import { Game } from "../../../game";
-import { Network } from "../../../game/networking/NetworkHandler";
+import { GameMain } from "../../../game/main/GameMain";
 
 //
 
@@ -31,34 +30,35 @@ const GamePlayUI = () => {
 
         EventBridge.dispatchToGame( 'upgradeSpell', { item, itemIndex } );
 
-        const playerIndex = Game.instance._lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
-        if ( playerIndex === undefined || playerIndex === -1 ) return;
+        // todo
+        // const playerIndex = GameMain.lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
+        // if ( playerIndex === undefined || playerIndex === -1 ) return;
 
-        const playerState = Game.instance.towerManager.get( playerIndex ).playerState;
-        const gold_balance = playerState.gold;
-        const price = item.cost;
+        // const playerState = GameMain.towerManager.get( playerIndex ).playerState;
+        // const gold_balance = playerState.gold;
+        // const price = item.cost;
 
-        if ( gold_balance < price ) return;
+        // if ( gold_balance < price ) return;
 
-        if ( item.spellType === 'Weapon' ) {
+        // if ( item.spellType === 'Weapon' ) {
 
-            const userSpells: any = [ ...profileSpells ];
+        //     const userSpells: any = [ ...profileSpells ];
 
-            const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
+        //     const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
 
-            if ( index !== -1 ) {
+        //     if ( index !== -1 ) {
 
-                userSpells[ index ].count ++;
+        //         userSpells[ index ].count ++;
 
-            } else {
+        //     } else {
 
-                userSpells.push({ ...item, count: 1, });
+        //         userSpells.push({ ...item, count: 1, });
 
-            }
+        //     }
 
-            setProfileSpells( userSpells );
+        //     setProfileSpells( userSpells );
 
-        }
+        // }
 
     };
 

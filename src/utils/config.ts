@@ -1,3 +1,6 @@
+
+global.process = global.process || { env: {} };
+
 export const Config = {
     demo: true,
     apiUrl: process.env.REACT_APP_API_URL ?? "http://localhost:3001/graphql",
