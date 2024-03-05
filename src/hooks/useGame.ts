@@ -14,11 +14,10 @@ export const useGame = () => {
     const {
         setCanEnterGame,
         setCurrentGameState,
-        setUpgrades,
         setGameMode,
         setShowGrid,
         gameMode,
-        lobbyInfo,
+        lobbyInfo
     } = useGameContext();
 
     /**
@@ -37,55 +36,34 @@ export const useGame = () => {
 
         });
 
-        GameMain.addListener( GameEvents.ASSETS_LOADING_FINISHED, (progress: number) => {
+        GameMain.addListener( GameEvents.ASSETS_LOADING_FINISHED, () => {
 
             setCanEnterGame( true );
 
         });
 
-        // ResourcesManager.load( ( progress ) => {
-
-        //     EventBridge.dispatchToUI( 'LoadingProgressUpdate', progress );
-
-        // }, () => {
-
-        //     console.log( 'Loading finished!' );
-        //     setCanEnterGame( true );
-
-        // });
-
     }, []);
 
     const createGameInstance = () => {
 
-        // let playerIndex: any = 0;
-        // playerIndex = lobbyInfo!.players.findIndex(
-        //     (player) => player.socketId === Network.socket?.id
-        // );
-
-        // Gfx.init({ canvasDiv: canvasDivRef.current! });
-        // Gfx.update();
-
-        // GameMain.init({
-        //     canvas:                 canvasDivRef.current!,
-        //     gameMode:               gameMode,
-        //     lobbyInfo:              lobbyInfo!,
-        //     playerIndex:            playerIndex
-        // });
+        GameMain.initGFX({
+            canvas:                 ( canvasDivRef.current! as HTMLElement ).children[0] as HTMLCanvasElement,
+            gameMode:               gameMode
+        });
 
     };
 
     const startGame = () => {
 
         createGameInstance();
-        setGameState(GAME_STATES.PLAYING);
+        setGameState( GAME_STATES.PLAYING );
 
     };
 
     const enterLooby = () => {
 
-        setGameMode(GAME_MODES.Lobby);
-        setGameState(GAME_STATES.GAME_LOBBY);
+        setGameMode( GAME_MODES.Lobby );
+        setGameState( GAME_STATES.GAME_LOBBY );
 
     };
 
@@ -93,9 +71,7 @@ export const useGame = () => {
 
         GameMain.dispatchEvent( GameEvents.SET_STATE, state );
 
-        //
-
-        setCurrentGameState(state);
+        setCurrentGameState( state );
 
     };
 
@@ -119,7 +95,7 @@ export const useGame = () => {
     const onToggleGrid = (e: any) => {
 
         const isChecked = e.target.checked;
-        setShowGrid(isChecked);
+        setShowGrid( isChecked );
 
         EventBridge.dispatchToGame( 'toggleGrid', isChecked );
 

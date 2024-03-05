@@ -4,12 +4,11 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect, useRef } from "react";
 
-import { SOCKET_EVENTS } from "../../constants/socket";
 import { useGame } from "../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
-import { EventBridge } from "../../libs/EventBridge";
-import { Events } from "../../constants/GameEvents";
+import { GameMain } from "../../game/main/GameMain";
+import { GameEvents } from "../../game/Events";
 
 gsap.registerPlugin(CustomEase);
 
@@ -42,13 +41,19 @@ const GameLobby = () => {
 
     useEffect( () => {
 
-        EventBridge.onGameEvent( Events.Game.SET_LOBBY_DATA, setLobbyInfo );
-        EventBridge.onGameEvent( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+        const setLobbyInfoCallback = ( lobby: any ) => {
+
+            setLobbyInfo( lobby );
+
+        };
+
+        GameMain.addListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
+        // EventBridge.onGameEvent( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
 
         return () => {
 
-            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, setLobbyInfo );
-            EventBridge.removeGameEventListener( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+            GameMain.removeListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
+            // EventBridge.removeGameEventListener( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
 
         };
 
@@ -58,10 +63,10 @@ const GameLobby = () => {
 
     useEffect(() => {
 
-        // todo
-        // Network.socket?.emit(SOCKET_EVENTS.JOIN);
+        GameMain.dispatchEvent( GameEvents.LOBBY_JOIN );
 
         if (divRef.current) {
+
             const divElement = divRef.current.childNodes[0];
 
             menuDownAnim.add("start").from(divElement, {
@@ -72,10 +77,13 @@ const GameLobby = () => {
                     "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
                 ),
             });
+
         }
+
         return () => {
             menuDownAnim.kill();
         };
+
     }, []);
 
     const onExit = () => {
@@ -92,9 +100,8 @@ const GameLobby = () => {
         }
 
         setTimeout(() => {
-            setGameState(GAME_STATES.GAME_MENU);
-            // todo
-            // Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+            setGameState( GAME_STATES.GAME_MENU );
+            GameMain.dispatchEvent( GameEvents.LOBBY_EXIT_ROOM );
         }, 1000);
     };
 

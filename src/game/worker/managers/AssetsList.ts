@@ -6,8 +6,8 @@ import { MODEL_URLS, S3_BUCKET_URL } from "../../../constants";
 export const AssetsList = {
 
     textures: [
-        { name: 'Particles1', path: S3_BUCKET_URL + "/assets/textures/particle/texture1.png" },
-        { name: 'Particles2', path: S3_BUCKET_URL + "/assets/textures/particle/texture2.png" }
+        { name: 'Particles1', path: "/assets/new/textures/texture1.ktx2" },
+        { name: 'Particles2', path: "/assets/new/textures/texture2.ktx2" }
     ],
 
     models: [

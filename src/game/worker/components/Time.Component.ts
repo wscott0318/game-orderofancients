@@ -50,7 +50,7 @@ export class TimeComponent {
             fastMode: false,
         });
 
-        GameWorker._spriteManager.addTextSprite( sprite );
+        GameWorker.spriteManager.addTextSprite( sprite );
 
         EventBridge.dispatchToUI( 'updateIncome', value );
 

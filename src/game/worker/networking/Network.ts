@@ -11,11 +11,10 @@ import {
 } from "../../../constants/type";
 import { SOCKET_EVENTS } from "../../../constants/socket";
 import { Config } from "../../../utils/config";
-import { EventBridge } from "../../../libs/EventBridge";
-import { Events } from "../../../constants/GameEvents";
 import { ITowerStatus } from "../entities/Tower.Entity";
 import { LobbyInfo, PlayerInfo } from "../../Types";
 import { GameWorker } from "../GameWorker";
+import { GameEvents } from "../../Events";
 
 //
 
@@ -25,25 +24,37 @@ export class NetworkHandler {
 
     //
 
-    public initialize () : void {
+    public init () : void {
 
-        this.socket = io( Config.socketServerUrl );
+        this.socket = io( Config.socketServerUrl, { transports: [ 'websocket' ] } );
 
         this.socket.on( "connect_error", ( error ) => {
 
-            toast.error(
-                `Can't connect to server. Please check server status.`
-            );
+            // toast.error(
+            //     `Can't connect to server. Please check server status.`
+            // );
+            console.log('error', error);
 
         });
 
         this.socket.on( "connect", () => {
 
             const socket = this.socket;
+
+            if ( ! socket ) {
+
+                console.error( "Socket is null" );
+                return;
+
+            }
+
             console.log( "Connected to server" );
+
+            GameWorker.sendToMain( GameEvents.NETWORK_INITED, { socketId: socket.id } );
 
             // Game start
             socket?.on( SOCKET_EVENTS.START_GAME, this.onStartGame );
+
             // Game events
             socket?.on( SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus );
             socket?.on( SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot );
@@ -59,6 +70,7 @@ export class NetworkHandler {
             socket?.on( SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus );
             socket?.on( SOCKET_EVENTS.KILL_BOT, this.onKillBot );
             socket?.on( SOCKET_EVENTS.REMOVE_DEAD_BOTS, this.onRemoveDeadBots );
+
             // Looby events
             socket?.on( SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData );
 
@@ -88,29 +100,21 @@ export class NetworkHandler {
 
     //
 
-    private onStartGame = ( lobby: LobbyInfo ) : void => {
+    private onStartGame = ( lobbyInfo: LobbyInfo ) : void => {
 
-        console.log( 'game started' );
+        GameWorker.startGame( lobbyInfo );
 
-        EventBridge.dispatchToUI( Events.Game.SET_LOBBY_DATA, lobby );
+        // const player = lobby.players.find(
+        //     ( item ) => item.socketId === this.socket?.id
+        // );
 
-        const player = lobby.players.find(
-            ( item ) => item.socketId === this.socket?.id
-        );
-
-        EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
-
-        setTimeout( () => {
-
-            EventBridge.dispatchToUI( Events.Game.GAME_START );
-
-        }, 300 );
+        // EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
 
     };
 
-    public onReceiveLobbyData = ( lobby: LobbyInfo ) : void => {
+    public onReceiveLobbyData = ( lobbyInfo: LobbyInfo ) : void => {
 
-        EventBridge.dispatchToUI( Events.Game.SET_LOBBY_DATA, lobby );
+        GameWorker.setLobbyInfo( lobbyInfo );
 
     };
 
@@ -174,7 +178,7 @@ export class NetworkHandler {
     public onReceiveUpgrades = ( playersInfo: PlayerInfo[] ) : void => {
 
         const player = playersInfo.find( ( el ) => el.socketId === this.socket?.id );
-        EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
+        // EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
 
     };
 
@@ -192,25 +196,25 @@ export class NetworkHandler {
 
     public onAddSprite = ( newSpriteInfo: NewSpriteInfo ) : void => {
 
-        GameWorker._spriteManager.addSpriteFrom( newSpriteInfo );
+        GameWorker.spriteManager.addSpriteFrom( newSpriteInfo );
 
     };
 
     public onAddTextSprite = ( newTextSpriteInfo: NewTextSpriteInfo ) : void => {
 
-        GameWorker._spriteManager.addTextSpriteFrom( newTextSpriteInfo );
+        GameWorker.spriteManager.addTextSpriteFrom( newTextSpriteInfo );
 
     };
 
     public onAddSpriteCollisionEffect = ( spriteIndex: number ) : void => {
 
-        GameWorker._spriteManager.spriteArray[ spriteIndex ].addCollisionEffect();
+        GameWorker.spriteManager.spriteArray[ spriteIndex ].addCollisionEffect();
 
     };
 
     public onDisposeSprite = ( removeSpriteArray: number[] ) : void => {
 
-        const spriteArray = GameWorker._spriteManager.spriteArray;
+        const spriteArray = GameWorker.spriteManager.spriteArray;
         const newArray = [];
 
         for ( let i = 0; i < spriteArray.length; i ++ ) {
@@ -231,13 +235,13 @@ export class NetworkHandler {
 
         }
 
-        GameWorker._spriteManager.spriteArray = newArray;
+        GameWorker.spriteManager.spriteArray = newArray;
 
     };
 
     public onReceiveSpriteStatus = ( spriteStatusData: SpriteStatus[] ) : void => {
 
-        const spriteArray = GameWorker._spriteManager.spriteArray;
+        const spriteArray = GameWorker.spriteManager.spriteArray;
 
         if ( spriteArray.length !== spriteStatusData.length ) {
 

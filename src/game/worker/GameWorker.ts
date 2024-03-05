@@ -7,16 +7,13 @@ import { TowerManager } from "./managers/TowerManager";
 import { StateManager } from "./states/StateManager";
 import { GAME_STATES } from "../../constants";
 import { AnimationManager } from "./gfx/managers/AnimationManager";
-import { EventBridge } from "../../libs/EventBridge";
 import { GameScene, Gfx } from "./gfx";
-import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
-import { SOCKET_EVENTS } from "../../constants/socket";
-import { TowerEntity } from "./entities/Tower.Entity";
 import { LobbyInfo } from "../Types";
 import EventEmitter from "events";
 import { GameEvents } from "../Events";
 import { ResourcesManager } from "./managers/ResourcesManager";
-// import { Network } from "./networking/Network";
+import { Network } from "./networking/Network";
+import { SOCKET_EVENTS } from "../../constants/socket";
 
 //
 
@@ -33,14 +30,14 @@ interface GameOptions {
 export class GameWorkerCore extends EventEmitter {
 
     public towerManager: TowerManager;
-    public _spriteManager: SpriteManager;
-    public _particleEffect: ParticleEffect;
-    public _canvasDiv: HTMLDivElement;
-    public _stateManager: StateManager;
-    public _lobbyInfo: LobbyInfo;
-    public _playerIndex: number;
-    public _gameMode: number;
-    public _animationManager: AnimationManager;
+    public spriteManager: SpriteManager;
+    public particleEffect: ParticleEffect;
+    public canvasDiv: HTMLDivElement;
+    public stateManager: StateManager;
+    public lobbyInfo: LobbyInfo;
+    public playerIndex: number;
+    public gameMode: number;
+    public animationManager: AnimationManager;
 
     public gameScene: GameScene;
 
@@ -57,9 +54,14 @@ export class GameWorkerCore extends EventEmitter {
 
         this.addListener( GameEvents.INIT_NETWORK, () => {
 
+            Network.init();
+
+        });
+
+        this.addListener( GameEvents.LOAD_ASSETS, () => {
+
             ResourcesManager.load( ( progress ) => {
 
-                console.log( 'Loading progress:', progress );
                 this.sendToMain( GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, progress );
 
             }, () => {
@@ -70,9 +72,35 @@ export class GameWorkerCore extends EventEmitter {
 
         });
 
+        this.addListener( GameEvents.INIT_GFX, ( props: any ) => {
+
+            console.log( props );
+
+        });
+
         this.addListener( GameEvents.LOAD_ASSETS, () => {
 
             console.log( 'GameWorkerCore: LOAD_ASSETS' );
+
+        });
+
+        //
+
+        this.addListener( GameEvents.LOBBY_JOIN, () => {
+
+            Network.socket?.emit( SOCKET_EVENTS.JOIN );
+
+        });
+
+        this.addListener( GameEvents.PLAY_SINGLE, () => {
+
+            Network.socket?.emit( SOCKET_EVENTS.PLAY_SINGLE );
+
+        });
+
+        this.addListener( GameEvents.LOBBY_EXIT_ROOM, () => {
+
+            Network.socket?.emit( SOCKET_EVENTS.EXIT_ROOM );
 
         });
 
@@ -132,12 +160,6 @@ export class GameWorkerCore extends EventEmitter {
 
     };
 
-    public initialize () : void {
-
-        // this._animationManager.light_attention();
-
-    };
-
     public dispose = () : void => {
 
         this.towerManager.dispose();
@@ -159,7 +181,7 @@ export class GameWorkerCore extends EventEmitter {
 
     public animate = () : void => {
 
-        if ( this._stateManager.getCurrentState() === GAME_STATES.END ) return;
+        if ( this.stateManager.getCurrentState() === GAME_STATES.END ) return;
 
         // process in/out events queue
 
@@ -167,11 +189,11 @@ export class GameWorkerCore extends EventEmitter {
 
         requestAnimationFrame( this.animate );
 
-        if ( this._stateManager.getCurrentState() === GAME_STATES["PLAYING"] ) {
+        if ( this.stateManager.getCurrentState() === GAME_STATES["PLAYING"] ) {
 
             this.towerManager.update();
-            this._spriteManager.tick();
-            this._particleEffect.tick();
+            this.spriteManager.tick();
+            this.particleEffect.tick();
 
         }
 
@@ -184,6 +206,20 @@ export class GameWorkerCore extends EventEmitter {
         // @eslint-disable-next-line
         // @ts-ignore
         self.postMessage({ eventName, params }, buffers );
+
+    };
+
+    public setLobbyInfo = ( lobbyInfo: LobbyInfo ) : void => {
+
+        this.lobbyInfo = lobbyInfo;
+        this.sendToMain( GameEvents.SET_LOBBY_DATA, lobbyInfo );
+
+    };
+
+    public startGame = ( lobby: LobbyInfo ) : void => {
+
+        this.setLobbyInfo( lobby );
+        this.sendToMain( GameEvents.START_GAME );
 
     };
 

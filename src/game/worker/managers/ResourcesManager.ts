@@ -1,8 +1,8 @@
 
-import { Texture, TextureLoader } from "three";
+import { Texture, WebGLRenderer } from "three";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
 
-import { MODEL_URLS, S3_BUCKET_URL } from "../../../constants";
 import { AssetsList } from "./AssetsList";
 
 //
@@ -23,7 +23,7 @@ class ResourcesManagerCore {
     private _texturesLoadedCount: number;
     private _modelsLoadedCount: number;
 
-    private _textureLoader: TextureLoader;
+    private _textureLoader: KTX2Loader;
     private _gltfLoader: GLTFLoader;
 
     public _particleTextures: any;
@@ -41,7 +41,14 @@ class ResourcesManagerCore {
 
         // init loaders
 
-        this._textureLoader = new TextureLoader();
+        // @ts-ignore
+        const offscreenCanvas = new OffscreenCanvas( 1, 1 );
+        const tmpRenderer = new WebGLRenderer({ canvas: offscreenCanvas });
+
+        this._textureLoader = new KTX2Loader();
+        this._textureLoader.setTranscoderPath( '/libs/basis/' );
+        this._textureLoader.detectSupport( tmpRenderer );
+
         this._gltfLoader = new GLTFLoader();
 
         //
@@ -123,7 +130,6 @@ class ResourcesManagerCore {
 
             this._models.set( asset.name, gltf );
             this._modelsLoadedCount ++;
-            // todo: update progress
 
             if ( ! this.isFinishedLoading() ) {
 
@@ -146,7 +152,6 @@ class ResourcesManagerCore {
 
             this._textures.set( asset.name, texture );
             this._texturesLoadedCount ++;
-            // todo: update progress
 
             if ( ! this.isFinishedLoading() ) {
 

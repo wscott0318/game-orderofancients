@@ -1,13 +1,12 @@
 
 import EventEmitter from "events";
 import { LobbyInfo } from "../Types";
+import { GameEvents } from "../Events";
 
 //
 
 interface IGameMainProps {
     canvas:         HTMLCanvasElement;
-    lobbyInfo:      LobbyInfo;
-    playerIndex:    number;
     gameMode:       number;
 };
 
@@ -16,12 +15,10 @@ interface IGameMainProps {
 class GameMainCore extends EventEmitter {
 
     private worker: Worker;
-    private inited: boolean = false;
 
+    public meId: string;
     public lobbyInfo: LobbyInfo;
     public playerIndex: number;
-
-    private props: IGameMainProps;
 
     //
 
@@ -30,15 +27,36 @@ class GameMainCore extends EventEmitter {
         this.worker = new Worker( "./worker.bundle.js" );
         this.worker.onmessage = this.onWorkerMessage;
 
+        this.addListener( GameEvents.NETWORK_INITED, ( { socketId }: { socketId: string } ) => {
+
+            this.meId = socketId;
+
+        });
+
         console.log( 'GameMainCore: init' );
+
+    };
+
+    public initGFX ( props: IGameMainProps ) : void {
+
+        // @ts-ignore
+        const offscreen = props.canvas.transferControlToOffscreen();
+
+        this.dispatchEvent( GameEvents.INIT_GFX, {
+
+            offscreen:          offscreen,
+            windowWidth:        window.innerWidth,
+            windowHeight:       window.innerHeight,
+            devicePixelRatio:   window.devicePixelRatio,
+            gameMode:           props.gameMode
+
+        }, [ offscreen ] );
 
     };
 
     public dispatchEvent = ( eventName: string, params?: any, buffers: Transferable[] = [] ) : void => {
 
         if ( ! this.worker ) return;
-
-        console.log( eventName );
 
         this.worker.postMessage({
             eventName,
@@ -56,28 +74,6 @@ class GameMainCore extends EventEmitter {
     //
 
     private onWorkerMessage = ( event: MessageEvent ) : void => {
-
-        if ( event.data.eventName === 'InitedWorker' ) {
-
-            // @ts-ignore
-            const offscreen = this.props.canvas.transferControlToOffscreen();
-
-            this.dispatchEvent( 'InitCanvas', {
-
-                offscreen:          offscreen,
-                windowWidth:        window.innerWidth,
-                windowHeight:       window.innerHeight,
-                devicePixelRatio:   window.devicePixelRatio,
-                lobbyInfo:          this.props.lobbyInfo,
-                playerIndex:        this.props.playerIndex,
-                gameMode:           this.props.gameMode
-
-            }, [ offscreen ] );
-
-            this.inited = true;
-            return;
-
-        }
 
         this.emit( event.data.eventName, event.data.params );
 

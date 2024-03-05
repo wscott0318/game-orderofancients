@@ -15,11 +15,20 @@ import Tutorial from "../Tutorial";
 import { EventBridge } from "../../libs/EventBridge";
 import { Events } from "../../constants/GameEvents";
 import { CONVERT_TIME } from "../../utils/helper";
+import { GameMain } from "../../game/main/GameMain";
+import { GameEvents } from "../../game/Events";
 
 const Wrapper = styled.div`
     position: relative;
     width: 100vw;
     height: 100vh;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 1;
+    }
 `;
 
 const BackVideo = styled.video`
@@ -125,12 +134,12 @@ export const GameScene = () => {
 
     useEffect( () => {
 
-        EventBridge.onGameEvent( Events.Game.GAME_START, startGame );
+        GameMain.addListener( GameEvents.START_GAME, startGame );
         EventBridge.onGameEvent( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
 
         return () => {
 
-            EventBridge.removeGameEventListener( Events.Game.GAME_START, startGame );
+            GameMain.removeListener( GameEvents.START_GAME, startGame );
             EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
 
         };
@@ -141,7 +150,9 @@ export const GameScene = () => {
 
     return (
         <Wrapper>
-            <div ref={canvasDivRef}></div>
+            <div ref={canvasDivRef}>
+                <canvas></canvas>
+            </div>
 
             {canPlayVideo && (
                 <BackVideo ref={videoRef} loop className="opacity-[0.8]">

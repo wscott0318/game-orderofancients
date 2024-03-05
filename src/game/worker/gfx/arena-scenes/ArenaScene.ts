@@ -118,9 +118,9 @@ export class ArenaScene extends GameScene {
         this._camControls.minDistance = 25;
 
         this._camControls.target.set(
-            TOWER_POSITIONS[ GameWorker._playerIndex ].x,
-            TOWER_POSITIONS[ GameWorker._playerIndex ].y,
-            TOWER_POSITIONS[ GameWorker._playerIndex ].z
+            TOWER_POSITIONS[ GameWorker.playerIndex ].x,
+            TOWER_POSITIONS[ GameWorker.playerIndex ].y,
+            TOWER_POSITIONS[ GameWorker.playerIndex ].z
         );
 
     };
