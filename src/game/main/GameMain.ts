@@ -47,6 +47,8 @@ class GameMainCore extends EventEmitter {
             offscreen:          offscreen,
             windowWidth:        window.innerWidth,
             windowHeight:       window.innerHeight,
+            screenWidth:        window.screen.width,
+            screenHeight:       window.screen.height,
             devicePixelRatio:   window.devicePixelRatio,
             gameMode:           props.gameMode
 

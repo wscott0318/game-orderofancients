@@ -9,7 +9,7 @@ import {
     S3_BUCKET_URL,
 } from "../../../constants";
 import { useGameContext } from "../../../contexts/game-context";
-import { EventBridge } from "../../../libs/EventBridge";
+import { GameMain } from "../../../game/main/GameMain";
 
 const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
 const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
@@ -447,9 +447,9 @@ export const Desktop = ({
 
         };
 
-        EventBridge.onGameEvent( 'updateGold', updateGold );
-        EventBridge.onGameEvent( 'updateIncome', updateIncome );
-        EventBridge.onGameEvent( 'tickRound', tickRound );
+        GameMain.addListener( 'updateGold', updateGold );
+        GameMain.addListener( 'updateIncome', updateIncome );
+        GameMain.addListener( 'tickRound', tickRound );
 
         gameMenuFadeInAnim
             .add("start")
@@ -463,9 +463,9 @@ export const Desktop = ({
 
             gameMenuFadeInAnim.kill();
 
-            EventBridge.removeGameEventListener( 'updateGold', updateGold );
-            EventBridge.removeGameEventListener( 'updateIncome', updateIncome );
-            EventBridge.removeGameEventListener( 'tickRound', tickRound );
+            GameMain.removeListener( 'updateGold', updateGold );
+            GameMain.removeListener( 'updateIncome', updateIncome );
+            GameMain.removeListener( 'tickRound', tickRound );
 
         };
 

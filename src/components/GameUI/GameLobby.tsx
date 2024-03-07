@@ -48,12 +48,12 @@ const GameLobby = () => {
         };
 
         GameMain.addListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
-        // EventBridge.onGameEvent( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+        GameMain.addListener( GameEvents.SET_PLAYER_UPGRADES, setUpgrades );
 
         return () => {
 
             GameMain.removeListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
-            // EventBridge.removeGameEventListener( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+            GameMain.removeListener( GameEvents.SET_PLAYER_UPGRADES, setUpgrades );
 
         };
 

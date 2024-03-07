@@ -67,7 +67,7 @@ class ResourcesManagerCore {
         this.loadNextModel();
         this.loadNextTexture();
 
-    }
+    };
 
     public getTexture ( textureName: string ) : Texture | null {
 
@@ -81,7 +81,7 @@ class ResourcesManagerCore {
 
         return texture ?? null;
 
-    }
+    };
 
     public getModel ( modelName: string ) : GLTF | null {
 
@@ -95,7 +95,7 @@ class ResourcesManagerCore {
 
         return model ?? null;
 
-    }
+    };
 
     //
 
@@ -117,7 +117,7 @@ class ResourcesManagerCore {
 
         return isFinishedLoading;
 
-    }
+    };
 
     private loadNextModel () : void {
 
@@ -139,7 +139,7 @@ class ResourcesManagerCore {
 
         });
 
-    }
+    };
 
     private loadNextTexture () : void {
 
@@ -161,8 +161,8 @@ class ResourcesManagerCore {
 
         });
 
-    }
+    };
 
-}
+};
 
 export const ResourcesManager = new ResourcesManagerCore();

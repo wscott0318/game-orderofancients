@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { useGameContext } from "../../../contexts/game-context";
-import { EventBridge } from "../../../libs/EventBridge";
 import { GameMain } from "../../../game/main/GameMain";
 
 //
@@ -28,7 +27,7 @@ const GamePlayUI = () => {
 
     const onClickUpgrade = ( item: any, itemIndex: number ) => {
 
-        EventBridge.dispatchToGame( 'upgradeSpell', { item, itemIndex } );
+        GameMain.dispatchEvent( 'upgradeSpell', { item, itemIndex } );
 
         // todo
         // const playerIndex = GameMain.lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
@@ -70,11 +69,11 @@ const GamePlayUI = () => {
 
         };
 
-        EventBridge.onGameEvent( 'updateUpgrades', updateUpgrades );
+        GameMain.addListener( 'updateUpgrades', updateUpgrades );
 
         return () => {
 
-            EventBridge.removeGameEventListener( 'updateUpgrades', updateUpgrades );
+            GameMain.removeListener( 'updateUpgrades', updateUpgrades );
 
         };
 

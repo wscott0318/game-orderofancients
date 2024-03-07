@@ -1,6 +1,6 @@
 
 import { Color, Matrix4, Object3D, Quaternion, Vector3 } from "three";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
+// import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import TWEEN from "@tweenjs/tween.js";
 
@@ -46,7 +46,7 @@ export class BotEntity {
 
     public mesh: Object3D;
     public model: GLTF;
-    public healthBarUI: CSS2DObject;
+    // public healthBarUI: CSS2DObject;
     public stunMesh: Object3D | null;
     public fireMesh: Object3D | null;
     public animController: BotAnimationController;
@@ -97,15 +97,15 @@ export class BotEntity {
         this.fireMesh = null;
         this.fireTime = 0;
 
-        const healthBarDiv = document.createElement("div");
-        healthBarDiv.className = "healthBar";
+        // const healthBarDiv = document.createElement("div");
+        // healthBarDiv.className = "healthBar";
 
-        const healthProgressDiv = document.createElement("div");
-        healthProgressDiv.className = "healthBar__progress";
+        // const healthProgressDiv = document.createElement("div");
+        // healthProgressDiv.className = "healthBar__progress";
 
-        healthBarDiv.appendChild(healthProgressDiv);
+        // healthBarDiv.appendChild(healthProgressDiv);
 
-        this.healthBarUI = new CSS2DObject(healthBarDiv);
+        // this.healthBarUI = new CSS2DObject(healthBarDiv);
 
         this.initialize();
 
@@ -119,16 +119,16 @@ export class BotEntity {
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        GameWorker.gameScene.scene.add( this.healthBarUI );
+        // GameWorker.gameScene.scene.add( this.healthBarUI );
         GameWorker.gameScene.scene.add( this.mesh );
 
     };
 
     private disposeHealthBar () : void {
 
-        this.healthBarUI.remove();
-        GameWorker.gameScene.scene.remove(this.healthBarUI);
-        this.healthBarUI.element.remove();
+        // this.healthBarUI.remove();
+        // GameWorker.gameScene.scene.remove( this.healthBarUI );
+        // this.healthBarUI.element.remove();
 
     };
 
@@ -355,25 +355,25 @@ export class BotEntity {
          * Configure HealthBar UI
          */
 
-        this.healthBarUI.position.set(
-            this.mesh.position.x,
-            this.mesh.position.y + BOT_PROPS.modelHeight[this.botType],
-            this.mesh.position.z
-        );
+        // this.healthBarUI.position.set(
+        //     this.mesh.position.x,
+        //     this.mesh.position.y + BOT_PROPS.modelHeight[this.botType],
+        //     this.mesh.position.z
+        // );
 
-        const scaleFactor = 85;
-        const scaleVector = new Vector3();
-        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarUI.position, GameWorker.gameScene.camera.position ).length() / scaleFactor );
+        // const scaleFactor = 85;
+        // const scaleVector = new Vector3();
+        // const scale = Math.sqrt( scaleVector.subVectors( this.healthBarUI.position, GameWorker.gameScene.camera.position ).length() / scaleFactor );
 
-        this.healthBarUI.element.style.width = `${ ( HEALTH_PIXEL * this.maxHp + 2 ) / scale }px`;
-        this.healthBarUI.element.style.height = `${ ( 5 + 2 ) / scale }px`;
+        // this.healthBarUI.element.style.width = `${ ( HEALTH_PIXEL * this.maxHp + 2 ) / scale }px`;
+        // this.healthBarUI.element.style.height = `${ ( 5 + 2 ) / scale }px`;
 
-        const progressBar = this.healthBarUI.element.children[0] as HTMLDivElement;
-        progressBar.style.width = `${(HEALTH_PIXEL * this.hp) / scale}px`;
-        progressBar.style.height = `${5 / scale}px`;
-        progressBar.style.left = `${1 / scale}px`;
-        progressBar.style.top = `${1 / scale}px`;
-        progressBar.style.background = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
+        // const progressBar = this.healthBarUI.element.children[0] as HTMLDivElement;
+        // progressBar.style.width = `${(HEALTH_PIXEL * this.hp) / scale}px`;
+        // progressBar.style.height = `${5 / scale}px`;
+        // progressBar.style.left = `${1 / scale}px`;
+        // progressBar.style.top = `${1 / scale}px`;
+        // progressBar.style.background = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
 
         this.animController.tick();
 

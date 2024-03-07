@@ -3,7 +3,6 @@ import { useCallback, useRef } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
 import { useGameContext } from "../contexts/game-context";
-import { EventBridge } from "../libs/EventBridge";
 import { GameMain } from "../game/main/GameMain";
 import { GameEvents } from "../game/Events";
 
@@ -16,8 +15,7 @@ export const useGame = () => {
         setCurrentGameState,
         setGameMode,
         setShowGrid,
-        gameMode,
-        lobbyInfo
+        gameMode
     } = useGameContext();
 
     /**
@@ -29,12 +27,6 @@ export const useGame = () => {
 
         GameMain.dispatchEvent( GameEvents.INIT_NETWORK );
         GameMain.dispatchEvent( GameEvents.LOAD_ASSETS );
-
-        GameMain.addListener( GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, (progress: number) => {
-
-            EventBridge.dispatchToUI( 'LoadingProgressUpdate', progress );
-
-        });
 
         GameMain.addListener( GameEvents.ASSETS_LOADING_FINISHED, () => {
 
@@ -97,7 +89,7 @@ export const useGame = () => {
         const isChecked = e.target.checked;
         setShowGrid( isChecked );
 
-        EventBridge.dispatchToGame( 'toggleGrid', isChecked );
+        GameMain.dispatchEvent( GameEvents.GFX_TOGGLE_GRID, isChecked );
 
     };
 

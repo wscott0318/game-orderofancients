@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, MouseEvent } from "react";
 import styled from "styled-components";
 import { Loader } from "../Loader";
 import { GAME_STATES, ROUND_TIME } from "../../constants";
@@ -12,8 +12,6 @@ import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
 import GameLobby from "./GameLobby";
 import Tutorial from "../Tutorial";
-import { EventBridge } from "../../libs/EventBridge";
-import { Events } from "../../constants/GameEvents";
 import { CONVERT_TIME } from "../../utils/helper";
 import { GameMain } from "../../game/main/GameMain";
 import { GameEvents } from "../../game/Events";
@@ -135,22 +133,40 @@ export const GameScene = () => {
     useEffect( () => {
 
         GameMain.addListener( GameEvents.START_GAME, startGame );
-        EventBridge.onGameEvent( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
+        GameMain.addListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
 
         return () => {
 
             GameMain.removeListener( GameEvents.START_GAME, startGame );
-            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
+            GameMain.removeListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
 
         };
 
     }, [] );
 
+    const mouseDownHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mousedown', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
+    const mouseUpHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mouseup', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
+    const mouseMoveHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mousemove', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
     // tmp end
 
     return (
         <Wrapper>
-            <div ref={canvasDivRef}>
+            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler } onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler }>
                 <canvas></canvas>
             </div>
 

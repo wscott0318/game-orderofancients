@@ -104,11 +104,11 @@ export class NetworkHandler {
 
         GameWorker.startGame( lobbyInfo );
 
-        // const player = lobby.players.find(
-        //     ( item ) => item.socketId === this.socket?.id
-        // );
+        const player = GameWorker.lobbyInfo.players.find(
+            ( item ) => item.socketId === this.socket?.id
+        );
 
-        // EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
+        GameWorker.sendToMain( GameEvents.SET_PLAYER_UPGRADES, player?.upgrades );
 
     };
 
@@ -178,7 +178,7 @@ export class NetworkHandler {
     public onReceiveUpgrades = ( playersInfo: PlayerInfo[] ) : void => {
 
         const player = playersInfo.find( ( el ) => el.socketId === this.socket?.id );
-        // EventBridge.dispatchToUI( Events.Game.SET_PLAYER_UPGRADES, player?.upgrades );
+        GameWorker.sendToMain( GameEvents.SET_PLAYER_UPGRADES, player?.upgrades );
 
     };
 

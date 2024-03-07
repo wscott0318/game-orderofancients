@@ -1,4 +1,4 @@
-import { EventBridge } from "../../../libs/EventBridge";
+import { GameWorker } from "../GameWorker";
 
 export class PlayerStateComponent {
 
@@ -153,7 +153,7 @@ export class PlayerStateComponent {
 
         if ( this.index === this.playerIndex ) {
 
-            EventBridge.dispatchToUI( "updateGold", this.gold );
+            GameWorker.sendToMain( "updateGold", this.gold );
 
         }
 

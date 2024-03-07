@@ -7,7 +7,8 @@ export const AssetsList = {
 
     textures: [
         { name: 'Particles1', path: "/assets/new/textures/texture1.ktx2" },
-        { name: 'Particles2', path: "/assets/new/textures/texture2.ktx2" }
+        { name: 'Particles2', path: "/assets/new/textures/texture2.ktx2" },
+        { name: 'ground-small2', path: "/assets/new/textures/small2.ktx2" },
     ],
 
     models: [

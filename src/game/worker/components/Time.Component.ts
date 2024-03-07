@@ -3,10 +3,9 @@ import { Vector3 } from "three";
 
 import { ROUND_TIME } from "../../../constants";
 import { TextSprite } from "../gfx/sprites/Text";
-import { EventBridge } from "../../../libs/EventBridge";
-import { Events } from "../../../constants/GameEvents";
 import { TowerEntity } from "../entities/Tower.Entity";
 import { GameWorker } from "../GameWorker";
+import { GameEvents } from "../../Events";
 
 //
 
@@ -52,7 +51,7 @@ export class TimeComponent {
 
         GameWorker.spriteManager.addTextSprite( sprite );
 
-        EventBridge.dispatchToUI( 'updateIncome', value );
+        GameWorker.sendToMain( 'updateIncome', value );
 
     };
 
@@ -62,7 +61,7 @@ export class TimeComponent {
 
         this.roundTracker = ROUND_TIME;
 
-        EventBridge.dispatchToUI( 'tickRound' );
+        GameWorker.sendToMain( 'tickRound' );
 
     };
 
@@ -70,7 +69,7 @@ export class TimeComponent {
 
         this.tower.playerState.updateGoldUI();
 
-        EventBridge.dispatchToUI( Events.Game.UPDATE_TIME, {
+        GameWorker.sendToMain( GameEvents.UPDATE_TIME, {
             totalTimeTracker:   this.totalTimeTracker,
             roundTracker:       this.roundTracker
         });

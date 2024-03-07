@@ -18,5 +18,9 @@ export const GameEvents = {
     SET_LOBBY_DATA: 'SetLobbyData',
 
     START_GAME: 'StartGame',
+    UPDATE_TIME: 'UpdateTime',
+    SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
+
+    GFX_TOGGLE_GRID: 'GfxToggleGrid',
 
 };

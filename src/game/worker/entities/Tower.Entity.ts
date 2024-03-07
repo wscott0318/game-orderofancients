@@ -18,7 +18,6 @@ import { ResourcesManager } from "../managers/ResourcesManager";
 //
 
 export interface ITowerProperties {
-    stateManager:       StateManager;
     particleEffect:     ParticleEffect;
     playerIndex:        number;
     index:              number;
@@ -61,7 +60,6 @@ export class TowerEntity {
         this.playerState = new PlayerStateComponent();
         this.time = new TimeComponent({ tower: this });
 
-        this.stateManager = params.stateManager;
         this.particleEffect = params.particleEffect;
         this.playerIndex = params.playerIndex;
         this.index = params.index;
@@ -76,25 +74,25 @@ export class TowerEntity {
         const towerModel = ResourcesManager.getModel("Buildings")?.scene.getObjectByName( 'orc_tower_Lv3_proto_orc_rts_0' ) as Object3D;
         this.towerMesh = SkeletonUtils.clone( towerModel );
 
-        const wrapper = document.createElement("div");
-        wrapper.className = "towerStatusBar";
+        // const wrapper = document.createElement("div");
+        // wrapper.className = "towerStatusBar";
 
-        const levelDiv = document.createElement("div");
-        levelDiv.className = "level";
+        // const levelDiv = document.createElement("div");
+        // levelDiv.className = "level";
 
-        const healthBarDiv = document.createElement("div");
-        healthBarDiv.className = "healthBar";
+        // const healthBarDiv = document.createElement("div");
+        // healthBarDiv.className = "healthBar";
 
-        const healthProgressDiv = document.createElement("div");
-        healthProgressDiv.className = "healthBar__progress";
+        // const healthProgressDiv = document.createElement("div");
+        // healthProgressDiv.className = "healthBar__progress";
 
-        healthBarDiv.appendChild( healthProgressDiv );
+        // healthBarDiv.appendChild( healthProgressDiv );
 
-        wrapper.appendChild( levelDiv );
-        wrapper.appendChild( healthBarDiv );
+        // wrapper.appendChild( levelDiv );
+        // wrapper.appendChild( healthBarDiv );
 
-        this.healthBarUI = new CSS2DObject( wrapper );
-        GameWorker.gameScene.add( this.healthBarUI );
+        // this.healthBarUI = new CSS2DObject( wrapper );
+        // GameWorker.gameScene.add( this.healthBarUI );
 
         this.initialize();
 
@@ -111,13 +109,13 @@ export class TowerEntity {
 
     public levelUp () : void {
 
-        const element = document.getElementById( "gameLevel" );
+        // const element = document.getElementById( "gameLevel" );
 
-        if ( element ) {
+        // if ( element ) {
 
-            element.textContent = `Level ${ this.level }`;
+        //     element.textContent = `Level ${ this.level }`;
 
-        }
+        // }
 
         // visual effect
         const newVector = new Vector3(
@@ -229,7 +227,7 @@ export class TowerEntity {
 
         }
 
-        this.renderHealthBar();
+        // this.renderHealthBar();
 
     };
 
@@ -237,14 +235,14 @@ export class TowerEntity {
 
     private updateHealth () : void {
 
-        const healthBarDiv = document.getElementsByClassName( "status_player_health" )[ this.index ] as HTMLDivElement;
+        // const healthBarDiv = document.getElementsByClassName( "status_player_health" )[ this.index ] as HTMLDivElement;
 
-        if ( healthBarDiv ) {
+        // if ( healthBarDiv ) {
 
-            healthBarDiv.style.width = `${ ( this.hp / this.maxHp ) * 100 }%`;
-            healthBarDiv.style.backgroundColor = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
+        //     healthBarDiv.style.width = `${ ( this.hp / this.maxHp ) * 100 }%`;
+        //     healthBarDiv.style.backgroundColor = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
 
-        }
+        // }
 
     };
 

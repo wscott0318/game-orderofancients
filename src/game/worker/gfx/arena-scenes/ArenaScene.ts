@@ -1,15 +1,13 @@
 
-import { Color, GridHelper, MOUSE, PerspectiveCamera, Scene, TOUCH, WebGLRenderTarget } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Color, GridHelper, PerspectiveCamera, Scene, WebGLRenderTarget } from 'three';
 import { BatchedRenderer } from 'three.quarks';
 
 import { Gfx } from '../core/Gfx';
 import { GameScene } from '../core/GameScene';
-import { TOWER_POSITIONS } from '../../../../constants/tower';
-import { ANG2RAD } from '../../../../helper/math';
 import { EnvironmentManager } from './EnvironmentManager';
-import { EventBridge } from '../../../../libs/EventBridge';
 import { GameWorker } from '../../GameWorker';
+import { ControlsManager } from './ControlsManager';
+import { GameEvents } from '../../../Events';
 
 //
 
@@ -17,12 +15,12 @@ export class ArenaScene extends GameScene {
 
     public scene: Scene;
     public camera: PerspectiveCamera;
+    public controls: ControlsManager;
 
     private _environment: EnvironmentManager;
 
     private gridHelper: GridHelper;
 
-    private _camControls: OrbitControls;
     protected _renderTarget: WebGLRenderTarget;
 
     //
@@ -30,7 +28,9 @@ export class ArenaScene extends GameScene {
     public init () : void {
 
         this.scene = new Scene();
-        this.camera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+        this.camera = new PerspectiveCamera( 75, Gfx.width / Gfx.height, 0.1, 1000 );
+
+        this.controls = new ControlsManager( this.camera );
 
         this.particleRenderer = new BatchedRenderer();
         this.scene.add( this.particleRenderer );
@@ -42,7 +42,7 @@ export class ArenaScene extends GameScene {
         this._environment = new EnvironmentManager();
         this._environment.init( this.scene );
 
-        EventBridge.onUIEvent( 'toggleGrid', this.toggleGrid );
+        GameWorker.addListener( GameEvents.GFX_TOGGLE_GRID, this.toggleGrid );
 
         this.addGrid();
         this.initCameraControls();
@@ -51,14 +51,16 @@ export class ArenaScene extends GameScene {
 
     public update ( delta: number, time: number ) : void {
 
-        this._camControls.update();
+        // this._camControls.update();
 
         this.particleRenderer.update( delta / 1000 );
 
         Gfx.renderer.setRenderTarget( this._renderTarget );
+        Gfx.renderer.setClearColor( 0xffffff );
+        Gfx.renderer.clear();
         Gfx.renderer.render( this.scene, this.camera );
 
-        Gfx.uiRenderer.render( this.scene, this.camera );
+        // Gfx.uiRenderer.render( this.scene, this.camera );
 
     };
 
@@ -91,37 +93,8 @@ export class ArenaScene extends GameScene {
 
     private initCameraControls () : void {
 
-        this._camControls = new OrbitControls(
-            this.camera,
-            Gfx.renderer.domElement
-        );
-
-        this._camControls.screenSpacePanning = false;
-
-        this._camControls.mouseButtons = {
-            LEFT: MOUSE.PAN,
-            MIDDLE: MOUSE.DOLLY,
-            RIGHT: MOUSE.ROTATE,
-        };
-
-        this._camControls.touches = {
-            ONE: TOUCH.PAN,
-            TWO: TOUCH.DOLLY_ROTATE,
-        };
-        this._camControls.enableRotate = false;
-        this._camControls.enableDamping = true;
-        this._camControls.dampingFactor = 0.05;
-
-        this._camControls.minPolarAngle = ANG2RAD(10);
-        this._camControls.maxPolarAngle = ANG2RAD(65);
-        this._camControls.maxDistance = 100;
-        this._camControls.minDistance = 25;
-
-        this._camControls.target.set(
-            TOWER_POSITIONS[ GameWorker.playerIndex ].x,
-            TOWER_POSITIONS[ GameWorker.playerIndex ].y,
-            TOWER_POSITIONS[ GameWorker.playerIndex ].z
-        );
+        this.camera.position.set( 0, 20, 10 );
+        this.camera.lookAt( 0, 0, 0 );
 
     };
 

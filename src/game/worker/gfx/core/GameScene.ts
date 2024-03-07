@@ -6,8 +6,8 @@ import { BatchedRenderer } from 'three.quarks';
 
 export abstract class GameScene {
 
-    public scene: Scene = new Scene();
-    public camera: PerspectiveCamera = new PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    public scene: Scene;
+    public camera: PerspectiveCamera;
     public particleRenderer: BatchedRenderer;
 
     protected _renderTarget: WebGLRenderTarget;

@@ -35,32 +35,33 @@ export class TextSprite {
         this.gameScene = gameScene;
         this.shouldRemove = false;
 
-        const textDiv = document.createElement("div");
-        textDiv.className = "textSprite";
-        textDiv.textContent = text;
-        textDiv.style.color = color;
+        // const textDiv = document.createElement("div");
+        // textDiv.className = "textSprite";
+        // textDiv.textContent = text;
+        // textDiv.style.color = color;
 
-        this.textUI = new CSS2DObject(textDiv);
-        this.textUI.position.set(position.x, position.y, position.z);
+        // this.textUI = new CSS2DObject(textDiv);
+        // this.textUI.position.set(position.x, position.y, position.z);
 
-        GameWorker.gameScene.add(this.textUI);
+        // GameWorker.gameScene.add(this.textUI);
 
-        const tweenAnimation = new TWEEN.Tween(this.textUI.position)
-            .to(
-                {
-                    x: this.textUI.position.x,
-                    y: this.textUI.position.y + (fastMode ? 5 : 15),
-                    z: this.textUI.position.z,
-                },
-                fastMode ? 300 : 3000
-            )
-            .easing(TWEEN.Easing.Linear.None)
-            .start();
+        // const tweenAnimation = new TWEEN.Tween(this.textUI.position)
+        //     .to(
+        //         {
+        //             x: this.textUI.position.x,
+        //             y: this.textUI.position.y + (fastMode ? 5 : 15),
+        //             z: this.textUI.position.z,
+        //         },
+        //         fastMode ? 300 : 3000
+        //     )
+        //     .easing(TWEEN.Easing.Linear.None)
+        //     .start();
 
-        tweenAnimation.onComplete(() => {
-            this.dispose();
-            this.shouldRemove = true;
-        });
+        // tweenAnimation.onComplete(() => {
+        //     this.dispose();
+        //     this.shouldRemove = true;
+        // });
+
     }
 
     dispose() {
@@ -70,17 +71,20 @@ export class TextSprite {
     }
 
     tick() {
-        const scaleFactor = 85;
-        const scaleVector = new Vector3();
-        const scale = Math.sqrt(
-            scaleVector
-                .subVectors(
-                    this.textUI.position,
-                    this.gameScene.camera.position
-                )
-                .length() / scaleFactor
-        );
 
-        this.textUI.element.style.fontSize = `${20 / scale}px`;
+        // const scaleFactor = 85;
+        // const scaleVector = new Vector3();
+        // const scale = Math.sqrt(
+        //     scaleVector
+        //         .subVectors(
+        //             this.textUI.position,
+        //             this.gameScene.camera.position
+        //         )
+        //         .length() / scaleFactor
+        // );
+
+        // this.textUI.element.style.fontSize = `${20 / scale}px`;
+
     }
+
 }

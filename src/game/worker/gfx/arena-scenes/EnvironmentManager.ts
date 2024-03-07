@@ -1,9 +1,9 @@
 
-import { AmbientLight, BoxGeometry, DoubleSide, LinearFilter, LinearMipMapLinearFilter, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Scene, TextureLoader, sRGBEncoding } from "three";
+import { AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Scene, TextureLoader } from "three";
 
 import { S3_BUCKET_URL } from "../../../../constants";
+import { ResourcesManager } from "../../managers/ResourcesManager";
 
-const groundTex = S3_BUCKET_URL + "/assets/textures/ground/small2.png";
 const tourPX = S3_BUCKET_URL + "/assets/textures/sky/tour_px.jpg";
 const tourNX = S3_BUCKET_URL + "/assets/textures/sky/tour_nx.jpg";
 const tourPY = S3_BUCKET_URL + "/assets/textures/sky/tour_py.jpg";
@@ -25,7 +25,7 @@ export class EnvironmentManager {
         this._scene = scene;
 
         this.initGround();
-        this.initSkyBox();
+        // this.initSkyBox();
         this.initLights();
 
         // this._scene.add(this._models.environment.scene);
@@ -65,19 +65,14 @@ export class EnvironmentManager {
 
     private initGround () : void {
 
-        const texture = new TextureLoader().load( groundTex );
-        texture.wrapS = RepeatWrapping;
-        texture.wrapT = RepeatWrapping;
-        texture.repeat.set( 400, 400 );
-        texture.anisotropy = 16;
-        texture.encoding = sRGBEncoding;
-        texture.magFilter = LinearFilter;
-        texture.minFilter = LinearMipMapLinearFilter;
+        const map = ResourcesManager.getTexture( "ground-small2" )!;
+        map.repeat.set( 100, 100 );
+        map.wrapS = map.wrapT = RepeatWrapping;
 
         const geometry = new PlaneGeometry( 1000, 1000 );
         const material = new MeshStandardMaterial({
-            side: DoubleSide,
-            map: texture,
+            map: map,
+            side: DoubleSide
         });
 
         const plane = new Mesh( geometry, material );
