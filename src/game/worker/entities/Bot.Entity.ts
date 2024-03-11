@@ -1,6 +1,5 @@
 
 import { Color, Matrix4, Object3D, Quaternion, Vector3 } from "three";
-// import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import TWEEN from "@tweenjs/tween.js";
 
@@ -16,6 +15,7 @@ import { createToonProjectile } from "../gfx/particles/ToonProjectile";
 import { ResourcesManager } from "../managers/ResourcesManager";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader";
 import { GameWorker } from "../GameWorker";
+import { GameEvents } from "../../Events";
 
 //
 
@@ -34,6 +34,7 @@ export class BotEntity {
 
     public botType: number;
     public targetPos: Vector3;
+    private healthPosition: Vector3 = new Vector3();
 
     public canRemove: boolean;
     public status: number;
@@ -46,7 +47,6 @@ export class BotEntity {
 
     public mesh: Object3D;
     public model: GLTF;
-    // public healthBarUI: CSS2DObject;
     public stunMesh: Object3D | null;
     public fireMesh: Object3D | null;
     public animController: BotAnimationController;
@@ -97,15 +97,15 @@ export class BotEntity {
         this.fireMesh = null;
         this.fireTime = 0;
 
-        // const healthBarDiv = document.createElement("div");
-        // healthBarDiv.className = "healthBar";
-
-        // const healthProgressDiv = document.createElement("div");
-        // healthProgressDiv.className = "healthBar__progress";
-
-        // healthBarDiv.appendChild(healthProgressDiv);
-
-        // this.healthBarUI = new CSS2DObject(healthBarDiv);
+        GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
+            id: `healthBar-${this.uuid}`,
+            props: {
+                className: "healthBar",
+                innerHTML: `
+                    <div class="healthBar__progress"></div>
+                `
+            }
+        });
 
         this.initialize();
 
@@ -119,16 +119,15 @@ export class BotEntity {
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        // GameWorker.gameScene.scene.add( this.healthBarUI );
         GameWorker.gameScene.scene.add( this.mesh );
 
     };
 
     private disposeHealthBar () : void {
 
-        // this.healthBarUI.remove();
-        // GameWorker.gameScene.scene.remove( this.healthBarUI );
-        // this.healthBarUI.element.remove();
+        GameWorker.sendToMain( GameEvents.UI_REMOVE_ELEMENT, {
+            id: `healthBar-${this.uuid}`
+        });
 
     };
 
@@ -355,25 +354,40 @@ export class BotEntity {
          * Configure HealthBar UI
          */
 
-        // this.healthBarUI.position.set(
-        //     this.mesh.position.x,
-        //     this.mesh.position.y + BOT_PROPS.modelHeight[this.botType],
-        //     this.mesh.position.z
-        // );
+        this.healthPosition.set( this.mesh.position.x, this.mesh.position.y + BOT_PROPS.modelHeight[this.botType], this.mesh.position.z );
 
-        // const scaleFactor = 85;
-        // const scaleVector = new Vector3();
-        // const scale = Math.sqrt( scaleVector.subVectors( this.healthBarUI.position, GameWorker.gameScene.camera.position ).length() / scaleFactor );
+        GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
+            id: `healthBar-${this.uuid}`,
+            position: {
+                x: this.healthPosition.x,
+                y: this.healthPosition.y,
+                z: this.healthPosition.z
+            }
+        });
 
-        // this.healthBarUI.element.style.width = `${ ( HEALTH_PIXEL * this.maxHp + 2 ) / scale }px`;
-        // this.healthBarUI.element.style.height = `${ ( 5 + 2 ) / scale }px`;
+        const scaleFactor = 85;
+        const scaleVector = new Vector3();
+        const scale = Math.sqrt( scaleVector.subVectors( this.healthPosition, GameWorker.gameScene.camera.position ).length() / scaleFactor );
 
-        // const progressBar = this.healthBarUI.element.children[0] as HTMLDivElement;
-        // progressBar.style.width = `${(HEALTH_PIXEL * this.hp) / scale}px`;
-        // progressBar.style.height = `${5 / scale}px`;
-        // progressBar.style.left = `${1 / scale}px`;
-        // progressBar.style.top = `${1 / scale}px`;
-        // progressBar.style.background = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `healthBar-${this.uuid}`,
+            styles: {
+                width: `${ ( HEALTH_PIXEL * this.maxHp + 2 ) / scale }px`,
+                height: `${ ( 5 + 2 ) / scale }px`
+            }
+        });
+
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `healthBar-${this.uuid}`,
+            class: "healthBar__progress",
+            styles: {
+                background: getColorForPercentage( this.hp / this.maxHp ),
+                width: `${ ( HEALTH_PIXEL * this.hp ) / scale }px`,
+                height: `${ 5 / scale }px`,
+                left: `${ 1 / scale }px`,
+                top: `${ 1 / scale }px`
+            }
+        });
 
         this.animController.tick();
 

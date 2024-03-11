@@ -14,6 +14,7 @@ import { BotManager } from "../managers/BotManager";
 import { StateManager } from "../states/StateManager";
 import { GameWorker } from "../GameWorker";
 import { ResourcesManager } from "../managers/ResourcesManager";
+import { GameEvents } from "../../Events";
 
 //
 
@@ -47,10 +48,11 @@ export class TowerEntity {
     public hp: number;
     public isDead: boolean;
     public towerMesh: any;
-    public healthBarUI: CSS2DObject;
     public playerIndex: number;
     public index: number;
     public sacrificeHP: number;
+
+    private healthBarPosition: Vector3 = new Vector3();
 
     //
 
@@ -74,25 +76,20 @@ export class TowerEntity {
         const towerModel = ResourcesManager.getModel("Buildings")?.scene.getObjectByName( 'orc_tower_Lv3_proto_orc_rts_0' ) as Object3D;
         this.towerMesh = SkeletonUtils.clone( towerModel );
 
-        // const wrapper = document.createElement("div");
-        // wrapper.className = "towerStatusBar";
+        // construct UI part
 
-        // const levelDiv = document.createElement("div");
-        // levelDiv.className = "level";
-
-        // const healthBarDiv = document.createElement("div");
-        // healthBarDiv.className = "healthBar";
-
-        // const healthProgressDiv = document.createElement("div");
-        // healthProgressDiv.className = "healthBar__progress";
-
-        // healthBarDiv.appendChild( healthProgressDiv );
-
-        // wrapper.appendChild( levelDiv );
-        // wrapper.appendChild( healthBarDiv );
-
-        // this.healthBarUI = new CSS2DObject( wrapper );
-        // GameWorker.gameScene.add( this.healthBarUI );
+        GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            props: {
+                className: "towerStatusBar",
+                innerHTML: `
+                    <div class="level">1</div>
+                    <div class="healthBar">
+                        <div class="healthBar__progress"></div>
+                    </div>
+                `
+            }
+        });
 
         this.initialize();
 
@@ -109,13 +106,13 @@ export class TowerEntity {
 
     public levelUp () : void {
 
-        // const element = document.getElementById( "gameLevel" );
-
-        // if ( element ) {
-
-        //     element.textContent = `Level ${ this.level }`;
-
-        // }
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: 'gameLevel',
+            props: {
+                textContent: `Level ${ this.level }`
+            }
+        });
 
         // visual effect
         const newVector = new Vector3(
@@ -143,65 +140,98 @@ export class TowerEntity {
 
     public renderHealthBar () : void {
 
-        this.healthBarUI.position.set(
-            this.towerMesh.position.x,
-            this.towerMesh.position.y + TOWER_HEIGHT,
-            this.towerMesh.position.z
-        );
+        this.healthBarPosition.set( this.towerMesh.position.x, this.towerMesh.position.y + TOWER_HEIGHT, this.towerMesh.position.z );
+
+        GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
+            id: `towerHealthBar_${ this.index }`,
+            position: {
+                x: this.healthBarPosition.x,
+                y: this.healthBarPosition.y,
+                z: this.healthBarPosition.z
+            }
+        });
 
         const scaleFactor = 85;
         const scaleVector = new Vector3();
-        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarUI.position, GameWorker.gameScene.camera.position ).length() / scaleFactor );
+        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarPosition, GameWorker.gameScene.camera.position ).length() / scaleFactor );
 
-        this.healthBarUI.element.classList.add("flex");
-        this.healthBarUI.element.style.gap = `${2 / scale}px`;
-        this.healthBarUI.element.style.padding = `${2 / scale}px`;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            styles: {
+                display: 'flex'
+            }
+        });
 
-        const levelDiv = this.healthBarUI.element.getElementsByClassName( "level" )[0] as HTMLDivElement;
-        levelDiv.textContent = String(this.level);
-        levelDiv.style.fontSize = `${13 / scale}px`;
-        levelDiv.style.borderWidth = `${1 / scale}px`;
-        levelDiv.style.padding = `0 ${5 / scale}px`;
-        levelDiv.style.height = `${13 / scale}px`;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: 'towerStatusBar',
+            styles: {
+                gap: `${ 2 / scale }px`,
+                padding: `${ 2 / scale }px`,
+                transform: `scale( ${ 1 / scale } )`
+            }
+        });
 
-        const healthBar = this.healthBarUI.element.getElementsByClassName( "healthBar" )[0] as HTMLDivElement;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: 'level',
+            props: {
+                textContent: this.level.toString()
+            },
+            styles: {
+                fontSize: `${13 / scale}px`,
+                borderWidth: `${1 / scale}px`,
+                padding: `0 ${5 / scale}px`,
+                height: `${13 / scale}px`
+            }
+        });
 
-        healthBar.style.width = `${(TOWER_HEALTH_WIDTH + 2) / scale}px`;
-        healthBar.style.height = `${(TOWER_HEALTH_HEIGHT + 2) / scale}px`;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: 'healthBar',
+            styles: {
+                width: `${(TOWER_HEALTH_WIDTH + 2) / scale}px`,
+                height: `${(TOWER_HEALTH_HEIGHT + 2) / scale}px`
+            }
+        });
 
-        const progressBar = healthBar.children[0] as HTMLDivElement;
-        progressBar.style.width = `${
-            (TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale
-        }px`;
-        progressBar.style.height = `${TOWER_HEALTH_HEIGHT / scale}px`;
-        progressBar.style.left = `${1 / scale}px`;
-        progressBar.style.top = `${1 / scale}px`;
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: 'healthBar__progress',
+            styles: {
+                width: `${(TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
+                height: `${TOWER_HEALTH_HEIGHT / scale}px`,
+                left: `${1 / scale}px`,
+                top: `${1 / scale}px`,
+                background: getColorForPercentage( this.hp / this.maxHp )
+            }
+        });
 
-        progressBar.style.background = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
+        if ( this.index === GameWorker.playerIndex ) {
 
-        if ( this.index !== this.playerIndex ) return;
+            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+                id: `towerHealthBar_${ this.index }`,
+                class: 'currentHP',
+                props: {
+                    textContent: this.playerState.gold.toString()
+                }
+            });
 
-        const currentHealthDiv = document.getElementById("currentHP");
+            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+                id: `towerHealthBar_${ this.index }`,
+                class: 'maxHP',
+                props: {
+                    textContent: ` / ${this.maxHp}`
+                }
+            });
 
-        if ( currentHealthDiv ) {
-
-            currentHealthDiv.textContent = `${this.hp}`;
-
-        }
-
-        const maxHealthDiv = document.getElementById("maxHP");
-
-        if ( maxHealthDiv ) {
-
-            maxHealthDiv.textContent = ` / ${this.maxHp}`;
-
-        }
-
-        const healthBarDiv = document.getElementById("towerHealthBar");
-
-        if ( healthBarDiv ) {
-
-            healthBarDiv.style.width = `${(this.hp / this.maxHp) * 100}%`;
+            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+                id: `towerHealthBar_${ this.index }`,
+                class: 'healthBar',
+                styles: {
+                    width: `${(this.hp / this.maxHp) * 100}%`
+                }
+            });
 
         }
 
@@ -227,7 +257,7 @@ export class TowerEntity {
 
         }
 
-        // this.renderHealthBar();
+        this.renderHealthBar();
 
     };
 
@@ -235,14 +265,14 @@ export class TowerEntity {
 
     private updateHealth () : void {
 
-        // const healthBarDiv = document.getElementsByClassName( "status_player_health" )[ this.index ] as HTMLDivElement;
-
-        // if ( healthBarDiv ) {
-
-        //     healthBarDiv.style.width = `${ ( this.hp / this.maxHp ) * 100 }%`;
-        //     healthBarDiv.style.backgroundColor = `${ getColorForPercentage( this.hp / this.maxHp ) }`;
-
-        // }
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${ this.index }`,
+            class: "healthBar__progress",
+            props: {
+                width: `${ ( TOWER_HEALTH_WIDTH * this.hp ) / this.maxHp }px`,
+                backgroundColor: getColorForPercentage( this.hp / this.maxHp )
+            }
+        });
 
     };
 

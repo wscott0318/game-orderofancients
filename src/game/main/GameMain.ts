@@ -2,6 +2,7 @@
 import EventEmitter from "events";
 import { LobbyInfo } from "../Types";
 import { GameEvents } from "../Events";
+import { UIRenderer } from "./UIRenderer";
 
 //
 
@@ -19,6 +20,8 @@ class GameMainCore extends EventEmitter {
     public meId: string;
     public lobbyInfo: LobbyInfo;
     public playerIndex: number;
+
+    private uiRenderer: UIRenderer;
 
     //
 
@@ -38,6 +41,28 @@ class GameMainCore extends EventEmitter {
     };
 
     public initGFX ( props: IGameMainProps ) : void {
+
+        this.uiRenderer = new UIRenderer();
+        this.uiRenderer.init( props.canvas.parentElement as HTMLDivElement );
+
+        this.addListener( GameEvents.UI_ADD_ELEMENT, this.uiRenderer.addElement );
+        this.addListener( GameEvents.UI_REMOVE_ELEMENT, this.uiRenderer.removeElement );
+        this.addListener( GameEvents.UI_UPDATE_ELEMENT, this.uiRenderer.updateElement );
+        this.addListener( GameEvents.UI_SET_ELEMENT_POSITION, this.uiRenderer.setElementPosition );
+        this.addListener( GameEvents.UI_SET_CAMERA_POSITION, this.uiRenderer.setCameraPosition );
+
+        window.addEventListener( 'resize', () => {
+
+            this.dispatchEvent( GameEvents.RESIZE_GFX, {
+                windowWidth:    window.innerWidth,
+                windowHeight:   window.innerHeight,
+                screenWidth:    window.screen.width,
+                screenHeight:   window.screen.height
+            });
+
+        });
+
+        //
 
         // @ts-ignore
         const offscreen = props.canvas.transferControlToOffscreen();

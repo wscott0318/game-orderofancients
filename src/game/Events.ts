@@ -7,6 +7,7 @@ export const GameEvents = {
     NETWORK_INITED: 'NetworkInited',
 
     INIT_GFX: 'InitGFX',
+    RESIZE_GFX: 'ResizeGFX',
 
     LOAD_ASSETS: 'LoadAssets',
     ASSETS_LOADING_PROGRESS_UPDATE: 'AssetsLoadingProgressUpdate',
@@ -22,5 +23,11 @@ export const GameEvents = {
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
 
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
+
+    UI_SET_CAMERA_POSITION: 'UISetCameraPosition',
+    UI_ADD_ELEMENT: 'UIAddElement',
+    UI_REMOVE_ELEMENT: 'UIRemoveElement',
+    UI_UPDATE_ELEMENT: 'UIUpdateElement',
+    UI_SET_ELEMENT_POSITION: 'UISetElementPosition',
 
 };

@@ -1,11 +1,11 @@
 
+import TWEEN from "@tweenjs/tween.js";
 import { WebGLRenderer } from 'three';
-// import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer';
-// import Stats from 'stats-gl';
 
 import { GameScene } from './GameScene';
 import { ComposerPass } from './Composer';
 import { GameWorker } from '../../GameWorker';
+import { GameEvents } from '../../../Events';
 
 //
 
@@ -32,7 +32,6 @@ class GfxCore {
     public devicePixelRatio: number = 1;
 
     public renderer: WebGLRenderer;
-    // public uiRenderer: CSS2DRenderer;
 
     public activeGameScene: GameScene | null = null;
     private gameScenes: GameScene[] = [];
@@ -48,6 +47,8 @@ class GfxCore {
     //
 
     public init ( params: IGfxInitProps ) : void {
+
+        GameWorker.addListener( GameEvents.RESIZE_GFX, this.resize );
 
         this.width = params.windowWidth;
         this.height = params.windowHeight;
@@ -99,6 +100,8 @@ class GfxCore {
 
         this.composer.render( this.renderer );
 
+        TWEEN.update();
+
         // this.stats.end();
         // this.stats.update();
 
@@ -124,7 +127,6 @@ class GfxCore {
 
         }
 
-        // this.uiRenderer.domElement.remove();
         this.renderer.domElement.remove();
         this.renderer.dispose();
         this.gameScenes = [];
@@ -136,10 +138,12 @@ class GfxCore {
 
     //
 
-    private resize () : void {
+    private resize = ( params: { windowWidth: number, windowHeight: number } ) : void => {
+
+        this.width = params.windowWidth;
+        this.height = params.windowHeight;
 
         this.renderer.setSize( this.width, this.height, false );
-        // this.uiRenderer.setSize( this.width, this.height );
 
         if ( this.activeGameScene ) this.activeGameScene.resize();
 
@@ -152,15 +156,6 @@ class GfxCore {
 
         this.renderer.setPixelRatio( this.devicePixelRatio );
         this.renderer.setSize( this.width, this.height, false );
-
-        //
-
-        // this.uiRenderer = new CSS2DRenderer();
-        // this.uiRenderer.setSize( this.width, this.height );
-        // this.uiRenderer.domElement.id = 'uiRenderer';
-        // this.uiRenderer.domElement.style.position = 'absolute';
-        // this.uiRenderer.domElement.style.top = '0px';
-        // document.body.appendChild( this.uiRenderer.domElement );
 
     };
 

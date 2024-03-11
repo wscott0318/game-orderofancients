@@ -15,6 +15,7 @@ export class ArenaScene extends GameScene {
 
     public scene: Scene;
     public camera: PerspectiveCamera;
+
     public controls: ControlsManager;
 
     private _environment: EnvironmentManager;
@@ -60,8 +61,6 @@ export class ArenaScene extends GameScene {
         Gfx.renderer.clear();
         Gfx.renderer.render( this.scene, this.camera );
 
-        // Gfx.uiRenderer.render( this.scene, this.camera );
-
     };
 
     public resize () : void {
@@ -95,6 +94,19 @@ export class ArenaScene extends GameScene {
 
         this.camera.position.set( 0, 20, 10 );
         this.camera.lookAt( 0, 0, 0 );
+
+        GameWorker.sendToMain( GameEvents.UI_SET_CAMERA_POSITION, {
+            pos: {
+                x: this.camera.position.x,
+                y: this.camera.position.y,
+                z: this.camera.position.z
+            },
+            target: {
+                x: 0,
+                y: 0,
+                z: 0
+            }
+        });
 
     };
 

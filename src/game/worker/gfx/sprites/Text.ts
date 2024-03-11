@@ -1,10 +1,11 @@
 
 import { Vector3 } from "three";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import TWEEN from "@tweenjs/tween.js";
 
 import { GameScene } from "..";
 import { GameWorker } from "../../GameWorker";
+import { GameEvents } from "../../../Events";
+import { generateUUID } from "three/src/math/MathUtils";
 
 //
 
@@ -18,73 +19,102 @@ interface TextSpriteProps {
 
 export class TextSprite {
 
-    public textUI: CSS2DObject;
+    public uuid: string;
     public shouldRemove: boolean;
     public gameScene: GameScene;
+    public position: Vector3 = new Vector3();
 
     //
 
-    constructor({
-        gameScene,
-        text,
-        color,
-        position,
-        fastMode = false,
-    }: TextSpriteProps) {
+    constructor ( { gameScene, text, color, position, fastMode = false }: TextSpriteProps ) {
+
+        this.uuid = generateUUID();
 
         this.gameScene = gameScene;
         this.shouldRemove = false;
+        this.position.set( position.x, position.y, position.z );
 
-        // const textDiv = document.createElement("div");
-        // textDiv.className = "textSprite";
-        // textDiv.textContent = text;
-        // textDiv.style.color = color;
+        GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
+            id: `textSprite-${this.uuid}`,
+            class: 'textSprite',
+            props: {
+                textContent: text
+            },
+            styles: {
+                color: color
+            }
+        });
 
-        // this.textUI = new CSS2DObject(textDiv);
-        // this.textUI.position.set(position.x, position.y, position.z);
+        GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
+            id: `textSprite-${this.uuid}`,
+            position: {
+                x: position.x,
+                y: position.y,
+                z: position.z
+            }
+        });
 
-        // GameWorker.gameScene.add(this.textUI);
+        const tweenAnimation = new TWEEN.Tween( this.position )
+            .to(
+                {
+                    x: this.position.x,
+                    y: this.position.y + ( fastMode ? 5 : 8 ),
+                    z: this.position.z,
+                },
+                fastMode ? 300 : 3000
+            )
+            .easing(TWEEN.Easing.Linear.None)
+            .start();
 
-        // const tweenAnimation = new TWEEN.Tween(this.textUI.position)
-        //     .to(
-        //         {
-        //             x: this.textUI.position.x,
-        //             y: this.textUI.position.y + (fastMode ? 5 : 15),
-        //             z: this.textUI.position.z,
-        //         },
-        //         fastMode ? 300 : 3000
-        //     )
-        //     .easing(TWEEN.Easing.Linear.None)
-        //     .start();
+        tweenAnimation.onUpdate(() => {
 
-        // tweenAnimation.onComplete(() => {
-        //     this.dispose();
-        //     this.shouldRemove = true;
-        // });
+            GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
+                id: `textSprite-${this.uuid}`,
+                position: {
+                    x: this.position.x,
+                    y: this.position.y,
+                    z: this.position.z
+                }
+            });
+
+        });
+
+        tweenAnimation.onComplete(() => {
+            this.dispose();
+            this.shouldRemove = true;
+        });
 
     }
 
-    dispose() {
-        this.textUI.remove();
-        this.gameScene.remove(this.textUI);
-        this.textUI.element.remove();
-    }
+    public dispose () : void {
 
-    tick() {
+        GameWorker.sendToMain( GameEvents.UI_REMOVE_ELEMENT, {
+            id: `textSprite-${this.uuid}`
+        });
 
-        // const scaleFactor = 85;
-        // const scaleVector = new Vector3();
-        // const scale = Math.sqrt(
-        //     scaleVector
-        //         .subVectors(
-        //             this.textUI.position,
-        //             this.gameScene.camera.position
-        //         )
-        //         .length() / scaleFactor
-        // );
+    };
 
-        // this.textUI.element.style.fontSize = `${20 / scale}px`;
+    public tick () : void {
 
-    }
+        const scaleFactor = 85;
+        const scaleVector = new Vector3();
 
-}
+        const scale = Math.sqrt(
+            scaleVector
+                .subVectors(
+                    this.position,
+                    this.gameScene.camera.position
+                )
+                .length() / scaleFactor
+        );
+
+        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
+            id: `textSprite-${this.uuid}`,
+            styles: {
+                fontSize: `${20 / scale}px`
+            }
+        });
+
+    };
+
+};

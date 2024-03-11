@@ -1,6 +1,4 @@
 
-import TWEEN from "@tweenjs/tween.js";
-
 import { ParticleEffect } from "./gfx/managers/ParticleEffect";
 import { SpriteManager } from "./gfx/managers/SpriteManager";
 import { TowerManager } from "./managers/TowerManager";
@@ -166,14 +164,6 @@ export class GameWorkerCore extends EventEmitter {
     private towerSpellUpgrade = ( data: any ) : void => {
 
         Network.socket?.emit( SOCKET_EVENTS.UPGRADE_SPELL, data.item, data.itemIndex );
-
-    };
-
-    public animate = () : void => {
-
-        requestAnimationFrame( this.animate );
-
-        TWEEN.update();
 
     };
 

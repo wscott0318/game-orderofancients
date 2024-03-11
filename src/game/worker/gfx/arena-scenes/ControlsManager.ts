@@ -2,13 +2,14 @@
 import { PerspectiveCamera, Vector2, Vector3 } from "three";
 
 import { GameWorker } from "../../GameWorker";
+import { GameEvents } from "../../../Events";
 
 //
 
 export class ControlsManager {
 
     private camera: PerspectiveCamera;
-    private offset: Vector3 = new Vector3( 0, 0, 20 );
+    private offset: Vector3 = new Vector3( 0, 20, 10 );
 
     private mouseKeys: { [key: number]: boolean } = {};
     private mousePos: Vector2 = new Vector2();
@@ -56,8 +57,23 @@ export class ControlsManager {
         const dx = event.x - this.mousePos.x;
         const dy = event.y - this.mousePos.y;
 
+        // need to move to render loop later
+
         this.camera.position.x -= dx / 50;
         this.camera.position.z -= dy / 50;
+
+        GameWorker.sendToMain( GameEvents.UI_SET_CAMERA_POSITION, {
+            pos: {
+                x: this.camera.position.x,
+                y: this.camera.position.y,
+                z: this.camera.position.z
+            },
+            target: {
+                x: this.camera.position.x - this.offset.x,
+                y: this.camera.position.y - this.offset.y,
+                z: this.camera.position.z - this.offset.z,
+            }
+        });
 
         this.mousePos.set( event.x, event.y );
 
