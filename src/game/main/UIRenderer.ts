@@ -160,6 +160,21 @@ export class UIRenderer {
 
     };
 
+    public dispose = () : void => {
+
+        if ( ! this.inited ) return;
+
+        this.elements.forEach( ( element ) => {
+
+            this.scene.remove( element );
+
+        } );
+
+        this.elements.clear();
+        this.renderer.domElement.remove();
+
+    };
+
     //
 
     private resize = () : void => {

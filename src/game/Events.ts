@@ -21,13 +21,17 @@ export const GameEvents = {
     START_GAME: 'StartGame',
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
+    SET_PLAYER_HEALTH: 'SetPlayerHealth',
 
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
 
+    UI_CLEAR: 'UIClear',
     UI_SET_CAMERA_POSITION: 'UISetCameraPosition',
     UI_ADD_ELEMENT: 'UIAddElement',
     UI_REMOVE_ELEMENT: 'UIRemoveElement',
     UI_UPDATE_ELEMENT: 'UIUpdateElement',
     UI_SET_ELEMENT_POSITION: 'UISetElementPosition',
+
+    DISPOSE: 'Dispose'
 
 };

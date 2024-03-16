@@ -5,11 +5,7 @@ import { Camera, HemisphereLight, SpotLight, Vector2, Vector3 } from "three";
 import { CAMERA_POS } from "../../../../constants";
 import { TOWER_POSITIONS } from "../../../../constants/tower";
 import { GameScene } from "..";
-
-interface AnimationManagerProps {
-    gameScene: GameScene;
-    playerIndex: number;
-}
+import { GameWorker } from "../../GameWorker";
 
 //
 
@@ -20,19 +16,19 @@ export class AnimationManager {
     public _camera: Camera;
     public _spotLight: SpotLight;
     public _hemiLight: HemisphereLight;
-    public _playerIndex: number;
 
     //
 
-    constructor ( params: AnimationManagerProps ) {
+    constructor ( gameScene: GameScene ) {
 
-        this.gameScene = params.gameScene;
-        this._playerIndex = params.playerIndex;
+        this.gameScene = gameScene;
+
+        const playerIndex = GameWorker.playerIndex;
 
         this._towerPosition = new Vector3(
-            TOWER_POSITIONS[this._playerIndex].x,
-            TOWER_POSITIONS[this._playerIndex].y,
-            TOWER_POSITIONS[this._playerIndex].z
+            TOWER_POSITIONS[ playerIndex ].x,
+            TOWER_POSITIONS[ playerIndex ].y,
+            TOWER_POSITIONS[ playerIndex ].z
         );
 
         // this._spotLight = this._sceneRenderer._spotLightArray[ params.playerIndex ];
@@ -114,6 +110,12 @@ export class AnimationManager {
         //     });
 
         // });
+
+    };
+
+    public dispose () : void {
+
+        // todo
 
     };
 

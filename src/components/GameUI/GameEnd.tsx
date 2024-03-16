@@ -1,12 +1,10 @@
 
-import { useEffect } from "react";
 import styled from "styled-components";
 import Fireworks from "@fireworks-js/react";
 
 import { useGame } from "../../hooks/useGame";
-import { GAME_MODES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
+import { GAME_MODES, GAME_STATES, PLAYER_COLOR, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
-import { SOCKET_EVENTS } from "../../constants/socket";
 
 const playerImg1 = S3_BUCKET_URL + "/assets/users/jack.png";
 const playerImg2 = S3_BUCKET_URL + "/assets/users/2.png";
@@ -89,26 +87,18 @@ export const GameEndUI = () => {
 
     const { exitGameAction, restartGameAction } = useGame();
 
-    const { gameMode, lobbyInfo } = useGameContext();
+    const { gameMode, currentGameState, lobbyInfo } = useGameContext();
 
-    useEffect(() => {
-        // todo
-        // Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
-    }, []);
+    const isVictory = currentGameState === GAME_STATES.WON;
 
-    /**
-     * Win if player stands up for 1.5 mins...
-     */
-
-    // todo: 
-    const isvictory = false; // (game as Game).towerManager.get( game._playerIndex ).time.totalTimeTracker > 90;
+    //
 
     return (
         <GameEnd className="GameEnd flex justify-center items-center">
             <div className="gameend h-fit flex flex-col items-center">
                 <img
                     className="vitory-logo relative w-full"
-                    src={isvictory ? victoryImg : defeatImg}
+                    src={ isVictory ? victoryImg : defeatImg }
                 />
 
                 {gameMode === GAME_MODES.Lobby && (
@@ -150,7 +140,7 @@ export const GameEndUI = () => {
                 <div
                     className="buttons relative top-[-5vw] flex font-bold"
                     style={{
-                        justifyContent: isvictory ? "space-between" : "center",
+                        justifyContent: isVictory ? "space-between" : "center",
                     }}
                 >
                     <button
@@ -158,7 +148,7 @@ export const GameEndUI = () => {
                         onClick={exitGameAction}
                     />
 
-                    {isvictory && (
+                    { isVictory && (
                         <button
                             className="playanother imageButton relative w-[45%] aspect-[652/170] text-[#e9c967]"
                             onClick={restartGameAction}
@@ -167,7 +157,7 @@ export const GameEndUI = () => {
                 </div>
             </div>
 
-            {isvictory && (
+            { isVictory && (
                 <Fireworks className="absolute w-full h-full top-0 pointer-events-none" />
             )}
         </GameEnd>

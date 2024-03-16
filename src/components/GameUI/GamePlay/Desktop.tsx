@@ -1,3 +1,4 @@
+
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -8,8 +9,12 @@ import {
     PLAYER_COLOR,
     S3_BUCKET_URL,
 } from "../../../constants";
+
 import { useGameContext } from "../../../contexts/game-context";
 import { GameMain } from "../../../game/main/GameMain";
+import { GameEvents } from "../../../game/Events";
+
+//
 
 const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
 const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
@@ -400,6 +405,8 @@ const TimeBar = styled.div`
     transition: all 1s;
 `;
 
+//
+
 export const Desktop = ({
     upgrades,
     profileSpells,
@@ -417,6 +424,9 @@ export const Desktop = ({
     const [ hoveredSpell, setHoveredSpell ]: [any, any] = useState(null);
     const [ goldValue, setGoldValue ] = useState(0);
     const [ incomeValue, setIncomeValue ] = useState(0);
+    const [ healthValue, setHealthValue ] = useState(0);
+    const [ maxHealthValue, setMaxHealthValue ] = useState(0);
+    const [ level, setLevel ] = useState(1);
 
     const { gameMode, lobbyInfo } = useGameContext();
 
@@ -431,6 +441,14 @@ export const Desktop = ({
         const updateIncome = ( income: number ) => {
 
             setIncomeValue( income );
+
+        };
+
+        const setHealth = ( props: { hp: number, maxHp: number, level: number } ) => {
+
+            setHealthValue( props.hp );
+            setMaxHealthValue( props.maxHp );
+            setLevel( props.level );
 
         };
 
@@ -450,6 +468,7 @@ export const Desktop = ({
         GameMain.addListener( 'updateGold', updateGold );
         GameMain.addListener( 'updateIncome', updateIncome );
         GameMain.addListener( 'tickRound', tickRound );
+        GameMain.addListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
 
         gameMenuFadeInAnim
             .add("start")
@@ -466,6 +485,7 @@ export const Desktop = ({
             GameMain.removeListener( 'updateGold', updateGold );
             GameMain.removeListener( 'updateIncome', updateIncome );
             GameMain.removeListener( 'tickRound', tickRound );
+            GameMain.removeListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
 
         };
 
@@ -634,7 +654,7 @@ export const Desktop = ({
                         <div className="name roundfont profileFont h-[28%] flex flex-col items-center justify-evenly">
                             <p className="text-white">Jacky555</p>
                             <p className="gradient-text1" id="gameLevel">
-                                Level 1
+                                Level { level }
                             </p>
                         </div>
                     </div>
@@ -652,19 +672,19 @@ export const Desktop = ({
                                 id="towerHealthBar"
                                 className="absolute w-[100%] h-[100%] rounded-[10px] border-[px] border-black"
                                 style={{
-                                    backgroundImage:
-                                        "url('assets/images/status-slider.png')",
-                                    backgroundSize: "auto 100%",
+                                    backgroundImage: "url('assets/images/status-slider.png')",
+                                    backgroundSize: `auto 100%`,
+                                    width: `${(healthValue / maxHealthValue) * 100}%`,
                                 }}
                             ></div>
                         </div>
 
                         <div className="absolute statusFont_small">
                             <span className="text-[#e9e502]" id="currentHP">
-                                1450{" "}
+                                { healthValue }{" "}
                             </span>
                             <span className="text-white" id="maxHP">
-                                / 1500
+                                / { maxHealthValue }
                             </span>
                         </div>
                     </div>
@@ -835,11 +855,7 @@ export const Desktop = ({
                                         {lobbyInfo?.players.map(
                                             (player: any, index: number) => (
                                                 <tr
-                                                    style={{
-                                                        color: PLAYER_COLOR[
-                                                            index
-                                                        ],
-                                                    }}
+                                                    style={{ color: PLAYER_COLOR[ index ] }}
                                                     key={`player${index}`}
                                                 >
                                                     <td

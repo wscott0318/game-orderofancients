@@ -119,7 +119,7 @@ export class BotEntity {
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
 
-        GameWorker.gameScene.scene.add( this.mesh );
+        GameWorker.arenaScene.add( this.mesh );
 
     };
 
@@ -136,7 +136,7 @@ export class BotEntity {
         if ( ! this.stunMesh ) return;
 
         disposeMesh( this.stunMesh );
-        GameWorker.gameScene.scene.remove( this.stunMesh );
+        GameWorker.arenaScene.remove( this.stunMesh );
 
     };
 
@@ -145,7 +145,7 @@ export class BotEntity {
         if ( ! this.fireMesh ) return;
 
         disposeMesh( this.fireMesh );
-        GameWorker.gameScene.scene.remove( this.fireMesh );
+        GameWorker.arenaScene.remove( this.fireMesh );
 
     };
 
@@ -155,8 +155,8 @@ export class BotEntity {
 
         this.animController.dispose();
 
-        disposeMesh(this.mesh);
-        GameWorker.gameScene.scene.remove(this.mesh);
+        disposeMesh( this.mesh );
+        GameWorker.arenaScene.remove( this.mesh );
 
         this.disposeStunMesh();
 
@@ -164,7 +164,7 @@ export class BotEntity {
 
     public kill () : void {
 
-        this.animController.playAnimation(ANIMATION_TYPE["dead"]);
+        this.animController.playAnimation( ANIMATION_TYPE["dead"] );
 
         this.status = BOT_STATUS["dead"];
 
@@ -172,7 +172,7 @@ export class BotEntity {
         this.disposeStunMesh();
         this.disposeFireMesh();
 
-        const tweenAnimation = new TWEEN.Tween(this.mesh.position)
+        const tweenAnimation = new TWEEN.Tween( this.mesh.position )
             .to(
                 {
                     x: this.mesh.position.x,
@@ -181,11 +181,13 @@ export class BotEntity {
                 },
                 1000
             )
-            .delay(3000)
+            .delay( 3000 )
             .start();
 
-        tweenAnimation.onComplete(() => {
+        tweenAnimation.onComplete( () => {
+
             this.dispose();
+
         });
 
     };
@@ -203,7 +205,7 @@ export class BotEntity {
                 this.stunMesh = new Object3D();
 
                 const particle = createStun(
-                    GameWorker.gameScene.particleRenderer,
+                    GameWorker.arenaScene.particleRenderer,
                     [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
                 );
 
@@ -221,7 +223,7 @@ export class BotEntity {
                     particleMesh.scale.set(0.7, 0.7, 0.7);
 
                     this.stunMesh = particleMesh;
-                    GameWorker.gameScene.scene.add(this.stunMesh);
+                    GameWorker.arenaScene.add(this.stunMesh);
 
                 });
 
@@ -290,7 +292,7 @@ export class BotEntity {
             if ( ! this.fireMesh ) {
 
                 const particle = createToonProjectile(
-                    GameWorker.gameScene.particleRenderer,
+                    GameWorker.arenaScene.particleRenderer,
                     [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
                 );
 
@@ -300,7 +302,7 @@ export class BotEntity {
 
                 this.fireMesh = particle;
 
-                GameWorker.gameScene.scene.add(this.fireMesh);
+                GameWorker.arenaScene.add(this.fireMesh);
 
             }
 
@@ -367,7 +369,7 @@ export class BotEntity {
 
         const scaleFactor = 85;
         const scaleVector = new Vector3();
-        const scale = Math.sqrt( scaleVector.subVectors( this.healthPosition, GameWorker.gameScene.camera.position ).length() / scaleFactor );
+        const scale = Math.sqrt( scaleVector.subVectors( this.healthPosition, GameWorker.arenaScene.camera.position ).length() / scaleFactor );
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
             id: `healthBar-${this.uuid}`,

@@ -21,9 +21,10 @@ export const useGame = () => {
     /**
      * Canvas Game Ref
      */
+
     const canvasDivRef = useRef(null);
 
-    const createGame = useCallback(async () => {
+    const createGame = useCallback( () => {
 
         GameMain.dispatchEvent( GameEvents.INIT_NETWORK );
         GameMain.dispatchEvent( GameEvents.LOAD_ASSETS );
@@ -34,20 +35,21 @@ export const useGame = () => {
 
         });
 
-    }, []);
+        GameMain.addListener( GameEvents.SET_STATE, ( state ) => {
 
-    const createGameInstance = () => {
+            setCurrentGameState( state );
 
-        GameMain.initGFX({
-            canvas:                 ( canvasDivRef.current! as HTMLElement ).children[0] as HTMLCanvasElement,
-            gameMode:               gameMode
         });
 
-    };
+    }, []);
 
     const startGame = () => {
 
-        createGameInstance();
+        GameMain.initGFX({
+            container:      canvasDivRef.current! as HTMLDivElement,
+            gameMode:       gameMode
+        });
+
         setGameState( GAME_STATES.PLAYING );
 
     };
@@ -62,7 +64,6 @@ export const useGame = () => {
     const setGameState = (state: number) => {
 
         GameMain.dispatchEvent( GameEvents.SET_STATE, state );
-
         setCurrentGameState( state );
 
     };

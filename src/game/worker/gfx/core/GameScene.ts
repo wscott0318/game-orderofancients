@@ -10,12 +10,13 @@ export abstract class GameScene {
     public camera: PerspectiveCamera;
     public particleRenderer: BatchedRenderer;
 
-    protected _renderTarget: WebGLRenderTarget;
+    protected renderTarget: WebGLRenderTarget;
 
     //
 
     public abstract init () : void;
     public abstract update ( delta: number, time: number ) : void;
+    public abstract render ( delta: number, time: number ) : void;
     public abstract resize () : void;
     public abstract getRenderTarget () : WebGLRenderTarget;
     public abstract dispose () : void;

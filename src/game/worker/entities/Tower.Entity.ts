@@ -1,17 +1,13 @@
 
 import { Object3D, Vector3 } from "three";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
-import { GAME_STATES } from "../../../constants";
 import { TOWER_HEALTH_HEIGHT, TOWER_HEALTH_WIDTH } from "../../../constants/gameUI";
 import { getColorForPercentage } from "../../../helper/color";
-import { ParticleEffect } from "../gfx/managers/ParticleEffect";
 import { TOWER_HEIGHT, TOWER_POSITIONS } from "../../../constants/tower";
 import { PlayerStateComponent } from "../components/PlayerState.Component";
 import { TimeComponent } from "../components/Time.Component";
 import { BotManager } from "../managers/BotManager";
-import { StateManager } from "../states/StateManager";
 import { GameWorker } from "../GameWorker";
 import { ResourcesManager } from "../managers/ResourcesManager";
 import { GameEvents } from "../../Events";
@@ -19,9 +15,8 @@ import { GameEvents } from "../../Events";
 //
 
 export interface ITowerProperties {
-    particleEffect:     ParticleEffect;
-    playerIndex:        number;
-    index:              number;
+    id:             number;
+    playerIndex:    number;
 };
 
 export interface ITowerStatus {
@@ -38,8 +33,6 @@ export class TowerEntity {
 
     public botManager: BotManager;
 
-    public stateManager: StateManager;
-    public particleEffect: ParticleEffect;
     public playerState: PlayerStateComponent;
     public time: TimeComponent;
 
@@ -49,7 +42,7 @@ export class TowerEntity {
     public isDead: boolean;
     public towerMesh: any;
     public playerIndex: number;
-    public index: number;
+    public id: number;
     public sacrificeHP: number;
 
     private healthBarPosition: Vector3 = new Vector3();
@@ -58,13 +51,12 @@ export class TowerEntity {
 
     constructor ( params: ITowerProperties ) {
 
-        this.botManager = new BotManager( params.index );
+        this.botManager = new BotManager( params.id );
         this.playerState = new PlayerStateComponent();
         this.time = new TimeComponent({ tower: this });
 
-        this.particleEffect = params.particleEffect;
         this.playerIndex = params.playerIndex;
-        this.index = params.index;
+        this.id = params.id;
 
         this.level = 1;
         this.hp = 1700;
@@ -79,7 +71,7 @@ export class TowerEntity {
         // construct UI part
 
         GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             props: {
                 className: "towerStatusBar",
                 innerHTML: `
@@ -97,17 +89,17 @@ export class TowerEntity {
 
     public initialize () : void {
 
-        this.towerMesh.position.x = TOWER_POSITIONS[ this.index ].x;
-        this.towerMesh.position.y = TOWER_POSITIONS[ this.index ].y;
-        this.towerMesh.position.z = TOWER_POSITIONS[ this.index ].z;
-        GameWorker.gameScene.add( this.towerMesh );
+        this.towerMesh.position.x = TOWER_POSITIONS[ this.id ].x;
+        this.towerMesh.position.y = TOWER_POSITIONS[ this.id ].y;
+        this.towerMesh.position.z = TOWER_POSITIONS[ this.id ].z;
+        GameWorker.arenaScene.add( this.towerMesh );
 
     };
 
     public levelUp () : void {
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: 'gameLevel',
             props: {
                 textContent: `Level ${ this.level }`
@@ -121,7 +113,17 @@ export class TowerEntity {
             this.towerMesh.position.z
         );
 
-        this.particleEffect.addLevelUp( newVector );
+        GameWorker.arenaScene.particleEffect.addLevelUp( newVector );
+
+    };
+
+    public updateGold () : void {
+
+        if ( this.id === this.playerIndex ) {
+
+            GameWorker.sendToMain( "updateGold", this.playerState.gold );
+
+        }
 
     };
 
@@ -143,7 +145,7 @@ export class TowerEntity {
         this.healthBarPosition.set( this.towerMesh.position.x, this.towerMesh.position.y + TOWER_HEIGHT, this.towerMesh.position.z );
 
         GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             position: {
                 x: this.healthBarPosition.x,
                 y: this.healthBarPosition.y,
@@ -153,17 +155,10 @@ export class TowerEntity {
 
         const scaleFactor = 85;
         const scaleVector = new Vector3();
-        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarPosition, GameWorker.gameScene.camera.position ).length() / scaleFactor );
+        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarPosition, GameWorker.arenaScene.camera.position ).length() / scaleFactor );
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
-            styles: {
-                display: 'flex'
-            }
-        });
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: 'towerStatusBar',
             styles: {
                 gap: `${ 2 / scale }px`,
@@ -173,7 +168,7 @@ export class TowerEntity {
         });
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: 'level',
             props: {
                 textContent: this.level.toString()
@@ -187,7 +182,7 @@ export class TowerEntity {
         });
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: 'healthBar',
             styles: {
                 width: `${(TOWER_HEALTH_WIDTH + 2) / scale}px`,
@@ -196,7 +191,7 @@ export class TowerEntity {
         });
 
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: 'healthBar__progress',
             styles: {
                 width: `${(TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
@@ -206,34 +201,6 @@ export class TowerEntity {
                 background: getColorForPercentage( this.hp / this.maxHp )
             }
         });
-
-        if ( this.index === GameWorker.playerIndex ) {
-
-            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${ this.index }`,
-                class: 'currentHP',
-                props: {
-                    textContent: this.playerState.gold.toString()
-                }
-            });
-
-            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${ this.index }`,
-                class: 'maxHP',
-                props: {
-                    textContent: ` / ${this.maxHp}`
-                }
-            });
-
-            GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${ this.index }`,
-                class: 'healthBar',
-                styles: {
-                    width: `${(this.hp / this.maxHp) * 100}%`
-                }
-            });
-
-        }
 
     };
 
@@ -248,10 +215,10 @@ export class TowerEntity {
 
             this.isDead = true;
 
-            if ( this.index === this.playerIndex ) {
+            if ( this.id === this.playerIndex ) {
 
-                this.stateManager.setState( GAME_STATES.END );
                 this.botManager.killAll();
+                GameWorker.gameOver();
 
             }
 
@@ -261,12 +228,26 @@ export class TowerEntity {
 
     };
 
+    public dispose () : void {
+
+        this.botManager.dispose();
+
+    };
+
     //
 
     private updateHealth () : void {
 
+        if ( this.id === this.playerIndex ) {
+
+            GameWorker.sendToMain( GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level } );
+
+        }
+
+        //
+
         GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.index }`,
+            id: `towerHealthBar_${ this.id }`,
             class: "healthBar__progress",
             props: {
                 width: `${ ( TOWER_HEALTH_WIDTH * this.hp ) / this.maxHp }px`,

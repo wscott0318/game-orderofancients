@@ -12917,10 +12917,11 @@ const GAME_STATES = {
     GAME_MENU: 0x01,
     PLAYING: 0x02,
     PAUSE: 0x03,
-    END: 0x04,
-    SETTING: 0x05,
-    GAME_LOBBY: 0x06,
-    TUTORIAL: 0x07,
+    WON: 0x04,
+    LOST: 0x05,
+    SETTING: 0x06,
+    GAME_LOBBY: 0x07,
+    TUTORIAL: 0x08,
 };
 const CAMERA_POS = {
     sideView: new three__WEBPACK_IMPORTED_MODULE_1__.Vector3(40, 30, 0),
@@ -13392,12 +13393,15 @@ const GameEvents = {
     START_GAME: 'StartGame',
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
+    SET_PLAYER_HEALTH: 'SetPlayerHealth',
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
+    UI_CLEAR: 'UIClear',
     UI_SET_CAMERA_POSITION: 'UISetCameraPosition',
     UI_ADD_ELEMENT: 'UIAddElement',
     UI_REMOVE_ELEMENT: 'UIRemoveElement',
     UI_UPDATE_ELEMENT: 'UIUpdateElement',
     UI_SET_ELEMENT_POSITION: 'UISetElementPosition',
+    DISPOSE: 'Dispose'
 };
 
 
@@ -13414,23 +13418,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GameWorker: () => (/* binding */ GameWorker),
 /* harmony export */   GameWorkerCore: () => (/* binding */ GameWorkerCore)
 /* harmony export */ });
-/* harmony import */ var _gfx_managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./gfx/managers/ParticleEffect */ "./src/game/worker/gfx/managers/ParticleEffect.ts");
-/* harmony import */ var _gfx_managers_SpriteManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./gfx/managers/SpriteManager */ "./src/game/worker/gfx/managers/SpriteManager.ts");
-/* harmony import */ var _managers_TowerManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./managers/TowerManager */ "./src/game/worker/managers/TowerManager.ts");
-/* harmony import */ var _gfx_managers_AnimationManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./gfx/managers/AnimationManager */ "./src/game/worker/gfx/managers/AnimationManager.ts");
-/* harmony import */ var _gfx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./gfx */ "./src/game/worker/gfx/index.ts");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Events */ "./src/game/Events.ts");
-/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
-/* harmony import */ var _networking_Network__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./networking/Network */ "./src/game/worker/networking/Network.ts");
-/* harmony import */ var _constants_socket__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../constants/socket */ "./src/constants/socket.ts");
-/* harmony import */ var _gfx_arena_scenes_ArenaScene__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./gfx/arena-scenes/ArenaScene */ "./src/game/worker/gfx/arena-scenes/ArenaScene.ts");
-/* harmony import */ var _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./entities/Tower.Entity */ "./src/game/worker/entities/Tower.Entity.ts");
-
-
-
-
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _gfx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./gfx */ "./src/game/worker/gfx/index.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Events */ "./src/game/Events.ts");
+/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
+/* harmony import */ var _networking_Network__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./networking/Network */ "./src/game/worker/networking/Network.ts");
+/* harmony import */ var _constants_socket__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../constants/socket */ "./src/constants/socket.ts");
+/* harmony import */ var _gfx_arena_scenes_ArenaScene__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./gfx/arena-scenes/ArenaScene */ "./src/game/worker/gfx/arena-scenes/ArenaScene.ts");
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../constants */ "./src/constants/index.ts");
 
 
 
@@ -13440,22 +13436,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 //
-class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_5___default()) {
+class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_0___default()) {
     //
     constructor() {
         super();
         this.inited = false;
+        this.finished = false;
+        this.prevUpdateTime = 0;
         this.dispose = () => {
-            this.towerManager.dispose();
-            _gfx__WEBPACK_IMPORTED_MODULE_4__.Gfx.dispose();
-            // this.stateManager.dispose();
-            // this.stateManager.dispose();
-            // this.particleEffect.dispose();
-            // this.spriteManager.dispose();
+            this.inited = false;
+            this.arenaScene.dispose();
+            _gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.dispose();
+            _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.dispose();
         };
         this.towerSpellUpgrade = (data) => {
             var _a;
-            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_9__.SOCKET_EVENTS.UPGRADE_SPELL, data.item, data.itemIndex);
+            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_5__.SOCKET_EVENTS.UPGRADE_SPELL, data.item, data.itemIndex);
         };
         this.sendToMain = (eventName, params, buffers = []) => {
             // @eslint-disable-next-line
@@ -13464,81 +13460,84 @@ class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_5___default()) {
         };
         this.setLobbyInfo = (lobbyInfo) => {
             this.lobbyInfo = lobbyInfo;
-            this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.SET_LOBBY_DATA, lobbyInfo);
+            this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.SET_LOBBY_DATA, lobbyInfo);
         };
         this.startGame = (lobby) => {
+            this.finished = false;
             this.setLobbyInfo(lobby);
-            this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.START_GAME);
+            this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.START_GAME);
+        };
+        this.gameOver = () => {
+            this.finished = true;
+            if (this.arenaScene.towerManager.get(this.playerIndex).time.totalTimeTracker > 90) {
+                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.SET_STATE, _constants__WEBPACK_IMPORTED_MODULE_7__.GAME_STATES.WON);
+            }
+            else {
+                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.SET_STATE, _constants__WEBPACK_IMPORTED_MODULE_7__.GAME_STATES.LOST);
+            }
         };
         //
+        this.update = () => {
+            const time = performance.now();
+            const delta = (this.prevUpdateTime ? time - this.prevUpdateTime : 0) / 1000;
+            this.prevUpdateTime = time;
+            if (this.inited) {
+                this.arenaScene.update(delta, time);
+                _gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.update(delta, time);
+            }
+            requestAnimationFrame(this.update);
+        };
         this.onMessage = (event) => {
             this.emit(event.data.eventName, event.data.params);
         };
         // @eslint-disable-next-line
         self.onmessage = this.onMessage;
         //
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.INIT_NETWORK, () => {
-            _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.init();
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.INIT_NETWORK, () => {
+            _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.init();
         });
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.LOAD_ASSETS, () => {
-            _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.load((progress) => {
-                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, progress);
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.LOAD_ASSETS, () => {
+            _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_3__.ResourcesManager.load((progress) => {
+                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, progress);
             }, () => {
-                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.ASSETS_LOADING_FINISHED);
+                this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.ASSETS_LOADING_FINISHED);
             });
         });
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.INIT_GFX, (props) => {
-            _gfx__WEBPACK_IMPORTED_MODULE_4__.Gfx.init(props);
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.INIT_GFX, (props) => {
+            _gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.init(props);
             this.init();
         });
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.LOAD_ASSETS, () => {
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.LOAD_ASSETS, () => {
             console.log('GameWorkerCore: LOAD_ASSETS');
         });
         //
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.LOBBY_JOIN, () => {
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.LOBBY_JOIN, () => {
             var _a;
-            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_9__.SOCKET_EVENTS.JOIN);
+            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_5__.SOCKET_EVENTS.JOIN);
         });
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.PLAY_SINGLE, () => {
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.PLAY_SINGLE, () => {
             var _a;
-            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_9__.SOCKET_EVENTS.PLAY_SINGLE);
+            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_5__.SOCKET_EVENTS.PLAY_SINGLE);
         });
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.LOBBY_EXIT_ROOM, () => {
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.LOBBY_EXIT_ROOM, () => {
             var _a;
-            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_9__.SOCKET_EVENTS.EXIT_ROOM);
+            (_a = _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.socket) === null || _a === void 0 ? void 0 : _a.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_5__.SOCKET_EVENTS.EXIT_ROOM);
         });
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.DISPOSE, () => {
+            this.dispose();
+        });
+        this.addListener("upgradeSpell", this.towerSpellUpgrade);
     }
     ;
     init() {
         let playerIndex = 0;
-        playerIndex = this.lobbyInfo.players.findIndex((player) => { var _a; return player.socketId === ((_a = _networking_Network__WEBPACK_IMPORTED_MODULE_8__.Network.socket) === null || _a === void 0 ? void 0 : _a.id); });
+        playerIndex = this.lobbyInfo.players.findIndex((player) => { var _a; return player.socketId === ((_a = _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.socket) === null || _a === void 0 ? void 0 : _a.id); });
         this.playerIndex = playerIndex;
-        this.gameScene = new _gfx_arena_scenes_ArenaScene__WEBPACK_IMPORTED_MODULE_10__.ArenaScene();
-        this.gameScene.init();
-        _gfx__WEBPACK_IMPORTED_MODULE_4__.Gfx.setActiveScene(this.gameScene);
-        this.particleEffect = new _gfx_managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_0__.ParticleEffect({
-            gameScene: this.gameScene
-        });
-        this.spriteManager = new _gfx_managers_SpriteManager__WEBPACK_IMPORTED_MODULE_1__.SpriteManager({
-            gameScene: this.gameScene
-        });
-        this.animationManager = new _gfx_managers_AnimationManager__WEBPACK_IMPORTED_MODULE_3__.AnimationManager({
-            gameScene: this.gameScene,
-            playerIndex: this.playerIndex
-        });
-        this.towerManager = new _managers_TowerManager__WEBPACK_IMPORTED_MODULE_2__.TowerManager();
-        for (let i = 0; i < this.lobbyInfo.players.length; i++) {
-            const tower = new _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__.TowerEntity({
-                particleEffect: this.particleEffect,
-                playerIndex: this.playerIndex,
-                index: i
-            });
-            this.towerManager.add(tower);
-        }
-        //
-        this.addListener("upgradeSpell", this.towerSpellUpgrade);
-        // EventBridge.onUIEvent( "Dispose", this.dispose );
+        this.arenaScene = new _gfx_arena_scenes_ArenaScene__WEBPACK_IMPORTED_MODULE_6__.ArenaScene();
+        this.arenaScene.init();
+        _gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.setActiveScene(this.arenaScene);
         this.inited = true;
+        this.update();
     }
     ;
 }
@@ -13558,8 +13557,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   PlayerStateComponent: () => (/* binding */ PlayerStateComponent)
 /* harmony export */ });
-/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
-
 class PlayerStateComponent {
     //
     constructor() {
@@ -13626,12 +13623,6 @@ class PlayerStateComponent {
         this.Gems_of_Power = 0;
     }
     ;
-    updateGoldUI() {
-        if (this.index === this.playerIndex) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.sendToMain("updateGold", this.gold);
-        }
-    }
-    ;
 }
 ;
 
@@ -13671,13 +13662,13 @@ class TimeComponent {
     tickSecond(value) {
         this.secondTracker = 1;
         const sprite = new _gfx_sprites_Text__WEBPACK_IMPORTED_MODULE_1__.TextSprite({
-            gameScene: _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.gameScene,
+            gameScene: _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene,
             text: `+${value}`,
             color: `#EED734`,
             position: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(this.tower.towerMesh.position.x, this.tower.towerMesh.position.y + 5, this.tower.towerMesh.position.z),
             fastMode: false,
         });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.spriteManager.addTextSprite(sprite);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.addTextSprite(sprite);
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain('updateIncome', value);
     }
     ;
@@ -13688,7 +13679,7 @@ class TimeComponent {
     }
     ;
     tick() {
-        this.tower.playerState.updateGoldUI();
+        this.tower.updateGold();
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.UPDATE_TIME, {
             totalTimeTracker: this.totalTimeTracker,
             roundTracker: this.roundTracker
@@ -13794,7 +13785,7 @@ class BotEntity {
         this.mesh.scale.x = 0.01;
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.add(this.mesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.mesh);
     }
     ;
     disposeHealthBar() {
@@ -13807,21 +13798,21 @@ class BotEntity {
         if (!this.stunMesh)
             return;
         (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.stunMesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.remove(this.stunMesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.stunMesh);
     }
     ;
     disposeFireMesh() {
         if (!this.fireMesh)
             return;
         (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.fireMesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.remove(this.fireMesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.fireMesh);
     }
     ;
     //
     dispose() {
         this.animController.dispose();
         (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.mesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.remove(this.mesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.mesh);
         this.disposeStunMesh();
     }
     ;
@@ -13851,14 +13842,14 @@ class BotEntity {
         if (this.stunTime > 0) {
             if (!this.stunMesh) {
                 this.stunMesh = new three__WEBPACK_IMPORTED_MODULE_12__.Object3D();
-                const particle = (0,_gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_7__.createStun)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
+                const particle = (0,_gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_7__.createStun)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
                 particle.then((group) => {
                     const particleMesh = group;
                     particleMesh.position.set(this.mesh.position.x, this.mesh.position.y +
                         _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS["modelHeight"][this.botType], this.mesh.position.z);
                     particleMesh.scale.set(0.7, 0.7, 0.7);
                     this.stunMesh = particleMesh;
-                    _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.add(this.stunMesh);
+                    _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.stunMesh);
                 });
             }
             this.animController.stopAnimation();
@@ -13897,11 +13888,11 @@ class BotEntity {
         }
         if (this.fireTime > 0) {
             if (!this.fireMesh) {
-                const particle = (0,_gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_8__.createToonProjectile)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
+                const particle = (0,_gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_8__.createToonProjectile)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
                 const scaleOffset = (_constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
                 particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
                 this.fireMesh = particle;
-                _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.scene.add(this.fireMesh);
+                _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.fireMesh);
             }
             if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
@@ -13944,7 +13935,7 @@ class BotEntity {
         });
         const scaleFactor = 85;
         const scaleVector = new three__WEBPACK_IMPORTED_MODULE_12__.Vector3();
-        const scale = Math.sqrt(scaleVector.subVectors(this.healthPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.gameScene.camera.position).length() / scaleFactor);
+        const scale = Math.sqrt(scaleVector.subVectors(this.healthPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.camera.position).length() / scaleFactor);
         _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_UPDATE_ELEMENT, {
             id: `healthBar-${this.uuid}`,
             styles: {
@@ -13982,19 +13973,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   TowerEntity: () => (/* binding */ TowerEntity)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! three/examples/jsm/utils/SkeletonUtils.js */ "./node_modules/three/examples/jsm/utils/SkeletonUtils.js");
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../constants */ "./src/constants/index.ts");
-/* harmony import */ var _constants_gameUI__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../constants/gameUI */ "./src/constants/gameUI.ts");
-/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
-/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
-/* harmony import */ var _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/PlayerState.Component */ "./src/game/worker/components/PlayerState.Component.ts");
-/* harmony import */ var _components_Time_Component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Time.Component */ "./src/game/worker/components/Time.Component.ts");
-/* harmony import */ var _managers_BotManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../managers/BotManager */ "./src/game/worker/managers/BotManager.ts");
-/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
-/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
-
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three/examples/jsm/utils/SkeletonUtils.js */ "./node_modules/three/examples/jsm/utils/SkeletonUtils.js");
+/* harmony import */ var _constants_gameUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../constants/gameUI */ "./src/constants/gameUI.ts");
+/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
+/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
+/* harmony import */ var _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/PlayerState.Component */ "./src/game/worker/components/PlayerState.Component.ts");
+/* harmony import */ var _components_Time_Component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Time.Component */ "./src/game/worker/components/Time.Component.ts");
+/* harmony import */ var _managers_BotManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../managers/BotManager */ "./src/game/worker/managers/BotManager.ts");
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
+/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
 
 
 
@@ -14013,23 +14002,22 @@ class TowerEntity {
     //
     constructor(params) {
         var _a;
-        this.healthBarPosition = new three__WEBPACK_IMPORTED_MODULE_10__.Vector3();
-        this.botManager = new _managers_BotManager__WEBPACK_IMPORTED_MODULE_6__.BotManager(params.index);
-        this.playerState = new _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_4__.PlayerStateComponent();
-        this.time = new _components_Time_Component__WEBPACK_IMPORTED_MODULE_5__.TimeComponent({ tower: this });
-        this.particleEffect = params.particleEffect;
+        this.healthBarPosition = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3();
+        this.botManager = new _managers_BotManager__WEBPACK_IMPORTED_MODULE_5__.BotManager(params.id);
+        this.playerState = new _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_3__.PlayerStateComponent();
+        this.time = new _components_Time_Component__WEBPACK_IMPORTED_MODULE_4__.TimeComponent({ tower: this });
         this.playerIndex = params.playerIndex;
-        this.index = params.index;
+        this.id = params.id;
         this.level = 1;
         this.hp = 1700;
         this.maxHp = 1700;
         this.isDead = false;
         this.sacrificeHP = 0;
-        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getModel("Buildings")) === null || _a === void 0 ? void 0 : _a.scene.getObjectByName('orc_tower_Lv3_proto_orc_rts_0');
-        this.towerMesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_11__.clone(towerModel);
+        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.getModel("Buildings")) === null || _a === void 0 ? void 0 : _a.scene.getObjectByName('orc_tower_Lv3_proto_orc_rts_0');
+        this.towerMesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__.clone(towerModel);
         // construct UI part
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_ADD_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_ADD_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             props: {
                 className: "towerStatusBar",
                 innerHTML: `
@@ -14044,23 +14032,29 @@ class TowerEntity {
     }
     ;
     initialize() {
-        this.towerMesh.position.x = _constants_tower__WEBPACK_IMPORTED_MODULE_3__.TOWER_POSITIONS[this.index].x;
-        this.towerMesh.position.y = _constants_tower__WEBPACK_IMPORTED_MODULE_3__.TOWER_POSITIONS[this.index].y;
-        this.towerMesh.position.z = _constants_tower__WEBPACK_IMPORTED_MODULE_3__.TOWER_POSITIONS[this.index].z;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.gameScene.add(this.towerMesh);
+        this.towerMesh.position.x = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].x;
+        this.towerMesh.position.y = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].y;
+        this.towerMesh.position.z = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].z;
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.add(this.towerMesh);
     }
     ;
     levelUp() {
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: 'gameLevel',
             props: {
                 textContent: `Level ${this.level}`
             }
         });
         // visual effect
-        const newVector = new three__WEBPACK_IMPORTED_MODULE_10__.Vector3(this.towerMesh.position.x, this.towerMesh.position.y + 5, this.towerMesh.position.z);
-        this.particleEffect.addLevelUp(newVector);
+        const newVector = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3(this.towerMesh.position.x, this.towerMesh.position.y + 5, this.towerMesh.position.z);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.particleEffect.addLevelUp(newVector);
+    }
+    ;
+    updateGold() {
+        if (this.id === this.playerIndex) {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain("updateGold", this.playerState.gold);
+        }
     }
     ;
     setStatus(status) {
@@ -14073,9 +14067,9 @@ class TowerEntity {
     }
     ;
     renderHealthBar() {
-        this.healthBarPosition.set(this.towerMesh.position.x, this.towerMesh.position.y + _constants_tower__WEBPACK_IMPORTED_MODULE_3__.TOWER_HEIGHT, this.towerMesh.position.z);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `towerHealthBar_${this.index}`,
+        this.healthBarPosition.set(this.towerMesh.position.x, this.towerMesh.position.y + _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_HEIGHT, this.towerMesh.position.z);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_SET_ELEMENT_POSITION, {
+            id: `towerHealthBar_${this.id}`,
             position: {
                 x: this.healthBarPosition.x,
                 y: this.healthBarPosition.y,
@@ -14083,16 +14077,10 @@ class TowerEntity {
             }
         });
         const scaleFactor = 85;
-        const scaleVector = new three__WEBPACK_IMPORTED_MODULE_10__.Vector3();
-        const scale = Math.sqrt(scaleVector.subVectors(this.healthBarPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.gameScene.camera.position).length() / scaleFactor);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
-            styles: {
-                display: 'flex'
-            }
-        });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        const scaleVector = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3();
+        const scale = Math.sqrt(scaleVector.subVectors(this.healthBarPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.camera.position).length() / scaleFactor);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: 'towerStatusBar',
             styles: {
                 gap: `${2 / scale}px`,
@@ -14100,8 +14088,8 @@ class TowerEntity {
                 transform: `scale( ${1 / scale} )`
             }
         });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: 'level',
             props: {
                 textContent: this.level.toString()
@@ -14113,48 +14101,25 @@ class TowerEntity {
                 height: `${13 / scale}px`
             }
         });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: 'healthBar',
             styles: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEALTH_WIDTH + 2) / scale}px`,
-                height: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEALTH_HEIGHT + 2) / scale}px`
+                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH + 2) / scale}px`,
+                height: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_HEIGHT + 2) / scale}px`
             }
         });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: 'healthBar__progress',
             styles: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
-                height: `${_constants_gameUI__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEALTH_HEIGHT / scale}px`,
+                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
+                height: `${_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_HEIGHT / scale}px`,
                 left: `${1 / scale}px`,
                 top: `${1 / scale}px`,
-                background: (0,_helper_color__WEBPACK_IMPORTED_MODULE_2__.getColorForPercentage)(this.hp / this.maxHp)
+                background: (0,_helper_color__WEBPACK_IMPORTED_MODULE_1__.getColorForPercentage)(this.hp / this.maxHp)
             }
         });
-        if (this.index === _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.playerIndex) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${this.index}`,
-                class: 'currentHP',
-                props: {
-                    textContent: this.playerState.gold.toString()
-                }
-            });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${this.index}`,
-                class: 'maxHP',
-                props: {
-                    textContent: ` / ${this.maxHp}`
-                }
-            });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-                id: `towerHealthBar_${this.index}`,
-                class: 'healthBar',
-                styles: {
-                    width: `${(this.hp / this.maxHp) * 100}%`
-                }
-            });
-        }
     }
     ;
     update() {
@@ -14164,22 +14129,30 @@ class TowerEntity {
         this.botManager.update();
         if (this.hp <= 0) {
             this.isDead = true;
-            if (this.index === this.playerIndex) {
-                this.stateManager.setState(_constants__WEBPACK_IMPORTED_MODULE_0__.GAME_STATES.END);
+            if (this.id === this.playerIndex) {
                 this.botManager.killAll();
+                _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.gameOver();
             }
         }
         this.renderHealthBar();
     }
     ;
+    dispose() {
+        this.botManager.dispose();
+    }
+    ;
     //
     updateHealth() {
-        _GameWorker__WEBPACK_IMPORTED_MODULE_7__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_9__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.index}`,
+        if (this.id === this.playerIndex) {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level });
+        }
+        //
+        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+            id: `towerHealthBar_${this.id}`,
             class: "healthBar__progress",
             props: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp}px`,
-                backgroundColor: (0,_helper_color__WEBPACK_IMPORTED_MODULE_2__.getColorForPercentage)(this.hp / this.maxHp)
+                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp}px`,
+                backgroundColor: (0,_helper_color__WEBPACK_IMPORTED_MODULE_1__.getColorForPercentage)(this.hp / this.maxHp)
             }
         });
     }
@@ -14200,7 +14173,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ArenaScene: () => (/* binding */ ArenaScene)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var three_quarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three.quarks */ "./node_modules/three.quarks/dist/three.quarks.esm.js");
 /* harmony import */ var _core_Gfx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/Gfx */ "./src/game/worker/gfx/core/Gfx.ts");
 /* harmony import */ var _core_GameScene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/GameScene */ "./src/game/worker/gfx/core/GameScene.ts");
@@ -14208,6 +14181,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../GameWorker */ "./src/game/worker/GameWorker.ts");
 /* harmony import */ var _ControlsManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ControlsManager */ "./src/game/worker/gfx/arena-scenes/ControlsManager.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../Events */ "./src/game/Events.ts");
+/* harmony import */ var _managers_AnimationManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../managers/AnimationManager */ "./src/game/worker/gfx/managers/AnimationManager.ts");
+/* harmony import */ var _managers_SpriteManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../managers/SpriteManager */ "./src/game/worker/gfx/managers/SpriteManager.ts");
+/* harmony import */ var _managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../managers/ParticleEffect */ "./src/game/worker/gfx/managers/ParticleEffect.ts");
+/* harmony import */ var _managers_TowerManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../managers/TowerManager */ "./src/game/worker/managers/TowerManager.ts");
+/* harmony import */ var _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../entities/Tower.Entity */ "./src/game/worker/entities/Tower.Entity.ts");
+
+
+
+
+
 
 
 
@@ -14226,24 +14209,43 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     }
     //
     init() {
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_7__.Scene();
-        this.camera = new three__WEBPACK_IMPORTED_MODULE_7__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 0.1, 1000);
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_12__.Scene();
+        this.camera = new three__WEBPACK_IMPORTED_MODULE_12__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 0.1, 1000);
         this.controls = new _ControlsManager__WEBPACK_IMPORTED_MODULE_5__.ControlsManager(this.camera);
         this.particleRenderer = new three_quarks__WEBPACK_IMPORTED_MODULE_0__.BatchedRenderer();
         this.scene.add(this.particleRenderer);
-        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_7__.Color(0xffffff);
-        this._renderTarget = new three__WEBPACK_IMPORTED_MODULE_7__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height);
-        this._environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
-        this._environment.init(this.scene);
+        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_12__.Color(0xffffff);
+        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_12__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height);
+        //
+        this.environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
+        this.environment.init(this.scene);
+        this.particleEffect = new _managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_9__.ParticleEffect(this);
+        this.spriteManager = new _managers_SpriteManager__WEBPACK_IMPORTED_MODULE_8__.SpriteManager(this);
+        this.animationManager = new _managers_AnimationManager__WEBPACK_IMPORTED_MODULE_7__.AnimationManager(this);
+        this.towerManager = new _managers_TowerManager__WEBPACK_IMPORTED_MODULE_10__.TowerManager();
+        //
+        for (let i = 0; i < _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.lobbyInfo.players.length; i++) {
+            const tower = new _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__.TowerEntity({
+                playerIndex: _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.playerIndex,
+                id: i
+            });
+            this.towerManager.add(tower);
+        }
+        //
         _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.GFX_TOGGLE_GRID, this.toggleGrid);
         this.addGrid();
         this.initCameraControls();
     }
     ;
     update(delta, time) {
-        // this._camControls.update();
-        this.particleRenderer.update(delta / 1000);
-        _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.setRenderTarget(this._renderTarget);
+        this.towerManager.update();
+        this.spriteManager.tick();
+        this.particleEffect.tick();
+    }
+    ;
+    render(delta, time) {
+        this.particleRenderer.update(delta);
+        _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.setRenderTarget(this.renderTarget);
         _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.setClearColor(0xffffff);
         _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.clear();
         _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.render(this.scene, this.camera);
@@ -14254,16 +14256,20 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         const height = _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height;
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
-        this._renderTarget.setSize(width, height);
+        this.renderTarget.setSize(width, height);
     }
     ;
     getRenderTarget() {
-        return this._renderTarget;
+        return this.renderTarget;
     }
     ;
     dispose() {
         this.scene.children = [];
-        this._renderTarget.dispose();
+        this.renderTarget.dispose();
+        this.towerManager.dispose();
+        this.particleEffect.dispose();
+        this.animationManager.dispose();
+        this.spriteManager.dispose();
     }
     ;
     //
@@ -14287,8 +14293,8 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     addGrid() {
         const size = 500;
         const divisions = 500;
-        const color = new three__WEBPACK_IMPORTED_MODULE_7__.Color(0x333333);
-        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_7__.GridHelper(size, divisions, color, color);
+        const color = new three__WEBPACK_IMPORTED_MODULE_12__.Color(0x333333);
+        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_12__.GridHelper(size, divisions, color, color);
         this.gridHelper.position.y = 0.01;
         this.gridHelper.visible = false;
         this.scene.add(this.gridHelper);
@@ -14576,37 +14582,22 @@ class GfxCore {
         this.screenHeight = 0;
         this.devicePixelRatio = 1;
         this.activeGameScene = null;
-        this.gameScenes = [];
-        this.prevRenderTime = 0;
         this.resolution = 1;
         this.loopEnabled = true;
         this.renderingEnabled = true;
-        this.update = () => {
+        this.update = (delta, time) => {
             if (!this.inited)
                 return;
             if (!this.loopEnabled)
                 return;
-            requestAnimationFrame(this.update);
             if (!this.renderingEnabled)
                 return;
-            const time = performance.now();
-            const delta = this.prevRenderTime ? time - this.prevRenderTime : 0;
-            // this.stats.begin();
             if (this.activeGameScene) {
-                this.activeGameScene.update(delta, time);
+                this.activeGameScene.render(delta, time);
                 this.composer.readBuffers['sceneDiffuse'] = this.activeGameScene.getRenderTarget().texture;
             }
             this.composer.render(this.renderer);
             _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_0__["default"].update();
-            // this.stats.end();
-            // this.stats.update();
-            // todo: move to game loop later
-            if (_GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.inited) {
-                _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.towerManager.update();
-                _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.spriteManager.tick();
-                _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.particleEffect.tick();
-            }
-            this.prevRenderTime = time;
         };
         //
         this.resize = (params) => {
@@ -14625,13 +14616,10 @@ class GfxCore {
         this.screenWidth = params.screenWidth;
         this.screenHeight = params.screenHeight;
         this.devicePixelRatio = params.devicePixelRatio;
-        // this.stats = new Stats();
-        // document.body.appendChild( this.stats.domElement );
         this.composer = new _Composer__WEBPACK_IMPORTED_MODULE_1__.ComposerPass();
         this.createRenderer(params.offscreen);
         //
         this.inited = true;
-        this.update();
     }
     ;
     setActiveScene(gameScene) {
@@ -14642,11 +14630,9 @@ class GfxCore {
         if (this.activeGameScene) {
             this.activeGameScene.dispose();
         }
-        this.renderer.domElement.remove();
         this.renderer.dispose();
-        this.gameScenes = [];
-        // this.stats.domElement.remove();
         this.activeGameScene = null;
+        this.inited = false;
     }
     ;
     // @ts-ignore
@@ -14693,11 +14679,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   AnimationManager: () => (/* binding */ AnimationManager)
 /* harmony export */ });
-/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/index.js");
-/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/gsap-core.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/index.js");
+/* harmony import */ var gsap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! gsap */ "./node_modules/gsap/gsap-core.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../constants */ "./src/constants/index.ts");
 /* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../constants/tower */ "./src/constants/tower.ts");
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../GameWorker */ "./src/game/worker/GameWorker.ts");
+
 
 
 
@@ -14705,28 +14693,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 class AnimationManager {
     //
-    constructor(params) {
-        this.gameScene = params.gameScene;
-        this._playerIndex = params.playerIndex;
-        this._towerPosition = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(_constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this._playerIndex].x, _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this._playerIndex].y, _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this._playerIndex].z);
+    constructor(gameScene) {
+        this.gameScene = gameScene;
+        const playerIndex = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.playerIndex;
+        this._towerPosition = new three__WEBPACK_IMPORTED_MODULE_3__.Vector3(_constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[playerIndex].x, _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[playerIndex].y, _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[playerIndex].z);
         // this._spotLight = this._sceneRenderer._spotLightArray[ params.playerIndex ];
         // this._hemiLight = this._sceneRenderer._hemiLight;
     }
     ;
     camera_Down() {
-        gsap__WEBPACK_IMPORTED_MODULE_3__.gsap.to(this._camera.position, Object.assign(Object.assign({}, _constants__WEBPACK_IMPORTED_MODULE_0__.CAMERA_POS.sideView), { duration: 3, ease: gsap__WEBPACK_IMPORTED_MODULE_4__.Circ.easeIn, onUpdate: () => {
+        gsap__WEBPACK_IMPORTED_MODULE_4__.gsap.to(this._camera.position, Object.assign(Object.assign({}, _constants__WEBPACK_IMPORTED_MODULE_0__.CAMERA_POS.sideView), { duration: 3, ease: gsap__WEBPACK_IMPORTED_MODULE_5__.Circ.easeIn, onUpdate: () => {
                 this._camera.lookAt(this._towerPosition);
             } }));
     }
     ;
     camera_Rotate() {
-        const camera2DPos = new three__WEBPACK_IMPORTED_MODULE_2__.Vector2(this._camera.position.x, this._camera.position.y);
-        const tower2DPos = new three__WEBPACK_IMPORTED_MODULE_2__.Vector2(this._towerPosition.x, this._towerPosition.y);
+        const camera2DPos = new three__WEBPACK_IMPORTED_MODULE_3__.Vector2(this._camera.position.x, this._camera.position.y);
+        const tower2DPos = new three__WEBPACK_IMPORTED_MODULE_3__.Vector2(this._towerPosition.x, this._towerPosition.y);
         const rotPos = {
             radius: camera2DPos.distanceTo(tower2DPos),
             angle: 0,
         };
-        gsap__WEBPACK_IMPORTED_MODULE_3__.gsap.to(rotPos, {
+        gsap__WEBPACK_IMPORTED_MODULE_4__.gsap.to(rotPos, {
             angle: -Math.PI * 2,
             duration: 10,
             repeat: -1,
@@ -14743,7 +14731,7 @@ class AnimationManager {
     ;
     camera_diorama() {
         const camPos = this._camera.position;
-        gsap__WEBPACK_IMPORTED_MODULE_3__.gsap.to(camPos, {
+        gsap__WEBPACK_IMPORTED_MODULE_4__.gsap.to(camPos, {
             x: Math.random() * 60 - 30,
             z: Math.random() * 60 - 30,
             y: Math.random() * 10 + 10,
@@ -14763,6 +14751,10 @@ class AnimationManager {
         //         ease: Circ.easeIn,
         //     });
         // });
+    }
+    ;
+    dispose() {
+        // todo
     }
     ;
 }
@@ -14859,10 +14851,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+//
 class ParticleEffect {
     //
-    constructor(params) {
-        this.gameScene = params.gameScene;
+    constructor(gameScene) {
+        this.gameScene = gameScene;
     }
     ;
     addExplosion(position) {
@@ -14870,7 +14863,7 @@ class ParticleEffect {
         explosion.position.x = position.x;
         explosion.position.y = position.y;
         explosion.position.z = position.z;
-        explosion.scale.set(0.1, 0.1, 0.1);
+        explosion.scale.setScalar(0.1);
         this.gameScene.add(explosion);
     }
     ;
@@ -14879,7 +14872,7 @@ class ParticleEffect {
         particle.position.x = position.x;
         particle.position.y = position.y;
         particle.position.z = position.z;
-        particle.scale.set(0.4, 0.4, 0.4);
+        particle.scale.setScalar(0.4);
         this.gameScene.add(particle);
     }
     ;
@@ -14903,6 +14896,10 @@ class ParticleEffect {
     }
     ;
     tick() { }
+    dispose() {
+        //
+    }
+    ;
 }
 ;
 
@@ -14945,13 +14942,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+//
 class SpriteManager {
     //
-    constructor({ gameScene }) {
+    constructor(gameScene) {
         this.spriteArray = [];
         this.textSpriteArray = [];
         this.gameScene = gameScene;
     }
+    ;
     addSpriteFrom(newSpriteInfo) {
         let sprite = null;
         const weaponName = newSpriteInfo.name;
@@ -14994,7 +14993,7 @@ class SpriteManager {
                 });
                 break;
             case "Fire Bow":
-                sprite = new _sprites_weapons_FireBow__WEBPACK_IMPORTED_MODULE_5__["default"]({
+                sprite = new _sprites_weapons_FireBow__WEBPACK_IMPORTED_MODULE_5__.FireBow({
                     gameScene: this.gameScene,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new three__WEBPACK_IMPORTED_MODULE_12__.Vector3(newSpriteInfo.targetPosition.x, newSpriteInfo.targetPosition.y, newSpriteInfo.targetPosition.z),
@@ -15036,7 +15035,7 @@ class SpriteManager {
                 });
                 break;
             case "Chaos Claw":
-                sprite = new _sprites_weapons_ChaosClaw__WEBPACK_IMPORTED_MODULE_3__["default"]({
+                sprite = new _sprites_weapons_ChaosClaw__WEBPACK_IMPORTED_MODULE_3__.ChaosClaw({
                     gameScene: this.gameScene,
                     launchPos: newSpriteInfo.launchPos,
                     targetPos: new three__WEBPACK_IMPORTED_MODULE_12__.Vector3(newSpriteInfo.targetPosition.x, newSpriteInfo.targetPosition.y, newSpriteInfo.targetPosition.z),
@@ -15047,9 +15046,11 @@ class SpriteManager {
             this.addSprite(sprite);
         }
     }
+    ;
     addSprite(sprite) {
         this.spriteArray.push(sprite);
     }
+    ;
     addTextSpriteFrom(newTextSpriteInfo) {
         this.addTextSprite(new _sprites_Text__WEBPACK_IMPORTED_MODULE_0__.TextSprite({
             text: newTextSpriteInfo.text,
@@ -15059,13 +15060,16 @@ class SpriteManager {
             fastMode: newTextSpriteInfo.fastMode === true,
         }));
     }
+    ;
     addTextSprite(sprite) {
         this.textSpriteArray.push(sprite);
     }
+    ;
     validateTextSprites() {
         const newArray = this.textSpriteArray.filter((sprite) => !sprite.shouldRemove);
         this.textSpriteArray = [...newArray];
     }
+    ;
     tick() {
         for (let i = 0; i < this.spriteArray.length; i++) {
             this.spriteArray[i].tick();
@@ -15075,7 +15079,18 @@ class SpriteManager {
             this.textSpriteArray[i].tick();
         }
     }
+    ;
+    dispose() {
+        for (let i = 0; i < this.spriteArray.length; i++) {
+            this.spriteArray[i].dispose();
+        }
+        for (let i = 0; i < this.textSpriteArray.length; i++) {
+            this.textSpriteArray[i].dispose();
+        }
+    }
+    ;
 }
+;
 
 
 /***/ }),
@@ -16616,8 +16631,6 @@ __webpack_require__.r(__webpack_exports__);
 function createChaosExplosion(renderer, textures) {
     const group = new three__WEBPACK_IMPORTED_MODULE_1__.Group();
     group.name = "ChaosExplosion";
-    const yellowColor = new three__WEBPACK_IMPORTED_MODULE_1__.Vector4(0.9, 0.6, 0.25, 1);
-    const yellowColor2 = new three__WEBPACK_IMPORTED_MODULE_1__.Vector4(1, 0.95, 0.4, 1);
     const greenColor = new three__WEBPACK_IMPORTED_MODULE_1__.Vector4(0.5, 0.9, 0.4, 1);
     const greenColor2 = new three__WEBPACK_IMPORTED_MODULE_1__.Vector4(0.09411764, 0.819607843, 0.2745098, 1);
     const texture = textures[0];
@@ -16855,6 +16868,7 @@ function createChaosExplosion(renderer, textures) {
     renderer.addSystem(circle2);
     return group;
 }
+;
 
 
 /***/ }),
@@ -17690,8 +17704,7 @@ class Bow {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   ChaosClaw: () => (/* binding */ ChaosClaw),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   ChaosClaw: () => (/* binding */ ChaosClaw)
 /* harmony export */ });
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _constants_spell__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../constants/spell */ "./src/constants/spell.ts");
@@ -17705,41 +17718,48 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+;
+//
 class ChaosClaw {
     //
     constructor({ gameScene, launchPos, targetPos }) {
         this.gameScene = gameScene;
         this.weaponType = "Chaos_Claw";
-        this.attackDamage = _constants_spell__WEBPACK_IMPORTED_MODULE_0__.SPELLS_INFO["Chaos_Claw"].attackDamage;
-        this.damageType = _constants_spell__WEBPACK_IMPORTED_MODULE_0__.SPELLS_INFO["Chaos_Claw"].damageType;
+        const spellsInfo = _constants_spell__WEBPACK_IMPORTED_MODULE_0__.SPELLS_INFO["Chaos_Claw"];
+        this.attackDamage = spellsInfo.attackDamage;
+        this.damageType = spellsInfo.damageType;
+        this.bounceCount = spellsInfo.BounceCount;
         this.targetPos = targetPos;
-        this.bounceCount = _constants_spell__WEBPACK_IMPORTED_MODULE_0__.SPELLS_INFO["Chaos_Claw"].BounceCount;
         this.mesh = new three__WEBPACK_IMPORTED_MODULE_5__.Object3D();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
         this.lastTime = Date.now() * 0.001;
     }
+    ;
     initMesh() {
         const mesh = (0,_particles_weapons_ChaosClaw__WEBPACK_IMPORTED_MODULE_3__.createChaosClaw)(this.gameScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_4__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_4__.ResourcesManager.getTexture("Particles2")]);
         mesh.position.x = 0;
         mesh.position.y = 0;
         mesh.position.z = 0;
-        mesh.scale.set(0.15, 0.15, 0.15);
+        mesh.scale.setScalar(0.15);
         this.mesh.add(mesh);
         this.gameScene.add(this.mesh);
     }
+    ;
     dispose() {
-        (0,_helper_three__WEBPACK_IMPORTED_MODULE_1__.disposeMesh)(this.mesh);
         this.gameScene.remove(this.mesh);
+        (0,_helper_three__WEBPACK_IMPORTED_MODULE_1__.disposeMesh)(this.mesh);
     }
+    ;
     addCollisionEffect() {
         const particle = (0,_particles_weapons_ChaosExplosion__WEBPACK_IMPORTED_MODULE_2__.createChaosExplosion)(this.gameScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_4__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_4__.ResourcesManager.getTexture("Particles2")]);
         particle.position.x = this.mesh.position.x;
         particle.position.y = this.mesh.position.y;
         particle.position.z = this.mesh.position.z;
-        particle.scale.set(0.1, 0.1, 0.1);
+        particle.scale.setScalar(0.1);
         this.gameScene.add(particle);
     }
+    ;
     tick() {
         const now = Date.now() * 0.001;
         const deltaTime = now - this.lastTime;
@@ -17760,8 +17780,9 @@ class ChaosClaw {
             this.mesh.position.lerp(targetPosition, amount);
         }
     }
+    ;
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ChaosClaw);
+;
 
 
 /***/ }),
@@ -17855,8 +17876,7 @@ class ChaosOrb {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FireBow: () => (/* binding */ FireBow),
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   FireBow: () => (/* binding */ FireBow)
 /* harmony export */ });
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _constants_spell__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../constants/spell */ "./src/constants/spell.ts");
@@ -17868,6 +17888,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+;
 class FireBow {
     //
     constructor({ gameScene, launchPos, targetPos }) {
@@ -17881,6 +17902,7 @@ class FireBow {
         this.initMesh();
         this.lastTime = Date.now() * 0.001;
     }
+    ;
     initMesh() {
         const mesh = (0,_particles_weapons_FireBow__WEBPACK_IMPORTED_MODULE_2__.createFireBow)(this.gameScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_3__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_3__.ResourcesManager.getTexture("Particles2")]);
         mesh.position.x = 0;
@@ -17916,7 +17938,7 @@ class FireBow {
         }
     }
 }
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FireBow);
+;
 
 
 /***/ }),
@@ -18473,6 +18495,10 @@ class BotManager {
         }
     }
     ;
+    dispose() {
+        this.killAll();
+    }
+    ;
 }
 ;
 
@@ -18635,7 +18661,10 @@ class TowerManager {
     }
     ;
     dispose() {
-        // todo
+        for (let i = 0; i < this.towersArray.length; i++) {
+            this.towersArray[i].dispose();
+        }
+        this.towersArray = [];
     }
     ;
 }
@@ -18668,7 +18697,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 class NetworkHandler {
     constructor() {
-        this.socket = null;
         //
         this.onStartGame = (lobbyInfo) => {
             _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.startGame(lobbyInfo);
@@ -18680,25 +18708,27 @@ class NetworkHandler {
         };
         this.onReceiveTowerStatus = (towerStatusData, timerStatus) => {
             towerStatusData.forEach((towerStatus, index) => {
-                const tower = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(index);
+                const tower = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(index);
                 tower.setStatus(towerStatus);
             });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.towersArray.forEach((tower) => {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.towersArray.forEach((tower) => {
                 tower.time.secondTracker = timerStatus.secondTracker;
                 tower.time.roundTracker = timerStatus.roundTracker;
                 tower.time.totalTimeTracker = timerStatus.totalTimeTracker;
             });
         };
         this.onReceiveProduceBot = (playerIndex, newBot) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).botManager.add(newBot.botType);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.add(newBot.botType);
         };
         this.onReceiveBotStatus = (botStatusData) => {
-            if (_GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(0).botManager.bots.length !== botStatusData[0].length) {
+            if (_GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(0).botManager.bots.length !== botStatusData[0].length) {
                 console.error("unsynce bot data");
             }
             for (let i = 0; i < botStatusData.length; i++) {
                 for (let j = 0; j < botStatusData[i].length; j++) {
-                    const bot = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(i).botManager.bots[j];
+                    const bot = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(i).botManager.bots[j];
+                    if (!bot)
+                        continue;
                     const botStatus = botStatusData[i][j];
                     if (!botStatus)
                         continue;
@@ -18719,22 +18749,22 @@ class NetworkHandler {
             _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_4__.GameEvents.SET_PLAYER_UPGRADES, player === null || player === void 0 ? void 0 : player.upgrades);
         };
         this.onTickSecond = (playerIndex, value) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).time.tickSecond(value);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickSecond(value);
         };
         this.onTickRound = (playerIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).time.tickRound();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickRound();
         };
         this.onAddSprite = (newSpriteInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.addSpriteFrom(newSpriteInfo);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.addSpriteFrom(newSpriteInfo);
         };
         this.onAddTextSprite = (newTextSpriteInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.addTextSpriteFrom(newTextSpriteInfo);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.addTextSpriteFrom(newTextSpriteInfo);
         };
         this.onAddSpriteCollisionEffect = (spriteIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.spriteArray[spriteIndex].addCollisionEffect();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray[spriteIndex].addCollisionEffect();
         };
         this.onDisposeSprite = (removeSpriteArray) => {
-            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.spriteArray;
+            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray;
             const newArray = [];
             for (let i = 0; i < spriteArray.length; i++) {
                 const index = removeSpriteArray.findIndex((removeIndex) => removeIndex === i);
@@ -18745,10 +18775,10 @@ class NetworkHandler {
                     spriteArray[i].dispose();
                 }
             }
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.spriteArray = newArray;
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray = newArray;
         };
         this.onReceiveSpriteStatus = (spriteStatusData) => {
-            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.spriteManager.spriteArray;
+            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray;
             if (spriteArray.length !== spriteStatusData.length) {
                 console.error("sprite sync error");
             }
@@ -18763,10 +18793,10 @@ class NetworkHandler {
             }
         };
         this.onKillBot = (playerIndex, botIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).botManager.bots[botIndex].kill();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots[botIndex].kill();
         };
         this.onRemoveDeadBots = (playerIndex, deadBotArray) => {
-            const botArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).botManager.bots;
+            const botArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots;
             if (!botArray.length)
                 return;
             const newArray = [];
@@ -18776,16 +18806,14 @@ class NetworkHandler {
                     newArray.push(botArray[i]);
                 }
             }
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.towerManager.get(playerIndex).botManager.bots = newArray;
+            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots = newArray;
         };
     }
     //
     init() {
+        console.log("Arena network inited");
         this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])(_utils_config__WEBPACK_IMPORTED_MODULE_2__.Config.socketServerUrl, { transports: ['websocket'] });
         this.socket.on("connect_error", (error) => {
-            // toast.error(
-            //     `Can't connect to server. Please check server status.`
-            // );
             console.log('error', error);
         });
         this.socket.on("connect", () => {
@@ -18795,44 +18823,37 @@ class NetworkHandler {
                 return;
             }
             console.log("Connected to server");
+            this.addEventListeners();
             _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_4__.GameEvents.NETWORK_INITED, { socketId: socket.id });
-            // Game start
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.START_GAME, this.onStartGame);
-            // Game events
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_SECOND, this.onTickSecond);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_ROUND, this.onTickRound);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_SPRITE, this.onAddSprite);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.KILL_BOT, this.onKillBot);
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.REMOVE_DEAD_BOTS, this.onRemoveDeadBots);
-            // Looby events
-            socket === null || socket === void 0 ? void 0 : socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData);
         });
     }
     ;
     dispose() {
+        this.socket.emit(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.EXIT_ROOM);
+        console.log("Arena network disposed");
+    }
+    ;
+    //
+    addEventListeners() {
         const socket = this.socket;
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.START_GAME, this.onStartGame);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_SECOND, this.onTickSecond);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_ROUND, this.onTickRound);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus);
-        socket === null || socket === void 0 ? void 0 : socket.off(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.KILL_BOT, this.onKillBot);
+        // Game start
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.START_GAME, this.onStartGame);
+        // Game events
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_SECOND, this.onTickSecond);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.TICK_ROUND, this.onTickRound);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_SPRITE, this.onAddSprite);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.KILL_BOT, this.onKillBot);
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.REMOVE_DEAD_BOTS, this.onRemoveDeadBots);
+        // Looby events
+        socket.on(_constants_socket__WEBPACK_IMPORTED_MODULE_1__.SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData);
     }
     ;
 }
@@ -18950,6 +18971,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Config: () => (/* binding */ Config)
 /* harmony export */ });
 var _a, _b, _c, _d, _e;
+// @ts-ignore
 __webpack_require__.g.process = __webpack_require__.g.process || { env: {} };
 const Config = {
     demo: true,

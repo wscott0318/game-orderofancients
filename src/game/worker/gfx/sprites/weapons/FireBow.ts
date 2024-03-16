@@ -13,7 +13,7 @@ interface Props {
     gameScene: GameScene;
     launchPos: Vector3;
     targetPos: Vector3;
-}
+};
 
 export class FireBow {
 
@@ -29,7 +29,7 @@ export class FireBow {
 
     //
 
-    constructor({ gameScene, launchPos, targetPos }: Props) {
+    constructor ({ gameScene, launchPos, targetPos }: Props ) {
 
         this.gameScene = gameScene;
 
@@ -43,7 +43,8 @@ export class FireBow {
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
+
+    };
 
     initMesh() {
         const mesh = createFireBow(
@@ -101,6 +102,5 @@ export class FireBow {
             this.mesh.position.lerp(targetPosition, amount);
         }
     }
-}
 
-export default FireBow;
+};

@@ -9,6 +9,7 @@ import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { GameMain } from "../../game/main/GameMain";
 import { GameEvents } from "../../game/Events";
+import { LobbyInfo } from "../../game/Types";
 
 gsap.registerPlugin(CustomEase);
 
@@ -41,7 +42,9 @@ const GameLobby = () => {
 
     useEffect( () => {
 
-        const setLobbyInfoCallback = ( lobby: any ) => {
+        setLobbyInfo( null );
+
+        const setLobbyInfoCallback = ( lobby: LobbyInfo ) => {
 
             setLobbyInfo( lobby );
 
@@ -87,8 +90,11 @@ const GameLobby = () => {
     }, []);
 
     const onExit = () => {
-        if (divRef.current) {
+
+        if ( divRef.current ) {
+
             const divElement = divRef.current.childNodes[0];
+
             menuDownAnim.add("end").to(divElement, {
                 top: "-50vw",
                 duration: 1,
@@ -97,13 +103,19 @@ const GameLobby = () => {
                     "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
                 ),
             });
+
         }
 
         setTimeout(() => {
+
             setGameState( GAME_STATES.GAME_MENU );
             GameMain.dispatchEvent( GameEvents.LOBBY_EXIT_ROOM );
+
         }, 1000);
+
     };
+
+    //
 
     return (
         <Wrapper

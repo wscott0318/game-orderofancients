@@ -1,9 +1,5 @@
-import { GameWorker } from "../GameWorker";
 
 export class PlayerStateComponent {
-
-    index: number;
-    playerIndex: number;
 
     gold: number;
 
@@ -146,16 +142,6 @@ export class PlayerStateComponent {
         this.Philosopher_Stone = 0;
         this.Underground_Gold_Mine = 0;
         this.Gems_of_Power = 0;
-
-    };
-
-    public updateGoldUI () {
-
-        if ( this.index === this.playerIndex ) {
-
-            GameWorker.sendToMain( "updateGold", this.gold );
-
-        }
 
     };
 

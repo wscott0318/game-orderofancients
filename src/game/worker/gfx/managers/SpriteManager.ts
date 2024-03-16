@@ -2,25 +2,22 @@
 import { Vector3 } from "three";
 
 import { NewSpriteInfo, NewTextSpriteInfo } from "../../../../constants/type";
+import { GameScene } from "..";
+
 import { TextSprite } from "../sprites/Text";
 import Boulder from "../sprites/weapons/Boulder";
 import Bow from "../sprites/weapons/Bow";
-import ChaosClaw from "../sprites/weapons/ChaosClaw";
+import { ChaosClaw } from "../sprites/weapons/ChaosClaw";
 import ChaosOrb from "../sprites/weapons/ChaosOrb";
-import FireBow from "../sprites/weapons/FireBow";
+import { FireBow } from "../sprites/weapons/FireBow";
 import Flamecaster from "../sprites/weapons/FlameCaster";
 import FrostBow from "../sprites/weapons/FrostBow";
 import MagicMissiles from "../sprites/weapons/MagicMissiles";
 import MissileBarrage from "../sprites/weapons/MissileBarrage";
 import Rifle from "../sprites/weapons/Rifle";
 import ThrowingAxe from "../sprites/weapons/ThrowingAxe";
-import { GameScene } from "..";
 
 //
-
-type SpriteManagerProps = {
-    gameScene: GameScene;
-};
 
 export class SpriteManager {
 
@@ -30,13 +27,13 @@ export class SpriteManager {
 
     //
 
-    constructor( { gameScene }: SpriteManagerProps ) {
+    constructor ( gameScene: GameScene ) {
 
         this.spriteArray = [];
         this.textSpriteArray = [];
         this.gameScene = gameScene;
 
-    }
+    };
 
     public addSpriteFrom ( newSpriteInfo: NewSpriteInfo ) : void {
 
@@ -194,13 +191,13 @@ export class SpriteManager {
 
         }
 
-    }
+    };
 
     public addSprite ( sprite: any ) : void {
 
         this.spriteArray.push( sprite );
 
-    }
+    };
 
     public addTextSpriteFrom ( newTextSpriteInfo: NewTextSpriteInfo ) : void {
 
@@ -214,13 +211,13 @@ export class SpriteManager {
             })
         );
 
-    }
+    };
 
     public addTextSprite ( sprite: TextSprite ) : void {
 
         this.textSpriteArray.push( sprite );
 
-    }
+    };
 
     public validateTextSprites () : void {
 
@@ -230,7 +227,7 @@ export class SpriteManager {
 
         this.textSpriteArray = [ ...newArray ];
 
-    }
+    };
 
     public tick () : void {
 
@@ -248,6 +245,22 @@ export class SpriteManager {
 
         }
 
-    }
+    };
 
-}
+    public dispose () : void {
+
+        for ( let i = 0; i < this.spriteArray.length; i ++ ) {
+
+            this.spriteArray[ i ].dispose();
+
+        }
+
+        for ( let i = 0; i < this.textSpriteArray.length; i ++ ) {
+
+            this.textSpriteArray[ i ].dispose();
+
+        }
+
+    };
+
+};

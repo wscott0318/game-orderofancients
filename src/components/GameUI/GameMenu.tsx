@@ -144,7 +144,8 @@ const GameMenuUI = ({ setGameState, startMultiAction }: GameMenuUIProps) => {
     };
 
     const onClickSinglePlay = () => {
-        setGameMode(GAME_MODES.Single);
+
+        setGameMode( GAME_MODES.Single );
 
         // todo
         // Network.socket?.emit(SOCKET_EVENTS.PLAY_SINGLE);

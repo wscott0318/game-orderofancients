@@ -1,6 +1,5 @@
 
 import io, { Socket } from "socket.io-client";
-import { toast } from "react-toastify";
 
 import {
     BotStatus,
@@ -9,6 +8,7 @@ import {
     SpriteStatus,
     TimerStatus
 } from "../../../constants/type";
+
 import { SOCKET_EVENTS } from "../../../constants/socket";
 import { Config } from "../../../utils/config";
 import { ITowerStatus } from "../entities/Tower.Entity";
@@ -20,19 +20,18 @@ import { GameEvents } from "../../Events";
 
 export class NetworkHandler {
 
-    public socket: Socket | null = null;
+    public socket: Socket;
 
     //
 
     public init () : void {
 
+        console.log( "Arena network inited" );
+
         this.socket = io( Config.socketServerUrl, { transports: [ 'websocket' ] } );
 
         this.socket.on( "connect_error", ( error ) => {
 
-            // toast.error(
-            //     `Can't connect to server. Please check server status.`
-            // );
             console.log('error', error);
 
         });
@@ -50,29 +49,8 @@ export class NetworkHandler {
 
             console.log( "Connected to server" );
 
+            this.addEventListeners();
             GameWorker.sendToMain( GameEvents.NETWORK_INITED, { socketId: socket.id } );
-
-            // Game start
-            socket?.on( SOCKET_EVENTS.START_GAME, this.onStartGame );
-
-            // Game events
-            socket?.on( SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus );
-            socket?.on( SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot );
-            socket?.on( SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus );
-            socket?.on( SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades );
-            socket?.on( SOCKET_EVENTS.TICK_SECOND, this.onTickSecond );
-            socket?.on( SOCKET_EVENTS.TICK_ROUND, this.onTickRound );
-            socket?.on( SOCKET_EVENTS.ADD_SPRITE, this.onAddSprite );
-            socket?.on( SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite );
-            socket?.on( SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect );
-            socket?.on( SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite );
-            socket?.on( SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite );
-            socket?.on( SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus );
-            socket?.on( SOCKET_EVENTS.KILL_BOT, this.onKillBot );
-            socket?.on( SOCKET_EVENTS.REMOVE_DEAD_BOTS, this.onRemoveDeadBots );
-
-            // Looby events
-            socket?.on( SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData );
 
         });
 
@@ -80,21 +58,9 @@ export class NetworkHandler {
 
     public dispose () : void {
 
-        const socket = this.socket;
+        this.socket.emit( SOCKET_EVENTS.EXIT_ROOM );
 
-        socket?.off( SOCKET_EVENTS.START_GAME, this.onStartGame );
-        socket?.off( SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus );
-        socket?.off( SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot );
-        socket?.off( SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus );
-        socket?.off( SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades );
-        socket?.off( SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData );
-        socket?.off( SOCKET_EVENTS.TICK_SECOND, this.onTickSecond );
-        socket?.off( SOCKET_EVENTS.TICK_ROUND, this.onTickRound );
-        socket?.off( SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect );
-        socket?.off( SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite );
-        socket?.off( SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite );
-        socket?.off( SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus );
-        socket?.off( SOCKET_EVENTS.KILL_BOT, this.onKillBot );
+        console.log( "Arena network disposed" );
 
     };
 
@@ -122,12 +88,12 @@ export class NetworkHandler {
 
         towerStatusData.forEach( ( towerStatus, index ) => {
 
-            const tower = GameWorker.towerManager.get( index );
+            const tower = GameWorker.arenaScene.towerManager.get( index );
             tower.setStatus( towerStatus );
 
         });
 
-        GameWorker.towerManager.towersArray.forEach( ( tower ) => {
+        GameWorker.arenaScene.towerManager.towersArray.forEach( ( tower ) => {
 
             tower.time.secondTracker = timerStatus.secondTracker;
             tower.time.roundTracker = timerStatus.roundTracker;
@@ -139,13 +105,13 @@ export class NetworkHandler {
 
     public onReceiveProduceBot = ( playerIndex: number, newBot: { botType: number } ) : void => {
 
-        GameWorker.towerManager.get( playerIndex ).botManager.add( newBot.botType );
+        GameWorker.arenaScene.towerManager.get( playerIndex ).botManager.add( newBot.botType );
 
     };
 
     public onReceiveBotStatus = ( botStatusData: BotStatus[][] ) : void => {
 
-        if ( GameWorker.towerManager.get( 0 ).botManager.bots.length !== botStatusData[0].length ) {
+        if ( GameWorker.arenaScene.towerManager.get( 0 ).botManager.bots.length !== botStatusData[0].length ) {
 
             console.error("unsynce bot data");
 
@@ -155,7 +121,8 @@ export class NetworkHandler {
 
             for ( let j = 0; j < botStatusData[ i ].length; j ++ ) {
 
-                const bot = GameWorker.towerManager.get( i ).botManager.bots[ j ] as any;
+                const bot = GameWorker.arenaScene.towerManager.get( i ).botManager.bots[ j ] as any;
+                if ( ! bot ) continue;
                 const botStatus = botStatusData[ i ][ j ];
                 if ( ! botStatus ) continue;
 
@@ -184,37 +151,37 @@ export class NetworkHandler {
 
     public onTickSecond = ( playerIndex: number, value: number ) : void => {
 
-        GameWorker.towerManager.get( playerIndex ).time.tickSecond( value );
+        GameWorker.arenaScene.towerManager.get( playerIndex ).time.tickSecond( value );
 
     };
 
     public onTickRound = ( playerIndex: number ) : void => {
 
-        GameWorker.towerManager.get( playerIndex ).time.tickRound();
+        GameWorker.arenaScene.towerManager.get( playerIndex ).time.tickRound();
 
     };
 
     public onAddSprite = ( newSpriteInfo: NewSpriteInfo ) : void => {
 
-        GameWorker.spriteManager.addSpriteFrom( newSpriteInfo );
+        GameWorker.arenaScene.spriteManager.addSpriteFrom( newSpriteInfo );
 
     };
 
     public onAddTextSprite = ( newTextSpriteInfo: NewTextSpriteInfo ) : void => {
 
-        GameWorker.spriteManager.addTextSpriteFrom( newTextSpriteInfo );
+        GameWorker.arenaScene.spriteManager.addTextSpriteFrom( newTextSpriteInfo );
 
     };
 
     public onAddSpriteCollisionEffect = ( spriteIndex: number ) : void => {
 
-        GameWorker.spriteManager.spriteArray[ spriteIndex ].addCollisionEffect();
+        GameWorker.arenaScene.spriteManager.spriteArray[ spriteIndex ].addCollisionEffect();
 
     };
 
     public onDisposeSprite = ( removeSpriteArray: number[] ) : void => {
 
-        const spriteArray = GameWorker.spriteManager.spriteArray;
+        const spriteArray = GameWorker.arenaScene.spriteManager.spriteArray;
         const newArray = [];
 
         for ( let i = 0; i < spriteArray.length; i ++ ) {
@@ -235,13 +202,13 @@ export class NetworkHandler {
 
         }
 
-        GameWorker.spriteManager.spriteArray = newArray;
+        GameWorker.arenaScene.spriteManager.spriteArray = newArray;
 
     };
 
     public onReceiveSpriteStatus = ( spriteStatusData: SpriteStatus[] ) : void => {
 
-        const spriteArray = GameWorker.spriteManager.spriteArray;
+        const spriteArray = GameWorker.arenaScene.spriteManager.spriteArray;
 
         if ( spriteArray.length !== spriteStatusData.length ) {
 
@@ -273,13 +240,13 @@ export class NetworkHandler {
 
     public onKillBot = ( playerIndex: number, botIndex: number ) : void => {
 
-        GameWorker.towerManager.get( playerIndex ).botManager.bots[ botIndex ].kill();
+        GameWorker.arenaScene.towerManager.get( playerIndex ).botManager.bots[ botIndex ].kill();
 
     };
 
     public onRemoveDeadBots = ( playerIndex: number, deadBotArray: number[] ) : void => {
 
-        const botArray = GameWorker.towerManager.get( playerIndex ).botManager.bots;
+        const botArray = GameWorker.arenaScene.towerManager.get( playerIndex ).botManager.bots;
 
         if ( ! botArray.length ) return;
 
@@ -299,7 +266,36 @@ export class NetworkHandler {
 
         }
 
-        GameWorker.towerManager.get( playerIndex ).botManager.bots = newArray;
+        GameWorker.arenaScene.towerManager.get( playerIndex ).botManager.bots = newArray;
+
+    };
+
+    //
+
+    private addEventListeners () : void {
+
+        const socket = this.socket;
+
+        // Game start
+        socket.on( SOCKET_EVENTS.START_GAME, this.onStartGame );
+
+        // Game events
+        socket.on( SOCKET_EVENTS.TOWER_STATUS, this.onReceiveTowerStatus );
+        socket.on( SOCKET_EVENTS.PRODUCE_BOT, this.onReceiveProduceBot );
+        socket.on( SOCKET_EVENTS.BOT_STATUS, this.onReceiveBotStatus );
+        socket.on( SOCKET_EVENTS.RECEIVE_UPGRADES, this.onReceiveUpgrades );
+        socket.on( SOCKET_EVENTS.TICK_SECOND, this.onTickSecond );
+        socket.on( SOCKET_EVENTS.TICK_ROUND, this.onTickRound );
+        socket.on( SOCKET_EVENTS.ADD_SPRITE, this.onAddSprite );
+        socket.on( SOCKET_EVENTS.ADD_SPRITE_COLLISION_EFFECT, this.onAddSpriteCollisionEffect );
+        socket.on( SOCKET_EVENTS.ADD_TEXT_SPRITE, this.onAddTextSprite );
+        socket.on( SOCKET_EVENTS.DISPOSE_SPRITE, this.onDisposeSprite );
+        socket.on( SOCKET_EVENTS.SPRITE_STATUS, this.onReceiveSpriteStatus );
+        socket.on( SOCKET_EVENTS.KILL_BOT, this.onKillBot );
+        socket.on( SOCKET_EVENTS.REMOVE_DEAD_BOTS, this.onRemoveDeadBots );
+
+        // Looby events
+        socket.on( SOCKET_EVENTS.LOBBY_DATA, this.onReceiveLobbyData );
 
     };
 

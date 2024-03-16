@@ -9,19 +9,15 @@ import { ResourcesManager } from "../../managers/ResourcesManager";
 
 //
 
-interface ParticleEffectProps {
-    gameScene: GameScene;
-}
-
 export class ParticleEffect {
 
     public gameScene: GameScene;
 
     //
 
-    constructor ( params: ParticleEffectProps ) {
+    constructor ( gameScene: GameScene ) {
 
-        this.gameScene = params.gameScene;
+        this.gameScene = gameScene;
 
     };
 
@@ -36,7 +32,7 @@ export class ParticleEffect {
         explosion.position.y = position.y;
         explosion.position.z = position.z;
 
-        explosion.scale.set(0.1, 0.1, 0.1);
+        explosion.scale.setScalar( 0.1 );
 
         this.gameScene.add( explosion );
 
@@ -53,7 +49,7 @@ export class ParticleEffect {
         particle.position.y = position.y;
         particle.position.z = position.z;
 
-        particle.scale.set(0.4, 0.4, 0.4);
+        particle.scale.setScalar( 0.4 );
 
         this.gameScene.add( particle );
 
@@ -96,5 +92,11 @@ export class ParticleEffect {
     };
 
     public tick () : void {}
+
+    public dispose () : void {
+
+        //
+
+    };
 
 };

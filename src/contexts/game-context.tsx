@@ -50,14 +50,9 @@ interface GameProviderProps {
 
 export const GameProvider = ({ children }: GameProviderProps) => {
 
-    const [canEnterGame, setCanEnterGame] = useState(
-        initialContext.canEnterGame
-    );
+    const [canEnterGame, setCanEnterGame] = useState( initialContext.canEnterGame );
     const [loading, setLoading] = useState(initialContext.loading);
-
-    const [currentGameState, setCurrentGameState] = useState(
-        initialContext.currentGameState
-    );
+    const [currentGameState, setCurrentGameState] = useState( initialContext.currentGameState );
     const [upgrades, setUpgrades] = useState(initialContext.upgrades);
     const [gameMode, setGameMode] = useState(initialContext.gameMode);
     const [showGrid, setShowGrid] = useState(initialContext.showGrid);

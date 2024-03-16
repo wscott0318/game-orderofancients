@@ -46,4 +46,10 @@ export class BotManager {
 
     };
 
+    public dispose () : void {
+
+        this.killAll();
+
+    };
+
 };

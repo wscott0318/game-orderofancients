@@ -46,7 +46,13 @@ export class TowerManager {
 
     public dispose () : void {
 
-        // todo
+        for ( let i = 0; i < this.towersArray.length; i++ ) {
+
+            this.towersArray[ i ].dispose();
+
+        }
+
+        this.towersArray = [];
 
     };
 

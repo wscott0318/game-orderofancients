@@ -1,4 +1,5 @@
 
+// @ts-ignore
 global.process = global.process || { env: {} };
 
 export const Config = {

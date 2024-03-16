@@ -1,36 +1,30 @@
 
-import { ParticleEffect } from "./gfx/managers/ParticleEffect";
-import { SpriteManager } from "./gfx/managers/SpriteManager";
-import { TowerManager } from "./managers/TowerManager";
-import { StateManager } from "./states/StateManager";
-import { GAME_STATES } from "../../constants";
-import { AnimationManager } from "./gfx/managers/AnimationManager";
-import { GameScene, Gfx } from "./gfx";
-import { LobbyInfo } from "../Types";
 import EventEmitter from "events";
+
+import { Gfx } from "./gfx";
+import { LobbyInfo } from "../Types";
 import { GameEvents } from "../Events";
 import { ResourcesManager } from "./managers/ResourcesManager";
 import { Network } from "./networking/Network";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { ArenaScene } from "./gfx/arena-scenes/ArenaScene";
-import { TowerEntity } from "./entities/Tower.Entity";
+import { GAME_STATES } from "../../constants";
 
 //
 
 export class GameWorkerCore extends EventEmitter {
 
-    public towerManager: TowerManager;
-    public spriteManager: SpriteManager;
-    public particleEffect: ParticleEffect;
     public canvasDiv: HTMLDivElement;
     public lobbyInfo: LobbyInfo;
     public playerIndex: number;
     public gameMode: number;
-    public animationManager: AnimationManager;
 
-    public gameScene: GameScene;
+    public arenaScene: ArenaScene;
 
     public inited: boolean = false;
+    public finished: boolean = false;
+
+    private prevUpdateTime: number = 0;
 
     //
 
@@ -96,6 +90,14 @@ export class GameWorkerCore extends EventEmitter {
 
         });
 
+        this.addListener( GameEvents.DISPOSE, () => {
+
+            this.dispose();
+
+        });
+
+        this.addListener( "upgradeSpell", this.towerSpellUpgrade );
+
     };
 
     public init () : void {
@@ -107,57 +109,22 @@ export class GameWorkerCore extends EventEmitter {
 
         this.playerIndex = playerIndex;
 
-        this.gameScene = new ArenaScene();
-        this.gameScene.init();
+        this.arenaScene = new ArenaScene();
+        this.arenaScene.init();
 
-        Gfx.setActiveScene( this.gameScene );
-
-        this.particleEffect = new ParticleEffect({
-            gameScene: this.gameScene
-        });
-
-        this.spriteManager = new SpriteManager({
-            gameScene: this.gameScene
-        });
-
-        this.animationManager = new AnimationManager({
-            gameScene: this.gameScene,
-            playerIndex: this.playerIndex
-        });
-
-        this.towerManager = new TowerManager();
-
-        for ( let i = 0; i < this.lobbyInfo.players.length; i ++ ) {
-
-            const tower = new TowerEntity({
-                particleEffect:     this.particleEffect,
-                playerIndex:        this.playerIndex,
-                index:              i
-            });
-
-            this.towerManager.add( tower );
-
-        }
-
-        //
-
-        this.addListener( "upgradeSpell", this.towerSpellUpgrade );
-        // EventBridge.onUIEvent( "Dispose", this.dispose );
+        Gfx.setActiveScene( this.arenaScene );
 
         this.inited = true;
+        this.update();
 
     };
 
     public dispose = () : void => {
 
-        this.towerManager.dispose();
-
+        this.inited = false;
+        this.arenaScene.dispose();
         Gfx.dispose();
-
-        // this.stateManager.dispose();
-        // this.stateManager.dispose();
-        // this.particleEffect.dispose();
-        // this.spriteManager.dispose();
+        Network.dispose();
 
     };
 
@@ -184,12 +151,46 @@ export class GameWorkerCore extends EventEmitter {
 
     public startGame = ( lobby: LobbyInfo ) : void => {
 
+        this.finished = false;
         this.setLobbyInfo( lobby );
         this.sendToMain( GameEvents.START_GAME );
 
     };
 
+    public gameOver = () : void => {
+
+        this.finished = true;
+
+        if ( this.arenaScene.towerManager.get( this.playerIndex ).time.totalTimeTracker > 90 ) {
+
+            this.sendToMain( GameEvents.SET_STATE, GAME_STATES.WON );
+
+        } else {
+
+            this.sendToMain( GameEvents.SET_STATE, GAME_STATES.LOST );
+
+        }
+
+    };
+
     //
+
+    private update = () : void => {
+
+        const time = performance.now();
+        const delta = ( this.prevUpdateTime ? time - this.prevUpdateTime : 0 ) / 1000;
+        this.prevUpdateTime = time;
+
+        if ( this.inited ) {
+
+            this.arenaScene.update( delta, time );
+            Gfx.update( delta, time );
+
+        }
+
+        requestAnimationFrame( this.update );
+
+    };
 
     private onMessage = ( event: MessageEvent ) : void => {
 

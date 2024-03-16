@@ -34,11 +34,7 @@ class GfxCore {
     public renderer: WebGLRenderer;
 
     public activeGameScene: GameScene | null = null;
-    private gameScenes: GameScene[] = [];
 
-    private prevRenderTime: number = 0;
-
-    private stats: Stats;
     private resolution: number = 1;
     private composer: ComposerPass;
     private loopEnabled: boolean = true;
@@ -56,9 +52,6 @@ class GfxCore {
         this.screenHeight = params.screenHeight;
         this.devicePixelRatio = params.devicePixelRatio;
 
-        // this.stats = new Stats();
-        // document.body.appendChild( this.stats.domElement );
-
         this.composer = new ComposerPass();
 
         this.createRenderer( params.offscreen );
@@ -66,8 +59,6 @@ class GfxCore {
         //
 
         this.inited = true;
-
-        this.update();
 
     };
 
@@ -77,23 +68,16 @@ class GfxCore {
 
     };
 
-    public update = () : void => {
+    public update = ( delta: number, time: number ) : void => {
 
         if ( ! this.inited ) return;
         if ( ! this.loopEnabled ) return;
 
-        requestAnimationFrame( this.update );
-
         if ( ! this.renderingEnabled ) return;
-
-        const time = performance.now();
-        const delta = this.prevRenderTime ? time - this.prevRenderTime : 0;
-
-        // this.stats.begin();
 
         if ( this.activeGameScene ) {
 
-            this.activeGameScene.update( delta, time );
+            this.activeGameScene.render( delta, time );
             this.composer.readBuffers[ 'sceneDiffuse' ] = this.activeGameScene.getRenderTarget().texture;
 
         }
@@ -101,21 +85,6 @@ class GfxCore {
         this.composer.render( this.renderer );
 
         TWEEN.update();
-
-        // this.stats.end();
-        // this.stats.update();
-
-        // todo: move to game loop later
-
-        if ( GameWorker.inited ) {
-
-            GameWorker.towerManager.update();
-            GameWorker.spriteManager.tick();
-            GameWorker.particleEffect.tick();
-
-        }
-
-        this.prevRenderTime = time;
 
     };
 
@@ -127,12 +96,10 @@ class GfxCore {
 
         }
 
-        this.renderer.domElement.remove();
         this.renderer.dispose();
-        this.gameScenes = [];
-        // this.stats.domElement.remove();
 
         this.activeGameScene = null;
+        this.inited = false;
 
     };
 

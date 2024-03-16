@@ -38,7 +38,7 @@ export class TimeComponent {
         this.secondTracker = 1;
 
         const sprite = new TextSprite({
-            gameScene: GameWorker.gameScene,
+            gameScene: GameWorker.arenaScene,
             text: `+${value}`,
             color: `#EED734`,
             position: new Vector3(
@@ -49,7 +49,7 @@ export class TimeComponent {
             fastMode: false,
         });
 
-        GameWorker.spriteManager.addTextSprite( sprite );
+        GameWorker.arenaScene.spriteManager.addTextSprite( sprite );
 
         GameWorker.sendToMain( 'updateIncome', value );
 
@@ -67,7 +67,7 @@ export class TimeComponent {
 
     public tick () : void {
 
-        this.tower.playerState.updateGoldUI();
+        this.tower.updateGold();
 
         GameWorker.sendToMain( GameEvents.UPDATE_TIME, {
             totalTimeTracker:   this.totalTimeTracker,

@@ -14,7 +14,9 @@ interface Props {
     gameScene: GameScene;
     launchPos: Vector3;
     targetPos: Vector3;
-}
+};
+
+//
 
 export class ChaosClaw {
 
@@ -32,25 +34,29 @@ export class ChaosClaw {
 
     //
 
-    constructor({ gameScene, launchPos, targetPos }: Props) {
+    constructor ( { gameScene, launchPos, targetPos }: Props ) {
 
         this.gameScene = gameScene;
 
         this.weaponType = "Chaos_Claw";
-        this.attackDamage = SPELLS_INFO["Chaos_Claw"].attackDamage;
-        this.damageType = SPELLS_INFO["Chaos_Claw"].damageType;
-        this.targetPos = targetPos;
 
-        this.bounceCount = SPELLS_INFO["Chaos_Claw"].BounceCount;
+        const spellsInfo = SPELLS_INFO["Chaos_Claw"];
+        this.attackDamage = spellsInfo.attackDamage;
+        this.damageType = spellsInfo.damageType;
+        this.bounceCount = spellsInfo.BounceCount;
+
+        this.targetPos = targetPos;
 
         this.mesh = new Object3D();
         this.mesh.position.set(launchPos.x, launchPos.y, launchPos.z);
         this.initMesh();
 
         this.lastTime = Date.now() * 0.001;
-    }
 
-    initMesh() {
+    };
+
+    public initMesh () : void {
+
         const mesh = createChaosClaw(
             this.gameScene.particleRenderer,
             [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
@@ -60,20 +66,22 @@ export class ChaosClaw {
         mesh.position.y = 0;
         mesh.position.z = 0;
 
-        mesh.scale.set(0.15, 0.15, 0.15);
+        mesh.scale.setScalar( 0.15 );
 
-        this.mesh.add(mesh);
+        this.mesh.add( mesh );
+        this.gameScene.add( this.mesh );
 
-        this.gameScene.add(this.mesh);
-    }
+    };
 
-    dispose() {
-        disposeMesh(this.mesh);
+    public dispose () : void {
 
-        this.gameScene.remove(this.mesh);
-    }
+        this.gameScene.remove( this.mesh );
+        disposeMesh( this.mesh );
 
-    addCollisionEffect() {
+    };
+
+    public addCollisionEffect () : void {
+
         const particle = createChaosExplosion(
             this.gameScene.particleRenderer,
             [ ResourcesManager.getTexture("Particles1")!, ResourcesManager.getTexture("Particles2")! ]
@@ -83,12 +91,14 @@ export class ChaosClaw {
         particle.position.y = this.mesh.position.y;
         particle.position.z = this.mesh.position.z;
 
-        particle.scale.set(0.1, 0.1, 0.1);
+        particle.scale.setScalar( 0.1 );
 
-        this.gameScene.add(particle);
-    }
+        this.gameScene.add( particle );
 
-    tick() {
+    };
+
+    public tick () : void {
+
         const now = Date.now() * 0.001;
         const deltaTime = now - this.lastTime;
         this.lastTime = now;
@@ -104,7 +114,7 @@ export class ChaosClaw {
         );
 
         const rotationMatrix = new Matrix4();
-        rotationMatrix.lookAt(targetPosition, this.mesh.position, this.mesh.up);
+        rotationMatrix.lookAt( targetPosition, this.mesh.position, this.mesh.up );
 
         const targetQuaternion = new Quaternion();
         targetQuaternion.setFromRotationMatrix(rotationMatrix);
@@ -114,11 +124,14 @@ export class ChaosClaw {
         const distance = this.mesh.position.distanceTo(targetPosition);
 
         const moveSpeed = 30;
-        if (distance > 0) {
-            const amount = Math.min(moveSpeed * deltaTime, distance) / distance;
-            this.mesh.position.lerp(targetPosition, amount);
-        }
-    }
-}
 
-export default ChaosClaw;
+        if ( distance > 0 ) {
+
+            const amount = Math.min( moveSpeed * deltaTime, distance ) / distance;
+            this.mesh.position.lerp( targetPosition, amount );
+
+        }
+
+    };
+
+};

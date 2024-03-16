@@ -7,7 +7,7 @@ import { UIRenderer } from "./UIRenderer";
 //
 
 interface IGameMainProps {
-    canvas:         HTMLCanvasElement;
+    container:      HTMLDivElement;
     gameMode:       number;
 };
 
@@ -22,6 +22,7 @@ class GameMainCore extends EventEmitter {
     public playerIndex: number;
 
     private uiRenderer: UIRenderer;
+    private canvas: HTMLCanvasElement;
 
     //
 
@@ -42,8 +43,14 @@ class GameMainCore extends EventEmitter {
 
     public initGFX ( props: IGameMainProps ) : void {
 
+        const canvas = document.createElement( 'canvas' );
+        props.container.appendChild( canvas );
+        this.canvas = canvas;
+
+        window.addEventListener( 'resize', this.onResize );
+
         this.uiRenderer = new UIRenderer();
-        this.uiRenderer.init( props.canvas.parentElement as HTMLDivElement );
+        this.uiRenderer.init( props.container );
 
         this.addListener( GameEvents.UI_ADD_ELEMENT, this.uiRenderer.addElement );
         this.addListener( GameEvents.UI_REMOVE_ELEMENT, this.uiRenderer.removeElement );
@@ -51,21 +58,10 @@ class GameMainCore extends EventEmitter {
         this.addListener( GameEvents.UI_SET_ELEMENT_POSITION, this.uiRenderer.setElementPosition );
         this.addListener( GameEvents.UI_SET_CAMERA_POSITION, this.uiRenderer.setCameraPosition );
 
-        window.addEventListener( 'resize', () => {
-
-            this.dispatchEvent( GameEvents.RESIZE_GFX, {
-                windowWidth:    window.innerWidth,
-                windowHeight:   window.innerHeight,
-                screenWidth:    window.screen.width,
-                screenHeight:   window.screen.height
-            });
-
-        });
-
         //
 
         // @ts-ignore
-        const offscreen = props.canvas.transferControlToOffscreen();
+        const offscreen = this.canvas.transferControlToOffscreen();
 
         this.dispatchEvent( GameEvents.INIT_GFX, {
 
@@ -94,11 +90,33 @@ class GameMainCore extends EventEmitter {
 
     public dispose () : void {
 
-        this.worker.terminate();
+        this.canvas.remove();
+
+        window.removeEventListener( 'resize', this.onResize );
+
+        this.removeListener( GameEvents.UI_ADD_ELEMENT, this.uiRenderer.addElement );
+        this.removeListener( GameEvents.UI_REMOVE_ELEMENT, this.uiRenderer.removeElement );
+        this.removeListener( GameEvents.UI_UPDATE_ELEMENT, this.uiRenderer.updateElement );
+        this.removeListener( GameEvents.UI_SET_ELEMENT_POSITION, this.uiRenderer.setElementPosition );
+        this.removeListener( GameEvents.UI_SET_CAMERA_POSITION, this.uiRenderer.setCameraPosition );
+
+        this.uiRenderer.dispose();
+        this.dispatchEvent( GameEvents.DISPOSE );
 
     };
 
     //
+
+    private onResize = () : void => {
+
+        this.dispatchEvent( GameEvents.RESIZE_GFX, {
+            windowWidth:    window.innerWidth,
+            windowHeight:   window.innerHeight,
+            screenWidth:    window.screen.width,
+            screenHeight:   window.screen.height
+        });
+
+    };
 
     private onWorkerMessage = ( event: MessageEvent ) : void => {
 

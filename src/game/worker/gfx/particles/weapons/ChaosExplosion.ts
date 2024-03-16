@@ -25,13 +25,10 @@ import {
 
 //
 
-export function createChaosExplosion( renderer: BatchedRenderer, textures: Texture[] ) {
+export function createChaosExplosion ( renderer: BatchedRenderer, textures: Texture[] ) {
 
     const group = new Group();
     group.name = "ChaosExplosion";
-
-    const yellowColor = new Vector4(0.9, 0.6, 0.25, 1);
-    const yellowColor2 = new Vector4(1, 0.95, 0.4, 1);
 
     const greenColor = new Vector4(0.5, 0.9, 0.4, 1);
     const greenColor2 = new Vector4(0.09411764, 0.819607843, 0.2745098, 1);
@@ -318,4 +315,5 @@ export function createChaosExplosion( renderer: BatchedRenderer, textures: Textu
     group.add(circle2.emitter);
     renderer.addSystem(circle2);
     return group;
-}
+
+};

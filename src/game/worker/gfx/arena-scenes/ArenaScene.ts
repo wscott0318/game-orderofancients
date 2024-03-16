@@ -8,6 +8,11 @@ import { EnvironmentManager } from './EnvironmentManager';
 import { GameWorker } from '../../GameWorker';
 import { ControlsManager } from './ControlsManager';
 import { GameEvents } from '../../../Events';
+import { AnimationManager } from '../managers/AnimationManager';
+import { SpriteManager } from '../managers/SpriteManager';
+import { ParticleEffect } from '../managers/ParticleEffect';
+import { TowerManager } from '../../managers/TowerManager';
+import { TowerEntity } from '../../entities/Tower.Entity';
 
 //
 
@@ -16,13 +21,15 @@ export class ArenaScene extends GameScene {
     public scene: Scene;
     public camera: PerspectiveCamera;
 
-    public controls: ControlsManager;
-
-    private _environment: EnvironmentManager;
-
     private gridHelper: GridHelper;
+    protected renderTarget: WebGLRenderTarget;
 
-    protected _renderTarget: WebGLRenderTarget;
+    public controls: ControlsManager;
+    private environment: EnvironmentManager;
+    public animationManager: AnimationManager;
+    public spriteManager: SpriteManager;
+    public particleEffect: ParticleEffect;
+    public towerManager: TowerManager;
 
     //
 
@@ -38,10 +45,32 @@ export class ArenaScene extends GameScene {
 
         this.scene.background = new Color( 0xffffff );
 
-        this._renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height );
+        this.renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height );
 
-        this._environment = new EnvironmentManager();
-        this._environment.init( this.scene );
+        //
+
+        this.environment = new EnvironmentManager();
+        this.environment.init( this.scene );
+
+        this.particleEffect = new ParticleEffect( this );
+        this.spriteManager = new SpriteManager( this );
+        this.animationManager = new AnimationManager( this );
+        this.towerManager = new TowerManager();
+
+        //
+
+        for ( let i = 0; i < GameWorker.lobbyInfo.players.length; i ++ ) {
+
+            const tower = new TowerEntity({
+                playerIndex:        GameWorker.playerIndex,
+                id:                 i
+            });
+
+            this.towerManager.add( tower );
+
+        }
+
+        //
 
         GameWorker.addListener( GameEvents.GFX_TOGGLE_GRID, this.toggleGrid );
 
@@ -52,11 +81,17 @@ export class ArenaScene extends GameScene {
 
     public update ( delta: number, time: number ) : void {
 
-        // this._camControls.update();
+        this.towerManager.update();
+        this.spriteManager.tick();
+        this.particleEffect.tick();
 
-        this.particleRenderer.update( delta / 1000 );
+    };
 
-        Gfx.renderer.setRenderTarget( this._renderTarget );
+    public render ( delta: number, time: number ) : void {
+
+        this.particleRenderer.update( delta );
+
+        Gfx.renderer.setRenderTarget( this.renderTarget );
         Gfx.renderer.setClearColor( 0xffffff );
         Gfx.renderer.clear();
         Gfx.renderer.render( this.scene, this.camera );
@@ -71,20 +106,25 @@ export class ArenaScene extends GameScene {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
 
-        this._renderTarget.setSize( width, height );
+        this.renderTarget.setSize( width, height );
 
     };
 
     public getRenderTarget () : WebGLRenderTarget {
 
-        return this._renderTarget;
+        return this.renderTarget;
 
     };
 
     public dispose () : void {
 
         this.scene.children = [];
-        this._renderTarget.dispose();
+        this.renderTarget.dispose();
+
+        this.towerManager.dispose();
+        this.particleEffect.dispose();
+        this.animationManager.dispose();
+        this.spriteManager.dispose();
 
     };
 
