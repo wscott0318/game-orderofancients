@@ -49,6 +49,7 @@ export class TimeComponent {
             fastMode: false,
         });
 
+        this.tower.playerState.income = value;
         GameWorker.arenaScene.spriteManager.addTextSprite( sprite );
 
         GameWorker.sendToMain( 'updateIncome', value );

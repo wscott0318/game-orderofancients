@@ -27,6 +27,7 @@ export type spell = {
 
 export interface PlayerInfo {
     socketId: string;
+    name: string;
     upgrades: spell[];
 };
 

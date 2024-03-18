@@ -25,6 +25,7 @@ export class GameWorkerCore extends EventEmitter {
     public finished: boolean = false;
 
     private prevUpdateTime: number = 0;
+    public tick: number = 0;
 
     //
 
@@ -176,6 +177,10 @@ export class GameWorkerCore extends EventEmitter {
     //
 
     private update = () : void => {
+
+        this.tick ++;
+
+        //
 
         const time = performance.now();
         const delta = ( this.prevUpdateTime ? time - this.prevUpdateTime : 0 ) / 1000;

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BrowserView, MobileView } from "react-device-detect";
 import styled from "styled-components";
 
@@ -20,7 +20,7 @@ export const GradientText = styled.span`
 
 const GamePlayUI = () => {
 
-    const { upgrades, setUpgrades } = useGameContext();
+    const { upgrades } = useGameContext();
 
     const [ profileSpells, setProfileSpells ] = useState( [] );
     const [ playerShow, setPlayerShow ] = useState( true );
@@ -60,24 +60,6 @@ const GamePlayUI = () => {
         // }
 
     };
-
-    useEffect(() => {
-
-        const updateUpgrades = ( upgrades: any[] ) => {
-
-            setUpgrades( upgrades );
-
-        };
-
-        GameMain.addListener( 'updateUpgrades', updateUpgrades );
-
-        return () => {
-
-            GameMain.removeListener( 'updateUpgrades', updateUpgrades );
-
-        };
-
-    }, []);
 
     //
 

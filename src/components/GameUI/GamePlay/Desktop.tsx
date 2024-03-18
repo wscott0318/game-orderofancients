@@ -408,7 +408,6 @@ const TimeBar = styled.div`
 //
 
 export const Desktop = ({
-    upgrades,
     profileSpells,
     onClickUpgrade,
     playerShow,
@@ -427,8 +426,11 @@ export const Desktop = ({
     const [ healthValue, setHealthValue ] = useState(0);
     const [ maxHealthValue, setMaxHealthValue ] = useState(0);
     const [ level, setLevel ] = useState(1);
+    const [ stats, setStats ] = useState({ players: [] });
 
-    const { gameMode, lobbyInfo } = useGameContext();
+    const { gameMode, upgrades } = useGameContext();
+
+    //
 
     useEffect(() => {
 
@@ -441,6 +443,12 @@ export const Desktop = ({
         const updateIncome = ( income: number ) => {
 
             setIncomeValue( income );
+
+        };
+
+        const setArenaStats = ( props: any ) => {
+
+            setStats( props );
 
         };
 
@@ -469,6 +477,7 @@ export const Desktop = ({
         GameMain.addListener( 'updateIncome', updateIncome );
         GameMain.addListener( 'tickRound', tickRound );
         GameMain.addListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
+        GameMain.addListener( GameEvents.SET_ARENA_STATS, setArenaStats );
 
         gameMenuFadeInAnim
             .add("start")
@@ -486,6 +495,7 @@ export const Desktop = ({
             GameMain.removeListener( 'updateIncome', updateIncome );
             GameMain.removeListener( 'tickRound', tickRound );
             GameMain.removeListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
+            GameMain.removeListener( GameEvents.SET_ARENA_STATS, setArenaStats );
 
         };
 
@@ -852,7 +862,7 @@ export const Desktop = ({
                                             </th>
                                         </tr>
 
-                                        {lobbyInfo?.players.map(
+                                        { stats.players.map(
                                             (player: any, index: number) => (
                                                 <tr
                                                     style={{ color: PLAYER_COLOR[ index ] }}
@@ -864,7 +874,7 @@ export const Desktop = ({
                                                             textAlign: "start",
                                                         }}
                                                     >
-                                                        {player.name}
+                                                        { player.name }
                                                     </td>
                                                     <td
                                                         style={{ width: "30%" }}
@@ -873,7 +883,7 @@ export const Desktop = ({
                                                             <div
                                                                 className="status_player_health"
                                                                 style={{
-                                                                    width: `100%`,
+                                                                    width: `${ 100 * player.hp / player.maxHp }%`,
                                                                 }}
                                                             ></div>
                                                         </div>
@@ -881,17 +891,17 @@ export const Desktop = ({
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        5
+                                                        { player.kills }
                                                     </td>
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        2
+                                                        { player.income }
                                                     </td>
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        0
+                                                        { player.wins }
                                                     </td>
                                                     <td
                                                         style={{ width: "20%" }}

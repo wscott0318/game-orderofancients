@@ -16,6 +16,18 @@ import { TowerEntity } from '../../entities/Tower.Entity';
 
 //
 
+interface IArenaState {
+    players: {
+        name:       string;
+        income:     number;
+        hp:         number;
+        maxHp:      number;
+        kills:      number;
+        wins:       number;
+        lastStand:  number;
+    }[];
+};
+
 export class ArenaScene extends GameScene {
 
     public scene: Scene;
@@ -66,6 +78,7 @@ export class ArenaScene extends GameScene {
                 id:                 i
             });
 
+            tower.playerState.name = GameWorker.lobbyInfo.players[ i ].name;
             this.towerManager.add( tower );
 
         }
@@ -80,6 +93,12 @@ export class ArenaScene extends GameScene {
     };
 
     public update ( delta: number, time: number ) : void {
+
+        if ( GameWorker.tick % 60 === 0 ) {
+
+            GameWorker.sendToMain( GameEvents.SET_ARENA_STATS, this.getStats() );
+
+        }
 
         this.towerManager.update();
         this.spriteManager.tick();
@@ -129,6 +148,30 @@ export class ArenaScene extends GameScene {
     };
 
     //
+
+    private getStats () : IArenaState {
+
+        const stats: IArenaState = {
+            players: []
+        };
+
+        this.towerManager.towersArray.forEach( ( tower ) => {
+
+            stats.players.push({
+                name:           tower.playerState.name,
+                income:         tower.playerState.income,
+                hp:             tower.hp,
+                maxHp:          tower.maxHp,
+                kills:          tower.playerState.kills,
+                wins:           tower.playerState.wins,
+                lastStand:      tower.playerState.lastStand
+            });
+
+        });
+
+        return stats;
+
+    };
 
     private initCameraControls () : void {
 

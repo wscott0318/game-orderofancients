@@ -54,6 +54,7 @@ export const GameScene = () => {
         currentGameState,
         showGrid,
         setCanEnterGame,
+        setUpgrades
     } = useGameContext();
 
     const {
@@ -146,15 +147,23 @@ export const GameScene = () => {
 
     };
 
+    const updateUpgrades = ( upgrades: any[] ) => {
+
+        setUpgrades( upgrades );
+
+    };
+
     useEffect( () => {
 
         GameMain.addListener( GameEvents.START_GAME, startGame );
         GameMain.addListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
+        GameMain.addListener( GameEvents.SET_PLAYER_UPGRADES, updateUpgrades );
 
         return () => {
 
             GameMain.removeListener( GameEvents.START_GAME, startGame );
             GameMain.removeListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
+            GameMain.removeListener( GameEvents.SET_PLAYER_UPGRADES, updateUpgrades );
 
         };
 

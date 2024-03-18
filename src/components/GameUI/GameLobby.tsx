@@ -31,7 +31,7 @@ const ContentWrapper = styled.div`
 const GameLobby = () => {
 
     const { setGameState } = useGame();
-    const { lobbyInfo, setLobbyInfo, setUpgrades } = useGameContext();
+    const { lobbyInfo, setLobbyInfo } = useGameContext();
 
     const divRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
@@ -51,12 +51,10 @@ const GameLobby = () => {
         };
 
         GameMain.addListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
-        GameMain.addListener( GameEvents.SET_PLAYER_UPGRADES, setUpgrades );
 
         return () => {
 
             GameMain.removeListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
-            GameMain.removeListener( GameEvents.SET_PLAYER_UPGRADES, setUpgrades );
 
         };
 

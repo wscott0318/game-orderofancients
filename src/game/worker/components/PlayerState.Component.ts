@@ -1,7 +1,12 @@
 
 export class PlayerStateComponent {
 
-    gold: number;
+    name: string = '';
+    gold: number = 0;
+    income: number = 0;
+    kills: number = 0;
+    wins: number = 0;
+    lastStand: number = 0;
 
     // Normal Weapon Spells
     Throwing_Axes: number;

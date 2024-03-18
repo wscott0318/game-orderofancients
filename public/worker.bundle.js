@@ -13394,6 +13394,7 @@ const GameEvents = {
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
     SET_PLAYER_HEALTH: 'SetPlayerHealth',
+    SET_ARENA_STATS: 'SetArenaStats',
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
     UI_CLEAR: 'UIClear',
     UI_SET_CAMERA_POSITION: 'UISetCameraPosition',
@@ -13443,6 +13444,7 @@ class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_0___default()) {
         this.inited = false;
         this.finished = false;
         this.prevUpdateTime = 0;
+        this.tick = 0;
         this.dispose = () => {
             this.inited = false;
             this.arenaScene.dispose();
@@ -13478,6 +13480,8 @@ class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_0___default()) {
         };
         //
         this.update = () => {
+            this.tick++;
+            //
             const time = performance.now();
             const delta = (this.prevUpdateTime ? time - this.prevUpdateTime : 0) / 1000;
             this.prevUpdateTime = time;
@@ -13560,6 +13564,12 @@ __webpack_require__.r(__webpack_exports__);
 class PlayerStateComponent {
     //
     constructor() {
+        this.name = '';
+        this.gold = 0;
+        this.income = 0;
+        this.kills = 0;
+        this.wins = 0;
+        this.lastStand = 0;
         this.gold = 5000;
         // Normal
         this.Throwing_Axes = 0;
@@ -13668,6 +13678,7 @@ class TimeComponent {
             position: new three__WEBPACK_IMPORTED_MODULE_4__.Vector3(this.tower.towerMesh.position.x, this.tower.towerMesh.position.y + 5, this.tower.towerMesh.position.z),
             fastMode: false,
         });
+        this.tower.playerState.income = value;
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.addTextSprite(sprite);
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain('updateIncome', value);
     }
@@ -14199,7 +14210,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-//
+;
 class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene {
     constructor() {
         super(...arguments);
@@ -14229,6 +14240,7 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
                 playerIndex: _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.playerIndex,
                 id: i
             });
+            tower.playerState.name = _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.lobbyInfo.players[i].name;
             this.towerManager.add(tower);
         }
         //
@@ -14238,6 +14250,9 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     }
     ;
     update(delta, time) {
+        if (_GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.tick % 60 === 0) {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.SET_ARENA_STATS, this.getStats());
+        }
         this.towerManager.update();
         this.spriteManager.tick();
         this.particleEffect.tick();
@@ -14273,6 +14288,24 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     }
     ;
     //
+    getStats() {
+        const stats = {
+            players: []
+        };
+        this.towerManager.towersArray.forEach((tower) => {
+            stats.players.push({
+                name: tower.playerState.name,
+                income: tower.playerState.income,
+                hp: tower.hp,
+                maxHp: tower.maxHp,
+                kills: tower.playerState.kills,
+                wins: tower.playerState.wins,
+                lastStand: tower.playerState.lastStand
+            });
+        });
+        return stats;
+    }
+    ;
     initCameraControls() {
         this.camera.position.set(0, 20, 10);
         this.camera.lookAt(0, 0, 0);

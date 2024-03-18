@@ -22,6 +22,7 @@ export const GameEvents = {
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
     SET_PLAYER_HEALTH: 'SetPlayerHealth',
+    SET_ARENA_STATS: 'SetArenaStats',
 
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
 
