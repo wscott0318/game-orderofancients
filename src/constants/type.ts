@@ -1,10 +1,3 @@
-export type TowerStatus = {
-    level: number;
-    maxHp: number;
-    hp: number;
-    isDead: boolean;
-    gold: number;
-};
 
 export type TimerStatus = {
     secondTracker: number;

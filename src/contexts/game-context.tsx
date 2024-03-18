@@ -1,19 +1,10 @@
+
 import { ReactNode, createContext, useContext, useState } from "react";
 
 import { GAME_MODES, GAME_STATES } from "../constants";
-import { Game } from "../game/Game";
-import { spell } from "../constants/spell";
+import { LobbyInfo } from "../game/Types";
 
-export interface PlayerInfo {
-    socketId: string;
-    upgrades: spell[];
-}
-
-export interface LobbyInfo {
-    id: string;
-    players: PlayerInfo[];
-    status: number;
-}
+//
 
 interface GameContextProps {
     canEnterGame: boolean;
@@ -28,8 +19,6 @@ interface GameContextProps {
     setGameMode: (value: number) => void;
     showGrid: boolean;
     setShowGrid: (value: boolean) => void;
-    gameInstance: Game | undefined;
-    setGameInstance: (value: Game | undefined) => void;
     lobbyInfo: LobbyInfo | undefined;
     setLobbyInfo: (value: LobbyInfo) => void;
 }
@@ -47,8 +36,6 @@ export const initialContext: GameContextProps = {
     setGameMode: () => {},
     showGrid: false,
     setShowGrid: () => {},
-    gameInstance: undefined,
-    setGameInstance: () => {},
     lobbyInfo: undefined,
     setLobbyInfo: () => {},
 };
@@ -57,22 +44,21 @@ export const GameContext = createContext<GameContextProps>(initialContext);
 
 interface GameProviderProps {
     children: ReactNode;
-}
+};
+
+//
 
 export const GameProvider = ({ children }: GameProviderProps) => {
-    const [canEnterGame, setCanEnterGame] = useState(
-        initialContext.canEnterGame
-    );
-    const [loading, setLoading] = useState(initialContext.loading);
 
-    const [currentGameState, setCurrentGameState] = useState(
-        initialContext.currentGameState
-    );
+    const [canEnterGame, setCanEnterGame] = useState( initialContext.canEnterGame );
+    const [loading, setLoading] = useState(initialContext.loading);
+    const [currentGameState, setCurrentGameState] = useState( initialContext.currentGameState );
     const [upgrades, setUpgrades] = useState(initialContext.upgrades);
     const [gameMode, setGameMode] = useState(initialContext.gameMode);
     const [showGrid, setShowGrid] = useState(initialContext.showGrid);
-    const [gameInstance, setGameInstance] = useState<Game>();
     const [lobbyInfo, setLobbyInfo] = useState<LobbyInfo>();
+
+    //
 
     return (
         <GameContext.Provider
@@ -89,8 +75,6 @@ export const GameProvider = ({ children }: GameProviderProps) => {
                 setGameMode,
                 showGrid,
                 setShowGrid,
-                gameInstance,
-                setGameInstance,
                 lobbyInfo,
                 setLobbyInfo,
             }}
@@ -100,4 +84,4 @@ export const GameProvider = ({ children }: GameProviderProps) => {
     );
 };
 
-export const useGameContext = () => useContext(GameContext);
+export const useGameContext = () => useContext( GameContext );

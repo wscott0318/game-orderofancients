@@ -1,15 +1,15 @@
+
 import styled from "styled-components";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/all";
 import { useEffect, useRef } from "react";
 
-import { SOCKET_EVENTS } from "../../constants/socket";
 import { useGame } from "../../hooks/useGame";
 import { GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
-import { Network } from "../../game/networking/NetworkHandler";
-import { EventBridge } from "../../libs/EventBridge";
-import { Events } from "../../constants/GameEvents";
+import { GameMain } from "../../game/main/GameMain";
+import { GameEvents } from "../../game/Events";
+import { LobbyInfo } from "../../game/Types";
 
 gsap.registerPlugin(CustomEase);
 
@@ -31,7 +31,7 @@ const ContentWrapper = styled.div`
 const GameLobby = () => {
 
     const { setGameState } = useGame();
-    const { lobbyInfo, setLobbyInfo, setUpgrades } = useGameContext();
+    const { lobbyInfo, setLobbyInfo } = useGameContext();
 
     const divRef = useRef<HTMLDivElement>(null);
     const menuDownAnim = gsap.timeline();
@@ -42,13 +42,19 @@ const GameLobby = () => {
 
     useEffect( () => {
 
-        EventBridge.onGameEvent( Events.Game.SET_LOBBY_DATA, setLobbyInfo );
-        EventBridge.onGameEvent( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+        setLobbyInfo( null );
+
+        const setLobbyInfoCallback = ( lobby: LobbyInfo ) => {
+
+            setLobbyInfo( lobby );
+
+        };
+
+        GameMain.addListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
 
         return () => {
 
-            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, setLobbyInfo );
-            EventBridge.removeGameEventListener( Events.Game.SET_PLAYER_UPGRADES, setUpgrades );
+            GameMain.removeListener( GameEvents.SET_LOBBY_DATA, setLobbyInfoCallback );
 
         };
 
@@ -58,9 +64,10 @@ const GameLobby = () => {
 
     useEffect(() => {
 
-        Network.socket?.emit(SOCKET_EVENTS.JOIN);
+        GameMain.dispatchEvent( GameEvents.LOBBY_JOIN );
 
         if (divRef.current) {
+
             const divElement = divRef.current.childNodes[0];
 
             menuDownAnim.add("start").from(divElement, {
@@ -71,15 +78,21 @@ const GameLobby = () => {
                     "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
                 ),
             });
+
         }
+
         return () => {
             menuDownAnim.kill();
         };
+
     }, []);
 
     const onExit = () => {
-        if (divRef.current) {
+
+        if ( divRef.current ) {
+
             const divElement = divRef.current.childNodes[0];
+
             menuDownAnim.add("end").to(divElement, {
                 top: "-50vw",
                 duration: 1,
@@ -88,13 +101,19 @@ const GameLobby = () => {
                     "M0,0,C0.266,0.412,0.666,1,0.842,1.022,0.924,1.032,0.92,1.034,1,1"
                 ),
             });
+
         }
 
         setTimeout(() => {
-            setGameState(GAME_STATES.GAME_MENU);
-            Network.socket?.emit(SOCKET_EVENTS.EXIT_ROOM);
+
+            setGameState( GAME_STATES.GAME_MENU );
+            GameMain.dispatchEvent( GameEvents.LOBBY_EXIT_ROOM );
+
         }, 1000);
+
     };
+
+    //
 
     return (
         <Wrapper

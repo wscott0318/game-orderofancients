@@ -4,7 +4,8 @@ import "./firefly.scss";
 import { useEffect, useState } from "react";
 import { GET_RANDOM_VAL } from "../../helper/math";
 import { S3_BUCKET_URL } from "../../constants";
-import { EventBridge } from "../../libs/EventBridge";
+import { GameMain } from "../../game/main/GameMain";
+import { GameEvents } from "../../game/Events";
 
 const logoImg = S3_BUCKET_URL + "/assets/images/logo2.png";
 const sliderImg = S3_BUCKET_URL + "/assets/images/loader-slider-shine.png";
@@ -57,21 +58,17 @@ export const Loader = ({ canEnterGame }: LoaderProps) => {
 
         };
 
-        EventBridge.onGameEvent( "LoadingProgressUpdate", onLoadProgress );
+        GameMain.addListener( GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, onLoadProgress );
 
         return () => {
 
-            EventBridge.removeGameEventListener( "LoadingProgressUpdate", onLoadProgress );
+            GameMain.removeListener( GameEvents.ASSETS_LOADING_PROGRESS_UPDATE, onLoadProgress );
 
         };
 
     }, []);
 
-    useEffect(() => {
-        if (canEnterGame) {
-            setProgressValue(100);
-        }
-    }, [canEnterGame]);
+    //
 
     return (
         <div className="loader">

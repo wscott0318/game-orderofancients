@@ -1,31 +1,5 @@
 import { ARMOR_TYPES, DAMAGE_TYPES, S3_BUCKET_URL } from ".";
 
-export type spell = {
-    name: string;
-    propertyName: string;
-    spellType: string;
-    thumbnail: string;
-    cost: string;
-    damageType: number;
-    attackRange: number;
-    targetType: string;
-    targetPreference: number;
-    attackDamage: number;
-    dps: number;
-    cooldown: number;
-    BounceCount?: number;
-    stunDuration?: number;
-    slowTime?: number;
-    duration?: number;
-    targetCount?: number;
-    upgradeType?: string;
-    gold?: number;
-    description?: string;
-    effect?: number;
-    sacrifiHealth?: number;
-    chargeCount?: number;
-};
-
 const throwingAxeImg =
     S3_BUCKET_URL + "/assets/images/spells/normal/throwingAxes.png";
 const seekerAxeImg =
@@ -175,7 +149,7 @@ export const SPELLS_INFO = {
         damageType: DAMAGE_TYPES.Magic,
         attackRange: 300,
         targetType: "Splash",
-        targetPreference: null,
+        targetPreference: null as number,
         attackDamage: 60,
         dps: 300,
         cooldown: 0.2,
@@ -235,7 +209,7 @@ export const SPELLS_INFO = {
         attackRange: 600,
         targetType: "Bounce(3)",
         BounceCount: 3,
-        targetPreference: null,
+        targetPreference: null as number,
         attackDamage: 75,
         dps: 150,
         cooldown: 0.5,

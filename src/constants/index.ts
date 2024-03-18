@@ -37,10 +37,11 @@ export const GAME_STATES = {
     GAME_MENU: 0x01,
     PLAYING: 0x02,
     PAUSE: 0x03,
-    END: 0x04,
-    SETTING: 0x05,
-    GAME_LOBBY: 0x06,
-    TUTORIAL: 0x07,
+    WON: 0x04,
+    LOST: 0x05,
+    SETTING: 0x06,
+    GAME_LOBBY: 0x07,
+    TUTORIAL: 0x08,
 };
 
 export const CAMERA_POS = {

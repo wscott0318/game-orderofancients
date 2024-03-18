@@ -6,7 +6,6 @@ import { GAME_MODES, GAME_STATES, S3_BUCKET_URL } from "../../constants";
 import { useGameContext } from "../../contexts/game-context";
 import { SOCKET_EVENTS } from "../../constants/socket";
 import { Config } from "../../utils/config";
-import { Network } from "../../game/networking/NetworkHandler";
 
 const menuBack = S3_BUCKET_URL + "/assets/images/menu-back.png";
 const btnBack = S3_BUCKET_URL + "/assets/images/button-back-bright.png";
@@ -145,9 +144,11 @@ const GameMenuUI = ({ setGameState, startMultiAction }: GameMenuUIProps) => {
     };
 
     const onClickSinglePlay = () => {
-        setGameMode(GAME_MODES.Single);
 
-        Network.socket?.emit(SOCKET_EVENTS.PLAY_SINGLE);
+        setGameMode( GAME_MODES.Single );
+
+        // todo
+        // Network.socket?.emit(SOCKET_EVENTS.PLAY_SINGLE);
     };
 
     return (

@@ -1,5 +1,7 @@
-import { useEffect, useRef } from "react";
+
+import { useEffect, useRef, MouseEvent } from "react";
 import styled from "styled-components";
+
 import { Loader } from "../Loader";
 import { GAME_STATES, ROUND_TIME } from "../../constants";
 import GameMenuUI from "./GameMenu";
@@ -12,14 +14,23 @@ import { Toggle } from "../Toggle";
 import { useGameContext } from "../../contexts/game-context";
 import GameLobby from "./GameLobby";
 import Tutorial from "../Tutorial";
-import { EventBridge } from "../../libs/EventBridge";
-import { Events } from "../../constants/GameEvents";
 import { CONVERT_TIME } from "../../utils/helper";
+import { GameMain } from "../../game/main/GameMain";
+import { GameEvents } from "../../game/Events";
+
+//
 
 const Wrapper = styled.div`
     position: relative;
     width: 100vw;
     height: 100vh;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 0;
+    }
 `;
 
 const BackVideo = styled.video`
@@ -30,7 +41,10 @@ const BackVideo = styled.video`
     z-index: 0;
 `;
 
+//
+
 export const GameScene = () => {
+
     const firstRef = useRef(false);
 
     const {
@@ -40,6 +54,7 @@ export const GameScene = () => {
         currentGameState,
         showGrid,
         setCanEnterGame,
+        setUpgrades
     } = useGameContext();
 
     const {
@@ -63,14 +78,19 @@ export const GameScene = () => {
     const videoRef = useRef() as any;
 
     useEffect(() => {
-        if (currentGameState === GAME_STATES.GAME_MENU) {
+
+        if ( currentGameState === GAME_STATES.GAME_MENU ) {
+
             const videoInstance = videoRef.current as HTMLVideoElement;
             if (videoInstance.paused) videoInstance.play();
+
         }
+
     }, [currentGameState]);
 
     useEffect(() => {
-        if (firstRef.current) return;
+
+        if ( firstRef.current ) return;
         firstRef.current = true;
 
         createGame();
@@ -83,21 +103,25 @@ export const GameScene = () => {
             window.removeEventListener("keydown", onKeyDown.bind(this));
             window.removeEventListener("click", onKeyDown.bind(this));
         };
+
     }, []);
 
     const onKeyDown = (e: any) => {
+
         if (canEnterGameRef.current && currentGameState === GAME_STATES.NONE) {
-            document
-                .getElementsByClassName("loader")[0]
-                .classList.add("enterGame");
+
+            document.getElementsByClassName("loader")[0].classList.add("enterGame");
 
             setTimeout(() => {
+
                 setCanEnterGame(false);
                 setLoading(false);
-
                 setGameState(GAME_STATES.TUTORIAL);
+
             }, 3000);
+
         }
+
     };
 
     // tmp start
@@ -123,25 +147,51 @@ export const GameScene = () => {
 
     };
 
+    const updateUpgrades = ( upgrades: any[] ) => {
+
+        setUpgrades( upgrades );
+
+    };
+
     useEffect( () => {
 
-        EventBridge.onGameEvent( Events.Game.GAME_START, startGame );
-        EventBridge.onGameEvent( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
+        GameMain.addListener( GameEvents.START_GAME, startGame );
+        GameMain.addListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
+        GameMain.addListener( GameEvents.SET_PLAYER_UPGRADES, updateUpgrades );
 
         return () => {
 
-            EventBridge.removeGameEventListener( Events.Game.GAME_START, startGame );
-            EventBridge.removeGameEventListener( Events.Game.UPDATE_TIME, onTimeUpdateHandler );
+            GameMain.removeListener( GameEvents.START_GAME, startGame );
+            GameMain.removeListener( GameEvents.UPDATE_TIME, onTimeUpdateHandler );
+            GameMain.removeListener( GameEvents.SET_PLAYER_UPGRADES, updateUpgrades );
 
         };
 
     }, [] );
 
+    const mouseDownHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mousedown', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
+    const mouseUpHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mouseup', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
+    const mouseMoveHandler = ( event: MouseEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mousemove', { key: event.button, x: event.clientX, y: event.clientY } );
+
+    };
+
     // tmp end
 
     return (
         <Wrapper>
-            <div ref={canvasDivRef}></div>
+            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler } onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler }></div>
 
             {canPlayVideo && (
                 <BackVideo ref={videoRef} loop className="opacity-[0.8]">
@@ -177,7 +227,7 @@ export const GameScene = () => {
                 </>
             ) : currentGameState === GAME_STATES.PAUSE ? (
                 <GamePauseUI />
-            ) : currentGameState === GAME_STATES.END ? (
+            ) : currentGameState === GAME_STATES.WON || currentGameState === GAME_STATES.LOST ? (
                 <GameEndUI />
             ) : currentGameState === GAME_STATES.GAME_LOBBY ? (
                 <GameLobby />

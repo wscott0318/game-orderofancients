@@ -6,9 +6,7 @@ import styled from "styled-components";
 import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { useGameContext } from "../../../contexts/game-context";
-import { EventBridge } from "../../../libs/EventBridge";
-import { Game } from "../../../game";
-import { Network } from "../../../game/networking/NetworkHandler";
+import { GameMain } from "../../../game/main/GameMain";
 
 //
 
@@ -22,46 +20,48 @@ export const GradientText = styled.span`
 
 const GamePlayUI = () => {
 
-    const { upgrades, lobbyInfo } = useGameContext();
+    const { upgrades } = useGameContext();
 
-    const [profileSpells, setProfilSpells] = useState([]) as any;
+    const [ profileSpells, setProfileSpells ] = useState( [] );
+    const [ playerShow, setPlayerShow ] = useState( true );
 
-    const [playerShow, setPlayerShow]: [boolean, any] = useState(true);
+    const onClickUpgrade = ( item: any, itemIndex: number ) => {
 
-    const onClickUpgrade = (item: any, itemIndex: number) => {
+        GameMain.dispatchEvent( 'upgradeSpell', { item, itemIndex } );
 
-        EventBridge.dispatchToGame( "upgradeSpell", { item, itemIndex } );
+        // todo
+        // const playerIndex = GameMain.lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
+        // if ( playerIndex === undefined || playerIndex === -1 ) return;
 
-        const playerIndex = Game.instance._lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );
-        if ( playerIndex === undefined || playerIndex === -1 ) return;
+        // const playerState = GameMain.towerManager.get( playerIndex ).playerState;
+        // const gold_balance = playerState.gold;
+        // const price = item.cost;
 
-        const playerState = Game.instance.towerManager.get( playerIndex ).playerState;
-        const gold_balance = playerState.gold;
-        const price = item.cost;
+        // if ( gold_balance < price ) return;
 
-        if ( gold_balance < price ) return;
+        // if ( item.spellType === 'Weapon' ) {
 
-        if ( item.spellType === "Weapon" ) {
+        //     const userSpells: any = [ ...profileSpells ];
 
-            const userSpells = [ ...profileSpells ];
+        //     const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
 
-            const index = userSpells.findIndex( ( spell: any ) => spell.name === item.name );
+        //     if ( index !== -1 ) {
 
-            if ( index !== -1 ) {
+        //         userSpells[ index ].count ++;
 
-                userSpells[ index ].count ++;
+        //     } else {
 
-            } else {
+        //         userSpells.push({ ...item, count: 1, });
 
-                userSpells.push({ ...item, count: 1, });
+        //     }
 
-            }
+        //     setProfileSpells( userSpells );
 
-            setProfilSpells( userSpells );
-
-        }
+        // }
 
     };
+
+    //
 
     return (
         <>

@@ -1,3 +1,4 @@
+
 import { gsap } from "gsap";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
@@ -8,7 +9,12 @@ import {
     PLAYER_COLOR,
     S3_BUCKET_URL,
 } from "../../../constants";
+
 import { useGameContext } from "../../../contexts/game-context";
+import { GameMain } from "../../../game/main/GameMain";
+import { GameEvents } from "../../../game/Events";
+
+//
 
 const spellsBack = S3_BUCKET_URL + "/assets/images/gameui-spells-back.png";
 const mapBack = S3_BUCKET_URL + "/assets/images/map-back.png";
@@ -399,23 +405,80 @@ const TimeBar = styled.div`
     transition: all 1s;
 `;
 
+//
+
 export const Desktop = ({
-    upgrades,
     profileSpells,
     onClickUpgrade,
     playerShow,
     setPlayerShow,
 }: any) => {
+
     const playerDivRef = useRef<HTMLDivElement>(null);
     const switchPlayerShow = () => {
         setPlayerShow(!playerShow);
     };
-    const gameMenuFadeInAnim = gsap.timeline();
-    const [hoveredSpell, setHoveredSpell]: [any, any] = useState(null);
 
-    const { gameMode, lobbyInfo } = useGameContext();
+    const gameMenuFadeInAnim = gsap.timeline();
+    const [ hoveredSpell, setHoveredSpell ]: [any, any] = useState(null);
+    const [ goldValue, setGoldValue ] = useState(0);
+    const [ incomeValue, setIncomeValue ] = useState(0);
+    const [ healthValue, setHealthValue ] = useState(0);
+    const [ maxHealthValue, setMaxHealthValue ] = useState(0);
+    const [ level, setLevel ] = useState(1);
+    const [ stats, setStats ] = useState({ players: [] });
+
+    const { gameMode, upgrades } = useGameContext();
+
+    //
 
     useEffect(() => {
+
+        const updateGold = ( gold: number ) => {
+
+            setGoldValue( gold );
+
+        };
+
+        const updateIncome = ( income: number ) => {
+
+            setIncomeValue( income );
+
+        };
+
+        const setArenaStats = ( props: any ) => {
+
+            setStats( props );
+
+        };
+
+        const setHealth = ( props: { hp: number, maxHp: number, level: number } ) => {
+
+            setHealthValue( props.hp );
+            setMaxHealthValue( props.maxHp );
+            setLevel( props.level );
+
+        };
+
+        const tickRound = () => {
+
+            const barDiv = document.getElementById("timeBar")!;
+
+            const temp = barDiv.style.transition;
+            barDiv.style.transition = "none";
+
+            setTimeout(() => {
+                barDiv.style.transition = temp;
+            }, 50);
+
+        };
+
+        GameMain.addListener( 'updateGold', updateGold );
+        GameMain.addListener( 'updateIncome', updateIncome );
+        GameMain.addListener( 'tickRound', tickRound );
+        GameMain.addListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
+        GameMain.addListener( GameEvents.SET_ARENA_STATS, setArenaStats );
+
         gameMenuFadeInAnim
             .add("start")
             .from(".back", { bottom: "-16.5vw", duration: 0 }, "start")
@@ -425,16 +488,29 @@ export const Desktop = ({
             .from(".player_stats", { right: "-22vw", duration: 0 }, "start");
 
         return () => {
+
             gameMenuFadeInAnim.kill();
+
+            GameMain.removeListener( 'updateGold', updateGold );
+            GameMain.removeListener( 'updateIncome', updateIncome );
+            GameMain.removeListener( 'tickRound', tickRound );
+            GameMain.removeListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
+            GameMain.removeListener( GameEvents.SET_ARENA_STATS, setArenaStats );
+
         };
+
     }, []);
 
     const spellEnter = (spell: any) => {
         setHoveredSpell(spell);
     };
+
     const spellLeave = () => {
         setHoveredSpell(null);
     };
+
+    //
+
     return (
         <GamePlay className="gameplay">
             {/* ------- profile start --------- */}
@@ -588,7 +664,7 @@ export const Desktop = ({
                         <div className="name roundfont profileFont h-[28%] flex flex-col items-center justify-evenly">
                             <p className="text-white">Jacky555</p>
                             <p className="gradient-text1" id="gameLevel">
-                                Level 1
+                                Level { level }
                             </p>
                         </div>
                     </div>
@@ -606,19 +682,19 @@ export const Desktop = ({
                                 id="towerHealthBar"
                                 className="absolute w-[100%] h-[100%] rounded-[10px] border-[px] border-black"
                                 style={{
-                                    backgroundImage:
-                                        "url('assets/images/status-slider.png')",
-                                    backgroundSize: "auto 100%",
+                                    backgroundImage: "url('assets/images/status-slider.png')",
+                                    backgroundSize: `auto 100%`,
+                                    width: `${(healthValue / maxHealthValue) * 100}%`,
                                 }}
                             ></div>
                         </div>
 
                         <div className="absolute statusFont_small">
                             <span className="text-[#e9e502]" id="currentHP">
-                                1450{" "}
+                                { healthValue }{" "}
                             </span>
                             <span className="text-white" id="maxHP">
-                                / 1500
+                                / { maxHealthValue }
                             </span>
                         </div>
                     </div>
@@ -640,11 +716,11 @@ export const Desktop = ({
                             ></img>
                             <div className="statusFont_big">
                                 <span className="text-white" id="gold">
-                                    200
+                                    { goldValue }
                                 </span>
                                 <span className="text-white"> / </span>
                                 <span className="text-[#e9e502]" id="income">
-                                    +80
+                                    { incomeValue }
                                 </span>
                             </div>
                         </div>
@@ -786,14 +862,10 @@ export const Desktop = ({
                                             </th>
                                         </tr>
 
-                                        {lobbyInfo?.players.map(
+                                        { stats.players.map(
                                             (player: any, index: number) => (
                                                 <tr
-                                                    style={{
-                                                        color: PLAYER_COLOR[
-                                                            index
-                                                        ],
-                                                    }}
+                                                    style={{ color: PLAYER_COLOR[ index ] }}
                                                     key={`player${index}`}
                                                 >
                                                     <td
@@ -802,7 +874,7 @@ export const Desktop = ({
                                                             textAlign: "start",
                                                         }}
                                                     >
-                                                        {player.name}
+                                                        { player.name }
                                                     </td>
                                                     <td
                                                         style={{ width: "30%" }}
@@ -811,7 +883,7 @@ export const Desktop = ({
                                                             <div
                                                                 className="status_player_health"
                                                                 style={{
-                                                                    width: `100%`,
+                                                                    width: `${ 100 * player.hp / player.maxHp }%`,
                                                                 }}
                                                             ></div>
                                                         </div>
@@ -819,17 +891,17 @@ export const Desktop = ({
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        5
+                                                        { player.kills }
                                                     </td>
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        2
+                                                        { player.income }
                                                     </td>
                                                     <td
                                                         style={{ width: "10%" }}
                                                     >
-                                                        0
+                                                        { player.wins }
                                                     </td>
                                                     <td
                                                         style={{ width: "20%" }}
