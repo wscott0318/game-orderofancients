@@ -13379,6 +13379,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const GameEvents = {
     SET_STATE: 'SetState',
+    INIT_CONFIG: 'InitConfig',
+    WORKER_INITED: 'WorkerInited',
     INIT_NETWORK: 'InitNetwork',
     NETWORK_INITED: 'NetworkInited',
     INIT_GFX: 'InitGFX',
@@ -13497,7 +13499,9 @@ class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_0___default()) {
         // @eslint-disable-next-line
         self.onmessage = this.onMessage;
         //
-        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.INIT_NETWORK, () => {
+        this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.INIT_NETWORK, (params) => {
+            console.log('GameWorkerCore: INIT_CONFIG', params.config);
+            this.config = params.config;
             _networking_Network__WEBPACK_IMPORTED_MODULE_4__.Network.init();
         });
         this.addListener(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.LOAD_ASSETS, () => {
@@ -13531,6 +13535,7 @@ class GameWorkerCore extends (events__WEBPACK_IMPORTED_MODULE_0___default()) {
             this.dispose();
         });
         this.addListener("upgradeSpell", this.towerSpellUpgrade);
+        this.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_2__.GameEvents.WORKER_INITED);
     }
     ;
     init() {
@@ -18719,10 +18724,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! socket.io-client */ "./node_modules/socket.io-client/build/esm/index.js");
 /* harmony import */ var _constants_socket__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../constants/socket */ "./src/constants/socket.ts");
-/* harmony import */ var _utils_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../utils/config */ "./src/utils/config.ts");
-/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
-
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
 
 
 
@@ -18732,34 +18735,34 @@ class NetworkHandler {
     constructor() {
         //
         this.onStartGame = (lobbyInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.startGame(lobbyInfo);
-            const player = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.lobbyInfo.players.find((item) => { var _a; return item.socketId === ((_a = this.socket) === null || _a === void 0 ? void 0 : _a.id); });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_4__.GameEvents.SET_PLAYER_UPGRADES, player === null || player === void 0 ? void 0 : player.upgrades);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.startGame(lobbyInfo);
+            const player = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.lobbyInfo.players.find((item) => { var _a; return item.socketId === ((_a = this.socket) === null || _a === void 0 ? void 0 : _a.id); });
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.SET_PLAYER_UPGRADES, player === null || player === void 0 ? void 0 : player.upgrades);
         };
         this.onReceiveLobbyData = (lobbyInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.setLobbyInfo(lobbyInfo);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.setLobbyInfo(lobbyInfo);
         };
         this.onReceiveTowerStatus = (towerStatusData, timerStatus) => {
             towerStatusData.forEach((towerStatus, index) => {
-                const tower = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(index);
+                const tower = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(index);
                 tower.setStatus(towerStatus);
             });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.towersArray.forEach((tower) => {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.towersArray.forEach((tower) => {
                 tower.time.secondTracker = timerStatus.secondTracker;
                 tower.time.roundTracker = timerStatus.roundTracker;
                 tower.time.totalTimeTracker = timerStatus.totalTimeTracker;
             });
         };
         this.onReceiveProduceBot = (playerIndex, newBot) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.add(newBot.botType);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.add(newBot.botType);
         };
         this.onReceiveBotStatus = (botStatusData) => {
-            if (_GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(0).botManager.bots.length !== botStatusData[0].length) {
+            if (_GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(0).botManager.bots.length !== botStatusData[0].length) {
                 console.error("unsynce bot data");
             }
             for (let i = 0; i < botStatusData.length; i++) {
                 for (let j = 0; j < botStatusData[i].length; j++) {
-                    const bot = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(i).botManager.bots[j];
+                    const bot = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(i).botManager.bots[j];
                     if (!bot)
                         continue;
                     const botStatus = botStatusData[i][j];
@@ -18779,25 +18782,25 @@ class NetworkHandler {
         };
         this.onReceiveUpgrades = (playersInfo) => {
             const player = playersInfo.find((el) => { var _a; return el.socketId === ((_a = this.socket) === null || _a === void 0 ? void 0 : _a.id); });
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_4__.GameEvents.SET_PLAYER_UPGRADES, player === null || player === void 0 ? void 0 : player.upgrades);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.SET_PLAYER_UPGRADES, player === null || player === void 0 ? void 0 : player.upgrades);
         };
         this.onTickSecond = (playerIndex, value) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickSecond(value);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickSecond(value);
         };
         this.onTickRound = (playerIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickRound();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).time.tickRound();
         };
         this.onAddSprite = (newSpriteInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.addSpriteFrom(newSpriteInfo);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.addSpriteFrom(newSpriteInfo);
         };
         this.onAddTextSprite = (newTextSpriteInfo) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.addTextSpriteFrom(newTextSpriteInfo);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.addTextSpriteFrom(newTextSpriteInfo);
         };
         this.onAddSpriteCollisionEffect = (spriteIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray[spriteIndex].addCollisionEffect();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.spriteArray[spriteIndex].addCollisionEffect();
         };
         this.onDisposeSprite = (removeSpriteArray) => {
-            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray;
+            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.spriteArray;
             const newArray = [];
             for (let i = 0; i < spriteArray.length; i++) {
                 const index = removeSpriteArray.findIndex((removeIndex) => removeIndex === i);
@@ -18808,10 +18811,10 @@ class NetworkHandler {
                     spriteArray[i].dispose();
                 }
             }
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray = newArray;
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.spriteArray = newArray;
         };
         this.onReceiveSpriteStatus = (spriteStatusData) => {
-            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.spriteManager.spriteArray;
+            const spriteArray = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.spriteArray;
             if (spriteArray.length !== spriteStatusData.length) {
                 console.error("sprite sync error");
             }
@@ -18826,10 +18829,10 @@ class NetworkHandler {
             }
         };
         this.onKillBot = (playerIndex, botIndex) => {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots[botIndex].kill();
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots[botIndex].kill();
         };
         this.onRemoveDeadBots = (playerIndex, deadBotArray) => {
-            const botArray = _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots;
+            const botArray = _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots;
             if (!botArray.length)
                 return;
             const newArray = [];
@@ -18839,13 +18842,13 @@ class NetworkHandler {
                     newArray.push(botArray[i]);
                 }
             }
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots = newArray;
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.towerManager.get(playerIndex).botManager.bots = newArray;
         };
     }
     //
     init() {
         console.log("Arena network inited");
-        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])(_utils_config__WEBPACK_IMPORTED_MODULE_2__.Config.socketServerUrl, { transports: ['websocket'] });
+        this.socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_0__["default"])(_GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.config.socketServerUrl, { transports: ['websocket'] });
         this.socket.on("connect_error", (error) => {
             console.log('error', error);
         });
@@ -18857,7 +18860,7 @@ class NetworkHandler {
             }
             console.log("Connected to server");
             this.addEventListeners();
-            _GameWorker__WEBPACK_IMPORTED_MODULE_3__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_4__.GameEvents.NETWORK_INITED, { socketId: socket.id });
+            _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.NETWORK_INITED, { socketId: socket.id });
         });
     }
     ;

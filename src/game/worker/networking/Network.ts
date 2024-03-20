@@ -10,7 +10,6 @@ import {
 } from "../../../constants/type";
 
 import { SOCKET_EVENTS } from "../../../constants/socket";
-import { Config } from "../../../utils/config";
 import { ITowerStatus } from "../entities/Tower.Entity";
 import { LobbyInfo, PlayerInfo } from "../../Types";
 import { GameWorker } from "../GameWorker";
@@ -28,7 +27,7 @@ export class NetworkHandler {
 
         console.log( "Arena network inited" );
 
-        this.socket = io( Config.socketServerUrl, { transports: [ 'websocket' ] } );
+        this.socket = io( GameWorker.config.socketServerUrl, { transports: [ 'websocket' ] } );
 
         this.socket.on( "connect_error", ( error ) => {
 

@@ -5,6 +5,7 @@ import { GAME_MODES, GAME_STATES } from "../constants";
 import { useGameContext } from "../contexts/game-context";
 import { GameMain } from "../game/main/GameMain";
 import { GameEvents } from "../game/Events";
+import { Config } from "../utils/config";
 
 //
 
@@ -26,7 +27,7 @@ export const useGame = () => {
 
     const createGame = useCallback( () => {
 
-        GameMain.dispatchEvent( GameEvents.INIT_NETWORK );
+        GameMain.dispatchEvent( GameEvents.INIT_NETWORK, { config: Config } );
         GameMain.dispatchEvent( GameEvents.LOAD_ASSETS );
 
         GameMain.addListener( GameEvents.ASSETS_LOADING_FINISHED, () => {

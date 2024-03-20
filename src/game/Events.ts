@@ -3,6 +3,9 @@ export const GameEvents = {
 
     SET_STATE: 'SetState',
 
+    INIT_CONFIG: 'InitConfig',
+    WORKER_INITED: 'WorkerInited',
+
     INIT_NETWORK: 'InitNetwork',
     NETWORK_INITED: 'NetworkInited',
 

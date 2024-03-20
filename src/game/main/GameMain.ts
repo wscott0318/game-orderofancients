@@ -3,6 +3,7 @@ import EventEmitter from "events";
 import { LobbyInfo } from "../Types";
 import { GameEvents } from "../Events";
 import { UIRenderer } from "./UIRenderer";
+import { Config } from "../../utils/config";
 
 //
 

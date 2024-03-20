@@ -27,6 +27,8 @@ export class GameWorkerCore extends EventEmitter {
     private prevUpdateTime: number = 0;
     public tick: number = 0;
 
+    public config: any;
+
     //
 
     constructor () {
@@ -38,8 +40,11 @@ export class GameWorkerCore extends EventEmitter {
 
         //
 
-        this.addListener( GameEvents.INIT_NETWORK, () => {
+        this.addListener( GameEvents.INIT_NETWORK, ( params: any ) => {
 
+            console.log( 'GameWorkerCore: INIT_CONFIG', params.config );
+
+            this.config = params.config;
             Network.init();
 
         });
@@ -98,6 +103,8 @@ export class GameWorkerCore extends EventEmitter {
         });
 
         this.addListener( "upgradeSpell", this.towerSpellUpgrade );
+
+        this.sendToMain( GameEvents.WORKER_INITED );
 
     };
 
