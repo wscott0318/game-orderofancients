@@ -14261,6 +14261,7 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         this.towerManager.update();
         this.spriteManager.tick();
         this.particleEffect.tick();
+        this.controls.update();
     }
     ;
     render(delta, time) {
@@ -14365,9 +14366,16 @@ class ControlsManager {
     //
     constructor(camera) {
         this.offset = new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(0, 20, 10);
+        this.altitude = 20;
+        this.maxAltitude = 50;
+        this.minAltitude = 10;
         this.mouseKeys = {};
         this.mousePos = new three__WEBPACK_IMPORTED_MODULE_2__.Vector2();
         //
+        this.mouseWheelHandler = (event) => {
+            this.altitude += event.deltaY / 100;
+            this.altitude = Math.max(this.minAltitude, Math.min(this.maxAltitude, this.altitude));
+        };
         this.mouseDownHandler = (event) => {
             this.mousePos.set(event.x, event.y);
             this.mouseKeys[event.key] = true;
@@ -14384,30 +14392,36 @@ class ControlsManager {
             // need to move to render loop later
             this.camera.position.x -= dx / 50;
             this.camera.position.z -= dy / 50;
-            _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_1__.GameEvents.UI_SET_CAMERA_POSITION, {
-                pos: {
-                    x: this.camera.position.x,
-                    y: this.camera.position.y,
-                    z: this.camera.position.z
-                },
-                target: {
-                    x: this.camera.position.x - this.offset.x,
-                    y: this.camera.position.y - this.offset.y,
-                    z: this.camera.position.z - this.offset.z,
-                }
-            });
             this.mousePos.set(event.x, event.y);
         };
         this.camera = camera;
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.addListener('mousedown', this.mouseDownHandler);
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.addListener('mouseup', this.mouseUpHandler);
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.addListener('mousemove', this.mouseMoveHandler);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.addListener('mousewheel', this.mouseWheelHandler);
     }
     ;
     dispose() {
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.removeListener('mousedown', this.mouseDownHandler);
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.removeListener('mouseup', this.mouseUpHandler);
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.removeListener('mousemove', this.mouseMoveHandler);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.removeListener('mousewheel', this.mouseWheelHandler);
+    }
+    ;
+    update() {
+        this.camera.position.y = 0.95 * this.camera.position.y + 0.05 * this.altitude;
+        _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_1__.GameEvents.UI_SET_CAMERA_POSITION, {
+            pos: {
+                x: this.camera.position.x,
+                y: this.camera.position.y,
+                z: this.camera.position.z
+            },
+            target: {
+                x: this.camera.position.x - this.offset.x,
+                y: this.camera.position.y - this.offset.y,
+                z: this.camera.position.z - this.offset.z,
+            }
+        });
     }
     ;
 }

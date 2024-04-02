@@ -104,6 +104,8 @@ export class ArenaScene extends GameScene {
         this.spriteManager.tick();
         this.particleEffect.tick();
 
+        this.controls.update();
+
     };
 
     public render ( delta: number, time: number ) : void {

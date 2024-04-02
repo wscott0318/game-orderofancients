@@ -1,5 +1,5 @@
 
-import { useEffect, useRef, MouseEvent } from "react";
+import { useEffect, useRef, MouseEvent, WheelEvent } from "react";
 import styled from "styled-components";
 
 import { Loader } from "../Loader";
@@ -187,11 +187,17 @@ export const GameScene = () => {
 
     };
 
+    const mouseWheelHandler = ( event: WheelEvent ) : void => {
+
+        GameMain.dispatchEvent( 'mousewheel', { deltaY: event.deltaY } );
+
+    };
+
     // tmp end
 
     return (
         <Wrapper>
-            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler } onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler }></div>
+            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler } onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler } onWheel={ mouseWheelHandler }></div>
 
             {canPlayVideo && (
                 <BackVideo ref={videoRef} loop className="opacity-[0.8]">
