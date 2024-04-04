@@ -12,7 +12,7 @@ export const AssetsList = {
     ],
 
     models: [
-        { name: 'Environment', path: MODEL_URLS["environment"] },
+        // { name: 'Environment', path: MODEL_URLS["environment"] },
         { name: 'Buildings', path: MODEL_URLS["buildings"] },
         { name: 'BotGrunt', path: MODEL_URLS["bot_grunt"] },
         { name: 'BotSwordsman', path: MODEL_URLS["bot_swordsman"] },
@@ -22,7 +22,9 @@ export const AssetsList = {
         { name: 'ThrowingAxe', path: MODEL_URLS["throwingAxe"] },
         { name: 'Arrow', path: MODEL_URLS["arrow"] },
         { name: 'Missile', path: MODEL_URLS["missile"] },
-        { name: 'Stone', path: MODEL_URLS["stone"] }
+        { name: 'Stone', path: MODEL_URLS["stone"] },
+        { name: 'Environment', path: "/assets/models/environment/Environment.glb" },
+        { name: 'Tower', path: "/assets/models/building/TowerLvl1.glb" }
     ]
 
 };

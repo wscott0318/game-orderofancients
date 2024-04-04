@@ -13,6 +13,7 @@ import { SpriteManager } from '../managers/SpriteManager';
 import { ParticleEffect } from '../managers/ParticleEffect';
 import { TowerManager } from '../../managers/TowerManager';
 import { TowerEntity } from '../../entities/Tower.Entity';
+import { DecorationManager } from './DecorationsManager';
 
 //
 
@@ -39,6 +40,7 @@ export class ArenaScene extends GameScene {
     public controls: ControlsManager;
     private environment: EnvironmentManager;
     public animationManager: AnimationManager;
+    public decorationManager: DecorationManager;
     public spriteManager: SpriteManager;
     public particleEffect: ParticleEffect;
     public towerManager: TowerManager;
@@ -63,6 +65,9 @@ export class ArenaScene extends GameScene {
 
         this.environment = new EnvironmentManager();
         this.environment.init( this.scene );
+
+        this.decorationManager = new DecorationManager();
+        this.decorationManager.init( this.scene );
 
         this.particleEffect = new ParticleEffect( this );
         this.spriteManager = new SpriteManager( this );

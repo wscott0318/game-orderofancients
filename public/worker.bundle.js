@@ -14029,7 +14029,7 @@ class TowerEntity {
         this.maxHp = 1700;
         this.isDead = false;
         this.sacrificeHP = 0;
-        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.getModel("Buildings")) === null || _a === void 0 ? void 0 : _a.scene.getObjectByName('orc_tower_Lv3_proto_orc_rts_0');
+        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.getModel("Tower")) === null || _a === void 0 ? void 0 : _a.scene;
         this.towerMesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__.clone(towerModel);
         // construct UI part
         _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_ADD_ELEMENT, {
@@ -14189,7 +14189,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ArenaScene: () => (/* binding */ ArenaScene)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var three_quarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three.quarks */ "./node_modules/three.quarks/dist/three.quarks.esm.js");
 /* harmony import */ var _core_Gfx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/Gfx */ "./src/game/worker/gfx/core/Gfx.ts");
 /* harmony import */ var _core_GameScene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/GameScene */ "./src/game/worker/gfx/core/GameScene.ts");
@@ -14202,6 +14202,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../managers/ParticleEffect */ "./src/game/worker/gfx/managers/ParticleEffect.ts");
 /* harmony import */ var _managers_TowerManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../managers/TowerManager */ "./src/game/worker/managers/TowerManager.ts");
 /* harmony import */ var _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../entities/Tower.Entity */ "./src/game/worker/entities/Tower.Entity.ts");
+/* harmony import */ var _DecorationsManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./DecorationsManager */ "./src/game/worker/gfx/arena-scenes/DecorationsManager.ts");
+
 
 
 
@@ -14225,16 +14227,18 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     }
     //
     init() {
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_12__.Scene();
-        this.camera = new three__WEBPACK_IMPORTED_MODULE_12__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 0.1, 1000);
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_13__.Scene();
+        this.camera = new three__WEBPACK_IMPORTED_MODULE_13__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 0.1, 1000);
         this.controls = new _ControlsManager__WEBPACK_IMPORTED_MODULE_5__.ControlsManager(this.camera);
         this.particleRenderer = new three_quarks__WEBPACK_IMPORTED_MODULE_0__.BatchedRenderer();
         this.scene.add(this.particleRenderer);
-        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_12__.Color(0xffffff);
-        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_12__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height);
+        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0xffffff);
+        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_13__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height);
         //
         this.environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
         this.environment.init(this.scene);
+        this.decorationManager = new _DecorationsManager__WEBPACK_IMPORTED_MODULE_12__.DecorationManager();
+        this.decorationManager.init(this.scene);
         this.particleEffect = new _managers_ParticleEffect__WEBPACK_IMPORTED_MODULE_9__.ParticleEffect(this);
         this.spriteManager = new _managers_SpriteManager__WEBPACK_IMPORTED_MODULE_8__.SpriteManager(this);
         this.animationManager = new _managers_AnimationManager__WEBPACK_IMPORTED_MODULE_7__.AnimationManager(this);
@@ -14332,8 +14336,8 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     addGrid() {
         const size = 500;
         const divisions = 500;
-        const color = new three__WEBPACK_IMPORTED_MODULE_12__.Color(0x333333);
-        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_12__.GridHelper(size, divisions, color, color);
+        const color = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0x333333);
+        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_13__.GridHelper(size, divisions, color, color);
         this.gridHelper.position.y = 0.01;
         this.gridHelper.visible = false;
         this.scene.add(this.gridHelper);
@@ -14430,6 +14434,43 @@ class ControlsManager {
 
 /***/ }),
 
+/***/ "./src/game/worker/gfx/arena-scenes/DecorationsManager.ts":
+/*!****************************************************************!*\
+  !*** ./src/game/worker/gfx/arena-scenes/DecorationsManager.ts ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DecorationManager: () => (/* binding */ DecorationManager)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+//
+class DecorationManager {
+    //
+    init(scene) {
+        this.wrapper = new three__WEBPACK_IMPORTED_MODULE_0__.Object3D();
+        scene.add(this.wrapper);
+        // tmp
+        const config = [
+            { type: 'tree1', items: [] },
+            { type: 'tree2', items: [] }
+        ];
+        for (let i = 0; i < config.length; i++) {
+            const itemType = config[i];
+            for (let j = 0; j < itemType.items.length; j++) {
+                //
+            }
+        }
+    }
+    ;
+}
+;
+
+
+/***/ }),
+
 /***/ "./src/game/worker/gfx/arena-scenes/EnvironmentManager.ts":
 /*!****************************************************************!*\
   !*** ./src/game/worker/gfx/arena-scenes/EnvironmentManager.ts ***!
@@ -14484,19 +14525,22 @@ class EnvironmentManager {
     }
     ;
     initGround() {
-        const map = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_1__.ResourcesManager.getTexture("ground-small2");
-        map.repeat.set(100, 100);
-        map.wrapS = map.wrapT = three__WEBPACK_IMPORTED_MODULE_2__.RepeatWrapping;
-        const geometry = new three__WEBPACK_IMPORTED_MODULE_2__.PlaneGeometry(1000, 1000);
-        const material = new three__WEBPACK_IMPORTED_MODULE_2__.MeshStandardMaterial({
-            map: map,
-            side: three__WEBPACK_IMPORTED_MODULE_2__.DoubleSide
-        });
-        const plane = new three__WEBPACK_IMPORTED_MODULE_2__.Mesh(geometry, material);
-        plane.receiveShadow = true;
-        plane.rotateX(-Math.PI / 2);
-        plane.position.y = -0.1;
-        this._scene.add(plane);
+        var _a;
+        const envModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_1__.ResourcesManager.getModel("Environment")) === null || _a === void 0 ? void 0 : _a.scene;
+        this._scene.add(envModel);
+        // const map = ResourcesManager.getTexture( "ground-small2" )!;
+        // map.repeat.set( 100, 100 );
+        // map.wrapS = map.wrapT = RepeatWrapping;
+        // const geometry = new PlaneGeometry( 1000, 1000 );
+        // const material = new MeshStandardMaterial({
+        //     map: map,
+        //     side: DoubleSide
+        // });
+        // const plane = new Mesh( geometry, material );
+        // plane.receiveShadow = true;
+        // plane.rotateX( - Math.PI / 2 );
+        // plane.position.y = -0.1;
+        // this._scene.add( plane );
     }
     ;
     update() {
@@ -18492,7 +18536,7 @@ const AssetsList = {
         { name: 'ground-small2', path: "/assets/new/textures/small2.ktx2" },
     ],
     models: [
-        { name: 'Environment', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["environment"] },
+        // { name: 'Environment', path: MODEL_URLS["environment"] },
         { name: 'Buildings', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["buildings"] },
         { name: 'BotGrunt', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["bot_grunt"] },
         { name: 'BotSwordsman', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["bot_swordsman"] },
@@ -18502,7 +18546,9 @@ const AssetsList = {
         { name: 'ThrowingAxe', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["throwingAxe"] },
         { name: 'Arrow', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["arrow"] },
         { name: 'Missile', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["missile"] },
-        { name: 'Stone', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["stone"] }
+        { name: 'Stone', path: _constants__WEBPACK_IMPORTED_MODULE_0__.MODEL_URLS["stone"] },
+        { name: 'Environment', path: "/assets/models/environment/Environment.glb" },
+        { name: 'Tower', path: "/assets/models/building/TowerLvl1.glb" }
     ]
 };
 

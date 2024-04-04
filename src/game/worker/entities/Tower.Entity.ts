@@ -65,7 +65,7 @@ export class TowerEntity {
 
         this.sacrificeHP = 0;
 
-        const towerModel = ResourcesManager.getModel("Buildings")?.scene.getObjectByName( 'orc_tower_Lv3_proto_orc_rts_0' ) as Object3D;
+        const towerModel = ResourcesManager.getModel("Tower")?.scene;
         this.towerMesh = SkeletonUtils.clone( towerModel );
 
         // construct UI part
