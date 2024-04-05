@@ -1,6 +1,6 @@
 
 import TWEEN from "@tweenjs/tween.js";
-import { WebGLRenderer } from 'three';
+import { VSMShadowMap, WebGLRenderer } from 'three';
 
 import { GameScene } from './GameScene';
 import { ComposerPass } from './Composer';
@@ -112,7 +112,7 @@ class GfxCore {
 
         this.renderer.setSize( this.width, this.height, false );
 
-        if ( this.activeGameScene ) this.activeGameScene.resize();
+        if ( this.activeGameScene ) this.activeGameScene.resize( this.devicePixelRatio );
 
     };
 
@@ -121,6 +121,8 @@ class GfxCore {
 
         this.renderer = new WebGLRenderer({ antialias: false, canvas: canvas });
 
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = VSMShadowMap;
         this.renderer.setPixelRatio( this.devicePixelRatio );
         this.renderer.setSize( this.width, this.height, false );
 

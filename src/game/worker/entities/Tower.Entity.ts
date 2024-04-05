@@ -66,6 +66,17 @@ export class TowerEntity {
         this.sacrificeHP = 0;
 
         const towerModel = ResourcesManager.getModel("Tower")?.scene;
+        towerModel.traverse( ( child: Object3D ) => {
+
+            if ( child instanceof Object3D ) {
+
+                child.castShadow = true;
+                child.receiveShadow = true;
+
+            }
+
+        });
+
         this.towerMesh = SkeletonUtils.clone( towerModel );
 
         // construct UI part

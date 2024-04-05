@@ -17,7 +17,7 @@ export abstract class GameScene {
     public abstract init () : void;
     public abstract update ( delta: number, time: number ) : void;
     public abstract render ( delta: number, time: number ) : void;
-    public abstract resize () : void;
+    public abstract resize ( dpr: number ) : void;
     public abstract getRenderTarget () : WebGLRenderTarget;
     public abstract dispose () : void;
 

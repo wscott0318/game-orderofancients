@@ -14030,6 +14030,12 @@ class TowerEntity {
         this.isDead = false;
         this.sacrificeHP = 0;
         const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.getModel("Tower")) === null || _a === void 0 ? void 0 : _a.scene;
+        towerModel.traverse((child) => {
+            if (child instanceof three__WEBPACK_IMPORTED_MODULE_9__.Object3D) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
         this.towerMesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__.clone(towerModel);
         // construct UI part
         _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_ADD_ELEMENT, {
@@ -14228,12 +14234,13 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     //
     init() {
         this.scene = new three__WEBPACK_IMPORTED_MODULE_13__.Scene();
-        this.camera = new three__WEBPACK_IMPORTED_MODULE_13__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 0.1, 1000);
+        this.camera = new three__WEBPACK_IMPORTED_MODULE_13__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 1, 200);
         this.controls = new _ControlsManager__WEBPACK_IMPORTED_MODULE_5__.ControlsManager(this.camera);
         this.particleRenderer = new three_quarks__WEBPACK_IMPORTED_MODULE_0__.BatchedRenderer();
         this.scene.add(this.particleRenderer);
         this.scene.background = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0xffffff);
         this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_13__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, { samples: 4 });
+        this.renderTarget.depthTexture = new three__WEBPACK_IMPORTED_MODULE_13__.DepthTexture(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, three__WEBPACK_IMPORTED_MODULE_13__.UnsignedIntType);
         //
         this.environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
         this.environment.init(this.scene);
@@ -14276,7 +14283,7 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.renderer.render(this.scene, this.camera);
     }
     ;
-    resize() {
+    resize(dpr) {
         const width = _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width;
         const height = _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height;
         this.camera.aspect = width / height;
@@ -14498,15 +14505,28 @@ class EnvironmentManager {
     init(scene) {
         this._scene = scene;
         this.initGround();
-        // this.initSkyBox();
         this.initLights();
-        // this._scene.add(this._models.environment.scene);
     }
     ;
     //
     initLights() {
-        this.ambientLight = new three__WEBPACK_IMPORTED_MODULE_2__.AmbientLight(0xffffff, 0.5);
+        this.ambientLight = new three__WEBPACK_IMPORTED_MODULE_2__.AmbientLight(0xffffff, 0.2);
         this._scene.add(this.ambientLight);
+        this.directionalLight = new three__WEBPACK_IMPORTED_MODULE_2__.DirectionalLight(0xffffff, 0.5);
+        this.directionalLight.position.set(20, 20, 20);
+        this.directionalLight.lookAt(0, 0, 0);
+        this.directionalLight.castShadow = true;
+        this.directionalLight.shadow.mapSize.width = 1024;
+        this.directionalLight.shadow.mapSize.height = 1024;
+        this.directionalLight.shadow.camera.far = 300;
+        this.directionalLight.shadow.camera.near = 10;
+        this.directionalLight.shadow.camera.left = -50;
+        this.directionalLight.shadow.camera.right = 50;
+        this.directionalLight.shadow.camera.top = 50;
+        this.directionalLight.shadow.camera.bottom = -50;
+        this.directionalLight.shadow.bias = -0.0002;
+        this.directionalLight.shadow.radius = 2;
+        this._scene.add(this.directionalLight);
     }
     ;
     initSkyBox() {
@@ -14528,6 +14548,16 @@ class EnvironmentManager {
         var _a;
         const envModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_1__.ResourcesManager.getModel("Environment")) === null || _a === void 0 ? void 0 : _a.scene;
         this._scene.add(envModel);
+        envModel.traverse((child) => {
+            if (child.isMesh) {
+                if (child.name !== 'Plane') {
+                    child.castShadow = true;
+                }
+                child.receiveShadow = true;
+                child.material.metalness = 0;
+                child.material.roughness = 1;
+            }
+        });
         // const map = ResourcesManager.getTexture( "ground-small2" )!;
         // map.repeat.set( 100, 100 );
         // map.wrapS = map.wrapT = RepeatWrapping;
@@ -14701,7 +14731,7 @@ class GfxCore {
             this.height = params.windowHeight;
             this.renderer.setSize(this.width, this.height, false);
             if (this.activeGameScene)
-                this.activeGameScene.resize();
+                this.activeGameScene.resize(this.devicePixelRatio);
         };
     }
     //
@@ -14734,6 +14764,8 @@ class GfxCore {
     // @ts-ignore
     createRenderer(canvas) {
         this.renderer = new three__WEBPACK_IMPORTED_MODULE_4__.WebGLRenderer({ antialias: false, canvas: canvas });
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = three__WEBPACK_IMPORTED_MODULE_4__.VSMShadowMap;
         this.renderer.setPixelRatio(this.devicePixelRatio);
         this.renderer.setSize(this.width, this.height, false);
     }

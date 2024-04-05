@@ -1,5 +1,5 @@
 
-import { AmbientLight, BoxGeometry, DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Scene, TextureLoader } from "three";
+import { AmbientLight, BoxGeometry, DirectionalLight, DoubleSide, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, Scene, TextureLoader } from "three";
 
 import { S3_BUCKET_URL } from "../../../../constants";
 import { ResourcesManager } from "../../managers/ResourcesManager";
@@ -17,6 +17,7 @@ export class EnvironmentManager {
     private _models: any;
 
     private ambientLight: AmbientLight;
+    private directionalLight: DirectionalLight;
 
     //
 
@@ -25,10 +26,7 @@ export class EnvironmentManager {
         this._scene = scene;
 
         this.initGround();
-        // this.initSkyBox();
         this.initLights();
-
-        // this._scene.add(this._models.environment.scene);
 
     };
 
@@ -36,8 +34,24 @@ export class EnvironmentManager {
 
     private initLights () : void {
 
-        this.ambientLight = new AmbientLight( 0xffffff, 0.5 );
+        this.ambientLight = new AmbientLight( 0xffffff, 0.2 );
         this._scene.add( this.ambientLight );
+
+        this.directionalLight = new DirectionalLight( 0xffffff, 0.5 );
+        this.directionalLight.position.set( 20, 20, 20 );
+        this.directionalLight.lookAt( 0, 0, 0 );
+        this.directionalLight.castShadow = true;
+        this.directionalLight.shadow.mapSize.width = 1024;
+        this.directionalLight.shadow.mapSize.height = 1024;
+        this.directionalLight.shadow.camera.far = 300;
+        this.directionalLight.shadow.camera.near = 10;
+        this.directionalLight.shadow.camera.left = - 50;
+        this.directionalLight.shadow.camera.right = 50;
+        this.directionalLight.shadow.camera.top = 50;
+        this.directionalLight.shadow.camera.bottom = - 50;
+        this.directionalLight.shadow.bias = - 0.0002;
+        this.directionalLight.shadow.radius = 2;
+        this._scene.add( this.directionalLight );
 
     };
 
@@ -67,6 +81,25 @@ export class EnvironmentManager {
 
         const envModel = ResourcesManager.getModel("Environment")?.scene;
         this._scene.add( envModel );
+
+        envModel.traverse( ( child: any ) => {
+
+            if ( child.isMesh ) {
+
+                if ( child.name !== 'Plane' ) {
+
+                    child.castShadow = true;
+
+                }
+
+                child.receiveShadow = true;
+
+                ( child.material as MeshStandardMaterial ).metalness = 0;
+                ( child.material as MeshStandardMaterial ).roughness = 1;
+
+            }
+
+        });
 
         // const map = ResourcesManager.getTexture( "ground-small2" )!;
         // map.repeat.set( 100, 100 );

@@ -1,5 +1,5 @@
 
-import { Color, GridHelper, PerspectiveCamera, Scene, WebGLRenderTarget } from 'three';
+import { Color, DepthTexture, GridHelper, PerspectiveCamera, Scene, UnsignedIntType, WebGLRenderTarget } from 'three';
 import { BatchedRenderer } from 'three.quarks';
 
 import { Gfx } from '../core/Gfx';
@@ -50,7 +50,7 @@ export class ArenaScene extends GameScene {
     public init () : void {
 
         this.scene = new Scene();
-        this.camera = new PerspectiveCamera( 75, Gfx.width / Gfx.height, 0.1, 1000 );
+        this.camera = new PerspectiveCamera( 75, Gfx.width / Gfx.height, 1, 200 );
 
         this.controls = new ControlsManager( this.camera );
 
@@ -60,6 +60,7 @@ export class ArenaScene extends GameScene {
         this.scene.background = new Color( 0xffffff );
 
         this.renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height, { samples: 4 } );
+        this.renderTarget.depthTexture = new DepthTexture( Gfx.width, Gfx.height, UnsignedIntType );
 
         //
 
@@ -124,7 +125,7 @@ export class ArenaScene extends GameScene {
 
     };
 
-    public resize () : void {
+    public resize ( dpr: number ) : void {
 
         const width = Gfx.width;
         const height = Gfx.height;
