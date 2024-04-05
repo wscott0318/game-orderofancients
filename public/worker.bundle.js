@@ -14233,7 +14233,7 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         this.particleRenderer = new three_quarks__WEBPACK_IMPORTED_MODULE_0__.BatchedRenderer();
         this.scene.add(this.particleRenderer);
         this.scene.background = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0xffffff);
-        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_13__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height);
+        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_13__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, { samples: 4 });
         //
         this.environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
         this.environment.init(this.scene);

@@ -59,7 +59,7 @@ export class ArenaScene extends GameScene {
 
         this.scene.background = new Color( 0xffffff );
 
-        this.renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height );
+        this.renderTarget = new WebGLRenderTarget( Gfx.width, Gfx.height, { samples: 4 } );
 
         //
 
