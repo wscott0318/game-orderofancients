@@ -39,6 +39,7 @@ export class TowerEntity {
     public level: number;
     public maxHp: number;
     public hp: number;
+    private prevHp: number;
     public isDead: boolean;
     public towerMesh: any;
     public playerIndex: number;
@@ -60,6 +61,7 @@ export class TowerEntity {
 
         this.level = 1;
         this.hp = 1700;
+        this.prevHp = this.hp;
         this.maxHp = 1700;
         this.isDead = false;
 
@@ -132,7 +134,7 @@ export class TowerEntity {
 
         if ( this.id === this.playerIndex ) {
 
-            GameWorker.sendToMain( "updateGold", this.playerState.gold );
+            GameWorker.sendToMain( GameEvents.SET_PLAYER_GOLD, this.playerState.gold );
 
         }
 
@@ -252,6 +254,13 @@ export class TowerEntity {
         if ( this.id === this.playerIndex ) {
 
             GameWorker.sendToMain( GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level } );
+
+        }
+
+        if ( this.hp < this.prevHp ) {
+
+            GameWorker.arenaScene.controls.addCameraShake( 0.02, 0.02, 0.2 );
+            this.prevHp = this.hp;
 
         }
 

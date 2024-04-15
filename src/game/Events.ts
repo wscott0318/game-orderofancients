@@ -20,11 +20,14 @@ export const GameEvents = {
     LOBBY_JOIN: 'LobbyJoin',
     PLAY_SINGLE: 'PlaySingle',
     SET_LOBBY_DATA: 'SetLobbyData',
+    TICK_ROUND: 'TickRound',
 
     START_GAME: 'StartGame',
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
     SET_PLAYER_HEALTH: 'SetPlayerHealth',
+    SET_PLAYER_GOLD: 'SetPlayerGold',
+    SET_PLAYER_INCOME: 'SetPlayerIncome',
     SET_ARENA_STATS: 'SetArenaStats',
 
     GFX_TOGGLE_GRID: 'GfxToggleGrid',

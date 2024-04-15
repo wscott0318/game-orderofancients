@@ -52,7 +52,7 @@ export class TimeComponent {
         this.tower.playerState.income = value;
         GameWorker.arenaScene.spriteManager.addTextSprite( sprite );
 
-        GameWorker.sendToMain( 'updateIncome', value );
+        GameWorker.sendToMain( GameEvents.SET_PLAYER_INCOME, value );
 
     };
 
@@ -62,7 +62,7 @@ export class TimeComponent {
 
         this.roundTracker = ROUND_TIME;
 
-        GameWorker.sendToMain( 'tickRound' );
+        GameWorker.sendToMain( GameEvents.TICK_ROUND );
 
     };
 

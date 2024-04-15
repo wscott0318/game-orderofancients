@@ -94,29 +94,11 @@ export class EnvironmentManager {
 
                 child.receiveShadow = true;
 
-                ( child.material as MeshStandardMaterial ).metalness = 0;
-                ( child.material as MeshStandardMaterial ).roughness = 1;
+                ( child.material as MeshStandardMaterial ).roughnessMap = null;
 
             }
 
         });
-
-        // const map = ResourcesManager.getTexture( "ground-small2" )!;
-        // map.repeat.set( 100, 100 );
-        // map.wrapS = map.wrapT = RepeatWrapping;
-
-        // const geometry = new PlaneGeometry( 1000, 1000 );
-        // const material = new MeshStandardMaterial({
-        //     map: map,
-        //     side: DoubleSide
-        // });
-
-        // const plane = new Mesh( geometry, material );
-        // plane.receiveShadow = true;
-        // plane.rotateX( - Math.PI / 2 );
-        // plane.position.y = -0.1;
-
-        // this._scene.add( plane );
 
     };
 

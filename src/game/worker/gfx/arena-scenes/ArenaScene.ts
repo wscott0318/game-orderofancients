@@ -14,6 +14,7 @@ import { ParticleEffect } from '../managers/ParticleEffect';
 import { TowerManager } from '../../managers/TowerManager';
 import { TowerEntity } from '../../entities/Tower.Entity';
 import { DecorationManager } from './DecorationsManager';
+import { MinimapManager } from '../managers/MinimapManager';
 
 //
 
@@ -44,6 +45,7 @@ export class ArenaScene extends GameScene {
     public spriteManager: SpriteManager;
     public particleEffect: ParticleEffect;
     public towerManager: TowerManager;
+    public minimapManager: MinimapManager;
 
     //
 
@@ -63,6 +65,8 @@ export class ArenaScene extends GameScene {
         this.renderTarget.depthTexture = new DepthTexture( Gfx.width, Gfx.height, UnsignedIntType );
 
         //
+
+        this.minimapManager = new MinimapManager();
 
         this.environment = new EnvironmentManager();
         this.environment.init( this.scene );
@@ -93,6 +97,8 @@ export class ArenaScene extends GameScene {
 
         GameWorker.addListener( GameEvents.GFX_TOGGLE_GRID, this.toggleGrid );
 
+        this.minimapManager.init( Gfx.minimapCanvas );
+
         this.addGrid();
         this.initCameraControls();
 
@@ -106,11 +112,12 @@ export class ArenaScene extends GameScene {
 
         }
 
+        this.minimapManager.update();
         this.towerManager.update();
         this.spriteManager.tick();
         this.particleEffect.tick();
 
-        this.controls.update();
+        this.controls.update( delta );
 
     };
 

@@ -24,6 +24,7 @@ export const useGame = () => {
      */
 
     const canvasDivRef = useRef(null);
+    const minimapCanvasRef = useRef(null);
 
     const createGame = useCallback( () => {
 
@@ -48,7 +49,8 @@ export const useGame = () => {
 
         GameMain.initGFX({
             container:      canvasDivRef.current! as HTMLDivElement,
-            gameMode:       gameMode
+            gameMode:       gameMode,
+            minimapCanvas:  minimapCanvasRef.current! as HTMLCanvasElement
         });
 
         setGameState( GAME_STATES.PLAYING );
@@ -97,6 +99,7 @@ export const useGame = () => {
 
     return {
         canvasDivRef,
+        minimapCanvasRef,
         createGame,
         exitGameAction,
         restartGameAction,

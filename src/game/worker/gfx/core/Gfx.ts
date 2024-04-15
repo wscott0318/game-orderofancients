@@ -11,12 +11,14 @@ import { GameEvents } from '../../../Events';
 
 export interface IGfxInitProps {
     // @ts-ignore
-    offscreen:          OffscreenCanvas;
-    windowWidth:        number;
-    windowHeight:       number;
-    screenWidth:        number;
-    screenHeight:       number;
-    devicePixelRatio:   number;
+    offscreen:                  OffscreenCanvas;
+    // @ts-ignore
+    minimapOffscreen:           OffscreenCanvas;
+    windowWidth:                number;
+    windowHeight:               number;
+    screenWidth:                number;
+    screenHeight:               number;
+    devicePixelRatio:           number;
 };
 
 //
@@ -40,12 +42,16 @@ class GfxCore {
     private loopEnabled: boolean = true;
     private renderingEnabled: boolean = true;
 
+    // @ts-ignore
+    public minimapCanvas: OffscreenCanvas;
+
     //
 
     public init ( params: IGfxInitProps ) : void {
 
         GameWorker.addListener( GameEvents.RESIZE_GFX, this.resize );
 
+        this.minimapCanvas = params.minimapOffscreen;
         this.width = params.windowWidth;
         this.height = params.windowHeight;
         this.screenWidth = params.screenWidth;

@@ -14,7 +14,6 @@ import { GAME_STATES } from "../../constants";
 
 export class GameWorkerCore extends EventEmitter {
 
-    public canvasDiv: HTMLDivElement;
     public lobbyInfo: LobbyInfo;
     public playerIndex: number;
     public gameMode: number;

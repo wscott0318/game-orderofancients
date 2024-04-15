@@ -13392,10 +13392,13 @@ const GameEvents = {
     LOBBY_JOIN: 'LobbyJoin',
     PLAY_SINGLE: 'PlaySingle',
     SET_LOBBY_DATA: 'SetLobbyData',
+    TICK_ROUND: 'TickRound',
     START_GAME: 'StartGame',
     UPDATE_TIME: 'UpdateTime',
     SET_PLAYER_UPGRADES: 'SetPlayerUpgrades',
     SET_PLAYER_HEALTH: 'SetPlayerHealth',
+    SET_PLAYER_GOLD: 'SetPlayerGold',
+    SET_PLAYER_INCOME: 'SetPlayerIncome',
     SET_ARENA_STATS: 'SetArenaStats',
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
     UI_CLEAR: 'UIClear',
@@ -13685,13 +13688,13 @@ class TimeComponent {
         });
         this.tower.playerState.income = value;
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.arenaScene.spriteManager.addTextSprite(sprite);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain('updateIncome', value);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.SET_PLAYER_INCOME, value);
     }
     ;
     tickRound() {
         this.tower.levelUp();
         this.roundTracker = _constants__WEBPACK_IMPORTED_MODULE_0__.ROUND_TIME;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain('tickRound');
+        _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.TICK_ROUND);
     }
     ;
     tick() {
@@ -14026,6 +14029,7 @@ class TowerEntity {
         this.id = params.id;
         this.level = 1;
         this.hp = 1700;
+        this.prevHp = this.hp;
         this.maxHp = 1700;
         this.isDead = false;
         this.sacrificeHP = 0;
@@ -14075,7 +14079,7 @@ class TowerEntity {
     ;
     updateGold() {
         if (this.id === this.playerIndex) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain("updateGold", this.playerState.gold);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.SET_PLAYER_GOLD, this.playerState.gold);
         }
     }
     ;
@@ -14168,6 +14172,10 @@ class TowerEntity {
         if (this.id === this.playerIndex) {
             _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level });
         }
+        if (this.hp < this.prevHp) {
+            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.controls.addCameraShake(0.02, 0.02, 0.2);
+            this.prevHp = this.hp;
+        }
         //
         _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
             id: `towerHealthBar_${this.id}`,
@@ -14195,7 +14203,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   ArenaScene: () => (/* binding */ ArenaScene)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var three_quarks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three.quarks */ "./node_modules/three.quarks/dist/three.quarks.esm.js");
 /* harmony import */ var _core_Gfx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../core/Gfx */ "./src/game/worker/gfx/core/Gfx.ts");
 /* harmony import */ var _core_GameScene__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../core/GameScene */ "./src/game/worker/gfx/core/GameScene.ts");
@@ -14209,6 +14217,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _managers_TowerManager__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../managers/TowerManager */ "./src/game/worker/managers/TowerManager.ts");
 /* harmony import */ var _entities_Tower_Entity__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../entities/Tower.Entity */ "./src/game/worker/entities/Tower.Entity.ts");
 /* harmony import */ var _DecorationsManager__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./DecorationsManager */ "./src/game/worker/gfx/arena-scenes/DecorationsManager.ts");
+/* harmony import */ var _managers_MinimapManager__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../managers/MinimapManager */ "./src/game/worker/gfx/managers/MinimapManager.ts");
+
 
 
 
@@ -14233,15 +14243,16 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     }
     //
     init() {
-        this.scene = new three__WEBPACK_IMPORTED_MODULE_13__.Scene();
-        this.camera = new three__WEBPACK_IMPORTED_MODULE_13__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 1, 200);
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_14__.Scene();
+        this.camera = new three__WEBPACK_IMPORTED_MODULE_14__.PerspectiveCamera(75, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width / _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, 1, 200);
         this.controls = new _ControlsManager__WEBPACK_IMPORTED_MODULE_5__.ControlsManager(this.camera);
         this.particleRenderer = new three_quarks__WEBPACK_IMPORTED_MODULE_0__.BatchedRenderer();
         this.scene.add(this.particleRenderer);
-        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0xffffff);
-        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_13__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, { samples: 4 });
-        this.renderTarget.depthTexture = new three__WEBPACK_IMPORTED_MODULE_13__.DepthTexture(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, three__WEBPACK_IMPORTED_MODULE_13__.UnsignedIntType);
+        this.scene.background = new three__WEBPACK_IMPORTED_MODULE_14__.Color(0xffffff);
+        this.renderTarget = new three__WEBPACK_IMPORTED_MODULE_14__.WebGLRenderTarget(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, { samples: 4 });
+        this.renderTarget.depthTexture = new three__WEBPACK_IMPORTED_MODULE_14__.DepthTexture(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.width, _core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.height, three__WEBPACK_IMPORTED_MODULE_14__.UnsignedIntType);
         //
+        this.minimapManager = new _managers_MinimapManager__WEBPACK_IMPORTED_MODULE_13__.MinimapManager();
         this.environment = new _EnvironmentManager__WEBPACK_IMPORTED_MODULE_3__.EnvironmentManager();
         this.environment.init(this.scene);
         this.decorationManager = new _DecorationsManager__WEBPACK_IMPORTED_MODULE_12__.DecorationManager();
@@ -14261,6 +14272,7 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         }
         //
         _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.addListener(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.GFX_TOGGLE_GRID, this.toggleGrid);
+        this.minimapManager.init(_core_Gfx__WEBPACK_IMPORTED_MODULE_1__.Gfx.minimapCanvas);
         this.addGrid();
         this.initCameraControls();
     }
@@ -14269,10 +14281,11 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
         if (_GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.tick % 60 === 0) {
             _GameWorker__WEBPACK_IMPORTED_MODULE_4__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_6__.GameEvents.SET_ARENA_STATS, this.getStats());
         }
+        this.minimapManager.update();
         this.towerManager.update();
         this.spriteManager.tick();
         this.particleEffect.tick();
-        this.controls.update();
+        this.controls.update(delta);
     }
     ;
     render(delta, time) {
@@ -14343,8 +14356,8 @@ class ArenaScene extends _core_GameScene__WEBPACK_IMPORTED_MODULE_2__.GameScene 
     addGrid() {
         const size = 500;
         const divisions = 500;
-        const color = new three__WEBPACK_IMPORTED_MODULE_13__.Color(0x333333);
-        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_13__.GridHelper(size, divisions, color, color);
+        const color = new three__WEBPACK_IMPORTED_MODULE_14__.Color(0x333333);
+        this.gridHelper = new three__WEBPACK_IMPORTED_MODULE_14__.GridHelper(size, divisions, color, color);
         this.gridHelper.position.y = 0.01;
         this.gridHelper.visible = false;
         this.scene.add(this.gridHelper);
@@ -14382,6 +14395,7 @@ class ControlsManager {
         this.minAltitude = 10;
         this.mouseKeys = {};
         this.mousePos = new three__WEBPACK_IMPORTED_MODULE_2__.Vector2();
+        this.cameraShake = null;
         //
         this.mouseWheelHandler = (event) => {
             this.altitude += event.deltaY / 100;
@@ -14419,8 +14433,29 @@ class ControlsManager {
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.removeListener('mousewheel', this.mouseWheelHandler);
     }
     ;
-    update() {
+    update(delta) {
         this.camera.position.y = 0.95 * this.camera.position.y + 0.05 * this.altitude;
+        if (this.cameraShake) {
+            if (!this.cameraShake._time || this.cameraShake._time - this.cameraShake._lastOffsetUpdateTime > this.cameraShake.frequency) {
+                this.cameraShake._offsetTarget.x = 3 * (Math.random() - 0.5) * this.cameraShake.amplitude;
+                this.cameraShake._offsetTarget.y = 3 * (Math.random() - 0.5) * this.cameraShake.amplitude;
+                this.cameraShake._offsetTarget.z = 3 * (Math.random() - 0.5) * this.cameraShake.amplitude;
+            }
+            const dx = this.cameraShake._offsetTarget.x - this.cameraShake._offset.x;
+            const dy = this.cameraShake._offsetTarget.y - this.cameraShake._offset.y;
+            const dz = this.cameraShake._offsetTarget.z - this.cameraShake._offset.z;
+            this.cameraShake._offset.x += dx * delta / this.cameraShake.frequency;
+            this.cameraShake._offset.y += dy * delta / this.cameraShake.frequency;
+            this.cameraShake._offset.z += dz * delta / this.cameraShake.frequency;
+            this.camera.position.x += this.cameraShake._offset.x;
+            this.camera.position.y += this.cameraShake._offset.y;
+            this.camera.position.z += this.cameraShake._offset.z;
+            this.cameraShake._time += delta;
+            if (this.cameraShake._time > this.cameraShake.duration) {
+                this.cameraShake = null;
+            }
+        }
+        //
         _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_1__.GameEvents.UI_SET_CAMERA_POSITION, {
             pos: {
                 x: this.camera.position.x,
@@ -14433,6 +14468,20 @@ class ControlsManager {
                 z: this.camera.position.z - this.offset.z,
             }
         });
+    }
+    ;
+    addCameraShake(frequency, amplitude, duration) {
+        if (this.cameraShake)
+            return;
+        this.cameraShake = {
+            frequency,
+            amplitude,
+            duration,
+            _time: 0,
+            _lastOffsetUpdateTime: 0,
+            _offset: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3(),
+            _offsetTarget: new three__WEBPACK_IMPORTED_MODULE_2__.Vector3()
+        };
     }
     ;
 }
@@ -14554,23 +14603,9 @@ class EnvironmentManager {
                     child.castShadow = true;
                 }
                 child.receiveShadow = true;
-                child.material.metalness = 0;
-                child.material.roughness = 1;
+                child.material.roughnessMap = null;
             }
         });
-        // const map = ResourcesManager.getTexture( "ground-small2" )!;
-        // map.repeat.set( 100, 100 );
-        // map.wrapS = map.wrapT = RepeatWrapping;
-        // const geometry = new PlaneGeometry( 1000, 1000 );
-        // const material = new MeshStandardMaterial({
-        //     map: map,
-        //     side: DoubleSide
-        // });
-        // const plane = new Mesh( geometry, material );
-        // plane.receiveShadow = true;
-        // plane.rotateX( - Math.PI / 2 );
-        // plane.position.y = -0.1;
-        // this._scene.add( plane );
     }
     ;
     update() {
@@ -14737,6 +14772,7 @@ class GfxCore {
     //
     init(params) {
         _GameWorker__WEBPACK_IMPORTED_MODULE_2__.GameWorker.addListener(_Events__WEBPACK_IMPORTED_MODULE_3__.GameEvents.RESIZE_GFX, this.resize);
+        this.minimapCanvas = params.minimapOffscreen;
         this.width = params.windowWidth;
         this.height = params.windowHeight;
         this.screenWidth = params.screenWidth;
@@ -14953,6 +14989,91 @@ class BotAnimationController {
     tick() {
         const delta = this.clock.getDelta();
         this.mixer.update(delta);
+    }
+    ;
+}
+;
+
+
+/***/ }),
+
+/***/ "./src/game/worker/gfx/managers/MinimapManager.ts":
+/*!********************************************************!*\
+  !*** ./src/game/worker/gfx/managers/MinimapManager.ts ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MinimapManager: () => (/* binding */ MinimapManager)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../GameWorker */ "./src/game/worker/GameWorker.ts");
+/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../constants/tower */ "./src/constants/tower.ts");
+
+
+
+//
+class MinimapManager {
+    constructor() {
+        this.camera = new three__WEBPACK_IMPORTED_MODULE_2__.OrthographicCamera(-1, 1, 1, -1, 0.5, 10);
+        this.scene = new three__WEBPACK_IMPORTED_MODULE_2__.Scene();
+        this.unitsPoints = new three__WEBPACK_IMPORTED_MODULE_2__.Points();
+        this.unitsBufferSize = 100;
+        this.towerPoints = new three__WEBPACK_IMPORTED_MODULE_2__.Points();
+        this.towerBufferSize = 8;
+        this.minimapSize = 160;
+        this.mapSize = 175;
+    }
+    //
+    init(canvas) {
+        // setup environment
+        this.renderer = new three__WEBPACK_IMPORTED_MODULE_2__.WebGLRenderer({ canvas });
+        this.camera.position.set(0, 1, 0);
+        this.camera.lookAt(0, 0, 0);
+        this.renderer.setSize(this.minimapSize, this.minimapSize, false);
+        this.renderer.setClearColor(0x000000, 1);
+        // setup units points
+        const unitsMaterial = new three__WEBPACK_IMPORTED_MODULE_2__.PointsMaterial({ size: 5, color: 0xff0000 });
+        const unitsGeometry = new three__WEBPACK_IMPORTED_MODULE_2__.BufferGeometry();
+        const unitsPositions = new Float32Array(this.unitsBufferSize * 3);
+        unitsGeometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_2__.BufferAttribute(unitsPositions, 3));
+        this.unitsPoints.material = unitsMaterial;
+        this.unitsPoints.geometry = unitsGeometry;
+        this.unitsPoints.geometry.drawRange.count = 0;
+        this.unitsPoints.frustumCulled = false;
+        this.scene.add(this.unitsPoints);
+        // setup tower points
+        const towerMaterial = new three__WEBPACK_IMPORTED_MODULE_2__.PointsMaterial({ size: 10, color: 0x00ff00 });
+        const towerGeometry = new three__WEBPACK_IMPORTED_MODULE_2__.BufferGeometry();
+        const towerPositions = new Float32Array(this.towerBufferSize * 3);
+        towerGeometry.setAttribute('position', new three__WEBPACK_IMPORTED_MODULE_2__.BufferAttribute(towerPositions, 3));
+        this.towerPoints.material = towerMaterial;
+        this.towerPoints.geometry = towerGeometry;
+        this.towerPoints.geometry.drawRange.count = 0;
+        this.towerPoints.frustumCulled = false;
+        this.scene.add(this.towerPoints);
+    }
+    ;
+    update() {
+        const unitPositions = this.unitsPoints.geometry.attributes.position;
+        const towerPositions = this.towerPoints.geometry.attributes.position;
+        let index = 0;
+        for (let i = 0; i < _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.arenaScene.towerManager.towersArray.length; i++) {
+            const tower = _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.arenaScene.towerManager.towersArray[i];
+            const units = tower.botManager.bots;
+            for (let j = 0; j < units.length; j++) {
+                unitPositions.setXYZ(index, units[j].position.x / this.mapSize - 0.5, 0, units[j].position.z / this.mapSize - 0.5);
+                index++;
+            }
+            const position = _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[i];
+            towerPositions.setXYZ(i, position.x / this.mapSize - 0.5, 0, position.z / this.mapSize - 0.5);
+        }
+        this.unitsPoints.geometry.drawRange.count = index;
+        unitPositions.needsUpdate = true;
+        this.towerPoints.geometry.drawRange.count = _GameWorker__WEBPACK_IMPORTED_MODULE_0__.GameWorker.arenaScene.towerManager.towersArray.length;
+        towerPositions.needsUpdate = true;
+        this.renderer.render(this.scene, this.camera);
     }
     ;
 }

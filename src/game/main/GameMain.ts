@@ -3,12 +3,12 @@ import EventEmitter from "events";
 import { LobbyInfo } from "../Types";
 import { GameEvents } from "../Events";
 import { UIRenderer } from "./UIRenderer";
-import { Config } from "../../utils/config";
 
 //
 
 interface IGameMainProps {
     container:      HTMLDivElement;
+    minimapCanvas:  HTMLCanvasElement;
     gameMode:       number;
 };
 
@@ -24,6 +24,7 @@ class GameMainCore extends EventEmitter {
 
     private uiRenderer: UIRenderer;
     private canvas: HTMLCanvasElement;
+    public minimapCanvas: HTMLCanvasElement;
 
     //
 
@@ -48,6 +49,11 @@ class GameMainCore extends EventEmitter {
         props.container.appendChild( canvas );
         this.canvas = canvas;
 
+        const minimapCanvas = document.createElement( 'canvas' );
+        minimapCanvas.width = 160;
+        minimapCanvas.height = 160;
+        this.minimapCanvas = minimapCanvas;
+
         window.addEventListener( 'resize', this.onResize );
 
         this.uiRenderer = new UIRenderer();
@@ -61,12 +67,13 @@ class GameMainCore extends EventEmitter {
 
         //
 
-        // @ts-ignore
         const offscreen = this.canvas.transferControlToOffscreen();
+        const minimapOffscreen = this.minimapCanvas.transferControlToOffscreen();
 
         this.dispatchEvent( GameEvents.INIT_GFX, {
 
             offscreen:          offscreen,
+            minimapOffscreen:   minimapOffscreen,
             windowWidth:        window.innerWidth,
             windowHeight:       window.innerHeight,
             screenWidth:        window.screen.width,
@@ -74,7 +81,8 @@ class GameMainCore extends EventEmitter {
             devicePixelRatio:   window.devicePixelRatio,
             gameMode:           props.gameMode
 
-        }, [ offscreen ] );
+        // @ts-ignore
+        }, [ offscreen, minimapOffscreen ] );
 
     };
 

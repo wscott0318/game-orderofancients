@@ -18,6 +18,16 @@ export class ControlsManager {
     private mouseKeys: { [key: number]: boolean } = {};
     private mousePos: Vector2 = new Vector2();
 
+    private cameraShake: {
+        frequency:                  number;
+        amplitude:                  number;
+        duration:                   number;
+        _time:                      number;
+        _lastOffsetUpdateTime:      number;
+        _offset:                    Vector3;
+        _offsetTarget:              Vector3;
+    } = null;
+
     //
 
     constructor ( camera: PerspectiveCamera ) {
@@ -40,9 +50,43 @@ export class ControlsManager {
 
     };
 
-    public update () : void {
+    public update ( delta: number ) : void {
 
         this.camera.position.y = 0.95 * this.camera.position.y + 0.05 * this.altitude;
+
+        if ( this.cameraShake ) {
+
+            if ( ! this.cameraShake._time || this.cameraShake._time - this.cameraShake._lastOffsetUpdateTime > this.cameraShake.frequency ) {
+
+                this.cameraShake._offsetTarget.x = 3 * ( Math.random() - 0.5 ) * this.cameraShake.amplitude;
+                this.cameraShake._offsetTarget.y = 3 * ( Math.random() - 0.5 ) * this.cameraShake.amplitude;
+                this.cameraShake._offsetTarget.z = 3 * ( Math.random() - 0.5 ) * this.cameraShake.amplitude;
+
+            }
+
+            const dx = this.cameraShake._offsetTarget.x - this.cameraShake._offset.x;
+            const dy = this.cameraShake._offsetTarget.y - this.cameraShake._offset.y;
+            const dz = this.cameraShake._offsetTarget.z - this.cameraShake._offset.z;
+
+            this.cameraShake._offset.x += dx * delta / this.cameraShake.frequency;
+            this.cameraShake._offset.y += dy * delta / this.cameraShake.frequency;
+            this.cameraShake._offset.z += dz * delta / this.cameraShake.frequency;
+
+            this.camera.position.x += this.cameraShake._offset.x;
+            this.camera.position.y += this.cameraShake._offset.y;
+            this.camera.position.z += this.cameraShake._offset.z;
+
+            this.cameraShake._time += delta;
+
+            if ( this.cameraShake._time > this.cameraShake.duration ) {
+
+                this.cameraShake = null;
+
+            }
+
+        }
+
+        //
 
         GameWorker.sendToMain( GameEvents.UI_SET_CAMERA_POSITION, {
             pos: {
@@ -56,6 +100,22 @@ export class ControlsManager {
                 z: this.camera.position.z - this.offset.z,
             }
         });
+
+    };
+
+    public addCameraShake ( frequency: number, amplitude: number, duration: number ) : void {
+
+        if ( this.cameraShake ) return;
+
+        this.cameraShake = {
+            frequency,
+            amplitude,
+            duration,
+            _time: 0,
+            _lastOffsetUpdateTime: 0,
+            _offset: new Vector3(),
+            _offsetTarget: new Vector3()
+        };
 
     };
 

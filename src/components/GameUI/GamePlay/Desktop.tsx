@@ -13,6 +13,7 @@ import {
 import { useGameContext } from "../../../contexts/game-context";
 import { GameMain } from "../../../game/main/GameMain";
 import { GameEvents } from "../../../game/Events";
+import { useGame } from "../../../hooks/useGame";
 
 //
 
@@ -428,9 +429,24 @@ export const Desktop = ({
     const [ level, setLevel ] = useState(1);
     const [ stats, setStats ] = useState({ players: [] });
 
-    const { gameMode, upgrades } = useGameContext();
+    const {
+        gameMode,
+        upgrades
+    } = useGameContext();
+
+    const minimapRef = useRef<HTMLDivElement>(null);
 
     //
+
+    useEffect(() => {
+
+        if ( GameMain.minimapCanvas ) {
+
+            minimapRef.current!.appendChild( GameMain.minimapCanvas );
+
+        }
+
+    }, [ GameMain.minimapCanvas ] );
 
     useEffect(() => {
 
@@ -473,9 +489,9 @@ export const Desktop = ({
 
         };
 
-        GameMain.addListener( 'updateGold', updateGold );
-        GameMain.addListener( 'updateIncome', updateIncome );
-        GameMain.addListener( 'tickRound', tickRound );
+        GameMain.addListener( GameEvents.SET_PLAYER_GOLD, updateGold );
+        GameMain.addListener( GameEvents.SET_PLAYER_INCOME, updateIncome );
+        GameMain.addListener( GameEvents.TICK_ROUND, tickRound );
         GameMain.addListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
         GameMain.addListener( GameEvents.SET_ARENA_STATS, setArenaStats );
 
@@ -491,9 +507,9 @@ export const Desktop = ({
 
             gameMenuFadeInAnim.kill();
 
-            GameMain.removeListener( 'updateGold', updateGold );
-            GameMain.removeListener( 'updateIncome', updateIncome );
-            GameMain.removeListener( 'tickRound', tickRound );
+            GameMain.removeListener( GameEvents.SET_PLAYER_GOLD, updateGold );
+            GameMain.removeListener( GameEvents.SET_PLAYER_INCOME, updateIncome );
+            GameMain.removeListener( GameEvents.TICK_ROUND, tickRound );
             GameMain.removeListener( GameEvents.SET_PLAYER_HEALTH, setHealth );
             GameMain.removeListener( GameEvents.SET_ARENA_STATS, setArenaStats );
 
@@ -604,6 +620,7 @@ export const Desktop = ({
                 </div>
             </div>
             <div className="field fixed flex bottom-0">
+                <div className="minimap absolute h-40 w-40 left-[-230px] z-100 bg-black" ref={ minimapRef }></div>
                 <div className="profile flex gap-[2%]">
                     <div className="left relative w-[20%] h-[100%] flex flex-col gap-[5%] overflow-y-scroll">
                         {profileSpells.length > 12
