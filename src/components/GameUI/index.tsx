@@ -196,8 +196,8 @@ export const GameScene = () => {
     // tmp end
 
     return (
-        <Wrapper onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler } >
-            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler } onWheel={ mouseWheelHandler }></div>
+        <Wrapper onMouseUp={ mouseUpHandler } onMouseMove={ mouseMoveHandler } onWheel={ mouseWheelHandler } >
+            <div ref={canvasDivRef} onMouseDown={ mouseDownHandler }></div>
 
             {canPlayVideo && (
                 <BackVideo ref={videoRef} loop className="opacity-[0.8]">

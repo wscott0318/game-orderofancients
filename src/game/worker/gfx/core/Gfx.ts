@@ -6,12 +6,15 @@ import { GameScene } from './GameScene';
 import { ComposerPass } from './Composer';
 import { GameWorker } from '../../GameWorker';
 import { GameEvents } from '../../../Events';
+import { UILayer } from "./UILayer";
 
 //
 
 export interface IGfxInitProps {
     // @ts-ignore
-    offscreen:                  OffscreenCanvas;
+    sceneOffscreen:             OffscreenCanvas;
+    // @ts-ignore
+    uiOffscreen:                OffscreenCanvas;
     // @ts-ignore
     minimapOffscreen:           OffscreenCanvas;
     windowWidth:                number;
@@ -60,7 +63,11 @@ class GfxCore {
 
         this.composer = new ComposerPass();
 
-        this.createRenderer( params.offscreen );
+        this.createRenderer( params.sceneOffscreen );
+
+        UILayer.uiCanvas = params.uiOffscreen;
+        UILayer.resize( this.width, this.height );
+        UILayer.init();
 
         //
 
@@ -90,6 +97,8 @@ class GfxCore {
 
         this.composer.render( this.renderer );
 
+        UILayer.render( this.activeGameScene.camera );
+
         TWEEN.update();
 
     };
@@ -117,6 +126,8 @@ class GfxCore {
         this.height = params.windowHeight;
 
         this.renderer.setSize( this.width, this.height, false );
+
+        UILayer.resize( this.width, this.height );
 
         if ( this.activeGameScene ) this.activeGameScene.resize( this.devicePixelRatio );
 

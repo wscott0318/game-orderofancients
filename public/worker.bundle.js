@@ -12846,25 +12846,6 @@ const BOT_PROPS = {
 
 /***/ }),
 
-/***/ "./src/constants/gameUI.ts":
-/*!*********************************!*\
-  !*** ./src/constants/gameUI.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   HEALTH_PIXEL: () => (/* binding */ HEALTH_PIXEL),
-/* harmony export */   TOWER_HEALTH_HEIGHT: () => (/* binding */ TOWER_HEALTH_HEIGHT),
-/* harmony export */   TOWER_HEALTH_WIDTH: () => (/* binding */ TOWER_HEALTH_WIDTH)
-/* harmony export */ });
-const HEALTH_PIXEL = 0.1;
-const TOWER_HEALTH_WIDTH = 70;
-const TOWER_HEALTH_HEIGHT = 8;
-
-
-/***/ }),
-
 /***/ "./src/constants/index.ts":
 /*!********************************!*\
   !*** ./src/constants/index.ts ***!
@@ -13721,22 +13702,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   BotEntity: () => (/* binding */ BotEntity)
 /* harmony export */ });
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
-/* harmony import */ var three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! three/examples/jsm/utils/SkeletonUtils.js */ "./node_modules/three/examples/jsm/utils/SkeletonUtils.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! three/examples/jsm/utils/SkeletonUtils.js */ "./node_modules/three/examples/jsm/utils/SkeletonUtils.js");
 /* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tweenjs/tween.js */ "./node_modules/@tweenjs/tween.js/dist/tween.esm.js");
 /* harmony import */ var _gfx_managers_BotAnimationController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../gfx/managers/BotAnimationController */ "./src/game/worker/gfx/managers/BotAnimationController.ts");
-/* harmony import */ var _constants_gameUI__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants/gameUI */ "./src/constants/gameUI.ts");
-/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
-/* harmony import */ var _helper_three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../helper/three */ "./src/helper/three.ts");
-/* harmony import */ var three_src_math_MathUtils__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! three/src/math/MathUtils */ "./node_modules/three/src/math/MathUtils.js");
-/* harmony import */ var _constants_bot__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants/bot */ "./src/constants/bot.ts");
-/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
-/* harmony import */ var _gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../gfx/particles/weapons/Stun */ "./src/game/worker/gfx/particles/weapons/Stun.ts");
-/* harmony import */ var _gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../gfx/particles/ToonProjectile */ "./src/game/worker/gfx/particles/ToonProjectile.ts");
-/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
-/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
-
+/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
+/* harmony import */ var _helper_three__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../helper/three */ "./src/helper/three.ts");
+/* harmony import */ var three_src_math_MathUtils__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! three/src/math/MathUtils */ "./node_modules/three/src/math/MathUtils.js");
+/* harmony import */ var _constants_bot__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../constants/bot */ "./src/constants/bot.ts");
+/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
+/* harmony import */ var _gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../gfx/particles/weapons/Stun */ "./src/game/worker/gfx/particles/weapons/Stun.ts");
+/* harmony import */ var _gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../gfx/particles/ToonProjectile */ "./src/game/worker/gfx/particles/ToonProjectile.ts");
+/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
+/* harmony import */ var _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../gfx/core/UILayer */ "./src/game/worker/gfx/core/UILayer.ts");
 
 
 
@@ -13755,12 +13734,13 @@ __webpack_require__.r(__webpack_exports__);
 class BotEntity {
     //
     constructor(botType, towerIndex) {
-        this.healthPosition = new three__WEBPACK_IMPORTED_MODULE_12__.Vector3();
-        this.uuid = (0,three_src_math_MathUtils__WEBPACK_IMPORTED_MODULE_13__.generateUUID)();
-        this.hp = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.healthPoint[botType];
-        this.maxHp = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.healthPoint[botType];
-        this.attackSpeed = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.attackSpeed[botType];
-        this.attackDamage = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.attackDamage[botType];
+        this.healthBar = null;
+        this.healthValueBar = null;
+        this.uuid = (0,three_src_math_MathUtils__WEBPACK_IMPORTED_MODULE_11__.generateUUID)();
+        this.hp = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.healthPoint[botType];
+        this.maxHp = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.healthPoint[botType];
+        this.attackSpeed = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.attackSpeed[botType];
+        this.attackDamage = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.attackDamage[botType];
         this.speed = 0.1;
         this.position = {
             x: 0,
@@ -13769,17 +13749,17 @@ class BotEntity {
         };
         this.botType = botType;
         //
-        this.model = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getModel(['BotGrunt', 'BotSwordsman', 'BotArcher', 'BotKing', 'BotMage'][botType - 1]);
-        this.mesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_14__.clone(this.model.scene);
+        this.model = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getModel(['BotGrunt', 'BotSwordsman', 'BotArcher', 'BotKing', 'BotMage'][botType - 1]);
+        this.mesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_12__.clone(this.model.scene);
         this.animController = new _gfx_managers_BotAnimationController__WEBPACK_IMPORTED_MODULE_1__.BotAnimationController({
             animations: this.model.animations,
             mesh: this.mesh,
             botType: this.botType,
         });
-        this.targetPos = new three__WEBPACK_IMPORTED_MODULE_12__.Vector3(_constants_tower__WEBPACK_IMPORTED_MODULE_6__.TOWER_POSITIONS[towerIndex].x, _constants_tower__WEBPACK_IMPORTED_MODULE_6__.TOWER_POSITIONS[towerIndex].y, _constants_tower__WEBPACK_IMPORTED_MODULE_6__.TOWER_POSITIONS[towerIndex].z);
-        this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS.walk;
-        this.oldStatus = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS.walk;
-        this.attackRange = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.attackRange[botType];
+        this.targetPos = new three__WEBPACK_IMPORTED_MODULE_13__.Vector3(_constants_tower__WEBPACK_IMPORTED_MODULE_5__.TOWER_POSITIONS[towerIndex].x, _constants_tower__WEBPACK_IMPORTED_MODULE_5__.TOWER_POSITIONS[towerIndex].y, _constants_tower__WEBPACK_IMPORTED_MODULE_5__.TOWER_POSITIONS[towerIndex].z);
+        this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS.walk;
+        this.oldStatus = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS.walk;
+        this.attackRange = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.attackRange[botType];
         this.claimTime = 0;
         this.canRemove = false;
         this.stunTime = 0;
@@ -13787,15 +13767,25 @@ class BotEntity {
         this.slowTime = 0;
         this.fireMesh = null;
         this.fireTime = 0;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_ADD_ELEMENT, {
-            id: `healthBar-${this.uuid}`,
-            props: {
-                className: "healthBar",
-                innerHTML: `
-                    <div class="healthBar__progress"></div>
-                `
-            }
+        // add UI health bar
+        this.healthBar = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_10__.UIRect({
+            name: 'BotHealthBar',
+            width: 60,
+            height: 15,
+            color: "#000000",
         });
+        this.healthValueBar = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_10__.UIRect({
+            name: 'BotHealthBarProgress',
+            width: 60,
+            height: 11,
+            hAlign: "left",
+            color: "#ff0000",
+            offset: new three__WEBPACK_IMPORTED_MODULE_13__.Vector2(2, 2),
+            innerShadow: true
+        });
+        this.healthBar.add(this.healthValueBar);
+        _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_10__.UILayer.add(this.healthBar);
+        //
         this.initialize();
     }
     ;
@@ -13804,40 +13794,39 @@ class BotEntity {
         this.mesh.scale.x = 0.01;
         this.mesh.scale.y = 0.01;
         this.mesh.scale.z = 0.01;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.mesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.add(this.mesh);
     }
     ;
     disposeHealthBar() {
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_REMOVE_ELEMENT, {
-            id: `healthBar-${this.uuid}`
-        });
+        _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_10__.UILayer.remove(this.healthBar);
+        this.healthBar = null;
     }
     ;
     disposeStunMesh() {
         if (!this.stunMesh)
             return;
-        (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.stunMesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.stunMesh);
+        (0,_helper_three__WEBPACK_IMPORTED_MODULE_3__.disposeMesh)(this.stunMesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.remove(this.stunMesh);
     }
     ;
     disposeFireMesh() {
         if (!this.fireMesh)
             return;
-        (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.fireMesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.fireMesh);
+        (0,_helper_three__WEBPACK_IMPORTED_MODULE_3__.disposeMesh)(this.fireMesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.remove(this.fireMesh);
     }
     ;
     //
     dispose() {
         this.animController.dispose();
-        (0,_helper_three__WEBPACK_IMPORTED_MODULE_4__.disposeMesh)(this.mesh);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.remove(this.mesh);
+        (0,_helper_three__WEBPACK_IMPORTED_MODULE_3__.disposeMesh)(this.mesh);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.remove(this.mesh);
         this.disposeStunMesh();
     }
     ;
     kill() {
-        this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_5__.ANIMATION_TYPE["dead"]);
-        this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["dead"];
+        this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_4__.ANIMATION_TYPE["dead"]);
+        this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["dead"];
         this.disposeHealthBar();
         this.disposeStunMesh();
         this.disposeFireMesh();
@@ -13860,15 +13849,15 @@ class BotEntity {
         this.mesh.position.z = this.position.z;
         if (this.stunTime > 0) {
             if (!this.stunMesh) {
-                this.stunMesh = new three__WEBPACK_IMPORTED_MODULE_12__.Object3D();
-                const particle = (0,_gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_7__.createStun)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
+                this.stunMesh = new three__WEBPACK_IMPORTED_MODULE_13__.Object3D();
+                const particle = (0,_gfx_particles_weapons_Stun__WEBPACK_IMPORTED_MODULE_6__.createStun)(_GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getTexture("Particles2")]);
                 particle.then((group) => {
                     const particleMesh = group;
                     particleMesh.position.set(this.mesh.position.x, this.mesh.position.y +
-                        _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS["modelHeight"][this.botType], this.mesh.position.z);
+                        _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS["modelHeight"][this.botType], this.mesh.position.z);
                     particleMesh.scale.set(0.7, 0.7, 0.7);
                     this.stunMesh = particleMesh;
-                    _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.stunMesh);
+                    _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.add(this.stunMesh);
                 });
             }
             this.animController.stopAnimation();
@@ -13876,21 +13865,21 @@ class BotEntity {
         else if (this.stunMesh) {
             this.disposeStunMesh();
             this.stunMesh = null;
-            if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["walk"]) {
-                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_5__.ANIMATION_TYPE["walk"]);
+            if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["walk"]) {
+                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_4__.ANIMATION_TYPE["walk"]);
             }
-            else if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["attack"]) {
-                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_5__.ANIMATION_TYPE["attack"]);
+            else if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["attack"]) {
+                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_4__.ANIMATION_TYPE["attack"]);
             }
         }
-        if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["dead"]) {
+        if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["dead"]) {
             this.disposeStunMesh();
         }
         if (this.slowTime > 0) {
             this.mesh.traverse((obj) => {
                 if (obj.isMesh || obj.isSkinnedMesh) {
                     const material = obj.material.clone();
-                    material.color = new three__WEBPACK_IMPORTED_MODULE_12__.Color(2, 10, 30);
+                    material.color = new three__WEBPACK_IMPORTED_MODULE_13__.Color(2, 10, 30);
                     obj.material = material;
                 }
             });
@@ -13900,22 +13889,22 @@ class BotEntity {
             this.mesh.traverse((obj) => {
                 if (obj.isMesh || obj.isSkinnedMesh) {
                     const material = obj.material.clone();
-                    material.color = new three__WEBPACK_IMPORTED_MODULE_12__.Color(1, 1, 1);
+                    material.color = new three__WEBPACK_IMPORTED_MODULE_13__.Color(1, 1, 1);
                     obj.material = material;
                 }
             });
         }
         if (this.fireTime > 0) {
             if (!this.fireMesh) {
-                const particle = (0,_gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_8__.createToonProjectile)(_GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_9__.ResourcesManager.getTexture("Particles2")]);
-                const scaleOffset = (_constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
+                const particle = (0,_gfx_particles_ToonProjectile__WEBPACK_IMPORTED_MODULE_7__.createToonProjectile)(_GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.particleRenderer, [_managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getTexture("Particles1"), _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_8__.ResourcesManager.getTexture("Particles2")]);
+                const scaleOffset = (_constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS["modelHeight"][this.botType] / 3) * 1.5;
                 particle.scale.set(scaleOffset, scaleOffset, scaleOffset);
                 this.fireMesh = particle;
-                _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.add(this.fireMesh);
+                _GameWorker__WEBPACK_IMPORTED_MODULE_9__.GameWorker.arenaScene.add(this.fireMesh);
             }
             if (this.fireMesh) {
                 this.fireMesh.position.x = this.mesh.position.x;
-                this.fireMesh.position.y = this.mesh.position.y + _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS["modelHeight"][this.botType] / 2;
+                this.fireMesh.position.y = this.mesh.position.y + _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS["modelHeight"][this.botType] / 2;
                 this.fireMesh.position.z = this.mesh.position.z;
             }
         }
@@ -13925,54 +13914,29 @@ class BotEntity {
             this.fireMesh = null;
         }
         const distance = this.mesh.position.distanceTo(this.targetPos);
-        if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["walk"]) {
-            if (distance - this.attackRange <= _constants_tower__WEBPACK_IMPORTED_MODULE_6__.TOWER_RADIUS) {
-                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_5__.ANIMATION_TYPE["attack"]);
-                this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_STATUS["attack"];
+        if (this.status === _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["walk"]) {
+            if (distance - this.attackRange <= _constants_tower__WEBPACK_IMPORTED_MODULE_5__.TOWER_RADIUS) {
+                this.animController.playAnimation(_constants_bot__WEBPACK_IMPORTED_MODULE_4__.ANIMATION_TYPE["attack"]);
+                this.status = _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_STATUS["attack"];
             }
         }
         /**
          * Rotate object to target position
          */
-        const curPos = new three__WEBPACK_IMPORTED_MODULE_12__.Vector3(this.position.x, this.position.y, this.position.z);
-        const rotationMatrix = new three__WEBPACK_IMPORTED_MODULE_12__.Matrix4();
+        const curPos = new three__WEBPACK_IMPORTED_MODULE_13__.Vector3(this.position.x, this.position.y, this.position.z);
+        const rotationMatrix = new three__WEBPACK_IMPORTED_MODULE_13__.Matrix4();
         rotationMatrix.lookAt(this.targetPos, curPos, this.mesh.up);
-        const targetQuaternion = new three__WEBPACK_IMPORTED_MODULE_12__.Quaternion();
+        const targetQuaternion = new three__WEBPACK_IMPORTED_MODULE_13__.Quaternion();
         targetQuaternion.setFromRotationMatrix(rotationMatrix);
         this.mesh.quaternion.rotateTowards(targetQuaternion, 10);
         /**
          * Configure HealthBar UI
          */
-        this.healthPosition.set(this.mesh.position.x, this.mesh.position.y + _constants_bot__WEBPACK_IMPORTED_MODULE_5__.BOT_PROPS.modelHeight[this.botType], this.mesh.position.z);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `healthBar-${this.uuid}`,
-            position: {
-                x: this.healthPosition.x,
-                y: this.healthPosition.y,
-                z: this.healthPosition.z
-            }
-        });
-        const scaleFactor = 85;
-        const scaleVector = new three__WEBPACK_IMPORTED_MODULE_12__.Vector3();
-        const scale = Math.sqrt(scaleVector.subVectors(this.healthPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.arenaScene.camera.position).length() / scaleFactor);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `healthBar-${this.uuid}`,
-            styles: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_2__.HEALTH_PIXEL * this.maxHp + 2) / scale}px`,
-                height: `${(5 + 2) / scale}px`
-            }
-        });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_10__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_11__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `healthBar-${this.uuid}`,
-            class: "healthBar__progress",
-            styles: {
-                background: (0,_helper_color__WEBPACK_IMPORTED_MODULE_3__.getColorForPercentage)(this.hp / this.maxHp),
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_2__.HEALTH_PIXEL * this.hp) / scale}px`,
-                height: `${5 / scale}px`,
-                left: `${1 / scale}px`,
-                top: `${1 / scale}px`
-            }
-        });
+        if (this.healthBar) {
+            this.healthBar.position.set(this.mesh.position.x, this.mesh.position.y + _constants_bot__WEBPACK_IMPORTED_MODULE_4__.BOT_PROPS.modelHeight[this.botType], this.mesh.position.z);
+            this.healthValueBar.width = (this.healthBar.width - 4) * this.hp / this.maxHp;
+            this.healthValueBar.color = (0,_helper_color__WEBPACK_IMPORTED_MODULE_2__.getColorForPercentage)(this.hp / this.maxHp);
+        }
         this.animController.tick();
     }
     ;
@@ -13994,15 +13958,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var three__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! three/examples/jsm/utils/SkeletonUtils.js */ "./node_modules/three/examples/jsm/utils/SkeletonUtils.js");
-/* harmony import */ var _constants_gameUI__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../constants/gameUI */ "./src/constants/gameUI.ts");
-/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
-/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
-/* harmony import */ var _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/PlayerState.Component */ "./src/game/worker/components/PlayerState.Component.ts");
-/* harmony import */ var _components_Time_Component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Time.Component */ "./src/game/worker/components/Time.Component.ts");
-/* harmony import */ var _managers_BotManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../managers/BotManager */ "./src/game/worker/managers/BotManager.ts");
-/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
-/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
-/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
+/* harmony import */ var _helper_color__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../helper/color */ "./src/helper/color.ts");
+/* harmony import */ var _constants_tower__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../constants/tower */ "./src/constants/tower.ts");
+/* harmony import */ var _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/PlayerState.Component */ "./src/game/worker/components/PlayerState.Component.ts");
+/* harmony import */ var _components_Time_Component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Time.Component */ "./src/game/worker/components/Time.Component.ts");
+/* harmony import */ var _managers_BotManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../managers/BotManager */ "./src/game/worker/managers/BotManager.ts");
+/* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../GameWorker */ "./src/game/worker/GameWorker.ts");
+/* harmony import */ var _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../managers/ResourcesManager */ "./src/game/worker/managers/ResourcesManager.ts");
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../Events */ "./src/game/Events.ts");
+/* harmony import */ var _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../gfx/core/UILayer */ "./src/game/worker/gfx/core/UILayer.ts");
 
 
 
@@ -14021,10 +13985,13 @@ class TowerEntity {
     //
     constructor(params) {
         var _a;
-        this.healthBarPosition = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3();
-        this.botManager = new _managers_BotManager__WEBPACK_IMPORTED_MODULE_5__.BotManager(params.id);
-        this.playerState = new _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_3__.PlayerStateComponent();
-        this.time = new _components_Time_Component__WEBPACK_IMPORTED_MODULE_4__.TimeComponent({ tower: this });
+        this.healthBarWrapper = null;
+        this.healthBar = null;
+        this.levelBar = null;
+        this.healthValueBar = null;
+        this.botManager = new _managers_BotManager__WEBPACK_IMPORTED_MODULE_4__.BotManager(params.id);
+        this.playerState = new _components_PlayerState_Component__WEBPACK_IMPORTED_MODULE_2__.PlayerStateComponent();
+        this.time = new _components_Time_Component__WEBPACK_IMPORTED_MODULE_3__.TimeComponent({ tower: this });
         this.playerIndex = params.playerIndex;
         this.id = params.id;
         this.level = 1;
@@ -14033,7 +14000,7 @@ class TowerEntity {
         this.maxHp = 1700;
         this.isDead = false;
         this.sacrificeHP = 0;
-        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_7__.ResourcesManager.getModel("Tower")) === null || _a === void 0 ? void 0 : _a.scene;
+        const towerModel = (_a = _managers_ResourcesManager__WEBPACK_IMPORTED_MODULE_6__.ResourcesManager.getModel("Tower")) === null || _a === void 0 ? void 0 : _a.scene;
         towerModel.traverse((child) => {
             if (child instanceof three__WEBPACK_IMPORTED_MODULE_9__.Object3D) {
                 child.castShadow = true;
@@ -14041,31 +14008,60 @@ class TowerEntity {
             }
         });
         this.towerMesh = three_examples_jsm_utils_SkeletonUtils_js__WEBPACK_IMPORTED_MODULE_10__.clone(towerModel);
-        // construct UI part
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_ADD_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            props: {
-                className: "towerStatusBar",
-                innerHTML: `
-                    <div class="level">1</div>
-                    <div class="healthBar">
-                        <div class="healthBar__progress"></div>
-                    </div>
-                `
-            }
+        // add UI health bar
+        this.healthBarWrapper = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__.UIRect({
+            name: 'TowerHealthBar',
+            width: 160,
+            height: 30,
+            color: "rgb(201, 160, 48)",
+            innerShadow: true
         });
+        this.levelBar = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__.UIRect({
+            name: 'TowerLevelBar',
+            width: 35,
+            height: 25,
+            hAlign: "left",
+            color: "#222",
+            offset: new three__WEBPACK_IMPORTED_MODULE_9__.Vector2(3, 3),
+            innerShadow: true,
+            text: '1',
+            fontSize: 20,
+            textColor: "#fff"
+        });
+        this.healthBar = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__.UIRect({
+            name: 'TowerHealthBar',
+            width: 118,
+            height: 19,
+            hAlign: "left",
+            offset: new three__WEBPACK_IMPORTED_MODULE_9__.Vector2(40, 3),
+            color: "#000000",
+        });
+        this.healthValueBar = new _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__.UIRect({
+            name: 'TowerHealthBarProgress',
+            width: 100,
+            height: 15,
+            hAlign: "left",
+            color: "#ff0000",
+            offset: new three__WEBPACK_IMPORTED_MODULE_9__.Vector2(2, 2),
+            innerShadow: true
+        });
+        _gfx_core_UILayer__WEBPACK_IMPORTED_MODULE_8__.UILayer.add(this.healthBarWrapper);
+        this.healthBarWrapper.add(this.healthBar);
+        this.healthBarWrapper.add(this.levelBar);
+        this.healthBar.add(this.healthValueBar);
+        //
         this.initialize();
     }
     ;
     initialize() {
-        this.towerMesh.position.x = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].x;
-        this.towerMesh.position.y = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].y;
-        this.towerMesh.position.z = _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_POSITIONS[this.id].z;
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.add(this.towerMesh);
+        this.towerMesh.position.x = _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this.id].x;
+        this.towerMesh.position.y = _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this.id].y;
+        this.towerMesh.position.z = _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_POSITIONS[this.id].z;
+        _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.arenaScene.add(this.towerMesh);
     }
     ;
     levelUp() {
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
+        _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_7__.GameEvents.UI_UPDATE_ELEMENT, {
             id: `towerHealthBar_${this.id}`,
             class: 'gameLevel',
             props: {
@@ -14074,12 +14070,12 @@ class TowerEntity {
         });
         // visual effect
         const newVector = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3(this.towerMesh.position.x, this.towerMesh.position.y + 5, this.towerMesh.position.z);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.particleEffect.addLevelUp(newVector);
+        _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.arenaScene.particleEffect.addLevelUp(newVector);
     }
     ;
     updateGold() {
         if (this.id === this.playerIndex) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.SET_PLAYER_GOLD, this.playerState.gold);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_7__.GameEvents.SET_PLAYER_GOLD, this.playerState.gold);
         }
     }
     ;
@@ -14092,62 +14088,6 @@ class TowerEntity {
         this.updateHealth();
     }
     ;
-    renderHealthBar() {
-        this.healthBarPosition.set(this.towerMesh.position.x, this.towerMesh.position.y + _constants_tower__WEBPACK_IMPORTED_MODULE_2__.TOWER_HEIGHT, this.towerMesh.position.z);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `towerHealthBar_${this.id}`,
-            position: {
-                x: this.healthBarPosition.x,
-                y: this.healthBarPosition.y,
-                z: this.healthBarPosition.z
-            }
-        });
-        const scaleFactor = 85;
-        const scaleVector = new three__WEBPACK_IMPORTED_MODULE_9__.Vector3();
-        const scale = Math.sqrt(scaleVector.subVectors(this.healthBarPosition, _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.camera.position).length() / scaleFactor);
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            class: 'towerStatusBar',
-            styles: {
-                gap: `${2 / scale}px`,
-                padding: `${2 / scale}px`,
-                transform: `scale( ${1 / scale} )`
-            }
-        });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            class: 'level',
-            props: {
-                textContent: this.level.toString()
-            },
-            styles: {
-                fontSize: `${13 / scale}px`,
-                borderWidth: `${1 / scale}px`,
-                padding: `0 ${5 / scale}px`,
-                height: `${13 / scale}px`
-            }
-        });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            class: 'healthBar',
-            styles: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH + 2) / scale}px`,
-                height: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_HEIGHT + 2) / scale}px`
-            }
-        });
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            class: 'healthBar__progress',
-            styles: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
-                height: `${_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_HEIGHT / scale}px`,
-                left: `${1 / scale}px`,
-                top: `${1 / scale}px`,
-                background: (0,_helper_color__WEBPACK_IMPORTED_MODULE_1__.getColorForPercentage)(this.hp / this.maxHp)
-            }
-        });
-    }
-    ;
     update() {
         if (this.isDead)
             return;
@@ -14157,10 +14097,16 @@ class TowerEntity {
             this.isDead = true;
             if (this.id === this.playerIndex) {
                 this.botManager.killAll();
-                _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.gameOver();
+                _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.gameOver();
             }
         }
-        this.renderHealthBar();
+        // update health bar
+        if (this.healthBarWrapper) {
+            this.healthBarWrapper.position.set(this.towerMesh.position.x, this.towerMesh.position.y + _constants_tower__WEBPACK_IMPORTED_MODULE_1__.TOWER_HEIGHT, this.towerMesh.position.z);
+            this.healthValueBar.width = (this.healthBar.width - 4) * this.hp / this.maxHp;
+            this.healthValueBar.color = (0,_helper_color__WEBPACK_IMPORTED_MODULE_0__.getColorForPercentage)(this.hp / this.maxHp);
+            this.levelBar.text = this.level.toString();
+        }
     }
     ;
     dispose() {
@@ -14170,21 +14116,12 @@ class TowerEntity {
     //
     updateHealth() {
         if (this.id === this.playerIndex) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level });
+            _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_7__.GameEvents.SET_PLAYER_HEALTH, { hp: this.hp, maxHp: this.maxHp, level: this.level });
         }
         if (this.hp < this.prevHp) {
-            _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.arenaScene.controls.addCameraShake(0.02, 0.02, 0.2);
+            _GameWorker__WEBPACK_IMPORTED_MODULE_5__.GameWorker.arenaScene.controls.addCameraShake(0.02, 0.02, 0.2);
             this.prevHp = this.hp;
         }
-        //
-        _GameWorker__WEBPACK_IMPORTED_MODULE_6__.GameWorker.sendToMain(_Events__WEBPACK_IMPORTED_MODULE_8__.GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${this.id}`,
-            class: "healthBar__progress",
-            props: {
-                width: `${(_constants_gameUI__WEBPACK_IMPORTED_MODULE_0__.TOWER_HEALTH_WIDTH * this.hp) / this.maxHp}px`,
-                backgroundColor: (0,_helper_color__WEBPACK_IMPORTED_MODULE_1__.getColorForPercentage)(this.hp / this.maxHp)
-            }
-        });
     }
     ;
 }
@@ -14723,10 +14660,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Gfx: () => (/* binding */ Gfx)
 /* harmony export */ });
 /* harmony import */ var _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tweenjs/tween.js */ "./node_modules/@tweenjs/tween.js/dist/tween.esm.js");
-/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
 /* harmony import */ var _Composer__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Composer */ "./src/game/worker/gfx/core/Composer.ts");
 /* harmony import */ var _GameWorker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../GameWorker */ "./src/game/worker/GameWorker.ts");
 /* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../Events */ "./src/game/Events.ts");
+/* harmony import */ var _UILayer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UILayer */ "./src/game/worker/gfx/core/UILayer.ts");
+
 
 
 
@@ -14758,6 +14697,7 @@ class GfxCore {
                 this.composer.readBuffers['sceneDiffuse'] = this.activeGameScene.getRenderTarget().texture;
             }
             this.composer.render(this.renderer);
+            _UILayer__WEBPACK_IMPORTED_MODULE_4__.UILayer.render(this.activeGameScene.camera);
             _tweenjs_tween_js__WEBPACK_IMPORTED_MODULE_0__["default"].update();
         };
         //
@@ -14765,6 +14705,7 @@ class GfxCore {
             this.width = params.windowWidth;
             this.height = params.windowHeight;
             this.renderer.setSize(this.width, this.height, false);
+            _UILayer__WEBPACK_IMPORTED_MODULE_4__.UILayer.resize(this.width, this.height);
             if (this.activeGameScene)
                 this.activeGameScene.resize(this.devicePixelRatio);
         };
@@ -14779,7 +14720,10 @@ class GfxCore {
         this.screenHeight = params.screenHeight;
         this.devicePixelRatio = params.devicePixelRatio;
         this.composer = new _Composer__WEBPACK_IMPORTED_MODULE_1__.ComposerPass();
-        this.createRenderer(params.offscreen);
+        this.createRenderer(params.sceneOffscreen);
+        _UILayer__WEBPACK_IMPORTED_MODULE_4__.UILayer.uiCanvas = params.uiOffscreen;
+        _UILayer__WEBPACK_IMPORTED_MODULE_4__.UILayer.resize(this.width, this.height);
+        _UILayer__WEBPACK_IMPORTED_MODULE_4__.UILayer.init();
         //
         this.inited = true;
     }
@@ -14799,9 +14743,9 @@ class GfxCore {
     ;
     // @ts-ignore
     createRenderer(canvas) {
-        this.renderer = new three__WEBPACK_IMPORTED_MODULE_4__.WebGLRenderer({ antialias: false, canvas: canvas });
+        this.renderer = new three__WEBPACK_IMPORTED_MODULE_5__.WebGLRenderer({ antialias: false, canvas: canvas });
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = three__WEBPACK_IMPORTED_MODULE_4__.VSMShadowMap;
+        this.renderer.shadowMap.type = three__WEBPACK_IMPORTED_MODULE_5__.VSMShadowMap;
         this.renderer.setPixelRatio(this.devicePixelRatio);
         this.renderer.setSize(this.width, this.height, false);
     }
@@ -14810,6 +14754,267 @@ class GfxCore {
 ;
 //
 const Gfx = new GfxCore();
+
+
+/***/ }),
+
+/***/ "./src/game/worker/gfx/core/UILayer.ts":
+/*!*********************************************!*\
+  !*** ./src/game/worker/gfx/core/UILayer.ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   UIElement: () => (/* binding */ UIElement),
+/* harmony export */   UILayer: () => (/* binding */ UILayer),
+/* harmony export */   UILayerCore: () => (/* binding */ UILayerCore),
+/* harmony export */   UIRect: () => (/* binding */ UIRect),
+/* harmony export */   UIText: () => (/* binding */ UIText)
+/* harmony export */ });
+/* harmony import */ var three__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! three */ "./node_modules/three/build/three.module.js");
+
+//
+const _vec3_1 = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+const _vec3_2 = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+const _quaternion = new three__WEBPACK_IMPORTED_MODULE_0__.Quaternion();
+function shiftColor(value, delta) {
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    if (value.indexOf('rgb(') !== -1) {
+        r = parseInt(value.split(',')[0].split('(')[1]);
+        g = parseInt(value.split(',')[1]);
+        b = parseInt(value.split(',')[2].split(')')[0]);
+    }
+    else {
+        const num = parseInt(value.replace('#', ''), 16);
+        r = (num >> 16);
+        g = (num >> 8 & 0x00FF);
+        b = (num & 0x0000FF);
+    }
+    r += delta;
+    g += delta;
+    b += delta;
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return `rgb(${r},${g},${b})`;
+}
+;
+;
+class UIElement {
+    //
+    constructor(params) {
+        this.name = '';
+        this.projectedPosition = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+        this.accumulatedOffset = new three__WEBPACK_IMPORTED_MODULE_0__.Vector2();
+        this.modelMatrix = new three__WEBPACK_IMPORTED_MODULE_0__.Matrix4();
+        this.position = new three__WEBPACK_IMPORTED_MODULE_0__.Vector3();
+        this.offset = new three__WEBPACK_IMPORTED_MODULE_0__.Vector2();
+        this.zIndex = 0;
+        this.visible = true;
+        this.opacity = 1;
+        this.vAlign = 'center';
+        this.hAlign = 'center';
+        this.width = 100;
+        this.height = 100;
+        this.parent = null;
+        this.children = [];
+        this.isText = false;
+        this.isRect = false;
+        this.text = '';
+        this.font = 'Arial';
+        this.textColor = '#000000';
+        this.fontSize = 16;
+        this.traverse = (callback) => {
+            callback(this);
+            for (let i = 0; i < this.children.length; i++) {
+                this.children[i].traverse(callback);
+            }
+        };
+        this.name = params.name;
+        if (params.position !== undefined)
+            this.position.copy(params.position);
+        if (params.zIndex !== undefined)
+            this.zIndex = params.zIndex;
+        if (params.visible !== undefined)
+            this.visible = params.visible;
+        if (params.opacity !== undefined)
+            this.opacity = params.opacity;
+        if (params.vAlign !== undefined)
+            this.vAlign = params.vAlign;
+        if (params.hAlign !== undefined)
+            this.hAlign = params.hAlign;
+        if (params.width !== undefined)
+            this.width = params.width;
+        if (params.height !== undefined)
+            this.height = params.height;
+        if (params.offset !== undefined)
+            this.offset.copy(params.offset);
+        if (params.text !== undefined)
+            this.text = params.text;
+        if (params.font !== undefined)
+            this.font = params.font;
+        if (params.textColor !== undefined)
+            this.textColor = params.textColor;
+        if (params.fontSize !== undefined)
+            this.fontSize = params.fontSize;
+    }
+    ;
+    add(item) {
+        this.children.push(item);
+        item.parent = this;
+    }
+    ;
+    remove(item) {
+        const index = this.children.indexOf(item);
+        if (index !== -1) {
+            this.children.splice(index, 1);
+        }
+        item.parent = null;
+    }
+    ;
+}
+;
+;
+class UIRect extends UIElement {
+    constructor(props) {
+        super(props);
+        this.color = '#000000';
+        this.innerShadow = false;
+        this.isRect = true;
+        if (props.color !== undefined)
+            this.color = props.color;
+        if (props.innerShadow !== undefined)
+            this.innerShadow = props.innerShadow;
+    }
+    ;
+}
+;
+;
+class UIText extends UIElement {
+    //
+    constructor(props) {
+        super(props);
+        this.text = '';
+        this.font = 'Arial';
+        this.color = '#000000';
+        this.isText = true;
+        if (props.text !== undefined)
+            this.text = props.text;
+        if (props.font !== undefined)
+            this.font = props.font;
+        if (props.color !== undefined)
+            this.color = props.color;
+    }
+    ;
+}
+;
+//
+class UILayerCore {
+    constructor() {
+        this.items = [];
+        this.uiCanvas = null;
+        this.ctx = null;
+        this.scene = new UIElement({ name: 'root' });
+        //
+        this.init = () => {
+            this.ctx = this.uiCanvas.getContext('2d');
+        };
+        this.render = (camera) => {
+            this.ctx.clearRect(0, 0, this.uiCanvas.width, this.uiCanvas.height);
+            this.scene.traverse((item) => {
+                item.modelMatrix.identity().setPosition(item.position);
+                if (item.parent)
+                    item.modelMatrix.premultiply(item.parent.modelMatrix);
+                item.modelMatrix.decompose(_vec3_1, _quaternion, _vec3_2);
+                item.projectedPosition.copy(_vec3_1).project(camera);
+                const scaleFactor = 20;
+                const scale = Math.sqrt(_vec3_2.subVectors(_vec3_1, camera.position).length() / scaleFactor);
+                let x = (item.projectedPosition.x * 0.5 + 0.5) * this.uiCanvas.width;
+                let y = (-item.projectedPosition.y * 0.5 + 0.5) * this.uiCanvas.height;
+                const w = item.width / scale;
+                const h = item.height / scale;
+                if (!item.parent) {
+                    item.accumulatedOffset.set(0, 0);
+                }
+                else {
+                    item.accumulatedOffset.x = item.parent.accumulatedOffset.x + item.offset.x / scale;
+                    item.accumulatedOffset.y = item.parent.accumulatedOffset.y + item.offset.y / scale;
+                }
+                // if ( item.hAlign === 'left' ) x -= item.width / 2;
+                if (item.hAlign === 'center')
+                    item.accumulatedOffset.x -= w * 0.25;
+                if (item.hAlign === 'right')
+                    item.accumulatedOffset.x += w;
+                // if ( item.vAlign === 'center' ) y += item.height * 0.5;
+                if (item.vAlign === 'bottom')
+                    item.accumulatedOffset.y += h;
+                x += item.accumulatedOffset.x;
+                y += item.accumulatedOffset.y;
+                if (item.isRect) {
+                    const rect = item;
+                    this.ctx.fillStyle = rect.color;
+                    this.ctx.globalAlpha = rect.opacity;
+                    this.ctx.fillRect(x, y, w, h);
+                    const shadowWidth = 2 / scale;
+                    if (rect.innerShadow) {
+                        const darkerColor = shiftColor(rect.color, -50);
+                        const lighterColor = shiftColor(rect.color, 50);
+                        let grd;
+                        // top light gradient
+                        grd = this.ctx.createLinearGradient(x, y, x, y + shadowWidth);
+                        grd.addColorStop(0, lighterColor);
+                        grd.addColorStop(1, rect.color);
+                        this.ctx.fillStyle = grd;
+                        this.ctx.fillRect(x, y, w, shadowWidth);
+                        // left light gradient
+                        grd = this.ctx.createLinearGradient(x, y, x + shadowWidth, y);
+                        grd.addColorStop(0, lighterColor);
+                        grd.addColorStop(1, rect.color);
+                        this.ctx.fillStyle = grd;
+                        this.ctx.fillRect(x, y, shadowWidth, h);
+                        // bottom dark gradient
+                        grd = this.ctx.createLinearGradient(x, y + h, x, y + h - shadowWidth);
+                        grd.addColorStop(0, darkerColor);
+                        grd.addColorStop(1, rect.color);
+                        this.ctx.fillStyle = grd;
+                        this.ctx.fillRect(x, y + h - shadowWidth, w, shadowWidth);
+                        // right dark gradient
+                        grd = this.ctx.createLinearGradient(x + w, y, x + w - shadowWidth, y);
+                        grd.addColorStop(0, darkerColor);
+                        grd.addColorStop(1, rect.color);
+                        this.ctx.fillStyle = grd;
+                        this.ctx.fillRect(x + w - shadowWidth, y, shadowWidth, h);
+                    }
+                    if (rect.text) {
+                        this.ctx.fillStyle = rect.textColor;
+                        this.ctx.textAlign = 'center';
+                        this.ctx.font = `${rect.fontSize / scale}px ${rect.font}`;
+                        this.ctx.fillText(rect.text, x + w / 2, y + h - 7);
+                    }
+                }
+            });
+        };
+    }
+    add(item) {
+        this.scene.add(item);
+    }
+    ;
+    remove(item) {
+        this.scene.remove(item);
+    }
+    ;
+    resize(width, height) {
+        this.uiCanvas.width = width;
+        this.uiCanvas.height = height;
+    }
+    ;
+}
+;
+//
+const UILayer = new UILayerCore();
 
 
 /***/ }),

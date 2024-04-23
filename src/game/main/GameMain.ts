@@ -2,7 +2,6 @@
 import EventEmitter from "events";
 import { LobbyInfo } from "../Types";
 import { GameEvents } from "../Events";
-import { UIRenderer } from "./UIRenderer";
 
 //
 
@@ -22,8 +21,8 @@ class GameMainCore extends EventEmitter {
     public lobbyInfo: LobbyInfo;
     public playerIndex: number;
 
-    private uiRenderer: UIRenderer;
-    private canvas: HTMLCanvasElement;
+    private sceneRenderCanvas: HTMLCanvasElement;
+    private uiCanvas: HTMLCanvasElement;
     public minimapCanvas: HTMLCanvasElement;
 
     //
@@ -45,34 +44,31 @@ class GameMainCore extends EventEmitter {
 
     public initGFX ( props: IGameMainProps ) : void {
 
-        const canvas = document.createElement( 'canvas' );
-        props.container.appendChild( canvas );
-        this.canvas = canvas;
+        const sceneRenderCanvas = document.createElement( 'canvas' );
+        props.container.appendChild( sceneRenderCanvas );
+        this.sceneRenderCanvas = sceneRenderCanvas;
 
         const minimapCanvas = document.createElement( 'canvas' );
         minimapCanvas.width = 160;
         minimapCanvas.height = 160;
         this.minimapCanvas = minimapCanvas;
 
+        const uiCanvas = document.createElement( 'canvas' );
+        props.container.appendChild( uiCanvas );
+        this.uiCanvas = uiCanvas;
+
         window.addEventListener( 'resize', this.onResize );
-
-        this.uiRenderer = new UIRenderer();
-        this.uiRenderer.init( props.container );
-
-        this.addListener( GameEvents.UI_ADD_ELEMENT, this.uiRenderer.addElement );
-        this.addListener( GameEvents.UI_REMOVE_ELEMENT, this.uiRenderer.removeElement );
-        this.addListener( GameEvents.UI_UPDATE_ELEMENT, this.uiRenderer.updateElement );
-        this.addListener( GameEvents.UI_SET_ELEMENT_POSITION, this.uiRenderer.setElementPosition );
-        this.addListener( GameEvents.UI_SET_CAMERA_POSITION, this.uiRenderer.setCameraPosition );
 
         //
 
-        const offscreen = this.canvas.transferControlToOffscreen();
+        const sceneOffscreen = this.sceneRenderCanvas.transferControlToOffscreen();
+        const uiOffscreen = this.uiCanvas.transferControlToOffscreen();
         const minimapOffscreen = this.minimapCanvas.transferControlToOffscreen();
 
         this.dispatchEvent( GameEvents.INIT_GFX, {
 
-            offscreen:          offscreen,
+            sceneOffscreen:     sceneOffscreen,
+            uiOffscreen:        uiOffscreen,
             minimapOffscreen:   minimapOffscreen,
             windowWidth:        window.innerWidth,
             windowHeight:       window.innerHeight,
@@ -82,7 +78,7 @@ class GameMainCore extends EventEmitter {
             gameMode:           props.gameMode
 
         // @ts-ignore
-        }, [ offscreen, minimapOffscreen ] );
+        }, [ sceneOffscreen, uiOffscreen, minimapOffscreen ] );
 
     };
 
@@ -99,17 +95,12 @@ class GameMainCore extends EventEmitter {
 
     public dispose () : void {
 
-        this.canvas.remove();
+        this.sceneRenderCanvas.remove();
+        this.minimapCanvas.remove();
+        this.uiCanvas.remove();
 
         window.removeEventListener( 'resize', this.onResize );
 
-        this.removeListener( GameEvents.UI_ADD_ELEMENT, this.uiRenderer.addElement );
-        this.removeListener( GameEvents.UI_REMOVE_ELEMENT, this.uiRenderer.removeElement );
-        this.removeListener( GameEvents.UI_UPDATE_ELEMENT, this.uiRenderer.updateElement );
-        this.removeListener( GameEvents.UI_SET_ELEMENT_POSITION, this.uiRenderer.setElementPosition );
-        this.removeListener( GameEvents.UI_SET_CAMERA_POSITION, this.uiRenderer.setCameraPosition );
-
-        this.uiRenderer.dispose();
         this.dispatchEvent( GameEvents.DISPOSE );
 
     };

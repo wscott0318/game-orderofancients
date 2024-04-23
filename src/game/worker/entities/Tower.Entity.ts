@@ -1,5 +1,5 @@
 
-import { Object3D, Vector3 } from "three";
+import { Object3D, Vector2, Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 import { TOWER_HEALTH_HEIGHT, TOWER_HEALTH_WIDTH } from "../../../constants/gameUI";
@@ -11,6 +11,7 @@ import { BotManager } from "../managers/BotManager";
 import { GameWorker } from "../GameWorker";
 import { ResourcesManager } from "../managers/ResourcesManager";
 import { GameEvents } from "../../Events";
+import { UIElement, UILayer, UIRect } from "../gfx/core/UILayer";
 
 //
 
@@ -46,7 +47,10 @@ export class TowerEntity {
     public id: number;
     public sacrificeHP: number;
 
-    private healthBarPosition: Vector3 = new Vector3();
+    public healthBarWrapper: UIElement = null;
+    public healthBar: UIElement = null;
+    public levelBar: UIElement = null;
+    public healthValueBar: UIElement = null;
 
     //
 
@@ -81,20 +85,54 @@ export class TowerEntity {
 
         this.towerMesh = SkeletonUtils.clone( towerModel );
 
-        // construct UI part
+        // add UI health bar
 
-        GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            props: {
-                className: "towerStatusBar",
-                innerHTML: `
-                    <div class="level">1</div>
-                    <div class="healthBar">
-                        <div class="healthBar__progress"></div>
-                    </div>
-                `
-            }
+        this.healthBarWrapper = new UIRect({
+            name:           'TowerHealthBar',
+            width:          160,
+            height:         30,
+            color:          "rgb(201, 160, 48)",
+            innerShadow:    true
         });
+
+        this.levelBar = new UIRect({
+            name:           'TowerLevelBar',
+            width:          35,
+            height:         25,
+            hAlign:         "left",
+            color:          "#222",
+            offset:         new Vector2( 3, 3 ),
+            innerShadow:    true,
+            text:           '1',
+            fontSize:       20,
+            textColor:      "#fff"
+        });
+
+        this.healthBar = new UIRect({
+            name:           'TowerHealthBar',
+            width:          118,
+            height:         19,
+            hAlign:         "left",
+            offset:         new Vector2( 40, 3 ),
+            color:          "#000000",
+        });
+
+        this.healthValueBar = new UIRect({
+            name:           'TowerHealthBarProgress',
+            width:          100,
+            height:         15,
+            hAlign:         "left",
+            color:          "#ff0000",
+            offset:         new Vector2( 2, 2 ),
+            innerShadow:    true
+        });
+
+        UILayer.add( this.healthBarWrapper );
+        this.healthBarWrapper.add( this.healthBar );
+        this.healthBarWrapper.add( this.levelBar );
+        this.healthBar.add( this.healthValueBar );
+
+        //
 
         this.initialize();
 
@@ -153,70 +191,6 @@ export class TowerEntity {
 
     };
 
-    public renderHealthBar () : void {
-
-        this.healthBarPosition.set( this.towerMesh.position.x, this.towerMesh.position.y + TOWER_HEIGHT, this.towerMesh.position.z );
-
-        GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `towerHealthBar_${ this.id }`,
-            position: {
-                x: this.healthBarPosition.x,
-                y: this.healthBarPosition.y,
-                z: this.healthBarPosition.z
-            }
-        });
-
-        const scaleFactor = 85;
-        const scaleVector = new Vector3();
-        const scale = Math.sqrt( scaleVector.subVectors( this.healthBarPosition, GameWorker.arenaScene.camera.position ).length() / scaleFactor );
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: 'towerStatusBar',
-            styles: {
-                gap: `${ 2 / scale }px`,
-                padding: `${ 2 / scale }px`,
-                transform: `scale( ${ 1 / scale } )`
-            }
-        });
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: 'level',
-            props: {
-                textContent: this.level.toString()
-            },
-            styles: {
-                fontSize: `${13 / scale}px`,
-                borderWidth: `${1 / scale}px`,
-                padding: `0 ${5 / scale}px`,
-                height: `${13 / scale}px`
-            }
-        });
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: 'healthBar',
-            styles: {
-                width: `${(TOWER_HEALTH_WIDTH + 2) / scale}px`,
-                height: `${(TOWER_HEALTH_HEIGHT + 2) / scale}px`
-            }
-        });
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: 'healthBar__progress',
-            styles: {
-                width: `${(TOWER_HEALTH_WIDTH * this.hp) / this.maxHp / scale}px`,
-                height: `${TOWER_HEALTH_HEIGHT / scale}px`,
-                left: `${1 / scale}px`,
-                top: `${1 / scale}px`,
-                background: getColorForPercentage( this.hp / this.maxHp )
-            }
-        });
-
-    };
-
     public update () : void {
 
         if ( this.isDead ) return;
@@ -237,7 +211,17 @@ export class TowerEntity {
 
         }
 
-        this.renderHealthBar();
+        // update health bar
+
+        if ( this.healthBarWrapper ) {
+
+            this.healthBarWrapper.position.set( this.towerMesh.position.x, this.towerMesh.position.y + TOWER_HEIGHT, this.towerMesh.position.z );
+
+            this.healthValueBar.width = ( this.healthBar.width - 4 ) * this.hp / this.maxHp;
+            ( this.healthValueBar as UIRect ).color = getColorForPercentage( this.hp / this.maxHp );
+            this.levelBar.text = this.level.toString();
+
+        }
 
     };
 
@@ -263,17 +247,6 @@ export class TowerEntity {
             this.prevHp = this.hp;
 
         }
-
-        //
-
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: "healthBar__progress",
-            props: {
-                width: `${ ( TOWER_HEALTH_WIDTH * this.hp ) / this.maxHp }px`,
-                backgroundColor: getColorForPercentage( this.hp / this.maxHp )
-            }
-        });
 
     };
 
