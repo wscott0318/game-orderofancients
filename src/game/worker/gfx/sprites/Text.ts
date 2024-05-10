@@ -1,6 +1,8 @@
 
-import { Vector3 } from "three";
+import { Mesh, Vector3 } from "three";
 import TWEEN from "@tweenjs/tween.js";
+// @ts-ignore
+import { Text } from "troika-three-text";
 
 import { GameScene } from "..";
 import { GameWorker } from "../../GameWorker";
@@ -24,6 +26,8 @@ export class TextSprite {
     public gameScene: GameScene;
     public position: Vector3 = new Vector3();
 
+    public mesh: Mesh;
+
     //
 
     constructor ( { gameScene, text, color, position, fastMode = false }: TextSpriteProps ) {
@@ -34,25 +38,16 @@ export class TextSprite {
         this.shouldRemove = false;
         this.position.set( position.x, position.y, position.z );
 
-        GameWorker.sendToMain( GameEvents.UI_ADD_ELEMENT, {
-            id: `textSprite-${this.uuid}`,
-            class: 'textSprite',
-            props: {
-                textContent: text
-            },
-            styles: {
-                color: color
-            }
-        });
-
-        GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
-            id: `textSprite-${this.uuid}`,
-            position: {
-                x: position.x,
-                y: position.y,
-                z: position.z
-            }
-        });
+        // @ts-ignore
+        this.mesh = new Text();
+        this.mesh.position.set( position.x, position.y, position.z );
+        // @ts-ignore
+        this.mesh.text = text;
+        // @ts-ignore
+        this.mesh.color = color;
+        // @ts-ignore
+        this.mesh.fontSize = 1;
+        gameScene.scene.add( this.mesh );
 
         const tweenAnimation = new TWEEN.Tween( this.position )
             .to(
@@ -66,19 +61,6 @@ export class TextSprite {
             .easing(TWEEN.Easing.Linear.None)
             .start();
 
-        tweenAnimation.onUpdate(() => {
-
-            GameWorker.sendToMain( GameEvents.UI_SET_ELEMENT_POSITION, {
-                id: `textSprite-${this.uuid}`,
-                position: {
-                    x: this.position.x,
-                    y: this.position.y,
-                    z: this.position.z
-                }
-            });
-
-        });
-
         tweenAnimation.onComplete(() => {
             this.dispose();
             this.shouldRemove = true;
@@ -88,9 +70,7 @@ export class TextSprite {
 
     public dispose () : void {
 
-        GameWorker.sendToMain( GameEvents.UI_REMOVE_ELEMENT, {
-            id: `textSprite-${this.uuid}`
-        });
+        this.gameScene.scene.remove( this.mesh );
 
     };
 
@@ -108,12 +88,9 @@ export class TextSprite {
                 .length() / scaleFactor
         );
 
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `textSprite-${this.uuid}`,
-            styles: {
-                fontSize: `${20 / scale}px`
-            }
-        });
+        this.mesh.scale.set( scale, scale, scale );
+        this.mesh.position.set( this.position.x, this.position.y, this.position.z );
+        this.mesh.quaternion.copy( this.gameScene.camera.quaternion );
 
     };
 

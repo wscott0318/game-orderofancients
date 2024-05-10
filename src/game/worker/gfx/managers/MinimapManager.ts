@@ -1,5 +1,6 @@
 
 import { BufferAttribute, BufferGeometry, OrthographicCamera, Points, PointsMaterial, Scene, WebGLRenderer } from "three";
+
 import { GameWorker } from "../../GameWorker";
 import { TOWER_POSITIONS } from "../../../../constants/tower";
 

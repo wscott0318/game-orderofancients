@@ -29,15 +29,14 @@ export const GameEvents = {
     SET_PLAYER_GOLD: 'SetPlayerGold',
     SET_PLAYER_INCOME: 'SetPlayerIncome',
     SET_ARENA_STATS: 'SetArenaStats',
+    UPGRADE_PLAYER_SPELLS: 'UpgradePlayerSpells',
+
+    CONTROLS_MOUSE_DOWN: 'ControlsMouseDown',
+    CONTROLS_MOUSE_UP: 'ControlsMouseUp',
+    CONTROLS_MOUSE_MOVE: 'ControlsMouseMove',
+    CONTROLS_MOUSE_WHEEL: 'ControlsMouseWheel',
 
     GFX_TOGGLE_GRID: 'GfxToggleGrid',
-
-    UI_CLEAR: 'UIClear',
-    UI_SET_CAMERA_POSITION: 'UISetCameraPosition',
-    UI_ADD_ELEMENT: 'UIAddElement',
-    UI_REMOVE_ELEMENT: 'UIRemoveElement',
-    UI_UPDATE_ELEMENT: 'UIUpdateElement',
-    UI_SET_ELEMENT_POSITION: 'UISetElementPosition',
 
     DISPOSE: 'Dispose'
 

@@ -141,8 +141,12 @@ export class BotEntity {
 
     private disposeHealthBar () : void {
 
-        UILayer.remove( this.healthBar );
-        this.healthBar = null;
+        if ( this.healthBar ) {
+
+            UILayer.remove( this.healthBar );
+            this.healthBar = null;
+
+        }
 
     };
 

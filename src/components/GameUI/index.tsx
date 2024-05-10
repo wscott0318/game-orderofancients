@@ -171,25 +171,25 @@ export const GameScene = () => {
 
     const mouseDownHandler = ( event: MouseEvent ) : void => {
 
-        GameMain.dispatchEvent( 'mousedown', { key: event.button, x: event.clientX, y: event.clientY } );
+        GameMain.dispatchEvent( GameEvents.CONTROLS_MOUSE_DOWN, { key: event.button, x: event.clientX, y: event.clientY } );
 
     };
 
     const mouseUpHandler = ( event: MouseEvent ) : void => {
 
-        GameMain.dispatchEvent( 'mouseup', { key: event.button, x: event.clientX, y: event.clientY } );
+        GameMain.dispatchEvent( GameEvents.CONTROLS_MOUSE_UP, { key: event.button, x: event.clientX, y: event.clientY } );
 
     };
 
     const mouseMoveHandler = ( event: MouseEvent ) : void => {
 
-        GameMain.dispatchEvent( 'mousemove', { key: event.button, x: event.clientX, y: event.clientY } );
+        GameMain.dispatchEvent( GameEvents.CONTROLS_MOUSE_MOVE, { key: event.button, x: event.clientX, y: event.clientY } );
 
     };
 
     const mouseWheelHandler = ( event: WheelEvent ) : void => {
 
-        GameMain.dispatchEvent( 'mousewheel', { deltaY: event.deltaY } );
+        GameMain.dispatchEvent( GameEvents.CONTROLS_MOUSE_WHEEL, { deltaY: event.deltaY } );
 
     };
 

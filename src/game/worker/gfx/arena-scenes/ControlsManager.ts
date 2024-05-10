@@ -34,19 +34,19 @@ export class ControlsManager {
 
         this.camera = camera;
 
-        GameWorker.addListener( 'mousedown', this.mouseDownHandler );
-        GameWorker.addListener( 'mouseup', this.mouseUpHandler );
-        GameWorker.addListener( 'mousemove', this.mouseMoveHandler );
-        GameWorker.addListener( 'mousewheel', this.mouseWheelHandler );
+        GameWorker.addListener( GameEvents.CONTROLS_MOUSE_DOWN, this.mouseDownHandler );
+        GameWorker.addListener( GameEvents.CONTROLS_MOUSE_UP, this.mouseUpHandler );
+        GameWorker.addListener( GameEvents.CONTROLS_MOUSE_MOVE, this.mouseMoveHandler );
+        GameWorker.addListener( GameEvents.CONTROLS_MOUSE_WHEEL, this.mouseWheelHandler );
 
     };
 
     public dispose () : void {
 
-        GameWorker.removeListener( 'mousedown', this.mouseDownHandler );
-        GameWorker.removeListener( 'mouseup', this.mouseUpHandler );
-        GameWorker.removeListener( 'mousemove', this.mouseMoveHandler );
-        GameWorker.removeListener( 'mousewheel', this.mouseWheelHandler );
+        GameWorker.removeListener( GameEvents.CONTROLS_MOUSE_DOWN, this.mouseDownHandler );
+        GameWorker.removeListener( GameEvents.CONTROLS_MOUSE_UP, this.mouseUpHandler );
+        GameWorker.removeListener( GameEvents.CONTROLS_MOUSE_MOVE, this.mouseMoveHandler );
+        GameWorker.removeListener( GameEvents.CONTROLS_MOUSE_WHEEL, this.mouseWheelHandler );
 
     };
 
@@ -85,21 +85,6 @@ export class ControlsManager {
             }
 
         }
-
-        //
-
-        GameWorker.sendToMain( GameEvents.UI_SET_CAMERA_POSITION, {
-            pos: {
-                x: this.camera.position.x,
-                y: this.camera.position.y,
-                z: this.camera.position.z
-            },
-            target: {
-                x: this.camera.position.x - this.offset.x,
-                y: this.camera.position.y - this.offset.y,
-                z: this.camera.position.z - this.offset.z,
-            }
-        });
 
     };
 

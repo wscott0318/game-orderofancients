@@ -2,6 +2,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 //
 
@@ -9,6 +10,14 @@ const plugins = [
     new webpack.SourceMapDevToolPlugin({
         filename: '[name].js.map',
         exclude: ['vendor.bundle.js']
+    }),
+    new CopyPlugin({
+        patterns: [
+          {
+            from: path.resolve( __dirname, 'node_modules_patch/' ),
+            to: path.resolve( __dirname, 'node_modules/')
+          }
+        ]
     })
 ];
 

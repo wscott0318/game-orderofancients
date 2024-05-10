@@ -49,6 +49,14 @@ export class ArenaScene extends GameScene {
 
     //
 
+    constructor () {
+
+        super();
+
+        GameWorker.addListener( GameEvents.GFX_TOGGLE_GRID, this.toggleGrid );
+
+    };
+
     public init () : void {
 
         this.scene = new Scene();
@@ -94,8 +102,6 @@ export class ArenaScene extends GameScene {
         }
 
         //
-
-        GameWorker.addListener( GameEvents.GFX_TOGGLE_GRID, this.toggleGrid );
 
         this.minimapManager.init( Gfx.minimapCanvas );
 
@@ -159,6 +165,16 @@ export class ArenaScene extends GameScene {
         this.particleEffect.dispose();
         this.animationManager.dispose();
         this.spriteManager.dispose();
+        this.controls.dispose();
+
+        this.controls = null;
+        this.minimapManager = null;
+        this.environment = null;
+        this.decorationManager = null;
+        this.particleEffect = null;
+        this.spriteManager = null;
+        this.animationManager = null;
+        this.towerManager = null;
 
     };
 
@@ -192,19 +208,6 @@ export class ArenaScene extends GameScene {
 
         this.camera.position.set( 0, 20, 10 );
         this.camera.lookAt( 0, 0, 0 );
-
-        GameWorker.sendToMain( GameEvents.UI_SET_CAMERA_POSITION, {
-            pos: {
-                x: this.camera.position.x,
-                y: this.camera.position.y,
-                z: this.camera.position.z
-            },
-            target: {
-                x: 0,
-                y: 0,
-                z: 0
-            }
-        });
 
     };
 

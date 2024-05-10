@@ -6,7 +6,7 @@ import { GameScene } from './GameScene';
 import { ComposerPass } from './Composer';
 import { GameWorker } from '../../GameWorker';
 import { GameEvents } from '../../../Events';
-import { UILayer } from "./UILayer";
+import { UILayer, UIText } from "./UILayer";
 
 //
 
@@ -38,7 +38,7 @@ class GfxCore {
 
     public renderer: WebGLRenderer;
 
-    public activeGameScene: GameScene | null = null;
+    public activeGameScene: GameScene = null;
 
     private resolution: number = 1;
     private composer: ComposerPass;
@@ -46,7 +46,11 @@ class GfxCore {
     private renderingEnabled: boolean = true;
 
     // @ts-ignore
-    public minimapCanvas: OffscreenCanvas;
+    public minimapCanvas: OffscreenCanvas = null;
+
+    private frame: number = 0;
+    public fps: number = 0;
+    private lastFpsUpdateTime: number = 0;
 
     //
 
@@ -88,6 +92,8 @@ class GfxCore {
 
         if ( ! this.renderingEnabled ) return;
 
+        this.renderer.info.reset();
+
         if ( this.activeGameScene ) {
 
             this.activeGameScene.render( delta, time );
@@ -101,6 +107,19 @@ class GfxCore {
 
         TWEEN.update();
 
+        //
+
+        this.frame ++;
+
+        if ( this.frame % 200 === 0 ) {
+
+            const fpsDeltaTime = time - this.lastFpsUpdateTime;
+            this.lastFpsUpdateTime = time;
+
+            this.fps = Math.round( 200 / fpsDeltaTime * 1000 );
+
+        }
+
     };
 
     public dispose () : void {
@@ -108,11 +127,16 @@ class GfxCore {
         if ( this.activeGameScene ) {
 
             this.activeGameScene.dispose();
+            this.activeGameScene = null;
 
         }
 
+        this.minimapCanvas = null;
+        this.composer = null;
         this.renderer.dispose();
 
+        this.width = 0;
+        this.height = 0;
         this.activeGameScene = null;
         this.inited = false;
 
@@ -140,6 +164,7 @@ class GfxCore {
 
         this.renderer.shadowMap.enabled = true;
         this.renderer.shadowMap.type = VSMShadowMap;
+        this.renderer.info.autoReset = false;
         this.renderer.setPixelRatio( this.devicePixelRatio );
         this.renderer.setSize( this.width, this.height, false );
 

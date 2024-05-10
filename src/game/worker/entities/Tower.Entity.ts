@@ -149,14 +149,6 @@ export class TowerEntity {
 
     public levelUp () : void {
 
-        GameWorker.sendToMain( GameEvents.UI_UPDATE_ELEMENT, {
-            id: `towerHealthBar_${ this.id }`,
-            class: 'gameLevel',
-            props: {
-                textContent: `Level ${ this.level }`
-            }
-        });
-
         // visual effect
         const newVector = new Vector3(
             this.towerMesh.position.x,
@@ -243,8 +235,14 @@ export class TowerEntity {
 
         if ( this.hp < this.prevHp ) {
 
-            GameWorker.arenaScene.controls.addCameraShake( 0.02, 0.02, 0.2 );
-            this.prevHp = this.hp;
+            const deltaHP = this.prevHp - this.hp;
+            this.prevHp = Math.max( 0, this.hp );
+
+            if ( this.id === this.playerIndex ) {
+
+                GameWorker.arenaScene.controls.addCameraShake( 0.02, deltaHP / this.maxHp, 0.2 );
+
+            }
 
         }
 

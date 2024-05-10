@@ -101,7 +101,7 @@ export class GameWorkerCore extends EventEmitter {
 
         });
 
-        this.addListener( "upgradeSpell", this.towerSpellUpgrade );
+        this.addListener( GameEvents.UPGRADE_PLAYER_SPELLS, this.towerSpellUpgrade );
 
         this.sendToMain( GameEvents.WORKER_INITED );
 

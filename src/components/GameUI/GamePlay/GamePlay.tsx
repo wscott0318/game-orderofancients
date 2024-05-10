@@ -7,6 +7,7 @@ import { Desktop } from "./Desktop";
 import { Mobile } from "./Mobile";
 import { useGameContext } from "../../../contexts/game-context";
 import { GameMain } from "../../../game/main/GameMain";
+import { GameEvents } from "../../../game/Events";
 
 //
 
@@ -27,7 +28,7 @@ const GamePlayUI = () => {
 
     const onClickUpgrade = ( item: any, itemIndex: number ) => {
 
-        GameMain.dispatchEvent( 'upgradeSpell', { item, itemIndex } );
+        GameMain.dispatchEvent( GameEvents.UPGRADE_PLAYER_SPELLS, { item, itemIndex } );
 
         // todo
         // const playerIndex = GameMain.lobbyInfo.players.findIndex( ( player ) => player.socketId === Network.socket?.id );

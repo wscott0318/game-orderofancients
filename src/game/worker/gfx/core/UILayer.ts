@@ -1,5 +1,6 @@
 
 import { Matrix4, PerspectiveCamera, Quaternion, Vector2, Vector3 } from "three";
+import { Gfx } from "./Gfx";
 
 //
 
@@ -333,6 +334,16 @@ export class UILayerCore {
             }
 
         });
+
+        // render stats block
+
+        this.ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        this.ctx.fillRect( 0, 0, 100, 50 );
+        this.ctx.fillStyle = '#ffffff';
+        this.ctx.textAlign = 'left';
+        this.ctx.fillText( 'FPS: ' + Gfx.fps, 10, 12 );
+        this.ctx.fillText( 'Calls: ' + Gfx.renderer.info.render.calls, 10, 27 );
+        this.ctx.fillText( 'Triangles: ' + Gfx.renderer.info.render.triangles, 10, 42 );
 
     };
 
